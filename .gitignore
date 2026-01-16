@@ -34,3 +34,7 @@ coverage
 
 # Vitest
 __screenshots__/
+
+# Docs
+docs
+/docs/fsd.md
