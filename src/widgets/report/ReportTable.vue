@@ -1,7 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import BaseButton from '@/shared/ui/BaseButton.vue'
+</script>
 
 <template>
   <div class="ReportTable">
+    <div class="ReportTable__actions">
+      <BaseButton color="primary" size="xs">Добавить строку</BaseButton>
+      <BaseButton color="danger" size="xs">Очистить таблицу</BaseButton>
+    </div>
     <h3>KNJIGA O OSTVARENOM PROMETU PAUŠALNO OPOREZOVANIH OBVEZNIKA</h3>
     <div class="ReportTable__header">
       <div class="ReportTable__col1">Redni broj</div>
@@ -41,6 +47,13 @@
     text-align: center;
   }
 }
+
+.ReportTable__actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
 .ReportTable__col1 {
   grid-area: col1;
 }

@@ -75,8 +75,25 @@
   --font-medium-text-sm: 500 14px/20px var(--font-family);
   --font-regular-text-sm: 400 14px/20px var(--font-family);
 
+  /* breakpoints */
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
 
+  /* container */
+  --container-max: 100%;
+  --container-gutter: clamp(16px, 3vw, 32px); /* боковые отступы */
+}
 
+@media (min-width: 640px)  { :root { --container-max: 600px; } }
+@media (min-width: 768px)  { :root { --container-max: 720px; } }
+@media (min-width: 1024px) { :root { --container-max: 960px; } }
+@media (min-width: 1280px) { :root { --container-max: 1120px; } }
+@media (min-width: 1536px) { :root { --container-max: 1200px; } }
 
-
+.Container {
+  width: min(100% - (var(--container-gutter) * 2), var(--container-max));
+  margin-inline: auto;
 }

@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <header class="AppHeader">
+  <header class="Container">
     <h1>{{ msg }}</h1>
   </header>
 </template>
