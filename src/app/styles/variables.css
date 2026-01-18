@@ -1,3 +1,82 @@
+/*
+[category]-[type]-[item]-[subitem]-[state]
+--color-background-primary-hover
+*/
+
+
 :root {
-  --color-backgroound-app: #f5f7fa;
+
+  /* color-background */
+  --color-background-disabled: #E5E7EB;
+  --color-background-surface: #FFFFFF;
+  --color-background-transparent: transparent;
+  --color-background-divider: #9CA3AF;
+  --color-background-modal: #FFFFFF;
+
+  --color-background-default: #F3F4F6;
+  --color-background-default-hovered: #E5E7EB;
+  --color-background-default-pressed: #D1D5DB;
+
+  --color-background-primary: #4338CA;
+  --color-background-primary-hovered: #1E40AF;
+  --color-background-primary-pressed: #312E81;
+
+  --color-background-success: #15803D;
+  --color-background-success-hovered: #166534;
+  --color-background-success-pressed: #14532D;
+
+  --color-background-info: #1D4ED8;
+  --color-background-info-hovered: #3730A3;
+  --color-background-info-pressed: #1E3A8A;
+
+  --color-background-warning: #A16207;
+  --color-background-warning-hovered: #854D0E;
+  --color-background-warning-pressed: #713F12;
+
+  --color-background-danger: #B91C1C;
+  --color-background-danger-hovered: #991B1B;
+  --color-background-danger-pressed: #7F1D1D;
+
+  /* color-text */
+  --color-text-base: #FFFFFF;
+  --color-text-default: #030712;
+  --color-text-primary: #4338CA;
+  --color-text-info: #1D4ED8;
+  --color-text-success: #15803D;
+  --color-text-warning: #A16207;
+  --color-text-danger: #B91C1C;
+  --color-text-placeholder: #6B7280;
+  --color-text-caption: #4B5563;
+  --color-text-link: #1D4ED8;
+  --color-text-visited: #7E22CE;
+  --color-text-loading: #374151;
+  --color-text-disabled: #9CA3AF;
+
+  /* color-border */
+  --color-border-base: #FFFFFF;
+  --color-border-default: #9CA3AF;
+  --color-border-primary: #4338CA;
+  --color-border-info: #1D4ED8;
+  --color-border-success: #15803D;
+  --color-border-warning: #A16207;
+  --color-border-danger: #B91C1C;
+  --color-border-ring: #9DC5F8;
+  --color-border-disabled: #D1D5DB;
+
+  /* fonts */
+  --font-family: "Montserrat", sans-serif;
+  --font-bold-text-6xl: 700 60px/60px var(--font-family);
+  --font-semibold-text-3xl: 600 30px/36px var(--font-family);
+  --font-semibold-text-2xl: 600 24px/32px var(--font-family);
+  --font-medium-text-xl: 500 20px/28px var(--font-family);
+  --font-medium-text-lg: 500 18px/28px var(--font-family);
+  --font-regular-text-base: 400 16px/24px var(--font-family);
+  --font-medium-text-base: 500 16px/24px var(--font-family);
+  --font-medium-text-sm: 500 14px/20px var(--font-family);
+  --font-regular-text-sm: 400 14px/20px var(--font-family);
+
+
+
+
+
 }

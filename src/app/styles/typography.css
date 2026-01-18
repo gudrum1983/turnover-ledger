@@ -1,0 +1,35 @@
+.Typo_Display {
+  font: var(--font-bold-text-6xl);
+}
+
+.Typo_Heading1 {
+  font: var(--font-semibold-text-3xl);
+}
+
+.Typo_Heading2 {
+  font: var(--font-semibold-text-2xl);
+}
+
+.Typo_Title1 {
+  font: var(--font-medium-text-xl);
+}
+
+.Typo_Title2 {
+  font: var(--font-medium-text-lg);
+}
+
+.Typo_Body {
+  font: var(--font-regular-text-base);
+}
+
+.Typo_BodyAccent {
+  font: var(--font-medium-text-base);
+}
+
+.Typo_Helper {
+  font: var(--font-medium-text-sm);
+}
+
+.Typo_Caption {
+  font: var(--font-regular-text-sm);
+}

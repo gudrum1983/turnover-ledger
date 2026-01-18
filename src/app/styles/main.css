@@ -5,10 +5,8 @@
 }
 
 body {
-  background: var(--color-backgroound-app);
+  font: var(--font-regular-text-base);
+  background: var(--color-background-default);
+  color: var(--color-text-default);
   min-height: 100vh;
-  font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
 }
