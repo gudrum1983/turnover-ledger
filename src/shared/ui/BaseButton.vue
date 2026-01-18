@@ -224,4 +224,6 @@ const classes = computed(() => [
 }
 </style>
 
-
+<!--todo - есть материал на подумать по рефакторингу
+docs/questions.md
+-->
