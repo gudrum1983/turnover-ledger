@@ -1,17 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-//todo: пример из https://router.vuejs.org/guide/ - заменить
-/*import HomeView from './HomeView.vue'
-import AboutView from './AboutView.vue'
+import { ROUTES } from '@/shared/variables/routes.ts'
 
 const routes = [
-  { path: '/', component: HomeView },
-  { path: '/about', component: AboutView },
-]*/
+  {
+    path: ROUTES.notFoundPage.patch,
+    name: ROUTES.notFoundPage.name,
+    component: () => import('@/pages/NotFoundPage.vue'),
+  },
+  {
+    path: ROUTES.homePage.patch,
+    name: ROUTES.homePage.name,
+    component: () => import('@/pages/HomePage.vue'),
+  },
+  {
+    path: ROUTES.previewPage.patch,
+    name: ROUTES.previewPage.name,
+    component: () => import('@/pages/ReportPreviewPage.vue'),
+  },
+  /* todo - сделать заметку про различия и лейзи загрузку, найти инфу 404 нужно первой или последней
+  { path: '/', component: HomePage },
+  { path: '/preview', component: ReportPreviewPage },*/
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [],
+  routes,
 })
 
 export default router

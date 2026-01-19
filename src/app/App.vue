@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import AppHeader from '@/app/AppHeader.vue'
-import ReportMetaForm from '@/widgets/report/ReportMetaForm.vue'
-import ReportActions from '@/widgets/report/ReportActions.vue'
-import ReportTable from '@/widgets/report/ReportTable.vue'
 </script>
 
 <template>
   <div class="App">
-    <AppHeader msg="Книга КПО (паушал)" />
+    <AppHeader msg="Книга КПО (паушал)" class="App_Header" />
     <main class="App_Main Container">
-      <ReportActions />
-      <ReportMetaForm />
-      <ReportTable />
+      <RouterView />
     </main>
   </div>
 </template>
@@ -22,8 +17,19 @@ import ReportTable from '@/widgets/report/ReportTable.vue'
   margin: 50px auto;
 }
 
+.App_Header {
+  margin-block-end: 40px;
+}
+
 .App_Main {
   display: flex;
   flex-direction: column;
+}
+
+@media print {
+  .App {
+    margin: 0;
+    padding: 0;
+  }
 }
 </style>
