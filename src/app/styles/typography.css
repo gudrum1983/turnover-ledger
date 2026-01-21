@@ -33,3 +33,34 @@
 .Typo_Caption {
   font: var(--font-regular-text-sm);
 }
+
+.Typo_ReportBody {
+  font: var(--font-report-regular-text-sm);
+}
+.Typo_ReportBodyAccent {
+  font: var(--font-report-bold-text-sm);
+}
+
+.Typo_ReportTitle {
+  font: var(--font-report-bold-text-base);
+}
+
+.Typo_ReportTableAccent {
+  font: var(--font-report-semibold-text-sm);
+}
+
+.Typo_Uppercase {
+  text-transform: uppercase;
+}
+
+.Text_AlginLeft {
+  text-align: left;
+}
+
+.Text_AlginRight {
+  text-align: right;
+}
+
+.Text_AlginCenter {
+  text-align: center;
+}
