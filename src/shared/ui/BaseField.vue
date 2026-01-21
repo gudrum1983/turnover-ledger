@@ -2,7 +2,7 @@
 import type { MaskOptions } from 'maska'
 import { computed, onBeforeUnmount } from 'vue'
 
-type TypeInput = 'text' | 'number' | 'datalist'
+type TypeInput = 'text' | 'datalist'
 
 type Props = {
   name: string
@@ -10,7 +10,7 @@ type Props = {
   fullWidth?: boolean
   type?: TypeInput
   placeholder?: string
-  modelValue: string | number | null
+  modelValue: string | null
   debounceMs?: number
   mask?: MaskOptions
   datalist?: string[]
@@ -29,7 +29,7 @@ const {
 } = defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number | null): void
+  (e: 'update:modelValue', value: string | null): void
 }>()
 
 const isDatalist = computed(() => Array.isArray(datalist) && datalist.length > 0)
@@ -57,10 +57,7 @@ function scheduleEmit(e: Event) {
   }, debounceMs)
 }
 
-function readValue(input: HTMLInputElement): string | number | null {
-  if (type === 'number') {
-    return Number.isNaN(input.valueAsNumber) ? null : input.valueAsNumber
-  }
+function readValue(input: HTMLInputElement): string | null {
   return input.value
 }
 

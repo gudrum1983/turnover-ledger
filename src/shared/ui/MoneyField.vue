@@ -12,7 +12,7 @@ type Props = {
 const { name, label, placeholder, modelValue, fullWidth = false } = defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number | null): void
+  (e: 'update:modelValue', value: string | null): void
 }>()
 
 const moneyMask = {
@@ -34,7 +34,4 @@ const moneyMask = {
     :mask="moneyMask"
     @update:modelValue="emit('update:modelValue', $event)"
   />
-
-  <!--  35 + @update:modelValue="emit('update:modelValue', $event == null ? null : String($event))"-->
-  <!--или  15+   (e: 'update:modelValue', value: string | number | null): void-->
 </template>
