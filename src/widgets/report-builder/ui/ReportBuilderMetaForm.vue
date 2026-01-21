@@ -1,56 +1,84 @@
 <script setup lang="ts">
 import BaseField from '@/shared/ui/BaseField.vue'
+import MoneyField from '@/shared/ui/MoneyField.vue'
+import DigitField from '@/shared/ui/DigitField.vue'
 
 import { ref, watch } from 'vue'
+import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 
-//todo - проверка работы инпутов удалить после создания стора
-// state
-const fieldPib = ref<string | null>(null)
-
-const fieldName = ref<string | null>(null)
-
-const fieldNum = ref<number | null>(null)
-
-// actions
-// просто для проверки в консоле
-watch(fieldPib, (v) => {
-  console.log('fieldPib changed:', v)
+const formData = ref({
+  header: {
+    pib: '',
+    taxpayer: '',
+    companyName: '',
+    address: '',
+    taxNumber: '',
+    activityCode: '',
+  },
+  footer: {
+    preparedBy: '',
+    responsiblePerson: '',
+  },
 })
 
-watch(fieldName, (v) => {
-  console.log('fieldPib changed:', v)
-})
+const fieldAmountAlt = ref<string | null>('')
+const fieldDigits = ref<string | null>('')
+const companySuggestions = ['Alpha', 'Beta', 'Gamma']
 
-watch(fieldNum, (v) => {
-  console.log('numberValue changed:', v)
-})
+watch(
+  formData,
+  (value) => {
+    console.log('formData changed:', value)
+  },
+  { deep: true },
+)
+
+function withColon(label: string) {
+  return `${label}:`
+}
 </script>
 
 <template>
-  <div class="ReportMetaForm">
-    <BaseField name="pib" label="PIB:" placeholder="lksdvlksnd" v-model="fieldPib" />
-    <BaseField name="name" label="Firma-radnja:" v-model="fieldName" />
-    <BaseField name="num" type="number" label="Num:" placeholder="0" v-model="fieldNum" />
-    <label>PIB: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
-    <label>Obveznik: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
-    <label>Firma-radnja: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
-    <label>Sedište: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
-    <label>Šifra poreskog obveznika: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
-    <label>Šifra delatnosti: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
-    <label>Sastavio: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
-    <label>Odgovorno lice: <input type="text" required minlength="4" maxlength="8" size="10" /></label>
+  <!-- todo - убрать лишнюю обертку и убрать тестовый компонент    -->
+  <div>
+    <div class="ReportMetaForm">
+      <BaseField
+        v-for="(field, key) in KPO_DICTIONARY.header"
+        :key="key"
+        :name="key"
+        :label="withColon(field.ru)"
+        v-model="formData.header[key]"
+      />
 
-    <div>fieldPib: {{ fieldPib }}</div>
-    <div>fieldName: {{ fieldName }}</div>
-    <div>fieldNum: {{ fieldNum }}</div>
+      <BaseField
+        v-for="(field, key) in KPO_DICTIONARY.footer"
+        :key="key"
+        :name="key"
+        :label="withColon(field.ru)"
+        v-model="formData.footer[key]"
+      />
+    </div>
+    <div style="background: bisque; padding: 5px; max-width: 200px; margin: 10px" class="TestComponent">
+      <BaseField
+        name="company"
+        label="Компания:"
+        v-model="formData.header.companyName"
+        :datalist="companySuggestions"
+      />
+      <MoneyField name="amountAlt" label="Сумма (через BaseField):" v-model="fieldAmountAlt" placeholder="0,00" />
+      <DigitField name="digitsOnly" label="Только цифры:" v-model="fieldDigits" placeholder="12345" />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .ReportMetaForm {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 400px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-rows: auto;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, auto);
+  row-gap: 6px;
+  column-gap: 10px;
 }
 </style>

@@ -7,7 +7,7 @@ export const KPO_DICTIONARY = {
       en: 'Tax ID (PIB)',
     },
     taxpayer: {
-      ru: 'Налогоплательщик',
+      ru: 'Налогоплательщик (имя и фамилия)',
       srLat: 'Obveznik',
       srCyr: 'Обвезник',
       en: 'Taxpayer',
@@ -19,7 +19,7 @@ export const KPO_DICTIONARY = {
       en: 'Business name',
     },
     address: {
-      ru: 'Адрес',
+      ru: 'Юридический адрес',
       srLat: 'Sedište',
       srCyr: 'Седиште',
       en: 'Registered address',
