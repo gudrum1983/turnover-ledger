@@ -3,68 +3,72 @@
 --color-background-primary-hover
 */
 
-
 :root {
-
   /* color-background */
-  --color-background-disabled: #E5E7EB;
-  --color-background-surface: #FFFFFF;
+  --color-background-disabled: #e5e7eb;
+  --color-background-surface: #ffffff;
   --color-background-transparent: transparent;
-  --color-background-divider: #9CA3AF;
-  --color-background-modal: #FFFFFF;
+  --color-background-divider: #9ca3af;
+  --color-background-modal: #ffffff;
 
-  --color-background-default: #F3F4F6;
-  --color-background-default-hovered: #E5E7EB;
-  --color-background-default-pressed: #D1D5DB;
+  --color-background-default: #f3f4f6;
+  --color-background-default-hovered: #e5e7eb;
+  --color-background-default-pressed: #d1d5db;
 
-  --color-background-primary: #4338CA;
-  --color-background-primary-hovered: #1E40AF;
-  --color-background-primary-pressed: #312E81;
+  --color-background-primary: #4338ca;
+  --color-background-primary-hovered: #1e40af;
+  --color-background-primary-pressed: #312e81;
 
-  --color-background-success: #15803D;
+  --color-background-success: #15803d;
   --color-background-success-hovered: #166534;
-  --color-background-success-pressed: #14532D;
+  --color-background-success-pressed: #14532d;
 
-  --color-background-info: #1D4ED8;
-  --color-background-info-hovered: #3730A3;
-  --color-background-info-pressed: #1E3A8A;
+  --color-background-info: #1d4ed8;
+  --color-background-info-hovered: #3730a3;
+  --color-background-info-pressed: #1e3a8a;
 
-  --color-background-warning: #A16207;
-  --color-background-warning-hovered: #854D0E;
-  --color-background-warning-pressed: #713F12;
+  --color-background-warning: #a16207;
+  --color-background-warning-hovered: #854d0e;
+  --color-background-warning-pressed: #713f12;
 
-  --color-background-danger: #B91C1C;
-  --color-background-danger-hovered: #991B1B;
-  --color-background-danger-pressed: #7F1D1D;
+  --color-background-danger: #b91c1c;
+  --color-background-danger-hovered: #991b1b;
+  --color-background-danger-pressed: #7f1d1d;
 
   /* color-text */
-  --color-text-base: #FFFFFF;
+  --color-text-base: #ffffff;
   --color-text-default: #030712;
-  --color-text-primary: #4338CA;
-  --color-text-info: #1D4ED8;
-  --color-text-success: #15803D;
-  --color-text-warning: #A16207;
-  --color-text-danger: #B91C1C;
-  --color-text-placeholder: #6B7280;
-  --color-text-caption: #4B5563;
-  --color-text-link: #1D4ED8;
-  --color-text-visited: #7E22CE;
+  --color-text-primary: #4338ca;
+  --color-text-info: #1d4ed8;
+  --color-text-success: #15803d;
+  --color-text-warning: #a16207;
+  --color-text-danger: #b91c1c;
+  --color-text-placeholder: #6b7280;
+  --color-text-caption: #4b5563;
+  --color-text-link: #1d4ed8;
+  --color-text-visited: #7e22ce;
   --color-text-loading: #374151;
-  --color-text-disabled: #9CA3AF;
+  --color-text-disabled: #9ca3af;
 
   /* color-border */
-  --color-border-base: #FFFFFF;
-  --color-border-default: #9CA3AF;
-  --color-border-primary: #4338CA;
-  --color-border-info: #1D4ED8;
-  --color-border-success: #15803D;
-  --color-border-warning: #A16207;
-  --color-border-danger: #B91C1C;
-  --color-border-ring: #9DC5F8;
-  --color-border-disabled: #D1D5DB;
+  --color-border-base: #ffffff;
+  --color-border-table: #030712;
+  --color-border-default: #9ca3af;
+  --color-border-primary: #4338ca;
+  --color-border-info: #1d4ed8;
+  --color-border-success: #15803d;
+  --color-border-warning: #a16207;
+  --color-border-danger: #b91c1c;
+  --color-border-ring: #9dc5f8;
+  --color-border-disabled: #d1d5db;
+
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
 
   /* fonts */
-  --font-family: "Montserrat", sans-serif;
+  --font-family: 'Montserrat', sans-serif;
+  --font-family-report: 'Open Sans', sans-serif;
   --font-bold-text-6xl: 700 60px/60px var(--font-family);
   --font-semibold-text-3xl: 600 30px/36px var(--font-family);
   --font-semibold-text-2xl: 600 24px/32px var(--font-family);
@@ -74,6 +78,11 @@
   --font-medium-text-base: 500 16px/24px var(--font-family);
   --font-medium-text-sm: 500 14px/20px var(--font-family);
   --font-regular-text-sm: 400 14px/20px var(--font-family);
+
+  --font-report-regular-text-sm: 400 14px/20px var(--font-family-report);
+  --font-report-bold-text-sm: 700 14px/20px var(--font-family-report);
+  --font-report-semibold-text-sm: 600 14px/24px var(--font-family-report);
+  --font-report-bold-text-base: 700 16px/24px var(--font-family-report);
 
   /* breakpoints */
   --bp-sm: 640px;
@@ -87,11 +96,35 @@
   --container-gutter: clamp(16px, 3vw, 32px); /* боковые отступы */
 }
 
-@media (min-width: 640px)  { :root { --container-max: 600px; } }
-@media (min-width: 768px)  { :root { --container-max: 720px; } }
-@media (min-width: 1024px) { :root { --container-max: 960px; } }
-@media (min-width: 1280px) { :root { --container-max: 1120px; } }
-@media (min-width: 1536px) { :root { --container-max: 1200px; } }
+@media (min-width: 640px) {
+  :root {
+    --container-max: 600px;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --container-max: 720px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --container-max: 960px;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --container-max: 1120px;
+  }
+}
+
+@media (min-width: 1536px) {
+  :root {
+    --container-max: 1200px;
+  }
+}
 
 .Container {
   width: min(100% - (var(--container-gutter) * 2), var(--container-max));

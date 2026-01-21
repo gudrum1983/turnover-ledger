@@ -1,21 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { ROUTES } from '@/shared/variables/routes.ts'
+import { ROUTES } from '@/shared/constants/routes.ts'
 
 const routes = [
   {
-    path: ROUTES.notFoundPage.patch,
-    name: ROUTES.notFoundPage.name,
-    component: () => import('@/pages/NotFoundPage.vue'),
+    path: ROUTES.notFound.path,
+    name: ROUTES.notFound.name,
+    component: () => import('@/pages/not-found/ui/NotFoundPage.vue'),
   },
   {
-    path: ROUTES.homePage.patch,
-    name: ROUTES.homePage.name,
-    component: () => import('@/pages/HomePage.vue'),
+    path: ROUTES.reportBuilder.path,
+    name: ROUTES.reportBuilder.name,
+    component: () => import('@/pages/report-builder/ui/ReportBuilderPage.vue'),
   },
   {
-    path: ROUTES.previewPage.patch,
-    name: ROUTES.previewPage.name,
-    component: () => import('@/pages/ReportPreviewPage.vue'),
+    path: ROUTES.reportPreview.path,
+    name: ROUTES.reportPreview.name,
+    component: () => import('@/pages/report-preview/ui/ReportPreviewPage.vue'),
   },
   /* todo - сделать заметку про различия и лейзи загрузку, найти инфу 404 нужно первой или последней
   { path: '/', component: HomePage },
