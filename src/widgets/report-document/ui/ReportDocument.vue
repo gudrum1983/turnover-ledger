@@ -2,10 +2,6 @@
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { computed } from 'vue'
 
-/*
-const headerRows = ['pib', 'taxpayer', 'companyName', 'address', 'taxNumber', 'activityCode']
-*/
-
 type Props = {
   landscape?: boolean
 }
@@ -107,57 +103,50 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
 <style scoped lang="scss">
 .ReportDocument {
   font-family: 'Open Sans', sans-serif !important;
-}
 
-.ReportDocument_Header {
-  margin-block-end: 20mm;
-}
-
-.ReportDocument_Title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-transform: uppercase;
-  margin-block-end: 10mm;
-}
-
-.ReportDocument_Footer {
-  display: flex;
-
-  justify-content: space-between;
-}
-.ReportDocument_SignaturePlace {
-  display: flex;
-  flex-direction: column;
-  min-width: 28%;
-  width: max-content;
-  max-width: 40%;
-  gap: 8px;
-  align-items: center;
-  justify-content: space-between;
-  &_landscale {
-    min-width: 18%;
-    max-width: 30%;
+  &_Header {
+    margin-block-end: 20mm;
   }
-}
+  &_Title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-transform: uppercase;
+    margin-block-end: 10mm;
+  }
 
-.ReportDocument_Signature {
-  border-bottom: 1px solid black;
-  width: 100%;
-  text-align: center;
-  /* Умные переносы с дефисами для русского языка */
-  hyphens: auto;
-  /*  !* Принудительный разрыв длинных слов *!
-  word-break: break-all;*/
-  /* Разрыв неразрывных слов */
-  overflow-wrap: break-word;
+  &_Footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_SignaturePlace {
+    display: flex;
+    flex-direction: column;
+    min-width: 28%;
+    width: max-content;
+    max-width: 40%;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    &_landscape {
+      min-width: 18%;
+      max-width: 30%;
+    }
+  }
+
+  &_Signature {
+    border-bottom: 1px solid black;
+    width: 100%;
+    text-align: center;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
 }
 
 .ReportDocument_Table {
   display: table;
   box-sizing: border-box;
-  /*  text-indent: initial;
-  unicode-bidi: isolate;*/
   border-collapse: collapse;
   border-spacing: 0;
   margin-block-end: 20mm;
