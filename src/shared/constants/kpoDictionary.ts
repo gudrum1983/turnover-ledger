@@ -1,3 +1,12 @@
+import type { FooterField, HeaderField, TableField, TitleField } from '@/shared/constants/reportFields.ts'
+
+type DictionaryEntry = {
+  ru: string
+  srLat: string
+  srCyr: string
+  en: string
+}
+
 export const KPO_DICTIONARY = {
   header: {
     pib: {
@@ -107,4 +116,33 @@ export const KPO_DICTIONARY = {
       en: 'Responsible person',
     },
   },
-} as const
+} satisfies {
+  header: Record<HeaderField, DictionaryEntry>
+  title: Record<TitleField, DictionaryEntry>
+  table: Record<TableField, DictionaryEntry>
+  footer: Record<FooterField, DictionaryEntry>
+}
+
+/*todo - чем satisfies отличается от Record-аннотации
+*
+* https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html
+*
+* • Да, вот короткий пример на твоем кейсе. С satisfies можно вытащить union из конкретных строк:
+
+*
+*
+  import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
+  import type { HeaderField } from '@/shared/constants/reportFields.ts'
+
+  type HeaderRu = (typeof KPO_DICTIONARY.header)[HeaderField]['ru']
+  // HeaderRu = 'ПИБ' | 'Налогоплательщик (имя и фамилия)' | 'Фирма' | ...
+
+  То же для title или table:
+
+  import type { TitleField } from '@/shared/constants/reportFields.ts'
+
+  type TitleEn = (typeof KPO_DICTIONARY.title)[TitleField]['en']
+  // TitleEn = 'Book of Realized Turnover' | '(Lump-Sum Taxation)'
+
+  Если бы KPO_DICTIONARY был аннотирован как Record<..., DictionaryEntry>, то HeaderRu стало бы просто string — литералы потерялись бы.
+*  */
