@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { computed } from 'vue'
+import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { storeToRefs } from 'pinia'
 
 type Props = {
   landscape?: boolean
 }
 
 const { landscape = false } = defineProps<Props>()
+
+const store = useMetaDataStore()
+const { formData } = storeToRefs(store)
 
 const classColumn = computed(() => [{ ReportDocument_Column_landscape: landscape }])
 const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape: landscape }])
@@ -16,13 +21,13 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
   <div class="ReportDocument Typo_ReportBody">
     <ul class="ReportDocument_Header">
       <li v-for="(item, index) in KPO_DICTIONARY.header" :key="index" v-bind="item">
-        <span class="Typo_ReportBodyAccent">{{ item.srLat }}:</span> {{ item.ru }}
+        <span class="Typo_ReportBodyAccent">{{ item.srLat }}:</span> {{ formData.header[index] }}
       </li>
     </ul>
 
     <div class="ReportDocument_Title Typo_ReportTitle">
-      <div>{{ KPO_DICTIONARY.title.row1.srLat }}</div>
-      <div>{{ KPO_DICTIONARY.title.row2.srLat }}</div>
+      <div>{{ KPO_DICTIONARY.title.firstLine.srLat }}</div>
+      <div>{{ KPO_DICTIONARY.title.secondLine.srLat }}</div>
     </div>
 
     <table class="ReportDocument_Table">
@@ -89,12 +94,12 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
     <div class="ReportDocument_Footer">
       <div class="ReportDocument_SignaturePlace" :class="classSignature">
         <div class="Typo_ReportTableAccent">{{ KPO_DICTIONARY.footer.preparedBy.srLat }}</div>
-        <div class="ReportDocument_Signature">{{ KPO_DICTIONARY.footer.preparedBy.ru }}</div>
+        <div class="ReportDocument_Signature">{{ formData.footer.preparedBy }}</div>
       </div>
 
       <div class="ReportDocument_SignaturePlace" :class="classSignature">
         <div class="Typo_ReportTableAccent">{{ KPO_DICTIONARY.footer.responsiblePerson.srLat }}</div>
-        <div class="ReportDocument_Signature">{{ KPO_DICTIONARY.footer.responsiblePerson.ru }}</div>
+        <div class="ReportDocument_Signature">{{ formData.footer.responsiblePerson }}</div>
       </div>
     </div>
   </div>

@@ -1,84 +1,94 @@
 <script setup lang="ts">
 import BaseField from '@/shared/ui/BaseField.vue'
-import MoneyField from '@/shared/ui/MoneyField.vue'
 import DigitField from '@/shared/ui/DigitField.vue'
 
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
+import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { storeToRefs } from 'pinia'
+import { HEADER_FIELDS, FOOTER_FIELDS } from '@/shared/constants/reportFields.ts'
+import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
 
-const formData = ref({
-  header: {
-    pib: '',
-    taxpayer: '',
-    companyName: '',
-    address: '',
-    taxNumber: '',
-    activityCode: '',
-  },
-  footer: {
-    preparedBy: '',
-    responsiblePerson: '',
-  },
-})
+const store = useMetaDataStore()
+const { formData } = storeToRefs(store)
+const { setHeaderValue, setFooterValue } = store
 
-const fieldAmountAlt = ref<string | null>('')
-const fieldDigits = ref<string | null>('')
-const companySuggestions = ['Alpha', 'Beta', 'Gamma']
+type HeaderMetaField = { key: HeaderField; label: string; isDigit: boolean }
+type FooterMetaField = { key: FooterField; label: string; isDigit: boolean }
 
+const DIGIT_FIELDS: HeaderField[] = ['pib', 'taxNumber']
+
+const headerMetaFields: HeaderMetaField[] = HEADER_FIELDS.map((key) => ({
+  key,
+  label: KPO_DICTIONARY.header[key].ru,
+  isDigit: DIGIT_FIELDS.includes(key),
+}))
+
+const footerMetaFields: FooterMetaField[] = FOOTER_FIELDS.map((key) => ({
+  key,
+  label: KPO_DICTIONARY.footer[key].ru,
+  isDigit: false,
+}))
+
+/*todo - подумать, возможно перенести из page localStorage*/
 watch(
-  formData,
-  (value) => {
-    console.log('formData changed:', value)
+  store,
+  (state) => {
+    // сохранять все состояние в local storage при каждом его изменении
+    localStorage.setItem('piniaState', JSON.stringify(state.formData))
+    console.log(state.formData)
   },
   { deep: true },
 )
-
-function withColon(label: string) {
-  return `${label}:`
-}
 </script>
 
 <template>
-  <!-- todo - убрать лишнюю обертку и убрать тестовый компонент    -->
   <div>
     <div class="ReportMetaForm">
-      <BaseField
-        v-for="(field, key) in KPO_DICTIONARY.header"
-        :key="key"
-        :name="key"
-        :label="withColon(field.ru)"
-        v-model="formData.header[key]"
-      />
-
-      <BaseField
-        v-for="(field, key) in KPO_DICTIONARY.footer"
-        :key="key"
-        :name="key"
-        :label="withColon(field.ru)"
-        v-model="formData.footer[key]"
-      />
-    </div>
-    <div style="background: bisque; padding: 5px; max-width: 200px; margin: 10px" class="TestComponent">
-      <BaseField
-        name="company"
-        label="Компания:"
-        v-model="formData.header.companyName"
-        :datalist="companySuggestions"
-      />
-      <MoneyField name="amountAlt" label="Сумма (через BaseField):" v-model="fieldAmountAlt" placeholder="0,00" />
-      <DigitField name="digitsOnly" label="Только цифры:" v-model="fieldDigits" placeholder="12345" />
+      <fieldset class="ReportMetaForm_Fieldset">
+        <legend>Информация о налогоплательщике</legend>
+        <component
+          v-for="field in headerMetaFields"
+          :key="field.key"
+          :is="field.isDigit ? DigitField : BaseField"
+          :name="field.key"
+          :label="`${field.label}:`"
+          :modelValue="formData.header[field.key]"
+          @update:modelValue="setHeaderValue(field.key, $event ?? '')"
+        />
+      </fieldset>
+      <fieldset class="ReportMetaForm_Fieldset">
+        <legend>Ответственные лица</legend>
+        <BaseField
+          v-for="field in footerMetaFields"
+          :key="field.key"
+          :name="field.key"
+          :label="`${field.label}:`"
+          :modelValue="formData.footer[field.key]"
+          @update:modelValue="setFooterValue(field.key, $event ?? '')"
+        />
+      </fieldset>
     </div>
   </div>
 </template>
 
 <style scoped>
 .ReportMetaForm {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.ReportMetaForm_Fieldset {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-rows: auto;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, auto);
+  border-radius: 10px;
+  border: 1px solid var(--color-border-disabled);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   row-gap: 6px;
   column-gap: 10px;
+  legend {
+    color: var(--color-text-default);
+    padding-inline: 10px;
+  }
 }
 </style>
