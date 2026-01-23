@@ -11,7 +11,7 @@ import AppHeader from '@/app/AppHeader.vue'
   <div class="ReportBuilderPage">
     <AppHeader msg="Книга КПО (паушал)" class="ReportBuilderPage_Header" />
     <main class="ReportBuilderPage_Main Container">
-      <BasePaper>
+      <BasePaper class="ReportBuilderPage_layout">
         <ReportActions />
         <ReportBuilderMetaForm />
         <ReportTable />
@@ -20,4 +20,12 @@ import AppHeader from '@/app/AppHeader.vue'
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.ReportBuilderPage {
+  .ReportBuilderPage_layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+</style>
