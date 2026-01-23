@@ -21,8 +21,8 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
     </ul>
 
     <div class="ReportDocument_Title Typo_ReportTitle">
-      <div>{{ KPO_DICTIONARY.title.row1.srLat }}</div>
-      <div>{{ KPO_DICTIONARY.title.row2.srLat }}</div>
+      <div>{{ KPO_DICTIONARY.title.firstLine.srLat }}</div>
+      <div>{{ KPO_DICTIONARY.title.secondLine.srLat }}</div>
     </div>
 
     <table class="ReportDocument_Table">

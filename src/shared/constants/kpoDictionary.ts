@@ -48,13 +48,13 @@ export const KPO_DICTIONARY = {
   },
 
   title: {
-    row1: {
+    firstLine: {
       ru: 'Книга о полученном доходе',
       srLat: 'Knjiga o ostvarenoj delatnosti',
       srCyr: 'Књига о оствареној делатности',
       en: 'Book of Realized Turnover',
     },
-    row2: {
+    secondLine: {
       ru: '(паушальное налогообложение)',
       srLat: 'paušalno oporezovanih obveznika',
       srCyr: 'паушално опорезованих обвезника',
