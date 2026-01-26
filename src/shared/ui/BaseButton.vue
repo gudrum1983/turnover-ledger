@@ -14,6 +14,7 @@ type Props = {
   type?: TypeButton
   disabled?: boolean
   isIconOnly?: boolean
+  contentPosition?: 'left' | 'center'
 }
 
 const {
@@ -24,6 +25,7 @@ const {
   type = 'button',
   disabled = false,
   isIconOnly = false,
+  contentPosition = 'center',
 } = defineProps<Props>()
 
 const classes = computed(() => [
@@ -32,6 +34,7 @@ const classes = computed(() => [
   `BaseButton_size_${size}`,
   { BaseButton_fullWidth: fullWidth },
   { BaseButton_iconOnly: isIconOnly },
+  { BaseButton_left: contentPosition === 'left' },
 ])
 </script>
 
@@ -80,6 +83,10 @@ const classes = computed(() => [
   padding: var(--button-padding-block) var(--button-padding-inline);
   gap: var(--button-gap);
   font: var(--button-font-size);
+
+  &_left {
+    justify-content: flex-start;
+  }
 
   &:disabled {
     cursor: not-allowed;

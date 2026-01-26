@@ -7,6 +7,7 @@
   /* color-background */
   --color-background-disabled: #e5e7eb;
   --color-background-surface: #ffffff;
+  --color-background-surface-accent: #0000000a;
   --color-background-transparent: transparent;
   --color-background-divider: #9ca3af;
   --color-background-modal: #ffffff;
@@ -61,6 +62,7 @@
   --color-border-danger: #b91c1c;
   --color-border-ring: #9dc5f8;
   --color-border-disabled: #d1d5db;
+  --color-border-table-cell: #e0e0e0 ;
 
   font-family: 'Open Sans', sans-serif;
   font-weight: 400;
@@ -78,6 +80,7 @@
   --font-medium-text-base: 500 16px/24px var(--font-family);
   --font-medium-text-sm: 500 14px/20px var(--font-family);
   --font-regular-text-sm: 400 14px/20px var(--font-family);
+  --font-medium-text-xs: 400 12px/18px var(--font-family);
 
   --font-report-regular-text-sm: 400 14px/20px var(--font-family-report);
   --font-report-bold-text-sm: 700 14px/20px var(--font-family-report);

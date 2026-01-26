@@ -9,6 +9,10 @@
   box-sizing: border-box;
 }
 
+:root {
+    scrollbar-gutter: stable;
+}
+
 body {
   font: var(--font-regular-text-base);
   background: var(--color-background-default);
