@@ -24,7 +24,6 @@ const router = useRouter()
   flex-direction: row;
   flex-wrap: wrap;
   gap: 8px;
-  padding-block: 16px;
   width: 100%;
 }
 </style>

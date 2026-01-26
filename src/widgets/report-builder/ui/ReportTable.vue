@@ -1,95 +1,145 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import BaseButton from '@/shared/ui/BaseButton.vue'
+import ReportTableRow from './ReportTableRow.vue'
+import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
+import { MOCK } from '@/shared/mock.ts'
+
+type ReportTableRowData = {
+  date: string
+  description: string
+  counterparty: string
+  incomeCurrency: string
+  incomeFromProductsCurrency: string
+  incomeFromProductsCurrencyAmount: string
+  incomeFromProducts: string
+  incomeFromServicesCurrency: string
+  incomeFromServicesCurrencyAmount: string
+  incomeFromServices: string
+  totalIncomeCurrency: string
+  totalIncomeCurrencyAmount: string
+  totalIncome: string
+}
+
+const rows = ref<ReportTableRowData[]>(MOCK)
+
+const sizeRow = ref<'short' | 'full'>('full')
+
+const textSizeRow = computed(() => (sizeRow.value === 'full' ? 'Сжать таблицу' : 'Раскрыть таблицу'))
+
+function handleEdit(index: number) {
+  void index
+  alert('Редактирование строки')
+}
+
+function handleCopy(index: number) {
+  void index
+  alert('Копирование строки')
+}
+
+function handleRemove(index: number) {
+  void index
+  alert('Удаление строки')
+}
+
+/*todo № на русском, br. ser, # на английском*/
 </script>
 
 <template>
   <div class="ReportTable">
-    <div class="ReportTable__actions">
-      <BaseButton color="primary" size="xs">Добавить строку</BaseButton>
-      <BaseButton color="danger" size="xs">Очистить таблицу</BaseButton>
-    </div>
-    <h3>KNJIGA O OSTVARENOM PROMETU PAUŠALNO OPOREZOVANIH OBVEZNIKA</h3>
-    <div class="ReportTable__header">
-      <div class="ReportTable__col1">Redni broj</div>
-      <div class="ReportTable__col2">Datum i opis knjiženja</div>
-      <div class="ReportTable__headerCol">PRIHOD OD DELATNOSTI</div>
-      <div class="ReportTable__col3">od prodaje proizvoda</div>
-      <div class="ReportTable__col4">od izvršenih usluga</div>
-      <div class="ReportTable__col5">SVEGA PRIHODI OD DELATNOSTI</div>
-      <div class="ReportTable__num1">1</div>
-      <div class="ReportTable__num2">2</div>
-      <div class="ReportTable__num3">3</div>
-      <div class="ReportTable__num4">4</div>
-      <div class="ReportTable__num5">5</div>
-    </div>
+    <fieldset class="ReportTable_Fieldset">
+      <legend>{{ KPO_DICTIONARY.title.firstLine.ru }}{{ KPO_DICTIONARY.title.secondLine.ru }}</legend>
+      <div class="ReportTable_Actions">
+        <BaseButton color="primary" size="xs">Добавить строку</BaseButton>
+        <BaseButton color="danger" size="xs">Очистить таблицу</BaseButton>
+
+        <BaseButton color="warning" size="xs" @click="sizeRow = sizeRow === 'full' ? 'short' : 'full'">{{
+          textSizeRow
+        }}</BaseButton>
+      </div>
+      <div>
+        <div class="ReportTable_Header">
+          <div>№</div>
+          <div>{{ KPO_DICTIONARY.table.dateAndDescription.ru }}</div>
+          <div></div>
+          <div>Доход<br />Валюта</div>
+          <div>Доход<br />RSD</div>
+          <div></div>
+        </div>
+        <div class="ReportTable_Rows">
+          <ReportTableRow
+            v-for="(row, index) in rows"
+            :size="sizeRow"
+            :key="index"
+            :index="index"
+            :date="row.date"
+            :counterparty="row.counterparty"
+            :description="row.description"
+            :incomeCurrency="row.incomeCurrency"
+            :incomeFromProductsCurrency="row.incomeFromProductsCurrency"
+            :incomeFromProductsCurrencyAmount="row.incomeFromProductsCurrencyAmount"
+            :incomeFromProducts="row.incomeFromProducts"
+            :incomeFromServicesCurrency="row.incomeFromServicesCurrency"
+            :incomeFromServicesCurrencyAmount="row.incomeFromServicesCurrencyAmount"
+            :incomeFromServices="row.incomeFromServices"
+            :totalIncomeCurrency="row.totalIncomeCurrency"
+            :totalIncomeCurrencyAmount="row.totalIncomeCurrencyAmount"
+            :totalIncome="row.totalIncome"
+            @edit="handleEdit"
+            @copy="handleCopy"
+            @remove="handleRemove"
+          />
+        </div>
+      </div>
+    </fieldset>
   </div>
 </template>
 
-<style scoped>
-.ReportTable__header {
-  width: 100%;
-  max-width: 800px;
-  display: grid;
-  gap: 5px;
-  grid-template-columns: 10% 20% 22% 22% 26%;
-  grid-template-areas:
-    'col1 col2 headerCol headerCol col5'
-    'col1 col2 col3 col4 col5'
-    'num1 num2 num3 num4 num5';
-  div {
+<style scoped lang="scss">
+.ReportTable {
+  &_Fieldset {
     display: flex;
-    padding: 5px;
-    background: beige;
-    border: 2px solid grey;
-    border-radius: 5px;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid var(--color-border-disabled);
+    border-radius: 10px;
+
+    legend {
+      color: var(--color-text-default);
+      padding-inline: 10px;
+    }
   }
-}
 
-.ReportTable__actions {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
+  &_Actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
 
-.ReportTable__col1 {
-  grid-area: col1;
-}
-.ReportTable__col2 {
-  grid-area: col2;
-}
+  &_Header {
+    display: grid;
+    grid-template-columns: 50px auto 60px 90px 130px 140px;
+    gap: 5px;
+    width: 100%;
+    border: 1px solid var(--color-border-table-cell);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    background: var(--color-background-default);
 
-.ReportTable__headerCol {
-  grid-area: headerCol;
-}
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+  }
 
-.ReportTable__col3 {
-  grid-area: col3;
-}
-
-.ReportTable__col4 {
-  grid-area: col4;
-}
-
-.ReportTable__col5 {
-  grid-area: col5;
-}
-
-.ReportTable__num1 {
-  grid-area: num1;
-}
-.ReportTable__num2 {
-  grid-area: num2;
-}
-.ReportTable__num3 {
-  grid-area: num3;
-}
-.ReportTable__num4 {
-  grid-area: num4;
-}
-.ReportTable__num5 {
-  grid-area: num5;
+  &_Rows {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border-table-cell);
+  }
 }
 </style>
