@@ -4,24 +4,9 @@ import BaseButton from '@/shared/ui/BaseButton.vue'
 import ReportTableRow from './ReportTableRow.vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { MOCK } from '@/shared/mock.ts'
+import type { ReportRow } from '@/shared/types/report.ts'
 
-type ReportTableRowData = {
-  date: string
-  description: string
-  counterparty: string
-  incomeCurrency: string
-  incomeFromProductsCurrency: string
-  incomeFromProductsCurrencyAmount: string
-  incomeFromProducts: string
-  incomeFromServicesCurrency: string
-  incomeFromServicesCurrencyAmount: string
-  incomeFromServices: string
-  totalIncomeCurrency: string
-  totalIncomeCurrencyAmount: string
-  totalIncome: string
-}
-
-const rows = ref<ReportTableRowData[]>(MOCK)
+const rows = ref<ReportRow[]>(MOCK)
 
 const sizeRow = ref<'short' | 'full'>('full')
 
@@ -72,19 +57,7 @@ function handleRemove(index: number) {
             :size="sizeRow"
             :key="index"
             :index="index"
-            :date="row.date"
-            :counterparty="row.counterparty"
-            :description="row.description"
-            :incomeCurrency="row.incomeCurrency"
-            :incomeFromProductsCurrency="row.incomeFromProductsCurrency"
-            :incomeFromProductsCurrencyAmount="row.incomeFromProductsCurrencyAmount"
-            :incomeFromProducts="row.incomeFromProducts"
-            :incomeFromServicesCurrency="row.incomeFromServicesCurrency"
-            :incomeFromServicesCurrencyAmount="row.incomeFromServicesCurrencyAmount"
-            :incomeFromServices="row.incomeFromServices"
-            :totalIncomeCurrency="row.totalIncomeCurrency"
-            :totalIncomeCurrencyAmount="row.totalIncomeCurrencyAmount"
-            :totalIncome="row.totalIncome"
+            :row="row"
             @edit="handleEdit"
             @copy="handleCopy"
             @remove="handleRemove"
