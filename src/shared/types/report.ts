@@ -1,4 +1,8 @@
-export type ForeignCurrency = 'EUR' | 'USD' | 'GBP' | 'CHF'
+import type { Currency } from '@/shared/types/currency.ts'
+
+export const FALLBACK_CURRENCIES = ['EUR', 'USD', 'GBP', 'CHF'] as const
+
+export type ForeignCurrency = Currency['code'] | (typeof FALLBACK_CURRENCIES)[number]
 
 export type MoneyPart = {
   rsdCents: number
