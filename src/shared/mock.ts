@@ -2,6 +2,16 @@ import type { ReportRow } from '@/shared/types/report.ts'
 
 export const MOCK: ReportRow[] = [
   {
+    date: '2024-01-08',
+    description: 'Доход в динарах',
+    counterparty: 'ИП Лазарев',
+    currency: null,
+    amounts: {
+      goods: { rsdCents: 350000 },
+      services: { rsdCents: 150000 },
+    },
+  },
+  {
     date: '2024-01-12',
     description: 'Продажа товара',
     counterparty: 'ООО Альфа',

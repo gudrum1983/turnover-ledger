@@ -3,10 +3,11 @@ import { computed, ref } from 'vue'
 import BaseButton from '@/shared/ui/BaseButton.vue'
 import ReportTableRow from './ReportTableRow.vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
-import { MOCK } from '@/shared/mock.ts'
-import type { ReportRow } from '@/shared/types/report.ts'
+import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { storeToRefs } from 'pinia'
 
-const rows = ref<ReportRow[]>(MOCK)
+const store = useMetaDataStore()
+const { rows } = storeToRefs(store)
 
 const sizeRow = ref<'short' | 'full'>('full')
 
