@@ -6,10 +6,16 @@ import './styles/main.css'
 
 import App from './App.vue'
 import router from './router'
+import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 
 const app = createApp(App)
 
-app.use(createPinia())
+const pinia = createPinia()
+
+app.use(pinia)
 app.use(router)
 app.directive('maska', vMaska)
+
+useMetaDataStore(pinia).hydrateFromLocalStorage()
+
 app.mount('#app')

@@ -2,7 +2,6 @@
 import BaseField from '@/shared/ui/BaseField.vue'
 import DigitField from '@/shared/ui/DigitField.vue'
 
-import { watch } from 'vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
@@ -30,16 +29,6 @@ const footerMetaFields: FooterMetaField[] = FOOTER_FIELDS.map((key) => ({
   isDigit: false,
 }))
 
-/*todo - подумать, возможно перенести из page localStorage*/
-watch(
-  store,
-  (state) => {
-    // сохранять все состояние в local storage при каждом его изменении
-    localStorage.setItem('piniaState', JSON.stringify(state.formData))
-    console.log(state.formData)
-  },
-  { deep: true },
-)
 </script>
 
 <template>
