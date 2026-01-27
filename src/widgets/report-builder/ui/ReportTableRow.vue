@@ -56,7 +56,7 @@ const displayTotalRsd = computed(() => formatMoney(totalRsd.value))
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_description">
       <div class="ReportTableRow_Description">
-        <BaseTag v-if="currencyLabel" class="ReportTableRow_Tag" :label="currencyLabel" />
+        <BaseTag class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
         {{ [row.date, row.counterparty, row.description].filter(Boolean).join(', ') }}
         <!--        это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для
         текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и
@@ -69,9 +69,9 @@ const displayTotalRsd = computed(() => formatMoney(totalRsd.value))
       <div>Сум.</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income ReportTableRow_Column_font_secondary">
-      <div v-if="!isShort">{{ displayGoodsForeign }}</div>
-      <div v-if="!isShort">{{ displayServicesForeign }}</div>
-      <div class="Typo_BodyAccent">{{ displayTotalForeign }}</div>
+      <div v-if="!isShort">{{ displayGoodsForeign || '-' }}</div>
+      <div v-if="!isShort">{{ displayServicesForeign || '-' }}</div>
+      <div class="Typo_BodyAccent">{{ displayTotalForeign || '-' }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
       <div v-if="!isShort">{{ displayGoodsRsd }}</div>
