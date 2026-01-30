@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import BaseButton from '@/shared/ui/BaseButton.vue'
+import BaseModal from '@/shared/ui/BaseModal.vue'
 import ReportTableRow from './ReportTableRow.vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
@@ -27,6 +28,11 @@ function handleRemove(index: number) {
   void index
   alert('Удаление строки')
 }
+const open = ref(false)
+
+function closeModal() {
+  open.value = false
+}
 
 /*todo № на русском, br. ser, # на английском*/
 </script>
@@ -36,7 +42,7 @@ function handleRemove(index: number) {
     <fieldset class="ReportTable_Fieldset">
       <legend>{{ KPO_DICTIONARY.title.firstLine.ru }}{{ KPO_DICTIONARY.title.secondLine.ru }}</legend>
       <div class="ReportTable_Actions">
-        <BaseButton color="primary" size="xs">Добавить строку</BaseButton>
+        <BaseButton color="primary" size="xs" @click="open = true">Добавить строку</BaseButton>
         <BaseButton color="danger" size="xs">Очистить таблицу</BaseButton>
 
         <BaseButton color="warning" size="xs" @click="sizeRow = sizeRow === 'full' ? 'short' : 'full'">{{
@@ -66,6 +72,14 @@ function handleRemove(index: number) {
         </div>
       </div>
     </fieldset>
+    <BaseModal :open="open" @close="closeModal">
+      <h2>Добавить строку</h2>
+      <p>Форма добавления строки будет здесь.</p>
+      <template #actions>
+        <BaseButton size="xs" @click="closeModal">Отмена</BaseButton>
+        <BaseButton color="primary" size="xs">Добавить</BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
