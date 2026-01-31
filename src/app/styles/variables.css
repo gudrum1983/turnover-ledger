@@ -37,6 +37,8 @@
   --color-background-danger-hovered: #991b1b;
   --color-background-danger-pressed: #7f1d1d;
 
+  --color-background-primary-invert: #e0e7ff;
+
   /* color-text */
   --color-text-base: #ffffff;
   --color-text-default: #030712;
@@ -63,7 +65,7 @@
   --color-border-danger: #b91c1c;
   --color-border-ring: #9dc5f8;
   --color-border-disabled: #d1d5db;
-  --color-border-table-cell: #e0e0e0 ;
+  --color-border-table-cell: #e0e0e0;
 
   font-family: 'Open Sans', sans-serif;
   font-weight: 400;
