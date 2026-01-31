@@ -76,6 +76,14 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
     }
   }
 
+  function convertAmount(amount: number, from: string, to: string): number {
+    void amount
+    void from
+    void to
+    /*todo - убрать мок*/
+    return amount
+  }
+
   return {
     currencies,
     currencyCodes,
@@ -84,5 +92,6 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
     updatedAt,
     hydrateFromLocalStorage,
     loadCurrencies,
+    convertAmount,
   }
 })
