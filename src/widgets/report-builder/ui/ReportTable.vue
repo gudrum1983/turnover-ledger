@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import BaseButton from '@/shared/ui/BaseButton.vue'
 import BaseModal from '@/shared/ui/BaseModal.vue'
 import ReportTableRow from './ReportTableRow.vue'
+import ReportRowCreateForm from './ReportRowCreateForm.vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
@@ -29,9 +30,11 @@ function handleRemove(index: number) {
   alert('Удаление строки')
 }
 const open = ref(false)
+const canSubmit = ref(false)
 
 function closeModal() {
   open.value = false
+  canSubmit.value = false
 }
 
 /*todo № на русском, br. ser, # на английском*/
@@ -74,10 +77,10 @@ function closeModal() {
     </fieldset>
     <BaseModal :open="open" @close="closeModal">
       <h2>Добавить строку</h2>
-      <p>Форма добавления строки будет здесь.</p>
+      <ReportRowCreateForm @update:canSubmit="canSubmit = $event" />
       <template #actions>
         <BaseButton size="xs" @click="closeModal">Отмена</BaseButton>
-        <BaseButton color="primary" size="xs">Добавить</BaseButton>
+        <BaseButton color="primary" size="xs" :disabled="!canSubmit">Добавить</BaseButton>
       </template>
     </BaseModal>
   </div>
