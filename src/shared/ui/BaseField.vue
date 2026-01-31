@@ -2,7 +2,7 @@
 import type { MaskOptions } from 'maska'
 import { computed, onBeforeUnmount } from 'vue'
 
-type TypeInput = 'text' | 'datalist'
+type TypeInput = 'text' | 'datalist' | 'date'
 
 type Props = {
   name: string
