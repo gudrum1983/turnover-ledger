@@ -15,6 +15,7 @@ type Option = {
 }
 
 type Props = {
+  label?: string
   options: Option[]
   modelValue?: string
   placeholder?: string
@@ -25,6 +26,7 @@ type Props = {
 }
 
 const {
+  label,
   options,
   modelValue,
   placeholder = 'Выбрать',
@@ -95,6 +97,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="dropdownRef" class="BaseDropdownButton">
+    <p v-if="label" class="Typo_Caption">{{ label }}</p>
     <BaseButton
       :size="size"
       full-width
@@ -115,16 +118,21 @@ onBeforeUnmount(() => {
         />
       </template>
     </BaseButton>
-    <div v-if="isOpen" class="BaseDropdownButton_Menu">
-      <BaseListBox :options="options" :model-value="modelValue" @change="handleSelect" />
-    </div>
+    <BaseListBox
+      class="BaseDropdownButton_Menu"
+      :options="options"
+      :model-value="modelValue"
+      @change="handleSelect"
+      v-if="isOpen"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
 .BaseDropdownButton {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  display: inline-flex;
   width: 110px;
 }
 
@@ -140,21 +148,13 @@ onBeforeUnmount(() => {
   transform: rotate(180deg);
 }
 
-/*TODO - откорректировать стили*/
-
 .BaseDropdownButton_Menu {
   position: absolute;
   right: 0;
-  top: calc(100% + 6px);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  top: calc(100% + 4px);
   width: 110px;
-  padding: 6px;
-  border: 1px solid var(--color-border-default);
-  border-radius: 8px;
-  background: var(--color-background-surface);
-  box-shadow: 0 10px 24px rgba(22, 30, 57, 0.12);
   z-index: 10;
+  max-height: 260px;
+  overflow-y: auto;
 }
 </style>
