@@ -100,6 +100,7 @@ onBeforeUnmount(clearTimer)
       :name="name"
       :placeholder="placeholder"
       :list="datalistId"
+      autocomplete="off"
     />
 
     <datalist :id="datalistId" v-if="isDatalist">
