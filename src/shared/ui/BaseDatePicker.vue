@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { type PickerSection, VueDatePicker } from '@vuepic/vue-datepicker'
+import { type InputAttributesConfig, VueDatePicker } from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 
@@ -9,9 +9,15 @@ type Props = {
   label?: string
   modelValue: string | null
   fullWidth?: boolean
+  required?: boolean
 }
 
-const { name, label, modelValue, fullWidth = false } = defineProps<Props>()
+const { name, label, modelValue, fullWidth = false, required = false } = defineProps<Props>()
+
+const inputConfig: Partial<InputAttributesConfig> = {
+  name: name,
+  required: required,
+}
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -21,8 +27,6 @@ const localeStore = useLocaleStore()
 const inputClassName = computed(() =>
   fullWidth ? 'BaseDatePicker_Input BaseDatePicker_FullWidth' : 'BaseDatePicker_Input',
 )
-
-const flow: PickerSection[] = ['year', 'month', 'calendar']
 </script>
 
 <template>
@@ -31,9 +35,9 @@ const flow: PickerSection[] = ['year', 'month', 'calendar']
     <VueDatePicker
       :model-value="modelValue"
       :name="name"
+      :input-attrs="inputConfig"
       :min-date="new Date(2020, 0, 1)"
       :max-date="new Date()"
-      :flow="{ steps: flow }"
       placeholder="DD.MM.YYYY"
       text-input
       :locale="localeStore.dateFnsLocale"
