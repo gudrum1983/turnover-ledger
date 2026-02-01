@@ -43,23 +43,22 @@ const handleSelect = (value: string) => {
 .BaseListBox {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  border-radius: 4px;
+  background: var(--color-background-surface);
+  box-shadow: var(--shadow);
+  color: var(--color-text-default);
+  overflow: hidden;
 }
-/*TODO - откорректировать стили*/
+
 .BaseListBox_Item {
+  border: none;
   width: 100%;
   text-align: left;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  padding: 6px 10px;
-  background: transparent;
-  color: var(--color-text-default);
+  padding: 12px 8px;
+  background: var(--color-background-transparent);
   font: var(--font-medium-text-sm);
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: all var(--transition);
 
   &:hover {
     background: var(--color-background-default-hovered);
