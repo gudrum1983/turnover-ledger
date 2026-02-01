@@ -5,6 +5,7 @@ import BaseDatePicker from '@/shared/ui/BaseDatePicker.vue'
 import BaseField from '@/shared/ui/BaseField.vue'
 import MoneyField from '@/shared/ui/MoneyField.vue'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
+import BaseDropdownButton from '@/shared/ui/BaseDropdownButton.vue'
 
 const currency = ref('RSD')
 const date = ref('')
@@ -13,8 +14,10 @@ const description = ref('')
 const goodsAmount = ref<string | null>(null)
 const servicesAmount = ref<string | null>(null)
 
+const currentCurs = ref<number | null>(null)
+
 const currencyStore = useCurrencyStore()
-const currencyOptions = computed(() => currencyStore.currencyCodes)
+const currencyOptions = computed(() => currencyStore.currencyCodes.map((code) => ({ value: code, label: code })))
 
 const emit = defineEmits<{
   (event: 'update:canSubmit', value: boolean): void
@@ -95,26 +98,27 @@ onMounted(() => {
 <template>
   <div class="ReportRowForm">
     <div class="ReportRowForm_Fields">
-      <BaseField
-        name="currency"
-        label="Валюта"
-        :model-value="currency"
-        :datalist="currencyOptions"
-        @update:modelValue="currency = $event ?? ''"
-      />
-      <BaseDatePicker
-        name="date"
-        label="Дата"
-        :model-value="date"
-        @update:modelValue="date = $event ?? ''"
-      />
-      <BaseField
-        name="counterparty"
-        label="Контрагент"
-        placeholder="Название или ФИО"
-        :model-value="counterparty"
-        @update:modelValue="counterparty = $event ?? ''"
-      />
+      <div class="ReportRowForm_Currency">
+        <BaseDropdownButton
+          class="ReportRowForm_CurrencyDropdown"
+          label="Валюта"
+          size="xs"
+          variant="outline"
+          color="primary"
+          :options="currencyOptions"
+          :model-value="currency"
+          :placeholder="currency"
+          @update:model-value="currency = $event ?? ''"
+        />
+
+        <BaseDatePicker
+          name="dateCurrency"
+          label="Дата"
+          :model-value="date"
+          @update:modelValue="date = $event ?? ''"
+          required
+        />
+      </div>
       <BaseField
         name="description"
         label="Описание"
@@ -149,6 +153,7 @@ onMounted(() => {
 
     <div class="ReportRowForm_Toolbar">
       <BaseButton size="xs" color="primary" @click="handleCalculate">Рассчитать</BaseButton>
+      <div v-if="currentCurs" class="ReportRowForm_Hint">{{ currentCurs }}</div>
       <div v-if="!isCalculated" class="ReportRowForm_Hint">Пересчитайте после изменений.</div>
     </div>
 
@@ -194,9 +199,19 @@ onMounted(() => {
 }
 
 .ReportRowForm_Fields {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  width: 100%;
   gap: 16px;
+}
+
+.ReportRowForm_Currency {
+  display: flex;
+  min-width: calc(110px + 160px + 16px);
+  gap: 16px;
+
+  .ReportRowForm_CurrencyDropdown {
+    min-width: 110px;
+  }
 }
 
 .ReportRowForm_AmountFields {
