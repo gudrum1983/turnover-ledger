@@ -23,6 +23,7 @@ type Props = {
   variant?: Variant
   color?: Colors
   disabled?: boolean
+  favorites?: string[]
 }
 
 const {
@@ -34,6 +35,7 @@ const {
   variant = 'outline',
   color = 'default',
   disabled = false,
+  favorites,
 } = defineProps<Props>()
 
 const emit = defineEmits<{
@@ -122,6 +124,7 @@ onBeforeUnmount(() => {
       class="BaseDropdownButton_Menu"
       :options="options"
       :model-value="modelValue"
+      :favorites="favorites"
       @change="handleSelect"
       v-if="isOpen"
     />

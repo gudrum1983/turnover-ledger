@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 type Option = {
   value: string
   label: string
@@ -7,9 +9,22 @@ type Option = {
 type Props = {
   options: Option[]
   modelValue?: string
+  favorites?: string[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const favoriteOptions = computed(() => {
+  if (!props.favorites?.length) return []
+  const favoriteSet = new Set(props.favorites)
+  return props.options.filter((option) => favoriteSet.has(option.value))
+})
+
+const otherOptions = computed(() => {
+  if (!props.favorites?.length) return props.options
+  const favoriteSet = new Set(props.favorites)
+  return props.options.filter((option) => !favoriteSet.has(option.value))
+})
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
@@ -26,7 +41,20 @@ const handleSelect = (value: string) => {
   <div class="BaseListBox" role="listbox">
     <div class="BaseListBox_List">
       <button
-        v-for="option in options"
+        v-for="option in favoriteOptions"
+        :key="option.value"
+        class="BaseListBox_Item"
+        :class="{ BaseListBox_Item_selected: option.value === modelValue }"
+        type="button"
+        role="option"
+        :aria-selected="option.value === modelValue"
+        @click="handleSelect(option.value)"
+      >
+        {{ option.label }}
+      </button>
+      <div v-if="favoriteOptions.length > 0 && otherOptions.length > 0" class="BaseListBox_Divider" role="separator" />
+      <button
+        v-for="option in otherOptions"
         :key="option.value"
         class="BaseListBox_Item"
         :class="{ BaseListBox_Item_selected: option.value === modelValue }"
@@ -52,6 +80,12 @@ const handleSelect = (value: string) => {
 
   &_List {
     overflow: auto;
+  }
+
+  &_Divider {
+    height: 1px;
+    background: var(--color-border-table-cell);
+    margin: 0 10px;
   }
 
   &_Item {
