@@ -57,7 +57,7 @@ const displayTotalRsd = computed(() => formatMoney(totalRsd.value))
     <div class="ReportTableRow_Column ReportTableRow_Column_type_description">
       <div class="ReportTableRow_Description">
         <BaseTag class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
-        {{ [row.date, row.counterparty, row.description].filter(Boolean).join(', ') }}
+        {{ [row.date, row.description].filter(Boolean).join(', ') }}
         <!--        это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для
         текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и
         форм шрифтов, используя Lorem Ipsum для распечатки образцов.-->

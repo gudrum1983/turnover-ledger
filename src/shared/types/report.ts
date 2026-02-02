@@ -13,7 +13,6 @@ export type MoneyPart = {
 export type ReportRow = {
   date: string
   description: string
-  counterparty: string
   currency: ForeignCurrency | null
   amounts: {
     goods: MoneyPart

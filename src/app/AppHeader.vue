@@ -35,7 +35,7 @@ const locales = [
           color="primary"
           :options="locales.map((locale) => ({ value: locale.code, label: locale.label }))"
           :model-value="localeStore.currentLocale"
-          @update:model-value="localeStore.setLocale"
+          @update:model-value="(value) => localeStore.setLocale(value as typeof localeStore.currentLocale)"
         />
       </div>
       <slot name="actionButtons" />
