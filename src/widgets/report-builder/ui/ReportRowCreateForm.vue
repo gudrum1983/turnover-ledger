@@ -25,7 +25,27 @@ const currentCurs = ref<number | null>(null)
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
-const currencyOptions = computed(() => currencyStore.currencyCodes.map((code) => ({ value: code, label: code })))
+const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes)
+const currencyOptions = computed(() => {
+  const unique = new Set<string>()
+  const ordered: string[] = []
+  const addCode = (code: string) => {
+    const normalized = code.trim().toUpperCase()
+    if (!normalized || unique.has(normalized)) return
+    unique.add(normalized)
+    ordered.push(normalized)
+  }
+
+  for (const code of favoriteCurrencyCodes.value) {
+    addCode(code)
+  }
+
+  for (const code of currencyStore.currencyCodes) {
+    addCode(code)
+  }
+
+  return ordered.map((code) => ({ value: code, label: code }))
+})
 
 const emit = defineEmits<{
   (event: 'update:canSubmit', value: boolean): void
@@ -143,6 +163,7 @@ onMounted(() => {
           variant="outline"
           color="primary"
           :options="currencyOptions"
+          :favorites="favoriteCurrencyCodes"
           :model-value="currency"
           @update:model-value="currency = $event ?? ''"
         />

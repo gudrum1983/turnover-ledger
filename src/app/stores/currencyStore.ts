@@ -4,6 +4,7 @@ import { STORE_NAME } from '@/shared/constants/nameStore.ts'
 import { fetchCurrencies } from '@/shared/api/currencies.ts'
 import type { Currency } from '@/shared/types/currency.ts'
 import { FALLBACK_CURRENCIES } from '@/shared/types/report.ts'
+import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 
 const LOCAL_STORAGE_KEY = 'currenciesState'
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
@@ -18,9 +19,35 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const updatedAt = ref<string | null>(null)
+  const metaDataStore = useMetaDataStore()
+
+  const BASE_FAVORITE_CODES = ['USD', 'EUR', 'RSD'] as const
   const currencyCodes = computed(() =>
     currencies.value.length > 0 ? currencies.value.map((currency) => currency.code) : [...FALLBACK_CURRENCIES],
   )
+  const favoriteCurrencyCodes = computed(() => {
+    const unique = new Set<string>()
+    const ordered: string[] = []
+
+    const addCode = (code: string) => {
+      const normalized = code.trim().toUpperCase()
+      if (!normalized || unique.has(normalized)) return
+      unique.add(normalized)
+      ordered.push(normalized)
+    }
+
+    for (const code of BASE_FAVORITE_CODES) {
+      addCode(code)
+    }
+
+    for (const row of metaDataStore.rows) {
+      if (typeof row.currency === 'string') {
+        addCode(row.currency)
+      }
+    }
+
+    return ordered
+  })
 
   function isCacheFresh(): boolean {
     if (!updatedAt.value) return false
@@ -87,6 +114,7 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
   return {
     currencies,
     currencyCodes,
+    favoriteCurrencyCodes,
     isLoading,
     error,
     updatedAt,
