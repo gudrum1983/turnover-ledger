@@ -36,6 +36,7 @@ const inputClassName = computed(() =>
       :model-value="modelValue"
       :name="name"
       :input-attrs="inputConfig"
+      :year-range="[2012, new Date().getFullYear()]"
       :min-date="new Date(2020, 0, 1)"
       :max-date="new Date()"
       placeholder="DD.MM.YYYY"
