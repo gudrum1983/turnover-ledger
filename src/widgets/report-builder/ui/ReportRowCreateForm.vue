@@ -6,8 +6,15 @@ import BaseField from '@/shared/ui/BaseField.vue'
 import MoneyField from '@/shared/ui/MoneyField.vue'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import BaseDropdownButton from '@/shared/ui/BaseDropdownButton.vue'
+import { fetchConversion } from '@/shared/api/currencies.ts'
 
-const currency = ref('RSD')
+/*
+ * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА
+ *ZVANIČNI SREDNJI KURS DINARA
+ *OFFICIAL MIDDLE RSD EXCHANGE RATE
+ * */
+
+const currency = ref('')
 const date = ref('')
 const counterparty = ref('')
 const description = ref('')
@@ -15,6 +22,7 @@ const goodsAmount = ref<string | null>(null)
 const servicesAmount = ref<string | null>(null)
 
 const currentCurs = ref<number | null>(null)
+const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
 const currencyOptions = computed(() => currencyStore.currencyCodes.map((code) => ({ value: code, label: code })))
@@ -40,6 +48,9 @@ const calculatedGoodsConverted = ref<number | null>(null)
 const calculatedServicesConverted = ref<number | null>(null)
 const calculatedTotalConverted = ref<number | null>(null)
 const isCalculated = ref(false)
+const isCalculateDisabled = computed(
+  () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value,
+)
 
 const formatDateForUi = (value: string) => {
   if (!value) return ''
@@ -58,7 +69,6 @@ const formatValue = (value: number | null) => (value === null ? '—' : value.to
 const resetCalculated = () => {
   calculatedGoods.value = null
   calculatedServices.value = null
-  //calculatedTotal.value = null
   calculatedGoodsConverted.value = null
   calculatedServicesConverted.value = null
   calculatedTotalConverted.value = null
@@ -68,26 +78,46 @@ const resetCalculated = () => {
   }
 }
 
-const handleCalculate = () => {
+const handleCalculate = async () => {
+  if (isCalculateDisabled.value) return
+
   const goodsValue = parseMoney(goodsAmount.value)
   const servicesValue = parseMoney(servicesAmount.value)
-  const goodsConverted = currencyStore.convertAmount(goodsValue, currency.value, 'RSD')
-  const servicesConverted = currencyStore.convertAmount(servicesValue, currency.value, 'RSD')
-  const totalConverted = goodsConverted + servicesConverted
+  const totalAmount = goodsValue + servicesValue
 
-  calculatedGoods.value = goodsValue
-  calculatedServices.value = servicesValue
-  calculatedGoodsConverted.value = goodsConverted
-  calculatedServicesConverted.value = servicesConverted
-  calculatedTotalConverted.value = totalConverted
+  if (totalAmount <= 0) return
 
-  if (!isCalculated.value) {
-    isCalculated.value = true
-    emit('update:canSubmit', true)
+  isCalculating.value = true
+  currentCurs.value = null
+
+  try {
+    const conversionGoods = await fetchConversion(currency.value, goodsValue, date.value)
+
+    const conversionServices = await fetchConversion(currency.value, servicesValue, date.value)
+
+    const goodsConverted = conversionGoods.buy_middle
+    const servicesConverted = conversionServices.buy_middle
+
+    const exchangeRate = conversionGoods.rate.exchange_middle
+    const totalConverted = goodsConverted + servicesConverted
+
+    calculatedGoods.value = goodsValue
+    calculatedServices.value = servicesValue
+    calculatedGoodsConverted.value = goodsConverted
+    calculatedServicesConverted.value = servicesConverted
+    calculatedTotalConverted.value = totalConverted
+    currentCurs.value = exchangeRate
+
+    if (!isCalculated.value) {
+      isCalculated.value = true
+      emit('update:canSubmit', true)
+    }
+  } finally {
+    isCalculating.value = false
   }
 }
 
-watch([date, goodsAmount, servicesAmount], resetCalculated)
+watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
 
 onMounted(() => {
   currencyStore.hydrateFromLocalStorage()
@@ -99,6 +129,13 @@ onMounted(() => {
   <div class="ReportRowForm">
     <div class="ReportRowForm_Fields">
       <div class="ReportRowForm_Currency">
+        <BaseDatePicker
+          name="dateCurrency"
+          label="Дата"
+          :model-value="date"
+          @update:modelValue="date = $event ?? ''"
+          required
+        />
         <BaseDropdownButton
           class="ReportRowForm_CurrencyDropdown"
           label="Валюта"
@@ -107,16 +144,7 @@ onMounted(() => {
           color="primary"
           :options="currencyOptions"
           :model-value="currency"
-          :placeholder="currency"
           @update:model-value="currency = $event ?? ''"
-        />
-
-        <BaseDatePicker
-          name="dateCurrency"
-          label="Дата"
-          :model-value="date"
-          @update:modelValue="date = $event ?? ''"
-          required
         />
       </div>
       <BaseField
@@ -152,8 +180,10 @@ onMounted(() => {
     </div>
 
     <div class="ReportRowForm_Toolbar">
-      <BaseButton size="xs" color="primary" @click="handleCalculate">Рассчитать</BaseButton>
-      <div v-if="currentCurs" class="ReportRowForm_Hint">{{ currentCurs }}</div>
+      <BaseButton size="xs" color="primary" :disabled="isCalculateDisabled" @click="handleCalculate">
+        Рассчитать
+      </BaseButton>
+      <div v-if="isCalculated" class="ReportRowForm_Hint">ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА {{ currentCurs }}</div>
       <div v-if="!isCalculated" class="ReportRowForm_Hint">Пересчитайте после изменений.</div>
     </div>
 
