@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import BaseButton from '@/shared/ui/BaseButton.vue'
-import BaseDatePicker from '@/shared/ui/BaseDatePicker.vue'
-import BaseField from '@/shared/ui/BaseField.vue'
-import MoneyField from '@/shared/ui/MoneyField.vue'
+import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
+import BaseDatePicker from '@/shared/ui/forms/BaseDatePicker.vue'
+import BaseField from '@/shared/ui/forms/BaseField.vue'
+import MoneyField from '@/shared/ui/forms/MoneyField.vue'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
-import BaseDropdownButton from '@/shared/ui/BaseDropdownButton.vue'
-import { fetchConversion } from '@/shared/api/currencies.ts'
+import BaseDropdownButton from '@/shared/ui/buttons/BaseDropdownButton.vue'
+
 
 /*
  * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА

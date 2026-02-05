@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import BaseButton from '@/shared/ui/BaseButton.vue'
-import BaseModal from '@/shared/ui/BaseModal.vue'
+import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
+import BaseModal from '@/shared/ui/overlays/BaseModal.vue'
 import ReportTableRow from './ReportTableRow.vue'
 import ReportRowCreateForm from './ReportRowCreateForm.vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'

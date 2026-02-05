@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import BaseTag from '@/shared/ui/BaseTag.vue'
+import BaseTag from '@/shared/ui/display/BaseTag.vue'
 import ReportTableRowButton from '@/widgets/report-builder/ui/ReportTableRowButton.vue'
 import type { ReportRow } from '@/shared/types/report.ts'
 import { formatMoney, sumCents } from '@/shared/lib/money.ts'
