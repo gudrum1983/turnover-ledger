@@ -1,5 +1,7 @@
+export type CurrencyCode = string
+
 export type Currency = {
-  code: string
+  code: CurrencyCode
   number: number
   country: string
   since: string

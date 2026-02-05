@@ -4,10 +4,10 @@ export const MOCK: ReportRow[] = [
   {
     date: '2024-01-08',
     description: 'Доход в динарах',
-    currency: null,
+    currency: 'RSD',
     amounts: {
-      goods: { rsdCents: 350000 },
-      services: { rsdCents: 150000 },
+      goods: { foreignCents: 350000, rsdCents: 350000 },
+      services: { foreignCents: 150000, rsdCents: 150000 },
     },
   },
   {

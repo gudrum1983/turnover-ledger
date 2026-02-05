@@ -1,9 +1,5 @@
-import type { Currency } from '@/shared/types/currency.ts'
+import type { CurrencyCode } from '@/shared/types/currency.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
-
-export const FALLBACK_CURRENCIES = ['EUR', 'USD', 'GBP', 'CHF'] as const
-
-export type ForeignCurrency = Currency['code'] | (typeof FALLBACK_CURRENCIES)[number]
 
 export type MoneyPart = {
   rsdCents: number
@@ -13,7 +9,7 @@ export type MoneyPart = {
 export type ReportRow = {
   date: string
   description: string
-  currency: ForeignCurrency | null
+  currency: CurrencyCode
   amounts: {
     goods: MoneyPart
     services: MoneyPart
