@@ -3,10 +3,11 @@ import { computed, ref } from 'vue'
 import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
 import BaseModal from '@/shared/ui/overlays/BaseModal.vue'
 import ReportTableRow from './ReportTableRow.vue'
-import ReportRowCreateForm from './ReportRowCreateForm.vue'
+import ReportRowCreateForm, { type ReportRowPayload } from './ReportRowCreateForm.vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
+import type { ReportRow } from '@/shared/types/report.ts'
 
 const store = useMetaDataStore()
 const { rows } = storeToRefs(store)
@@ -31,10 +32,38 @@ function handleRemove(index: number) {
 }
 const open = ref(false)
 const canSubmit = ref(false)
+const formKey = ref(0)
 
 function closeModal() {
   open.value = false
   canSubmit.value = false
+}
+
+const toCents = (value: number) => Math.round(value * 100)
+
+function onSubmit(payload: ReportRowPayload) {
+  if (!payload.currency || !payload.date) return
+  if (payload.calculatedGoodsConverted === null || payload.calculatedServicesConverted === null) return
+
+  const row: ReportRow = {
+    date: payload.date,
+    description: payload.description,
+    currency: payload.currency.toUpperCase(),
+    amounts: {
+      goods: {
+        foreignCents: toCents(payload.goodsAmount),
+        rsdCents: toCents(payload.calculatedGoodsConverted),
+      },
+      services: {
+        foreignCents: toCents(payload.servicesAmount),
+        rsdCents: toCents(payload.calculatedServicesConverted),
+      },
+    },
+  }
+
+  store.addRow(row)
+  closeModal()
+  formKey.value += 1
 }
 
 /*todo № на русском, br. ser, # на английском*/
@@ -77,10 +106,15 @@ function closeModal() {
     </fieldset>
     <BaseModal :open="open" @close="closeModal">
       <h2>Добавить строку</h2>
-      <ReportRowCreateForm @update:canSubmit="canSubmit = $event" />
+      <ReportRowCreateForm
+        :key="formKey"
+        @update:canSubmit="canSubmit = $event"
+        @submit="onSubmit"
+        id="testForm"
+      />
       <template #actions>
         <BaseButton size="xs" @click="closeModal">Отмена</BaseButton>
-        <BaseButton color="primary" size="xs" :disabled="!canSubmit">Добавить</BaseButton>
+        <BaseButton color="primary" size="xs" :disabled="!canSubmit" type="submit" form="testForm">Добавить</BaseButton>
       </template>
     </BaseModal>
   </div>

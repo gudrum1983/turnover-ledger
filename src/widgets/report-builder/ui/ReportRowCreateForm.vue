@@ -32,8 +32,20 @@ const currencyOptions = computed(() => {
   return currencyStore.currencies.map((code) => ({ value: code, label: code }))
 })
 
+export type ReportRowPayload = {
+  date: string
+  currency: string
+  description: string
+  goodsAmount: number
+  servicesAmount: number
+  calculatedGoodsConverted: number | null
+  calculatedServicesConverted: number | null
+  calculatedTotalConverted: number | null
+}
+
 const emit = defineEmits<{
   (event: 'update:canSubmit', value: boolean): void
+  (event: 'submit', payload: ReportRowPayload): void
 }>()
 
 const parseMoney = (value: string | null) => {
@@ -122,6 +134,31 @@ const handleCalculate = async () => {
   }
 }
 
+const handleSubmit = (event: Event) => {
+  event.preventDefault()
+
+  if (!isCalculated.value) {
+    emit('update:canSubmit', false)
+    return
+  }
+
+  if (calculatedGoodsConverted.value === null || calculatedServicesConverted.value === null) {
+    emit('update:canSubmit', false)
+    return
+  }
+
+  emit('submit', {
+    date: date.value,
+    currency: currency.value,
+    description: description.value,
+    goodsAmount: parseMoney(goodsAmount.value),
+    servicesAmount: parseMoney(servicesAmount.value),
+    calculatedGoodsConverted: calculatedGoodsConverted.value,
+    calculatedServicesConverted: calculatedServicesConverted.value,
+    calculatedTotalConverted: calculatedTotalConverted.value,
+  })
+}
+
 watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
 
 onMounted(() => {
@@ -134,7 +171,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="ReportRowForm">
+  <form class="ReportRowForm" @submit="handleSubmit">
     <div class="ReportRowForm_Fields">
       <div class="ReportRowForm_Currency">
         <BaseDatePicker
@@ -227,7 +264,7 @@ onMounted(() => {
         <div class="ReportRowForm_Value">{{ summary || '—' }}</div>
       </div>
     </div>
-  </div>
+  </form>
 </template>
 
 <style scoped>
