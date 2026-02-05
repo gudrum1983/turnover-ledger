@@ -7,6 +7,7 @@ export type MoneyPart = {
 }
 
 export type ReportRow = {
+  id: string
   date: string
   description: string
   currency: CurrencyCode

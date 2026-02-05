@@ -7,6 +7,9 @@ import MoneyField from '@/shared/ui/forms/MoneyField.vue'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import BaseDropdownButton from '@/shared/ui/buttons/BaseDropdownButton.vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { formatDateForUi } from '@/shared/lib/date/date.ts'
+import { formatMoney } from '@/shared/lib/money/money.ts'
+import { useLocaleStore } from '@/app/stores/localeStore.ts'
 
 /*
  * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА
@@ -26,6 +29,7 @@ const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
 const metaDataStore = useMetaDataStore()
+const localeStore = useLocaleStore()
 const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(metaDataStore.usedCurrencyCodes))
 
 const currencyOptions = computed(() => {
@@ -69,19 +73,17 @@ const isCalculateDisabled = computed(
   () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value,
 )
 
-const formatDateForUi = (value: string) => {
-  if (!value) return ''
-  const [year, month, day] = value.split('-')
-  if (!year || !month || !day) return value
-  return `${day}.${month}.${year}`
-}
-
 const summary = computed(() =>
-  [date.value ? formatDateForUi(date.value) : '', counterparty.value, description.value].filter(Boolean).join(', '),
+  [date.value ? formatDateForUi(date.value, { withTrailingDot: true }) : '', counterparty.value, description.value]
+    .filter(Boolean)
+    .join(', '),
 )
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
 
-const formatValue = (value: number | null) => (value === null ? '—' : value.toFixed(2))
+const uiLocale = computed(() => (localeStore.currentLocale === 'en' ? 'en' : localeStore.currentLocale === 'ru' ? 'ru' : 'sr'))
+const toCents = (value: number) => Math.round(value * 100)
+const formatValue = (value: number | null) =>
+  value === null ? '—' : formatMoney(toCents(value), { showMinorZeros: true, locale: uiLocale.value })
 
 const resetCalculated = () => {
   calculatedGoods.value = null

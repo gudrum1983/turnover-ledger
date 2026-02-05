@@ -2,6 +2,7 @@ import type { ReportRow } from '@/shared/types/report.ts'
 
 export const MOCK: ReportRow[] = [
   {
+    id: 'row-2024-01-08-1',
     date: '2024-01-08',
     description: 'Доход в динарах',
     currency: 'RSD',
@@ -11,6 +12,7 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-01-12-1',
     date: '2024-01-12',
     description: 'Продажа товара',
     currency: 'EUR',
@@ -20,6 +22,7 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-01-15-1',
     date: '2024-01-15',
     description: 'Услуги консультации',
     currency: 'USD',
@@ -29,6 +32,7 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-01-21-1',
     date: '2024-01-21',
     description: 'Смешанный доход',
     currency: 'CHF',
@@ -38,6 +42,7 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-01-28-1',
     date: '2024-01-28',
     description: 'Крупная партия товара',
     currency: 'EUR',
@@ -47,6 +52,7 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-02-02-1',
     date: '2024-02-02',
     description: 'Долгосрочное обслуживание',
     currency: 'USD',
@@ -56,6 +62,7 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-02-06-1',
     date: '2024-02-06',
     description: 'Суммарный оборот',
     currency: 'GBP',

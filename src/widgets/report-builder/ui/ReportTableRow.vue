@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import BaseTag from '@/shared/ui/display/BaseTag.vue'
 import ReportTableRowButton from '@/widgets/report-builder/ui/ReportTableRowButton.vue'
 import type { ReportRow } from '@/shared/types/report.ts'
-import { formatMoney, sumCents } from '@/shared/lib/money.ts'
+import { formatMoney, sumCents } from '@/shared/lib/money/money.ts'
 
 type ReportTableRowProps = {
   index: number
@@ -14,9 +14,9 @@ type ReportTableRowProps = {
 const props = defineProps<ReportTableRowProps>()
 
 const emit = defineEmits<{
-  (event: 'edit', index: number): void
-  (event: 'copy', index: number): void
-  (event: 'remove', index: number): void
+  (event: 'edit', id: string): void
+  (event: 'copy', id: string): void
+  (event: 'remove', id: string): void
 }>()
 
 const isEven = computed(() => props.index % 2 === 0)
@@ -35,18 +35,18 @@ const totalForeign = computed(() => sumCents([goodsForeign.value, servicesForeig
 const totalRsd = computed(() => sumCents([goodsRsd.value, servicesRsd.value]))
 
 const displayGoodsForeign = computed(() =>
-  hasCurrency.value ? formatMoney(goodsForeign.value, { showMinorZeros: true }) : '',
+  hasCurrency.value ? formatMoney(goodsForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
 )
 const displayServicesForeign = computed(() =>
-  hasCurrency.value ? formatMoney(servicesForeign.value, { showMinorZeros: true }) : '',
+  hasCurrency.value ? formatMoney(servicesForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
 )
 const displayTotalForeign = computed(() =>
-  hasCurrency.value ? formatMoney(totalForeign.value, { showMinorZeros: true }) : '',
+  hasCurrency.value ? formatMoney(totalForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
 )
 
-const displayGoodsRsd = computed(() => formatMoney(goodsRsd.value))
-const displayServicesRsd = computed(() => formatMoney(servicesRsd.value))
-const displayTotalRsd = computed(() => formatMoney(totalRsd.value))
+const displayGoodsRsd = computed(() => formatMoney(goodsRsd.value, { locale: 'sr' }))
+const displayServicesRsd = computed(() => formatMoney(servicesRsd.value, { locale: 'sr' }))
+const displayTotalRsd = computed(() => formatMoney(totalRsd.value, { locale: 'sr' }))
 </script>
 
 <template>
@@ -79,9 +79,9 @@ const displayTotalRsd = computed(() => formatMoney(totalRsd.value))
       <div class="Typo_BodyAccent">{{ displayTotalRsd }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_actions">
-      <ReportTableRowButton :size="size" icon="edit" label="Изменить" @click="emit('edit', index)" />
-      <ReportTableRowButton :size="size" icon="copy" label="Копировать" @click="emit('copy', index)" />
-      <ReportTableRowButton :size="size" icon="trash" label="Удалить" @click="emit('remove', index)" />
+      <ReportTableRowButton :size="size" icon="edit" label="Изменить" @click="emit('edit', row.id)" />
+      <ReportTableRowButton :size="size" icon="copy" label="Копировать" @click="emit('copy', row.id)" />
+      <ReportTableRowButton :size="size" icon="trash" label="Удалить" @click="emit('remove', row.id)" />
     </div>
   </div>
 </template>

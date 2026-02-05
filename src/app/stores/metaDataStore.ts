@@ -61,13 +61,29 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
     rows.value[index] = row
   }
 
+  function updateRowById(id: string, row: ReportRow) {
+    const index = rows.value.findIndex((item) => item.id === id)
+    if (index === -1) return
+    rows.value[index] = row
+  }
+
   function getRow(index: number): ReportRow | null {
     if (index < 0 || index >= rows.value.length) return null
     return rows.value[index] ?? null
   }
 
+  function getRowById(id: string): ReportRow | null {
+    return rows.value.find((item) => item.id === id) ?? null
+  }
+
   function removeRow(index: number) {
     if (index < 0 || index >= rows.value.length) return
+    rows.value.splice(index, 1)
+  }
+
+  function removeRowById(id: string) {
+    const index = rows.value.findIndex((item) => item.id === id)
+    if (index === -1) return
     rows.value.splice(index, 1)
   }
 
@@ -134,8 +150,11 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
     setFooterValue,
     addRow,
     updateRow,
+    updateRowById,
     getRow,
+    getRowById,
     removeRow,
+    removeRowById,
     setRows,
     clearRows,
     hydrateFromLocalStorage,

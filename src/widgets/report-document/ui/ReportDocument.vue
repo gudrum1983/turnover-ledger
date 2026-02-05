@@ -3,6 +3,7 @@ import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { computed } from 'vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
+import ReportDocumentRow from '@/widgets/report-document/ui/ReportDocumentRow.vue'
 
 type Props = {
   landscape?: boolean
@@ -53,41 +54,16 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>текст 2</td>
-          <td>текст 3</td>
-          <td>текст 4</td>
-          <td>текст 5</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>текст 2</td>
-          <td>текст 3</td>
-          <td>текст 4</td>
-          <td>текст 5</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>текст 2</td>
-          <td>текст 3</td>
-          <td>текст 4</td>
-          <td>текст 5</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>текст 2</td>
-          <td>текст 3</td>
-          <td>текст 4</td>
-          <td>текст 5</td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>текст 2</td>
-          <td>текст 3</td>
-          <td>текст 4</td>
-          <td>текст 5</td>
-        </tr>
+        <ReportDocumentRow
+          v-for="(row, index) in store.rows"
+          :key="row.id"
+          :id="row.id"
+          :index="index"
+          :date="row.date"
+          :description="row.description"
+          :amountsGoods="row.amounts.goods.rsdCents"
+          :amountsServices="row.amounts.services.rsdCents"
+        />
       </tbody>
     </table>
 

@@ -16,19 +16,19 @@ const sizeRow = ref<'short' | 'full'>('full')
 
 const textSizeRow = computed(() => (sizeRow.value === 'full' ? 'Сжать таблицу' : 'Раскрыть таблицу'))
 
-function handleEdit(index: number) {
-  void index
+function handleEdit(id: string) {
+  void id
   alert('Редактирование строки')
 }
 
-function handleCopy(index: number) {
-  void index
-  alert('Копирование строки')
+function handleCopy(id: string) {
+  const row = store.getRowById(id)
+  if (!row) return
+  store.addRow({ ...row, id: createRowId() })
 }
 
-function handleRemove(index: number) {
-  void index
-  alert('Удаление строки')
+function handleRemove(id: string) {
+  store.removeRowById(id)
 }
 const open = ref(false)
 const canSubmit = ref(false)
@@ -41,11 +41,19 @@ function closeModal() {
 
 const toCents = (value: number) => Math.round(value * 100)
 
+const createRowId = () => {
+  if (typeof globalThis.crypto?.randomUUID === 'function') {
+    return globalThis.crypto.randomUUID()
+  }
+  return `row-${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
 function onSubmit(payload: ReportRowPayload) {
   if (!payload.currency || !payload.date) return
   if (payload.calculatedGoodsConverted === null || payload.calculatedServicesConverted === null) return
 
   const row: ReportRow = {
+    id: createRowId(),
     date: payload.date,
     description: payload.description,
     currency: payload.currency.toUpperCase(),
@@ -91,16 +99,16 @@ function onSubmit(payload: ReportRowPayload) {
           <div></div>
         </div>
         <div class="ReportTable_Rows">
-          <ReportTableRow
-            v-for="(row, index) in rows"
-            :size="sizeRow"
-            :key="index"
-            :index="index"
-            :row="row"
-            @edit="handleEdit"
-            @copy="handleCopy"
-            @remove="handleRemove"
-          />
+      <ReportTableRow
+        v-for="(row, index) in rows"
+        :size="sizeRow"
+        :key="row.id"
+        :index="index"
+        :row="row"
+        @edit="handleEdit"
+        @copy="handleCopy"
+        @remove="handleRemove"
+      />
         </div>
       </div>
     </fieldset>
