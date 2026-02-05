@@ -1,33 +1,37 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
-import { fetchCurrencies } from '@/shared/api/currencies.ts'
-import type { Currency } from '@/shared/types/currency.ts'
-import { FALLBACK_CURRENCIES } from '@/shared/types/report.ts'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { fetchConversion, fetchCurrencies } from '@/shared/api/currencies.ts'
+import type { ConversionResponse, Currency, CurrencyCode } from '@/shared/types/currency.ts'
 
 const LOCAL_STORAGE_KEY = 'currenciesState'
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
+const BASE_FAVORITE_CODES = ['USD', 'EUR', 'RSD'] as const
+const UNTIL_DATE = new Date('2020-01-01')
 
 type CurrencyCache = {
-  currencies: Currency[]
+  currencies: CurrencyCode[]
   updatedAt: string
 }
 
 export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
-  const currencies = ref<Currency[]>([])
+  const currencies = ref<CurrencyCode[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const updatedAt = ref<string | null>(null)
-  const metaDataStore = useMetaDataStore()
 
-  const BASE_FAVORITE_CODES = ['USD', 'EUR', 'RSD'] as const
-  const currencyCodes = computed(() =>
-    currencies.value.length > 0 ? currencies.value.map((currency) => currency.code) : [...FALLBACK_CURRENCIES],
-  )
-  const favoriteCurrencyCodes = computed(() => {
+  function isActiveCurrencies(currency: Currency) {
+    if (!currency.country?.trim()) return false
+
+    if (new Date(currency.until) < UNTIL_DATE) return false
+
+    return true
+  }
+
+  function favoriteCurrencyCodes(usedCodes: string[]) {
     const unique = new Set<string>()
     const ordered: string[] = []
+    const available = new Set(currencies.value.map((code) => code.trim().toUpperCase()))
 
     const addCode = (code: string) => {
       const normalized = code.trim().toUpperCase()
@@ -37,17 +41,15 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
     }
 
     for (const code of BASE_FAVORITE_CODES) {
-      addCode(code)
+      if (available.has(code)) addCode(code)
     }
 
-    for (const row of metaDataStore.rows) {
-      if (typeof row.currency === 'string') {
-        addCode(row.currency)
-      }
+    for (const code of usedCodes) {
+      if (available.has(code.trim().toUpperCase())) addCode(code)
     }
 
     return ordered
-  })
+  }
 
   function isCacheFresh(): boolean {
     if (!updatedAt.value) return false
@@ -58,6 +60,7 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
 
   function hydrateFromLocalStorage() {
     const savedState = localStorage.getItem(LOCAL_STORAGE_KEY)
+
     if (!savedState) return
 
     try {
@@ -93,7 +96,7 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
 
     try {
       const response = await fetchCurrencies()
-      currencies.value = response.currencies
+      currencies.value = response.currencies.filter(isActiveCurrencies).map((currency) => currency.code)
       updatedAt.value = new Date().toISOString()
       persistToLocalStorage()
     } catch (err) {
@@ -103,17 +106,12 @@ export const useCurrencyStore = defineStore(STORE_NAME.Currencies, () => {
     }
   }
 
-  function convertAmount(amount: number, from: string, to: string): number {
-    void amount
-    void from
-    void to
-    /*todo - убрать мок*/
-    return amount
+  async function convertAmount(currencyCode: string, amount: number, date: string): Promise<ConversionResponse> {
+    return await fetchConversion(currencyCode, amount, date)
   }
 
   return {
     currencies,
-    currencyCodes,
     favoriteCurrencyCodes,
     isLoading,
     error,

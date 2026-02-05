@@ -1,4 +1,4 @@
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
@@ -23,6 +23,26 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
     },
   })
   const rows = ref<ReportRow[]>([...MOCK])
+
+  const usedCurrencyCodes = computed(() => {
+    const unique = new Set<string>()
+    const ordered: string[] = []
+
+    const addCode = (code: string) => {
+      const normalized = code.trim().toUpperCase()
+      if (!normalized || unique.has(normalized)) return
+      unique.add(normalized)
+      ordered.push(normalized)
+    }
+
+    for (const row of rows.value) {
+      if (typeof row.currency === 'string') addCode(row.currency)
+    }
+
+    return ordered
+  })
+
+  const lastUsedCurrencyCode = computed(() => rows.value.at(-1)?.currency ?? 'EUR')
 
   function setHeaderValue(field: HeaderField, value: string) {
     formData.header[field] = value
@@ -88,7 +108,6 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
         // ignore invalid data in localStorage
       }
     }
-
   }
 
   watch(
@@ -109,6 +128,8 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
   return {
     formData,
     rows,
+    usedCurrencyCodes,
+    lastUsedCurrencyCode,
     setHeaderValue,
     setFooterValue,
     addRow,

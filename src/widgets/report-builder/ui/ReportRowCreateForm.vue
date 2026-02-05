@@ -6,7 +6,7 @@ import BaseField from '@/shared/ui/forms/BaseField.vue'
 import MoneyField from '@/shared/ui/forms/MoneyField.vue'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import BaseDropdownButton from '@/shared/ui/buttons/BaseDropdownButton.vue'
-
+import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 
 /*
  * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА
@@ -25,26 +25,11 @@ const currentCurs = ref<number | null>(null)
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
-const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes)
+const metaDataStore = useMetaDataStore()
+const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(metaDataStore.usedCurrencyCodes))
+
 const currencyOptions = computed(() => {
-  const unique = new Set<string>()
-  const ordered: string[] = []
-  const addCode = (code: string) => {
-    const normalized = code.trim().toUpperCase()
-    if (!normalized || unique.has(normalized)) return
-    unique.add(normalized)
-    ordered.push(normalized)
-  }
-
-  for (const code of favoriteCurrencyCodes.value) {
-    addCode(code)
-  }
-
-  for (const code of currencyStore.currencyCodes) {
-    addCode(code)
-  }
-
-  return ordered.map((code) => ({ value: code, label: code }))
+  return currencyStore.currencies.map((code) => ({ value: code, label: code }))
 })
 
 const emit = defineEmits<{
@@ -111,9 +96,9 @@ const handleCalculate = async () => {
   currentCurs.value = null
 
   try {
-    const conversionGoods = await fetchConversion(currency.value, goodsValue, date.value)
+    const conversionGoods = await currencyStore.convertAmount(currency.value, goodsValue, date.value)
 
-    const conversionServices = await fetchConversion(currency.value, servicesValue, date.value)
+    const conversionServices = await currencyStore.convertAmount(currency.value, servicesValue, date.value)
 
     const goodsConverted = conversionGoods.buy_middle
     const servicesConverted = conversionServices.buy_middle
@@ -140,6 +125,9 @@ const handleCalculate = async () => {
 watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
 
 onMounted(() => {
+  if (!currency.value) {
+    currency.value = metaDataStore.lastUsedCurrencyCode
+  }
   currencyStore.hydrateFromLocalStorage()
   void currencyStore.loadCurrencies()
 })
