@@ -2,19 +2,19 @@ import type { ReportRow } from '@/shared/types/report.ts'
 
 export const MOCK: ReportRow[] = [
   {
+    id: 'row-2024-01-08-1',
     date: '2024-01-08',
     description: 'Доход в динарах',
-    counterparty: 'ИП Лазарев',
-    currency: null,
+    currency: 'RSD',
     amounts: {
-      goods: { rsdCents: 350000 },
-      services: { rsdCents: 150000 },
+      goods: { foreignCents: 350000, rsdCents: 350000 },
+      services: { foreignCents: 150000, rsdCents: 150000 },
     },
   },
   {
+    id: 'row-2024-01-12-1',
     date: '2024-01-12',
     description: 'Продажа товара',
-    counterparty: 'ООО Альфа',
     currency: 'EUR',
     amounts: {
       goods: { foreignCents: 10540, rsdCents: 1250000 },
@@ -22,9 +22,9 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-01-15-1',
     date: '2024-01-15',
     description: 'Услуги консультации',
-    counterparty: 'ИП Никитин',
     currency: 'USD',
     amounts: {
       goods: { foreignCents: 0, rsdCents: 0 },
@@ -32,9 +32,9 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-01-21-1',
     date: '2024-01-21',
     description: 'Смешанный доход',
-    counterparty: 'ЗАО Бета',
     currency: 'CHF',
     amounts: {
       goods: { foreignCents: 4000, rsdCents: 400000 },
@@ -42,9 +42,9 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-01-28-1',
     date: '2024-01-28',
     description: 'Крупная партия товара',
-    counterparty: 'ООО Магистраль',
     currency: 'EUR',
     amounts: {
       goods: { foreignCents: 1055050, rsdCents: 125000050 },
@@ -52,9 +52,9 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-02-02-1',
     date: '2024-02-02',
     description: 'Долгосрочное обслуживание',
-    counterparty: 'ИП Белова',
     currency: 'USD',
     amounts: {
       goods: { foreignCents: 0, rsdCents: 0 },
@@ -62,9 +62,9 @@ export const MOCK: ReportRow[] = [
     },
   },
   {
+    id: 'row-2024-02-06-1',
     date: '2024-02-06',
     description: 'Суммарный оборот',
-    counterparty: 'ОАО Вектор',
     currency: 'GBP',
     amounts: {
       goods: { foreignCents: 425000, rsdCents: 50000000 },

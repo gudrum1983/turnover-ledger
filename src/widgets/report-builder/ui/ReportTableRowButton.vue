@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import BaseButton from '@/shared/ui/BaseButton.vue'
+import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
 import IconCopy from '@/shared/ui/icons/IconCopy.vue'
 import IconEdit from '@/shared/ui/icons/IconEdit.vue'
 import IconTrash from '@/shared/ui/icons/IconTrash.vue'

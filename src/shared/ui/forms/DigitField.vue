@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseField from '@/shared/ui/BaseField.vue'
+import BaseField from '@/shared/ui/forms/BaseField.vue'
 
 type Props = {
   name: string
@@ -15,11 +15,10 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
 }>()
 
-const moneyMask = {
-  mask: '0,99',
+const digitsMask = {
+  mask: '0',
   tokens: {
     '0': { pattern: /[0-9]/, multiple: true },
-    '9': { pattern: /[0-9]/, optional: true },
   },
 }
 </script>
@@ -31,7 +30,7 @@ const moneyMask = {
     :placeholder="placeholder"
     :model-value="modelValue"
     :full-width="fullWidth"
-    :mask="moneyMask"
+    :mask="digitsMask"
     @update:modelValue="emit('update:modelValue', $event)"
   />
 </template>

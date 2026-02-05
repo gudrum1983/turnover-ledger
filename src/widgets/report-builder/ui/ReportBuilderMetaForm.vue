@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import BaseField from '@/shared/ui/BaseField.vue'
-import DigitField from '@/shared/ui/DigitField.vue'
+import BaseField from '@/shared/ui/forms/BaseField.vue'
+import DigitField from '@/shared/ui/forms/DigitField.vue'
 
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
@@ -28,7 +28,6 @@ const footerMetaFields: FooterMetaField[] = FOOTER_FIELDS.map((key) => ({
   label: KPO_DICTIONARY.footer[key].ru,
   isDigit: false,
 }))
-
 </script>
 
 <template>

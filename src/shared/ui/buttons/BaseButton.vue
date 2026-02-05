@@ -42,6 +42,7 @@ const classes = computed(() => [
   <button class="BaseButton" :class="classes" :disabled="disabled" :type="type">
     <slot name="icon" />
     <slot v-if="!isIconOnly" />
+    <slot name="end-icon" class="BaseButton_endIcon" />
   </button>
 </template>
 

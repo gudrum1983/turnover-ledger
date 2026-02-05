@@ -2,7 +2,7 @@
 import type { MaskOptions } from 'maska'
 import { computed, onBeforeUnmount } from 'vue'
 
-type TypeInput = 'text' | 'datalist'
+type TypeInput = 'text' | 'datalist' | 'date'
 
 type Props = {
   name: string
@@ -100,6 +100,7 @@ onBeforeUnmount(clearTimer)
       :name="name"
       :placeholder="placeholder"
       :list="datalistId"
+      autocomplete="off"
     />
 
     <datalist :id="datalistId" v-if="isDatalist">
