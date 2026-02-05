@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, watch } from 'vue'
-import BasePaper from '@/shared/ui/BasePaper.vue'
+import BasePaper from '@/shared/ui/display/BasePaper.vue'
 
 const {
   open,

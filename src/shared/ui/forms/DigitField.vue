@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseField from '@/shared/ui/BaseField.vue'
+import BaseField from '@/shared/ui/forms/BaseField.vue'
 
 type Props = {
   name: string
