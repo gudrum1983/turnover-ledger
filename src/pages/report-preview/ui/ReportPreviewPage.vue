@@ -2,7 +2,7 @@
 import ReportDocument from '@/widgets/report-document/ui/ReportDocument.vue'
 import AppHeader from '@/app/AppHeader.vue'
 import { ROUTES } from '@/shared/constants/routes.ts'
-import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
+import { BaseButton } from '@/shared/ui'
 import router from '@/app/router'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 

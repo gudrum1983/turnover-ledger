@@ -1,20 +1,23 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
-import BaseModal from '@/shared/ui/overlays/BaseModal.vue'
+import { BaseButton, BaseDividerToggle, BaseModal, IconAdd, IconCompress, IconExpand } from '@/shared/ui'
 import ReportTableRow from './ReportTableRow.vue'
 import ReportRowCreateForm, { type ReportRowPayload } from './ReportRowCreateForm.vue'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/shared/types/report.ts'
+import { formatMoney, getTableTotals } from '@/shared/lib'
 
 const store = useMetaDataStore()
 const { rows } = storeToRefs(store)
 
-const sizeRow = ref<'short' | 'full'>('full')
+const isFullTable = ref<boolean>(true)
 
-const textSizeRow = computed(() => (sizeRow.value === 'full' ? 'Сжать таблицу' : 'Раскрыть таблицу'))
+const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
+
+const tableTotals = computed(() => getTableTotals(rows.value))
+const displayTotalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: 'sr' }))
 
 function handleEdit(id: string) {
   void id
@@ -79,15 +82,19 @@ function onSubmit(payload: ReportRowPayload) {
 
 <template>
   <div class="ReportTable">
-    <fieldset class="ReportTable_Fieldset">
-      <legend>{{ KPO_DICTIONARY.title.firstLine.ru }}{{ KPO_DICTIONARY.title.secondLine.ru }}</legend>
-      <div class="ReportTable_Actions">
-        <BaseButton color="primary" size="xs" @click="open = true">Добавить строку</BaseButton>
-        <BaseButton color="danger" size="xs">Очистить таблицу</BaseButton>
+    <BaseDividerToggle
+      v-model="isFullTable"
+      :label="`${KPO_DICTIONARY.title.firstLine.ru} ${KPO_DICTIONARY.title.secondLine.ru}`"
+      color="disabled"
+    >
+      <template #icon-active><IconExpand style="width: 18px; height: 18px" /></template>
+      <template #icon><IconCompress style="width: 18px; height: 18px" /></template>
+    </BaseDividerToggle>
 
-        <BaseButton color="warning" size="xs" @click="sizeRow = sizeRow === 'full' ? 'short' : 'full'">{{
-          textSizeRow
-        }}</BaseButton>
+    <div class="ReportTable_Fieldset">
+      <div class="ReportTable_Actions">
+        <BaseButton color="primary" size="xs" @click="open = true" class="">Добавить строку</BaseButton>
+        <BaseButton color="danger" size="xs" v-if="rows.length > 0">Очистить таблицу</BaseButton>
       </div>
       <div>
         <div class="ReportTable_Header">
@@ -99,27 +106,39 @@ function onSubmit(payload: ReportRowPayload) {
           <div></div>
         </div>
         <div class="ReportTable_Rows">
-      <ReportTableRow
-        v-for="(row, index) in rows"
-        :size="sizeRow"
-        :key="row.id"
-        :index="index"
-        :row="row"
-        @edit="handleEdit"
-        @copy="handleCopy"
-        @remove="handleRemove"
-      />
+          <ReportTableRow
+            v-for="(row, index) in rows"
+            :size="sizeRow"
+            :key="row.id"
+            :index="index"
+            :row="row"
+            @edit="handleEdit"
+            @copy="handleCopy"
+            @remove="handleRemove"
+          />
+        </div>
+        <div v-if="rows.length < 1" class="ReportTable_Empty">
+          Таблица пустая, добавьте строку ...
+          <BaseButton color="primary" size="xs" @click="open = true" variant="outline" isIconOnly>
+            <template #icon>
+              <IconAdd style="width: 18px; height: 18px" />
+            </template>
+          </BaseButton>
+        </div>
+
+        <div v-if="rows.length > 0" class="ReportTable_TotalRow">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div class="ReportTable_TotalCell Typo_BodyAccent">Итого</div>
+          <div class="ReportTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
+          <div></div>
         </div>
       </div>
-    </fieldset>
+    </div>
     <BaseModal :open="open" @close="closeModal">
       <h2>Добавить строку</h2>
-      <ReportRowCreateForm
-        :key="formKey"
-        @update:canSubmit="canSubmit = $event"
-        @submit="onSubmit"
-        id="testForm"
-      />
+      <ReportRowCreateForm :key="formKey" @update:canSubmit="canSubmit = $event" @submit="onSubmit" id="testForm" />
       <template #actions>
         <BaseButton size="xs" @click="closeModal">Отмена</BaseButton>
         <BaseButton color="primary" size="xs" :disabled="!canSubmit" type="submit" form="testForm">Добавить</BaseButton>
@@ -134,25 +153,21 @@ function onSubmit(payload: ReportRowPayload) {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    border: 1px solid var(--color-border-disabled);
-    border-radius: 10px;
-
-    legend {
-      color: var(--color-text-default);
-      padding-inline: 10px;
-    }
+    padding-top: 20px;
   }
 
   &_Actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 160px);
+    grid-auto-columns: 160px;
+    grid-auto-flow: column;
     justify-content: space-between;
     width: 100%;
   }
 
   &_Header {
     display: grid;
-    grid-template-columns: 50px auto 60px 90px 130px 140px;
-    gap: 5px;
+    grid-template-columns: 50px auto 60px 90px 130px 150px;
     width: 100%;
     border: 1px solid var(--color-border-table-cell);
     border-bottom: none;
@@ -169,10 +184,56 @@ function onSubmit(payload: ReportRowPayload) {
     }
   }
 
+  &_Empty {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    text-align: center;
+    color: var(--color-text-disabled);
+    border: 1px solid var(--color-border-table-cell);
+    border-radius: 0 0 6px 6px;
+    border-top: none;
+  }
+
   &_Rows {
     display: flex;
     flex-direction: column;
     border: 1px solid var(--color-border-table-cell);
+  }
+
+  &_TotalRow {
+    display: grid;
+    grid-template-columns: 50px auto 60px 90px 130px 140px;
+    gap: 5px;
+    width: 100%;
+    border: 1px solid var(--color-border-table-cell);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    background: var(--color-background-default);
+  }
+
+  &_TotalCell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+
+    &_type_number {
+      justify-content: flex-start;
+    }
+
+    &_type_label {
+      justify-content: flex-start;
+      font-weight: 600;
+    }
+
+    &_type_value {
+      font-weight: 600;
+    }
   }
 }
 </style>

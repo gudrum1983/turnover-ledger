@@ -14,6 +14,57 @@ export default defineConfigWithVueTs(
     files: ['**/*.{vue,ts,mts,tsx}'],
   },
 
+  {
+    name: 'app/no-deep-shared-lib-imports',
+    files: ['src/**/*.{vue,ts,mts,tsx}'],
+    ignores: ['src/shared/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['@/shared/lib/*', '@/shared/lib/**', '@/shared/ui/*', '@/shared/ui/**'],
+        },
+      ],
+    },
+  },
+
+  {
+    name: 'app/no-shared-alias-inside-shared',
+    files: ['src/shared/**/*.{vue,ts,mts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['@/shared/*', '@/shared/**'],
+        },
+      ],
+    },
+  },
+
+  {
+    name: 'app/shared-ui-cross-folder-imports-via-index',
+    files: ['src/shared/ui/**/*.{vue,ts,mts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '../buttons/*',
+            '../buttons/**',
+            '../display/*',
+            '../display/**',
+            '../forms/*',
+            '../forms/**',
+            '../icons/*',
+            '../icons/**',
+            '../overlays/*',
+            '../overlays/**',
+          ],
+        },
+      ],
+    },
+  },
+
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
 
   ...pluginVue.configs['flat/essential'],

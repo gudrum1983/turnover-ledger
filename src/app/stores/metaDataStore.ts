@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
 import type { ReportRow, ReportState } from '@/shared/types/report.ts'
-import { MOCK } from '@/shared/mock.ts'
 
 export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
   const LOCAL_STORAGE_KEY = 'reportState'
@@ -22,7 +21,7 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
       responsiblePerson: '',
     },
   })
-  const rows = ref<ReportRow[]>([...MOCK])
+  const rows = ref<ReportRow[]>([])
 
   const usedCurrencyCodes = computed(() => {
     const unique = new Set<string>()

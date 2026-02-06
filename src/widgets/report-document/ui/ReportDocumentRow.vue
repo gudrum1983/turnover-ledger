@@ -1,25 +1,29 @@
 <script setup lang="ts">
-import { formatDateForUi } from '@/shared/lib/date/date.ts'
-import { formatMoney, sumCents } from '@/shared/lib/money/money.ts'
+import { computed } from 'vue'
+import { formatDateForUi, formatMoney, getRowTotals } from '@/shared/lib'
+import type { ReportRow } from '@/shared/types/report.ts'
+
 type ReportRowProps = {
   index: number
-  date: string
-  description: string
-  amountsGoods: number
-  amountsServices: number
+  row: ReportRow
 }
 
-const { index, date, description, amountsGoods, amountsServices } = defineProps<ReportRowProps>()
+const { index, row } = defineProps<ReportRowProps>()
+const totals = computed(() => getRowTotals(row))
 </script>
 
 <template>
   <tr>
     <td>{{ index + 1 }}</td>
-    <td>{{ formatDateForUi(date, { withTrailingDot: true }) + ' ' + description }}</td>
-    <td class="Text_AlginRight">{{ formatMoney(amountsGoods, { showMinorZeros: true, locale: 'sr' }) }}</td>
-    <td class="Text_AlginRight">{{ formatMoney(amountsServices, { showMinorZeros: true, locale: 'sr' }) }}</td>
+    <td>{{ formatDateForUi(row.date, { withTrailingDot: true }) + ' ' + row.description }}</td>
     <td class="Text_AlginRight">
-      {{ formatMoney(sumCents([amountsGoods, amountsServices]), { showMinorZeros: true, locale: 'sr' }) }}
+      {{ formatMoney(row.amounts.goods.rsdCents ?? 0, { showMinorZeros: true, locale: 'sr' }) }}
+    </td>
+    <td class="Text_AlginRight">
+      {{ formatMoney(row.amounts.services.rsdCents ?? 0, { showMinorZeros: true, locale: 'sr' }) }}
+    </td>
+    <td class="Text_AlginRight">
+      {{ formatMoney(totals.rsdCents, { showMinorZeros: true, locale: 'sr' }) }}
     </td>
   </tr>
 </template>

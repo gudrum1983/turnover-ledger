@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, watch } from 'vue'
-import BasePaper from '@/shared/ui/display/BasePaper.vue'
+import { BasePaper } from '../display'
 
 const {
   open,
@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
 }
 
 .BaseModal_Panel {
-  max-width: min(720px, 100%);
+  max-width: min(740px, 100%);
   width: 100%;
   display: flex;
   flex-direction: column;

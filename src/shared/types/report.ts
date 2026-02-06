@@ -1,5 +1,5 @@
-import type { CurrencyCode } from '@/shared/types/currency.ts'
-import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
+import type { CurrencyCode } from './currency'
+import type { FooterField, HeaderField } from '../constants/reportFields'
 
 export type MoneyPart = {
   rsdCents: number

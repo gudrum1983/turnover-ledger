@@ -2,9 +2,9 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import BaseButton from './BaseButton.vue'
 
-import type { Colors } from '@/shared/types/colorsProp.ts'
-import BaseListBox from '../forms/BaseListBox.vue'
-import IconChevron from '@/shared/ui/icons/IconChevron.vue'
+import type { Colors } from '../../types/colorsProp'
+import { BaseListBox } from '../forms'
+import { IconChevron } from '../icons'
 
 type Variant = 'fill' | 'outline'
 type Size = 'xs' | 'sm' | 'md' | 'lg'

@@ -1,20 +1,16 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
-import BaseDatePicker from '@/shared/ui/forms/BaseDatePicker.vue'
-import BaseField from '@/shared/ui/forms/BaseField.vue'
-import MoneyField from '@/shared/ui/forms/MoneyField.vue'
+import { BaseButton, BaseDatePicker, BaseDropdownButton, BaseField, MoneyField } from '@/shared/ui'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
-import BaseDropdownButton from '@/shared/ui/buttons/BaseDropdownButton.vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
-import { formatDateForUi } from '@/shared/lib/date/date.ts'
-import { formatMoney } from '@/shared/lib/money/money.ts'
+import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 
 /*
  * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА
  *ZVANIČNI SREDNJI KURS DINARA
  *OFFICIAL MIDDLE RSD EXCHANGE RATE
+ * 55 символов в описании + счетчик символов
  * */
 
 const currency = ref('')
@@ -80,7 +76,9 @@ const summary = computed(() =>
 )
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
 
-const uiLocale = computed(() => (localeStore.currentLocale === 'en' ? 'en' : localeStore.currentLocale === 'ru' ? 'ru' : 'sr'))
+const uiLocale = computed(() =>
+  localeStore.currentLocale === 'en' ? 'en' : localeStore.currentLocale === 'ru' ? 'ru' : 'sr',
+)
 const toCents = (value: number) => Math.round(value * 100)
 const formatValue = (value: number | null) =>
   value === null ? '—' : formatMoney(toCents(value), { showMinorZeros: true, locale: uiLocale.value })
