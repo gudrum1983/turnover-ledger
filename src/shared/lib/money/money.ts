@@ -19,6 +19,10 @@ export function formatMoney(cents: number, options: FormatMoneyOptions = {}): st
   return `${sign}${majorFormatted}${decimalSeparator}${String(minor).padStart(2, '0')}`
 }
 
+export function formatMoneySafe(cents?: number | null, options: FormatMoneyOptions = {}): string {
+  return formatMoney(cents ?? 0, options)
+}
+
 export function sumCents(values: Array<number | null | undefined>): number {
   return values.reduce<number>((acc, value) => acc + (value ?? 0), 0)
 }

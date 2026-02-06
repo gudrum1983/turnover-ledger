@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Colors } from '@/shared/types/colorsProp.ts'
+import type { Colors } from '../../types/colorsProp'
 import { computed } from 'vue'
 
 type TypeButton = 'button' | 'submit' | 'reset'
