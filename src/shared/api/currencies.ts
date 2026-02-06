@@ -1,4 +1,4 @@
-import type { ConversionResponse, CurrencyResponse } from '@/shared/types/currency.ts'
+import type { ConversionResponse, CurrencyResponse } from '../types/currency'
 
 /*https://nbs-rates.gudrum1983.workers.dev/api/v1/currencies*/
 /*https://kurs.resenje.org/api/v1/currencies*/

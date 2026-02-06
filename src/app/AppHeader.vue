@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type VNode } from 'vue'
-import BaseDropdownButton from '@/shared/ui/buttons/BaseDropdownButton.vue'
+import { BaseDropdownButton } from '@/shared/ui'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 
 defineProps<{

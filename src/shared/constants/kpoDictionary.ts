@@ -1,4 +1,4 @@
-import type { FooterField, HeaderField, TableField, TitleField } from '@/shared/constants/reportFields.ts'
+import type { FooterField, HeaderField, TableField, TitleField } from './reportFields'
 
 type DictionaryEntry = {
   ru: string

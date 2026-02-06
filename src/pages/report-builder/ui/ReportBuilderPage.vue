@@ -3,7 +3,7 @@ import ReportBuilderMetaForm from '@/widgets/report-builder/ui/ReportBuilderMeta
 import ReportActions from '@/widgets/report-builder/ui/ReportActions.vue'
 import ReportTable from '@/widgets/report-builder/ui/ReportTable.vue'
 
-import BasePaper from '@/shared/ui/display/BasePaper.vue'
+import { BasePaper } from '@/shared/ui'
 import AppHeader from '@/app/AppHeader.vue'
 </script>
 

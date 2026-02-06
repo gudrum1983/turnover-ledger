@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import BaseButton from '@/shared/ui/buttons/BaseButton.vue'
-import IconCopy from '@/shared/ui/icons/IconCopy.vue'
-import IconEdit from '@/shared/ui/icons/IconEdit.vue'
-import IconTrash from '@/shared/ui/icons/IconTrash.vue'
+import { BaseButton, IconCopy, IconEdit, IconTrash } from '@/shared/ui'
 
 type Props = {
   size: 'short' | 'full'

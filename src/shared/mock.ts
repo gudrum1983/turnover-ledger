@@ -1,4 +1,4 @@
-import type { ReportRow } from '@/shared/types/report.ts'
+import type { ReportRow } from './types/report'
 
 export const MOCK: ReportRow[] = [
   {
