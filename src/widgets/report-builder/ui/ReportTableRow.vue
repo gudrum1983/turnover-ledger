@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import BaseTag from '@/shared/ui/display/BaseTag.vue'
+import { BaseDivider, BaseTag } from '@/shared/ui'
 import ReportTableRowButton from '@/widgets/report-builder/ui/ReportTableRowButton.vue'
 import type { ReportRow } from '@/shared/types/report.ts'
-import { formatMoney, sumCents } from '@/shared/lib/money/money.ts'
+import { formatMoneySafe, getRowTotals } from '@/shared/lib'
 
 type ReportTableRowProps = {
   index: number
@@ -31,22 +31,23 @@ const servicesForeign = computed(() => props.row.amounts.services.foreignCents ?
 const goodsRsd = computed(() => props.row.amounts.goods.rsdCents)
 const servicesRsd = computed(() => props.row.amounts.services.rsdCents)
 
-const totalForeign = computed(() => sumCents([goodsForeign.value, servicesForeign.value]))
-const totalRsd = computed(() => sumCents([goodsRsd.value, servicesRsd.value]))
+const totals = computed(() => getRowTotals(props.row))
+const totalForeign = computed(() => totals.value.foreignCents)
+const totalRsd = computed(() => totals.value.rsdCents)
 
 const displayGoodsForeign = computed(() =>
-  hasCurrency.value ? formatMoney(goodsForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
+  hasCurrency.value ? formatMoneySafe(goodsForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
 )
 const displayServicesForeign = computed(() =>
-  hasCurrency.value ? formatMoney(servicesForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
+  hasCurrency.value ? formatMoneySafe(servicesForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
 )
 const displayTotalForeign = computed(() =>
-  hasCurrency.value ? formatMoney(totalForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
+  hasCurrency.value ? formatMoneySafe(totalForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
 )
 
-const displayGoodsRsd = computed(() => formatMoney(goodsRsd.value, { locale: 'sr' }))
-const displayServicesRsd = computed(() => formatMoney(servicesRsd.value, { locale: 'sr' }))
-const displayTotalRsd = computed(() => formatMoney(totalRsd.value, { locale: 'sr' }))
+const displayGoodsRsd = computed(() => formatMoneySafe(goodsRsd.value, { showMinorZeros: true, locale: 'sr' }))
+const displayServicesRsd = computed(() => formatMoneySafe(servicesRsd.value, { showMinorZeros: true, locale: 'sr' }))
+const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMinorZeros: true, locale: 'sr' }))
 </script>
 
 <template>
@@ -58,24 +59,27 @@ const displayTotalRsd = computed(() => formatMoney(totalRsd.value, { locale: 'sr
       <div class="ReportTableRow_Description">
         <BaseTag class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
         {{ [row.date, row.description].filter(Boolean).join(', ') }}
-        <!--        это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для
-        текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и
-        форм шрифтов, используя Lorem Ipsum для распечатки образцов.-->
       </div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
       <div v-if="!isShort">Тов.</div>
+      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">Усл.</div>
+      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
       <div>Сум.</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income ReportTableRow_Column_font_secondary">
       <div v-if="!isShort">{{ displayGoodsForeign || '-' }}</div>
+      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ displayServicesForeign || '-' }}</div>
+      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
       <div class="Typo_BodyAccent">{{ displayTotalForeign || '-' }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
-      <div v-if="!isShort">{{ displayGoodsRsd }}</div>
+      <div v-if="!isShort" class="Text_AlginRight">{{ displayGoodsRsd }}</div>
+      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ displayServicesRsd }}</div>
+      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
       <div class="Typo_BodyAccent">{{ displayTotalRsd }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_actions">
@@ -139,7 +143,7 @@ const displayTotalRsd = computed(() => formatMoney(totalRsd.value, { locale: 'sr
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
       }
 
       &_actions {

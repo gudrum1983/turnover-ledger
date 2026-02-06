@@ -54,16 +54,7 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
         </tr>
       </thead>
       <tbody>
-        <ReportDocumentRow
-          v-for="(row, index) in store.rows"
-          :key="row.id"
-          :id="row.id"
-          :index="index"
-          :date="row.date"
-          :description="row.description"
-          :amountsGoods="row.amounts.goods.rsdCents"
-          :amountsServices="row.amounts.services.rsdCents"
-        />
+        <ReportDocumentRow v-for="(row, index) in store.rows" :key="row.id" :index="index" :row="row" />
       </tbody>
     </table>
 
