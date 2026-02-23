@@ -4,14 +4,18 @@ import { BaseDivider, BaseTag } from '@/shared/ui'
 import ReportTableRowButton from '@/widgets/report-builder/ui/ReportTableRowButton.vue'
 import type { ReportRow } from '@/shared/types/report.ts'
 import { formatMoneySafe, getRowTotals } from '@/shared/lib'
+import { useLocale } from '@/shared/i18n'
+import type { I18nLocale } from '@/shared/i18n'
 
 type ReportTableRowProps = {
   index: number
   size: 'full' | 'short'
   row: ReportRow
+  locale: I18nLocale
 }
 
 const props = defineProps<ReportTableRowProps>()
+const { t } = useLocale()
 
 const emit = defineEmits<{
   (event: 'edit', id: string): void
@@ -36,18 +40,20 @@ const totalForeign = computed(() => totals.value.foreignCents)
 const totalRsd = computed(() => totals.value.rsdCents)
 
 const displayGoodsForeign = computed(() =>
-  hasCurrency.value ? formatMoneySafe(goodsForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
+  hasCurrency.value ? formatMoneySafe(goodsForeign.value, { showMinorZeros: true, locale: props.locale }) : '',
 )
 const displayServicesForeign = computed(() =>
-  hasCurrency.value ? formatMoneySafe(servicesForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
+  hasCurrency.value ? formatMoneySafe(servicesForeign.value, { showMinorZeros: true, locale: props.locale }) : '',
 )
 const displayTotalForeign = computed(() =>
-  hasCurrency.value ? formatMoneySafe(totalForeign.value, { showMinorZeros: true, locale: 'sr' }) : '',
+  hasCurrency.value ? formatMoneySafe(totalForeign.value, { showMinorZeros: true, locale: props.locale }) : '',
 )
 
-const displayGoodsRsd = computed(() => formatMoneySafe(goodsRsd.value, { showMinorZeros: true, locale: 'sr' }))
-const displayServicesRsd = computed(() => formatMoneySafe(servicesRsd.value, { showMinorZeros: true, locale: 'sr' }))
-const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMinorZeros: true, locale: 'sr' }))
+const displayGoodsRsd = computed(() => formatMoneySafe(goodsRsd.value, { showMinorZeros: true, locale: props.locale }))
+const displayServicesRsd = computed(() =>
+  formatMoneySafe(servicesRsd.value, { showMinorZeros: true, locale: props.locale }),
+)
+const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMinorZeros: true, locale: props.locale }))
 </script>
 
 <template>
@@ -62,11 +68,11 @@ const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMin
       </div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
-      <div v-if="!isShort">Тов.</div>
+      <div v-if="!isShort">{{ t('ui.reportTableRow.goodsShort') }}</div>
       <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
-      <div v-if="!isShort">Усл.</div>
+      <div v-if="!isShort">{{ t('ui.reportTableRow.servicesShort') }}</div>
       <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
-      <div>Сум.</div>
+      <div>{{ t('ui.reportTableRow.subtotalShort') }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income ReportTableRow_Column_font_secondary">
       <div v-if="!isShort">{{ displayGoodsForeign || '-' }}</div>
@@ -83,9 +89,24 @@ const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMin
       <div class="Typo_BodyAccent">{{ displayTotalRsd }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_actions">
-      <ReportTableRowButton :size="size" icon="edit" label="Изменить" @click="emit('edit', row.id)" />
-      <ReportTableRowButton :size="size" icon="copy" label="Копировать" @click="emit('copy', row.id)" />
-      <ReportTableRowButton :size="size" icon="trash" label="Удалить" @click="emit('remove', row.id)" />
+      <ReportTableRowButton
+        :size="size"
+        icon="edit"
+        :label="t('ui.reportTableRow.edit')"
+        @click="emit('edit', row.id)"
+      />
+      <ReportTableRowButton
+        :size="size"
+        icon="copy"
+        :label="t('ui.reportTableRow.copy')"
+        @click="emit('copy', row.id)"
+      />
+      <ReportTableRowButton
+        :size="size"
+        icon="trash"
+        :label="t('ui.reportTableRow.remove')"
+        @click="emit('remove', row.id)"
+      />
     </div>
   </div>
 </template>

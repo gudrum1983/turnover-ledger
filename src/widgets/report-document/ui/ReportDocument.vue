@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { computed } from 'vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
 import ReportDocumentRow from '@/widgets/report-document/ui/ReportDocumentRow.vue'
+import { HEADER_FIELDS } from '@/shared/constants/reportFields.ts'
+import { useLocale } from '@/shared/i18n'
 
 type Props = {
   landscape?: boolean
@@ -13,6 +14,7 @@ const { landscape = false } = defineProps<Props>()
 
 const store = useMetaDataStore()
 const { formData } = storeToRefs(store)
+const { t } = useLocale()
 
 const classColumn = computed(() => [{ ReportDocument_Column_landscape: landscape }])
 const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape: landscape }])
@@ -21,29 +23,29 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
 <template>
   <div class="ReportDocument Typo_ReportBody">
     <ul class="ReportDocument_Header">
-      <li v-for="(item, index) in KPO_DICTIONARY.header" :key="index" v-bind="item">
-        <span class="Typo_ReportBodyAccent">{{ item.srLat }}:</span> {{ formData.header[index] }}
+      <li v-for="field in HEADER_FIELDS" :key="field">
+        <span class="Typo_ReportBodyAccent">{{ t(`report.header.${field}`) }}:</span> {{ formData.header[field] }}
       </li>
     </ul>
 
     <div class="ReportDocument_Title Typo_ReportTitle">
-      <div>{{ KPO_DICTIONARY.title.firstLine.srLat }}</div>
-      <div>{{ KPO_DICTIONARY.title.secondLine.srLat }}</div>
+      <div>{{ t('report.title.firstLine') }}</div>
+      <div>{{ t('report.title.secondLine') }}</div>
     </div>
 
     <table class="ReportDocument_Table">
       <thead class="Typo_ReportTableAccent">
         <tr>
-          <td rowspan="2" colspan="1">{{ KPO_DICTIONARY.table.rowNumber.srLat }}</td>
+          <td rowspan="2" colspan="1">{{ t('report.table.rowNumber') }}</td>
           <td rowspan="2" colspan="1">
-            {{ KPO_DICTIONARY.table.dateAndDescription.srLat }}
+            {{ t('report.table.dateAndDescription') }}
           </td>
-          <td rowspan="1" colspan="2" class="Typo_Uppercase">{{ KPO_DICTIONARY.table.income.srLat }}</td>
-          <td rowspan="2" colspan="1" class="Typo_Uppercase">{{ KPO_DICTIONARY.table.totalIncome.srLat }}</td>
+          <td rowspan="1" colspan="2" class="Typo_Uppercase">{{ t('report.table.income') }}</td>
+          <td rowspan="2" colspan="1" class="Typo_Uppercase">{{ t('report.table.totalIncome') }}</td>
         </tr>
         <tr>
-          <td>{{ KPO_DICTIONARY.table.incomeFromProducts.srLat }}</td>
-          <td>{{ KPO_DICTIONARY.table.incomeFromServices.srLat }}</td>
+          <td>{{ t('report.table.incomeFromProducts') }}</td>
+          <td>{{ t('report.table.incomeFromServices') }}</td>
         </tr>
         <tr :class="classColumn">
           <td class="ReportDocument_Column ReportDocument_Column_type_num">1</td>
@@ -60,12 +62,12 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
 
     <div class="ReportDocument_Footer">
       <div class="ReportDocument_SignaturePlace" :class="classSignature">
-        <div class="Typo_ReportTableAccent">{{ KPO_DICTIONARY.footer.preparedBy.srLat }}</div>
+        <div class="Typo_ReportTableAccent">{{ t('report.footer.preparedBy') }}</div>
         <div class="ReportDocument_Signature">{{ formData.footer.preparedBy }}</div>
       </div>
 
       <div class="ReportDocument_SignaturePlace" :class="classSignature">
-        <div class="Typo_ReportTableAccent">{{ KPO_DICTIONARY.footer.responsiblePerson.srLat }}</div>
+        <div class="Typo_ReportTableAccent">{{ t('report.footer.responsiblePerson') }}</div>
         <div class="ReportDocument_Signature">{{ formData.footer.responsiblePerson }}</div>
       </div>
     </div>

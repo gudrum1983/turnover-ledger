@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { type VNode } from 'vue'
+import { computed, type VNode } from 'vue'
 import { BaseDropdownButton } from '@/shared/ui'
-import { useLocaleStore } from '@/app/stores/localeStore.ts'
+import { useLocale } from '@/shared/i18n'
+import { LOCALE_LABEL_KEY_BY_LOCALE, SUPPORTED_LOCALES, isSupportedLocale } from '@/shared/i18n'
 
 defineProps<{
   msg: string
@@ -11,14 +12,20 @@ defineSlots<{
   actionButtons?: () => VNode | VNode[]
 }>()
 
-const localeStore = useLocaleStore()
+const { locale, setLocale, t } = useLocale()
 
-const locales = [
-  { code: 'ru', label: 'Русский' },
-  { code: 'en', label: 'English' },
-  { code: 'srLat', label: 'Srpski' },
-  { code: 'srCyr', label: 'Српски' },
-] as const
+const localeOptions = computed(() =>
+  SUPPORTED_LOCALES.map((code) => ({
+    value: code,
+    label: t(LOCALE_LABEL_KEY_BY_LOCALE[code]),
+  })),
+)
+
+const handleLocaleUpdate = (value: string | null) => {
+  if (value && isSupportedLocale(value)) {
+    setLocale(value)
+  }
+}
 
 /*Todo - чекнуть по ошибке апдейта и изменить компоновку лейаута*/
 </script>
@@ -33,9 +40,9 @@ const locales = [
           size="xs"
           variant="outline"
           color="primary"
-          :options="locales.map((locale) => ({ value: locale.code, label: locale.label }))"
-          :model-value="localeStore.currentLocale"
-          @update:model-value="(value) => localeStore.setLocale(value as typeof localeStore.currentLocale)"
+          :options="localeOptions"
+          :model-value="locale"
+          @update:model-value="handleLocaleUpdate"
         />
       </div>
       <slot name="actionButtons" />

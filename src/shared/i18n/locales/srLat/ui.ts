@@ -1,0 +1,66 @@
+import type { I18nLocaleMessages } from '../../types'
+
+export const srLatUi = {
+  app: {
+    reportBuilderTitle: 'KPO knjiga (paušal)',
+    reportPreviewTitle: 'KPO knjiga (paušal) izveštaj',
+  },
+  locale: {
+    ru: 'Русский',
+    en: 'English',
+    srLat: 'Srpski',
+    srCyr: 'Српски',
+  },
+  reportActions: {
+    preview: 'Pregled',
+    export: 'Izvoz podataka',
+    import: 'Uvoz podataka',
+  },
+  reportMetaForm: {
+    taxpayerInfo: 'Informacije o obvezniku',
+    responsiblePeople: 'Odgovorna lica',
+  },
+  reportTable: {
+    rowNumber: 'Br.',
+    income: 'Prihod',
+    currency: 'Valuta',
+    addRow: 'Dodaj red',
+    clearTable: 'Obriši tabelu',
+    emptyHint: 'Tabela je prazna, dodajte red ...',
+    total: 'Ukupno',
+    addRowModalTitle: 'Dodaj red',
+    cancel: 'Otkaži',
+    add: 'Dodaj',
+    editAlert: 'Izmena reda',
+  },
+  reportTableRow: {
+    goodsShort: 'Rob.',
+    servicesShort: 'Usl.',
+    subtotalShort: 'Sve.',
+    edit: 'Izmeni',
+    copy: 'Kopiraj',
+    remove: 'Obriši',
+  },
+  reportRowForm: {
+    date: 'Datum',
+    currency: 'Valuta',
+    description: 'Opis',
+    descriptionPlaceholder: 'Svrha plaćanja',
+    goodsAmount: 'Iznos robe',
+    servicesAmount: 'Iznos usluga',
+    total: 'Ukupno',
+    calculate: 'Izračunaj',
+    officialRatePrefix: 'ZVANIČNI SREDNJI KURS DINARA',
+    recalculateHint: 'Preračunajte nakon izmena.',
+    goodsRsd: 'Roba (RSD)',
+    servicesRsd: 'Usluge (RSD)',
+    totalRsd: 'Ukupno (RSD)',
+    row: 'Red',
+  },
+  reportPreview: {
+    landscape: 'Horizontalno',
+    portrait: 'Vertikalno',
+    toHome: 'Na početnu',
+    print: 'ŠTAMPA',
+  },
+} as const satisfies I18nLocaleMessages['ui']

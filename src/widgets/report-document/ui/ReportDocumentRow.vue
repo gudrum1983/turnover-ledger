@@ -13,17 +13,17 @@ const totals = computed(() => getRowTotals(row))
 </script>
 
 <template>
-  <tr>
+  <tr class="ReportDocumentRow">
     <td>{{ index + 1 }}</td>
     <td>{{ formatDateForUi(row.date, { withTrailingDot: true }) + ' ' + row.description }}</td>
     <td class="Text_AlginRight">
-      {{ formatMoney(row.amounts.goods.rsdCents ?? 0, { showMinorZeros: true, locale: 'sr' }) }}
+      {{ formatMoney(row.amounts.goods.rsdCents ?? 0) }}
     </td>
     <td class="Text_AlginRight">
-      {{ formatMoney(row.amounts.services.rsdCents ?? 0, { showMinorZeros: true, locale: 'sr' }) }}
+      {{ formatMoney(row.amounts.services.rsdCents ?? 0) }}
     </td>
     <td class="Text_AlginRight">
-      {{ formatMoney(totals.rsdCents, { showMinorZeros: true, locale: 'sr' }) }}
+      {{ formatMoney(totals.rsdCents) }}
     </td>
   </tr>
 </template>
