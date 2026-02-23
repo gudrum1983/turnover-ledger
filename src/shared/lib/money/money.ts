@@ -1,22 +1,15 @@
+import type { I18nLocale } from '../../i18n/locales.ts'
+
 type FormatMoneyOptions = {
-  locale?: 'sr' | 'en' | 'ru'
+  locale?: 'ru' | 'en' | 'srLat' | 'srCyr'
   showMinorZeros?: boolean
 }
 
 export function formatMoney(cents: number, options: FormatMoneyOptions = {}): string {
-  const { showMinorZeros = false, locale = 'ru' } = options
+  const { showMinorZeros = true, locale = 'ru' } = options
   const sign = cents < 0 ? '-' : ''
   const abs = Math.abs(cents)
-  const major = Math.floor(abs / 100)
-  const minor = abs % 100
-  const { groupSeparator, decimalSeparator } = getSeparators(locale)
-  const majorFormatted = major.toString().replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator)
-
-  if (minor === 0 && !showMinorZeros) {
-    return `${sign}${majorFormatted}`
-  }
-
-  return `${sign}${majorFormatted}${decimalSeparator}${String(minor).padStart(2, '0')}`
+  return sign + formatMoneyForUi(abs, locale, showMinorZeros)
 }
 
 export function formatMoneySafe(cents?: number | null, options: FormatMoneyOptions = {}): string {
@@ -27,12 +20,20 @@ export function sumCents(values: Array<number | null | undefined>): number {
   return values.reduce<number>((acc, value) => acc + (value ?? 0), 0)
 }
 
-function getSeparators(locale: 'sr' | 'en' | 'ru') {
-  if (locale === 'sr') {
-    return { groupSeparator: '.', decimalSeparator: ',' }
+function intlFormat(value: number, locales: string, showMinorZeros: boolean): string {
+  if (showMinorZeros) return new Intl.NumberFormat(locales, { minimumFractionDigits: 2 }).format(value / 100)
+
+  return new Intl.NumberFormat(locales).format(value)
+}
+
+export function formatMoneyForUi(cents: number, locales: I18nLocale, showMinorZeros: boolean): string {
+  if (locales === 'en') {
+    return intlFormat(cents, 'en-US', showMinorZeros)
   }
-  if (locale === 'en') {
-    return { groupSeparator: ',', decimalSeparator: '.' }
+
+  if (locales === 'srCyr' || locales === 'srLat') {
+    return intlFormat(cents, 'sr-RS', showMinorZeros)
   }
-  return { groupSeparator: ' ', decimalSeparator: ',' }
+
+  return intlFormat(cents, 'ru-RU', showMinorZeros)
 }
