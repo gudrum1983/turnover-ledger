@@ -1,0 +1,66 @@
+import type { I18nLocaleMessages } from '../../types'
+
+export const enUi = {
+  app: {
+    reportBuilderTitle: 'Turnover Book (lump sum)',
+    reportPreviewTitle: 'Turnover Book (lump sum) report',
+  },
+  locale: {
+    ru: 'Русский',
+    en: 'English',
+    srLat: 'Srpski',
+    srCyr: 'Српски',
+  },
+  reportActions: {
+    preview: 'Preview',
+    export: 'Export data',
+    import: 'Import data',
+  },
+  reportMetaForm: {
+    taxpayerInfo: 'Taxpayer information',
+    responsiblePeople: 'Responsible persons',
+  },
+  reportTable: {
+    rowNumber: 'No.',
+    income: 'Income',
+    currency: 'Currency',
+    addRow: 'Add row',
+    clearTable: 'Clear table',
+    emptyHint: 'The table is empty, add a row ...',
+    total: 'Total',
+    addRowModalTitle: 'Add row',
+    cancel: 'Cancel',
+    add: 'Add',
+    editAlert: 'Edit row',
+  },
+  reportTableRow: {
+    goodsShort: 'Gds.',
+    servicesShort: 'Srv.',
+    subtotalShort: 'Sub.',
+    edit: 'Edit',
+    copy: 'Copy',
+    remove: 'Delete',
+  },
+  reportRowForm: {
+    date: 'Date',
+    currency: 'Currency',
+    description: 'Description',
+    descriptionPlaceholder: 'Payment purpose',
+    goodsAmount: 'Goods amount',
+    servicesAmount: 'Services amount',
+    total: 'Total',
+    calculate: 'Calculate',
+    officialRatePrefix: 'OFFICIAL MIDDLE RSD EXCHANGE RATE',
+    recalculateHint: 'Recalculate after any changes.',
+    goodsRsd: 'Goods (RSD)',
+    servicesRsd: 'Services (RSD)',
+    totalRsd: 'Total (RSD)',
+    row: 'Row',
+  },
+  reportPreview: {
+    landscape: 'Landscape',
+    portrait: 'Portrait',
+    toHome: 'Back home',
+    print: 'PRINT',
+  },
+} as const satisfies I18nLocaleMessages['ui']

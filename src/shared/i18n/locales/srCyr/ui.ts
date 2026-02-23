@@ -1,0 +1,66 @@
+import type { I18nLocaleMessages } from '../../types'
+
+export const srCyrUi = {
+  app: {
+    reportBuilderTitle: 'КПО књига (паушал)',
+    reportPreviewTitle: 'КПО књига (паушал) извештај',
+  },
+  locale: {
+    ru: 'Русский',
+    en: 'English',
+    srLat: 'Srpski',
+    srCyr: 'Српски',
+  },
+  reportActions: {
+    preview: 'Преглед',
+    export: 'Извоз података',
+    import: 'Увоз података',
+  },
+  reportMetaForm: {
+    taxpayerInfo: 'Информације о обвезнику',
+    responsiblePeople: 'Одговорна лица',
+  },
+  reportTable: {
+    rowNumber: 'Бр.',
+    income: 'Приход',
+    currency: 'Валута',
+    addRow: 'Додај ред',
+    clearTable: 'Обриши табелу',
+    emptyHint: 'Табела је празна, додајте ред ...',
+    total: 'Укупно',
+    addRowModalTitle: 'Додај ред',
+    cancel: 'Откажи',
+    add: 'Додај',
+    editAlert: 'Измена реда',
+  },
+  reportTableRow: {
+    goodsShort: 'Роб.',
+    servicesShort: 'Усл.',
+    subtotalShort: 'Св.',
+    edit: 'Измени',
+    copy: 'Копирај',
+    remove: 'Обриши',
+  },
+  reportRowForm: {
+    date: 'Датум',
+    currency: 'Валута',
+    description: 'Опис',
+    descriptionPlaceholder: 'Сврха плаћања',
+    goodsAmount: 'Износ робе',
+    servicesAmount: 'Износ услуга',
+    total: 'Укупно',
+    calculate: 'Израчунај',
+    officialRatePrefix: 'ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА',
+    recalculateHint: 'Прерачунајте након измена.',
+    goodsRsd: 'Роба (RSD)',
+    servicesRsd: 'Услуге (RSD)',
+    totalRsd: 'Укупно (RSD)',
+    row: 'Ред',
+  },
+  reportPreview: {
+    landscape: 'Хоризонтално',
+    portrait: 'Вертикално',
+    toHome: 'На почетну',
+    print: 'ШТАМПА',
+  },
+} as const satisfies I18nLocaleMessages['ui']
