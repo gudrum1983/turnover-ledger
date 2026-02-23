@@ -1,0 +1,5 @@
+export { useLocale } from './useLocale'
+export { i18n, setI18nLocale } from './i18n'
+export { DEFAULT_LOCALE, SUPPORTED_LOCALES, LOCALE_LABEL_KEY_BY_LOCALE, isSupportedLocale } from './locales.ts'
+export type { I18nMessageKey, I18nLocaleMessages } from './types'
+export type { I18nLocale, I18nLocaleLabelKey } from './locales.ts'
