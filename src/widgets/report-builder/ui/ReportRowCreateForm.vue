@@ -5,6 +5,7 @@ import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
+import { useLocale } from '@/shared/i18n'
 
 /*
  * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА
@@ -26,6 +27,7 @@ const isCalculating = ref(false)
 const currencyStore = useCurrencyStore()
 const metaDataStore = useMetaDataStore()
 const localeStore = useLocaleStore()
+const { t } = useLocale()
 const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(metaDataStore.usedCurrencyCodes))
 
 const currencyOptions = computed(() => {
@@ -76,9 +78,7 @@ const summary = computed(() =>
 )
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
 
-const uiLocale = computed(() =>
-  localeStore.currentLocale === 'en' ? 'en' : localeStore.currentLocale === 'ru' ? 'ru' : 'sr',
-)
+const uiLocale = computed(() => localeStore.currentLocale)
 const toCents = (value: number) => Math.round(value * 100)
 const formatValue = (value: number | null) =>
   value === null ? '—' : formatMoney(toCents(value), { showMinorZeros: true, locale: uiLocale.value })
@@ -176,14 +176,14 @@ onMounted(() => {
       <div class="ReportRowForm_Currency">
         <BaseDatePicker
           name="dateCurrency"
-          label="Дата"
+          :label="t('ui.reportRowForm.date')"
           :model-value="date"
           @update:modelValue="date = $event ?? ''"
           required
         />
         <BaseDropdownButton
           class="ReportRowForm_CurrencyDropdown"
-          label="Валюта"
+          :label="t('ui.reportRowForm.currency')"
           size="xs"
           variant="outline"
           color="primary"
@@ -195,8 +195,8 @@ onMounted(() => {
       </div>
       <BaseField
         name="description"
-        label="Описание"
-        placeholder="Назначение платежа"
+        :label="t('ui.reportRowForm.description')"
+        :placeholder="t('ui.reportRowForm.descriptionPlaceholder')"
         :model-value="description"
         @update:modelValue="description = $event ?? ''"
       />
@@ -204,21 +204,21 @@ onMounted(() => {
     <div class="ReportRowForm_AmountFields">
       <MoneyField
         name="goodsAmount"
-        label="Сумма по товарам"
+        :label="t('ui.reportRowForm.goodsAmount')"
         placeholder="0,00"
         :model-value="goodsAmount"
         @update:modelValue="goodsAmount = $event"
       />
       <MoneyField
         name="servicesAmount"
-        label="Сумма по услугам"
+        :label="t('ui.reportRowForm.servicesAmount')"
         placeholder="0,00"
         :model-value="servicesAmount"
         @update:modelValue="servicesAmount = $event"
       />
 
       <div>
-        <div class="ReportRowForm_Label">Итого</div>
+        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.total') }}</div>
         <div class="ReportRowForm_Card">
           <div class="ReportRowForm_Value">{{ formatValue(totalValue) }}</div>
         </div>
@@ -227,15 +227,17 @@ onMounted(() => {
 
     <div class="ReportRowForm_Toolbar">
       <BaseButton size="xs" color="primary" :disabled="isCalculateDisabled" @click="handleCalculate">
-        Рассчитать
+        {{ t('ui.reportRowForm.calculate') }}
       </BaseButton>
-      <div v-if="isCalculated" class="ReportRowForm_Hint">ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА {{ currentCurs }}</div>
-      <div v-if="!isCalculated" class="ReportRowForm_Hint">Пересчитайте после изменений.</div>
+      <div v-if="isCalculated" class="ReportRowForm_Hint">
+        {{ t('ui.reportRowForm.officialRatePrefix') }} {{ currentCurs }}
+      </div>
+      <div v-if="!isCalculated" class="ReportRowForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
     </div>
 
     <div class="ReportRowForm_Calculations">
       <div>
-        <div class="ReportRowForm_Label">По товарам (RSD)</div>
+        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.goodsRsd') }}</div>
 
         <div class="ReportRowForm_Card">
           <div class="ReportRowForm_Value">{{ formatValue(calculatedGoodsConverted) }}</div>
@@ -243,7 +245,7 @@ onMounted(() => {
       </div>
 
       <div>
-        <div class="ReportRowForm_Label">По услугам (RSD)</div>
+        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.servicesRsd') }}</div>
 
         <div class="ReportRowForm_Card">
           <div class="ReportRowForm_Value">{{ formatValue(calculatedServicesConverted) }}</div>
@@ -251,7 +253,7 @@ onMounted(() => {
       </div>
 
       <div>
-        <div class="ReportRowForm_Label">Итого (RSD)</div>
+        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.totalRsd') }}</div>
         <div class="ReportRowForm_Card">
           <div class="ReportRowForm_Value">{{ formatValue(calculatedTotalConverted) }}</div>
         </div>
@@ -259,7 +261,7 @@ onMounted(() => {
     </div>
 
     <div>
-      <div class="ReportRowForm_Label">Строка</div>
+      <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.row') }}</div>
       <div class="ReportRowForm_Summary">
         <div class="ReportRowForm_Value">{{ summary || '—' }}</div>
       </div>

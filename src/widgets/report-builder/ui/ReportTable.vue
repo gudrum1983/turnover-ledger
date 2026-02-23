@@ -3,25 +3,29 @@ import { computed, ref } from 'vue'
 import { BaseButton, BaseDividerToggle, BaseModal, IconAdd, IconCompress, IconExpand } from '@/shared/ui'
 import ReportTableRow from './ReportTableRow.vue'
 import ReportRowCreateForm, { type ReportRowPayload } from './ReportRowCreateForm.vue'
-import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/shared/types/report.ts'
 import { formatMoney, getTableTotals } from '@/shared/lib'
+import { useLocaleStore } from '@/app/stores/localeStore.ts'
+import { useLocale } from '@/shared/i18n'
 
 const store = useMetaDataStore()
 const { rows } = storeToRefs(store)
+
+const localeStore = useLocaleStore()
+const { t } = useLocale()
 
 const isFullTable = ref<boolean>(true)
 
 const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 
 const tableTotals = computed(() => getTableTotals(rows.value))
-const displayTotalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: 'sr' }))
+const displayTotalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: localeStore.currentLocale }))
 
 function handleEdit(id: string) {
   void id
-  alert('Редактирование строки')
+  alert(t('ui.reportTable.editAlert'))
 }
 
 function handleCopy(id: string) {
@@ -84,7 +88,7 @@ function onSubmit(payload: ReportRowPayload) {
   <div class="ReportTable">
     <BaseDividerToggle
       v-model="isFullTable"
-      :label="`${KPO_DICTIONARY.title.firstLine.ru} ${KPO_DICTIONARY.title.secondLine.ru}`"
+      :label="`${t('report.title.firstLine')} ${t('report.title.secondLine')}`"
       color="disabled"
     >
       <template #icon-active><IconExpand style="width: 18px; height: 18px" /></template>
@@ -93,16 +97,18 @@ function onSubmit(payload: ReportRowPayload) {
 
     <div class="ReportTable_Fieldset">
       <div class="ReportTable_Actions">
-        <BaseButton color="primary" size="xs" @click="open = true" class="">Добавить строку</BaseButton>
-        <BaseButton color="danger" size="xs" v-if="rows.length > 0">Очистить таблицу</BaseButton>
+        <BaseButton color="primary" size="xs" @click="open = true" class="">{{
+          t('ui.reportTable.addRow')
+        }}</BaseButton>
+        <BaseButton color="danger" size="xs" v-if="rows.length > 0">{{ t('ui.reportTable.clearTable') }}</BaseButton>
       </div>
       <div>
         <div class="ReportTable_Header">
-          <div>№</div>
-          <div>{{ KPO_DICTIONARY.table.dateAndDescription.ru }}</div>
+          <div>{{ t('ui.reportTable.rowNumber') }}</div>
+          <div>{{ t('report.table.dateAndDescription') }}</div>
           <div></div>
-          <div>Доход<br />Валюта</div>
-          <div>Доход<br />RSD</div>
+          <div>{{ t('ui.reportTable.income') }}<br />{{ t('ui.reportTable.currency') }}</div>
+          <div>{{ t('ui.reportTable.income') }}<br />RSD</div>
           <div></div>
         </div>
         <div class="ReportTable_Rows">
@@ -112,13 +118,14 @@ function onSubmit(payload: ReportRowPayload) {
             :key="row.id"
             :index="index"
             :row="row"
+            :locale="localeStore.currentLocale"
             @edit="handleEdit"
             @copy="handleCopy"
             @remove="handleRemove"
           />
         </div>
         <div v-if="rows.length < 1" class="ReportTable_Empty">
-          Таблица пустая, добавьте строку ...
+          {{ t('ui.reportTable.emptyHint') }}
           <BaseButton color="primary" size="xs" @click="open = true" variant="outline" isIconOnly>
             <template #icon>
               <IconAdd style="width: 18px; height: 18px" />
@@ -130,18 +137,20 @@ function onSubmit(payload: ReportRowPayload) {
           <div></div>
           <div></div>
           <div></div>
-          <div class="ReportTable_TotalCell Typo_BodyAccent">Итого</div>
+          <div class="ReportTable_TotalCell Typo_BodyAccent">{{ t('ui.reportTable.total') }}</div>
           <div class="ReportTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
           <div></div>
         </div>
       </div>
     </div>
     <BaseModal :open="open" @close="closeModal">
-      <h2>Добавить строку</h2>
+      <h2>{{ t('ui.reportTable.addRowModalTitle') }}</h2>
       <ReportRowCreateForm :key="formKey" @update:canSubmit="canSubmit = $event" @submit="onSubmit" id="testForm" />
       <template #actions>
-        <BaseButton size="xs" @click="closeModal">Отмена</BaseButton>
-        <BaseButton color="primary" size="xs" :disabled="!canSubmit" type="submit" form="testForm">Добавить</BaseButton>
+        <BaseButton size="xs" @click="closeModal">{{ t('ui.reportTable.cancel') }}</BaseButton>
+        <BaseButton color="primary" size="xs" :disabled="!canSubmit" type="submit" form="testForm">
+          {{ t('ui.reportTable.add') }}
+        </BaseButton>
       </template>
     </BaseModal>
   </div>

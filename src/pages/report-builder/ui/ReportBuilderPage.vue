@@ -5,11 +5,14 @@ import ReportTable from '@/widgets/report-builder/ui/ReportTable.vue'
 
 import { BasePaper } from '@/shared/ui'
 import AppHeader from '@/app/AppHeader.vue'
+import { useLocale } from '@/shared/i18n'
+
+const { t } = useLocale()
 </script>
 
 <template>
   <div class="ReportBuilderPage">
-    <AppHeader msg="Книга КПО (паушал)" class="ReportBuilderPage_Header" />
+    <AppHeader :msg="t('ui.app.reportBuilderTitle')" class="ReportBuilderPage_Header" />
     <main class="ReportBuilderPage_Main Container">
       <BasePaper class="ReportBuilderPage_layout">
         <ReportActions />

@@ -5,18 +5,22 @@ import { ROUTES } from '@/shared/constants/routes.ts'
 import { BaseButton } from '@/shared/ui'
 import router from '@/app/router'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useLocale } from '@/shared/i18n'
 
 const onPrint = () => {
   window.print()
 }
 
 const directionLandscape = ref<boolean>(false)
+const { t } = useLocale()
 
 function onCross() {
   directionLandscape.value = !directionLandscape.value
 }
 
-const labelButtonDirection = computed(() => (directionLandscape.value ? 'Горизонтальная' : 'Вертикальная'))
+const labelButtonDirection = computed(() =>
+  directionLandscape.value ? t('ui.reportPreview.landscape') : t('ui.reportPreview.portrait'),
+)
 
 const classes = computed(() => [{ ReportPreviewPage_Document_landscape: directionLandscape.value }])
 
@@ -47,15 +51,15 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="ReportPreviewPage">
-    <AppHeader msg="Книга КПО (паушал) отчет" class="ReportPreviewPage_Header">
+    <AppHeader :msg="t('ui.app.reportPreviewTitle')" class="ReportPreviewPage_Header">
       <template v-slot:actionButtons>
         <BaseButton color="info" @click="onCross">
           {{ labelButtonDirection }}
         </BaseButton>
         <BaseButton color="default" variant="outline" @click="router.push({ name: ROUTES.reportBuilder.name })">
-          На главную
+          {{ t('ui.reportPreview.toHome') }}
         </BaseButton>
-        <BaseButton color="primary" variant="outline" @click="onPrint">ПЕЧАТЬ</BaseButton>
+        <BaseButton color="primary" variant="outline" @click="onPrint">{{ t('ui.reportPreview.print') }}</BaseButton>
       </template>
     </AppHeader>
     <section class="ReportPreviewPage_Document" :class="classes">

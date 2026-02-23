@@ -1,32 +1,37 @@
 <script setup lang="ts">
 import { BaseDividerToggle, BaseField, DigitField } from '@/shared/ui'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import { HEADER_FIELDS, FOOTER_FIELDS } from '@/shared/constants/reportFields.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { useLocale } from '@/shared/i18n'
 
 const store = useMetaDataStore()
 const { formData } = storeToRefs(store)
 const { setHeaderValue, setFooterValue } = store
+const { t } = useLocale()
 
 type HeaderMetaField = { key: HeaderField; label: string; isDigit: boolean }
 type FooterMetaField = { key: FooterField; label: string; isDigit: boolean }
 
 const DIGIT_FIELDS: HeaderField[] = ['pib', 'taxNumber']
 
-const headerMetaFields: HeaderMetaField[] = HEADER_FIELDS.map((key) => ({
-  key,
-  label: KPO_DICTIONARY.header[key].ru,
-  isDigit: DIGIT_FIELDS.includes(key),
-}))
+const headerMetaFields = computed<HeaderMetaField[]>(() =>
+  HEADER_FIELDS.map((key) => ({
+    key,
+    label: t(`report.header.${key}`),
+    isDigit: DIGIT_FIELDS.includes(key),
+  })),
+)
 
-const footerMetaFields: FooterMetaField[] = FOOTER_FIELDS.map((key) => ({
-  key,
-  label: KPO_DICTIONARY.footer[key].ru,
-  isDigit: false,
-}))
+const footerMetaFields = computed<FooterMetaField[]>(() =>
+  FOOTER_FIELDS.map((key) => ({
+    key,
+    label: t(`report.footer.${key}`),
+    isDigit: false,
+  })),
+)
 
 const isOpenHeader = ref(true)
 const isOpenFooter = ref(true)
@@ -35,7 +40,7 @@ const isOpenFooter = ref(true)
 <template>
   <div>
     <div class="ReportMetaForm">
-      <BaseDividerToggle v-model="isOpenHeader" label="Информация о налогоплательщике" color="disabled" />
+      <BaseDividerToggle v-model="isOpenHeader" :label="t('ui.reportMetaForm.taxpayerInfo')" color="disabled" />
       <div v-show="isOpenHeader" class="ReportMetaForm_Fieldset">
         <component
           v-for="field in headerMetaFields"
@@ -48,7 +53,7 @@ const isOpenFooter = ref(true)
         />
       </div>
 
-      <BaseDividerToggle v-model="isOpenFooter" label="Ответственные лица" color="disabled" />
+      <BaseDividerToggle v-model="isOpenFooter" :label="t('ui.reportMetaForm.responsiblePeople')" color="disabled" />
       <div v-show="isOpenFooter" class="ReportMetaForm_Fieldset">
         <BaseField
           v-for="field in footerMetaFields"
