@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { vMaska } from 'maska/vue'
+import { vAutofocus } from '@/shared/lib'
 
 import './styles/main.css'
 
@@ -19,6 +20,7 @@ app.use(pinia)
 app.use(i18n)
 app.use(router)
 app.directive('maska', vMaska)
+app.directive('autofocus', vAutofocus)
 
 useMetaDataStore(pinia).hydrateFromLocalStorage()
 const currencyStore = useCurrencyStore(pinia)
