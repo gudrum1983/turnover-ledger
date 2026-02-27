@@ -92,6 +92,10 @@ const classes = computed(() => [
   &:disabled {
     cursor: not-allowed;
   }
+
+  &:focus {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
 }
 
 .BaseButton_fullWidth {

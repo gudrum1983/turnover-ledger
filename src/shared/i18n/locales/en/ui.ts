@@ -63,4 +63,16 @@ export const enUi = {
     toHome: 'Back home',
     print: 'PRINT',
   },
+  deleteRowModal: {
+    title: 'Delete this record?',
+    description: 'This action cannot be undone.',
+    confirm: 'Delete',
+    cancel: 'Cancel',
+  },
+  deleteAllRowsModal: {
+    title: 'Delete all records?',
+    description: 'All data will be permanently removed.',
+    confirm: 'Delete all',
+    cancel: 'Cancel',
+  },
 } as const satisfies I18nLocaleMessages['ui']
