@@ -63,4 +63,16 @@ export const srCyrUi = {
     toHome: 'На почетну',
     print: 'ШТАМПА',
   },
+  deleteRowModal: {
+    title: 'Обрисати запис?',
+    description: 'Ова радња се не може опозвати.',
+    confirm: 'Обриши',
+    cancel: 'Откажи',
+  },
+  deleteAllRowsModal: {
+    title: 'Обрисати све записе?',
+    description: 'Сви подаци ће бити трајно уклоњени.',
+    confirm: 'Обриши све',
+    cancel: 'Откажи',
+  },
 } as const satisfies I18nLocaleMessages['ui']

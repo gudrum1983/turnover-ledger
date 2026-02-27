@@ -63,4 +63,16 @@ export const srLatUi = {
     toHome: 'Na početnu',
     print: 'ŠTAMPA',
   },
+  deleteRowModal: {
+    title: 'Obrisati zapis?',
+    description: 'Ova radnja se ne može opozvati.',
+    confirm: 'Obriši',
+    cancel: 'Otkaži',
+  },
+  deleteAllRowsModal: {
+    title: 'Obrisati sve zapise?',
+    description: 'Svi podaci će biti trajno uklonjeni.',
+    confirm: 'Obriši sve',
+    cancel: 'Otkaži',
+  },
 } as const satisfies I18nLocaleMessages['ui']

@@ -61,4 +61,16 @@ export const ruUi = {
     toHome: 'На главную',
     print: 'ПЕЧАТЬ',
   },
+  deleteRowModal: {
+    title: 'Удалить запись?',
+    description: 'Это действие нельзя отменить.',
+    confirm: 'Удалить',
+    cancel: 'Отмена',
+  },
+  deleteAllRowsModal: {
+    title: 'Удалить все записи?',
+    description: 'Все данные будут удалены без возможности восстановления.',
+    confirm: 'Удалить всё',
+    cancel: 'Отмена',
+  },
 } as const
