@@ -171,7 +171,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <form class="ReportRowForm" @submit="handleSubmit">
+  <form class="ReportRowForm" @submit="handleSubmit" v-autofocus>
     <div class="ReportRowForm_Fields">
       <div class="ReportRowForm_Currency">
         <BaseDatePicker
@@ -330,7 +330,7 @@ onMounted(() => {
 
 .ReportRowForm_Summary {
   padding: 12px 16px;
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px dashed var(--color-border-default);
   background: var(--color-background-surface-accent);
   display: flex;

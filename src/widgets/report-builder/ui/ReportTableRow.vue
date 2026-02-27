@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { BaseDivider, BaseTag } from '@/shared/ui'
+import { computed, ref } from 'vue'
+import { BaseDivider, BaseTag, ConfirmDialog } from '@/shared/ui'
 import ReportTableRowButton from '@/widgets/report-builder/ui/ReportTableRowButton.vue'
 import type { ReportRow } from '@/shared/types/report.ts'
 import { formatMoneySafe, getRowTotals } from '@/shared/lib'
@@ -54,6 +54,17 @@ const displayServicesRsd = computed(() =>
   formatMoneySafe(servicesRsd.value, { showMinorZeros: true, locale: props.locale }),
 )
 const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMinorZeros: true, locale: props.locale }))
+
+const openConfirmDialog = ref(false)
+
+function closeConfirmDialog() {
+  openConfirmDialog.value = false
+}
+
+function handleClearRow() {
+  emit('remove', props.row.id)
+  closeConfirmDialog()
+}
 </script>
 
 <template>
@@ -105,9 +116,18 @@ const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMin
         :size="size"
         icon="trash"
         :label="t('ui.reportTableRow.remove')"
-        @click="emit('remove', row.id)"
+        @click="openConfirmDialog = true"
       />
     </div>
+    <ConfirmDialog
+      v-model:open="openConfirmDialog"
+      @confirm="handleClearRow"
+      :title="t('ui.deleteRowModal.title')"
+      :message="t('ui.deleteRowModal.description')"
+      :labelActiveButton="t('ui.deleteRowModal.confirm')"
+      :labelCancelButton="t('ui.deleteRowModal.cancel')"
+      type="delete"
+    />
   </div>
 </template>
 
