@@ -3,10 +3,12 @@ import { onBeforeUnmount, watch } from 'vue'
 import { BasePaper } from '../display'
 
 const {
+  size = 'md',
   open,
   closeOnOverlay = false,
   closeOnEsc = false,
 } = defineProps<{
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   open: boolean
   closeOnOverlay?: boolean
   closeOnEsc?: boolean
@@ -84,7 +86,7 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <div v-if="open" class="BaseModal" role="dialog" aria-modal="true">
       <div class="BaseModal_Overlay" @click.self="handleOverlayClick">
-        <BasePaper class="BaseModal_Panel">
+        <BasePaper class="BaseModal_Panel" :class="`BaseModal_Panel_size_${size}`">
           <div class="BaseModal_Content">
             <slot />
           </div>
@@ -97,7 +99,7 @@ onBeforeUnmount(() => {
   </Teleport>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .BaseModal {
   position: fixed;
   inset: 0;
@@ -119,6 +121,21 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  &_size {
+    &_xs {
+      max-width: min(400px, 100%);
+    }
+    &_sm {
+      max-width: min(600px, 100%);
+    }
+    &_md {
+      max-width: min(740px, 100%);
+    }
+    &_lg {
+      max-width: min(800px, 100%);
+    }
+  }
 }
 
 .BaseModal_Content {
