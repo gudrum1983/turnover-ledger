@@ -28,6 +28,22 @@ const moneyMask = computed(() => ({
     '9': { pattern: /[0-9]/, optional: true },
   },
 }))
+
+function formatMoneyValue(value: string | null): string | null {
+  if (!value) return value
+
+  const normalized = value.replace(',', '.')
+  const parsed = Number(normalized)
+
+  if (Number.isNaN(parsed)) return value
+
+  const formatted = parsed.toFixed(2)
+  return decimalSeparator.value === ',' ? formatted.replace('.', ',') : formatted
+}
+
+function handleBlur(value: string | null) {
+  emit('update:modelValue', formatMoneyValue(value))
+}
 </script>
 
 <template>
@@ -39,5 +55,6 @@ const moneyMask = computed(() => ({
     :full-width="fullWidth"
     :mask="moneyMask"
     @update:modelValue="emit('update:modelValue', $event)"
+    @blur="handleBlur"
   />
 </template>

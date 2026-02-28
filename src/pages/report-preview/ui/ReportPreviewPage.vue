@@ -11,16 +11,16 @@ const onPrint = () => {
   window.print()
 }
 
-const directionLandscape = ref<boolean>(false)
+const directionLandscape = ref<boolean>(true)
 const { t } = useLocale()
 
-function onCross() {
+/*function onCross() {
   directionLandscape.value = !directionLandscape.value
-}
+}*/
 
-const labelButtonDirection = computed(() =>
+/*const labelButtonDirection = computed(() =>
   directionLandscape.value ? t('ui.reportPreview.landscape') : t('ui.reportPreview.portrait'),
-)
+)*/
 
 const classes = computed(() => [{ ReportPreviewPage_Document_landscape: directionLandscape.value }])
 
@@ -53,9 +53,9 @@ onBeforeUnmount(() => {
   <div class="ReportPreviewPage">
     <AppHeader :msg="t('ui.app.reportPreviewTitle')" class="ReportPreviewPage_Header">
       <template v-slot:actionButtons>
-        <BaseButton color="info" @click="onCross">
+        <!--        <BaseButton color="info" @click="onCross">
           {{ labelButtonDirection }}
-        </BaseButton>
+        </BaseButton>-->
         <BaseButton color="default" variant="outline" @click="router.push({ name: ROUTES.reportBuilder.name })">
           {{ t('ui.reportPreview.toHome') }}
         </BaseButton>

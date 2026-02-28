@@ -10,12 +10,13 @@ type ReportRowProps = {
 
 const { index, row } = defineProps<ReportRowProps>()
 const totals = computed(() => getRowTotals(row))
+const summary = computed(() => [formatDateForUi(row.date), row.description].filter(Boolean).join(', '))
 </script>
 
 <template>
   <tr class="ReportDocumentRow">
     <td>{{ index + 1 }}</td>
-    <td>{{ formatDateForUi(row.date) + ', ' + row.description }}</td>
+    <td>{{ summary }}</td>
     <td class="Text_AlginRight">
       {{ formatMoney(row.amounts.goods.rsdCents ?? 0) }}
     </td>

@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { BaseButton, BaseDividerToggle, BaseModal, IconAdd, IconCompress, IconExpand, ConfirmDialog } from '@/shared/ui'
 import ReportTableRow from './ReportTableRow.vue'
-import ReportRowCreateForm, { type ReportRowPayload } from './ReportRowCreateForm.vue'
+import ReportRowCreateForm, { type ReportRowPayload } from '@/widgets/create-form/ui/ReportRowCreateForm.vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/shared/types/report.ts'

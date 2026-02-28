@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { BaseButton, BaseDatePicker, BaseDropdownButton, BaseField, MoneyField } from '@/shared/ui'
+import { BaseButton, BaseDatePicker, BaseDropdownButton, FieldWithCounter, MoneyField } from '@/shared/ui'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
@@ -11,7 +11,6 @@ import { useLocale } from '@/shared/i18n'
  * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА
  *ZVANIČNI SREDNJI KURS DINARA
  *OFFICIAL MIDDLE RSD EXCHANGE RATE
- * 55 символов в описании + счетчик символов
  * */
 
 const currency = ref('')
@@ -196,7 +195,8 @@ onMounted(() => {
           @update:model-value="currency = $event ?? ''"
         />
       </div>
-      <BaseField
+      <FieldWithCounter
+        :maxLength="55"
         name="description"
         :label="t('ui.reportRowForm.description')"
         :placeholder="t('ui.reportRowForm.descriptionPlaceholder')"
