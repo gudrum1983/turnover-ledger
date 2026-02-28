@@ -72,9 +72,7 @@ const isCalculateDisabled = computed(
 )
 
 const summary = computed(() =>
-  [date.value ? formatDateForUi(date.value, { withTrailingDot: true }) : '', counterparty.value, description.value]
-    .filter(Boolean)
-    .join(', '),
+  [date.value ? formatDateForUi(date.value) : '', counterparty.value, description.value].filter(Boolean).join(', '),
 )
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
 
@@ -108,22 +106,27 @@ const handleCalculate = async () => {
   currentCurs.value = null
 
   try {
-    const conversionGoods = await currencyStore.convertAmount(currency.value, goodsValue, date.value)
+    const conversionGoods =
+      goodsValue > 0 ? await currencyStore.convertAmount(currency.value, goodsValue, date.value) : null
 
-    const conversionServices = await currencyStore.convertAmount(currency.value, servicesValue, date.value)
+    const conversionServices =
+      servicesValue > 0 ? await currencyStore.convertAmount(currency.value, servicesValue, date.value) : null
 
-    const goodsConverted = conversionGoods.buy_middle
-    const servicesConverted = conversionServices.buy_middle
+    const goodsConverted = conversionGoods ? conversionGoods.buy_middle : 0
+    const servicesConverted = conversionServices ? conversionServices.buy_middle : 0
 
-    const exchangeRate = conversionGoods.rate.exchange_middle
     const totalConverted = goodsConverted + servicesConverted
+
+    const exchangeRateGoods = conversionGoods?.rate.exchange_middle
+    const exchangeRateServices = conversionServices?.rate.exchange_middle
+    const exchangeRate = exchangeRateGoods ?? exchangeRateServices
 
     calculatedGoods.value = goodsValue
     calculatedServices.value = servicesValue
     calculatedGoodsConverted.value = goodsConverted
     calculatedServicesConverted.value = servicesConverted
     calculatedTotalConverted.value = totalConverted
-    currentCurs.value = exchangeRate
+    currentCurs.value = exchangeRate ?? 0
 
     if (!isCalculated.value) {
       isCalculated.value = true
