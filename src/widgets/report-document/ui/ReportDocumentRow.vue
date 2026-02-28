@@ -15,7 +15,7 @@ const totals = computed(() => getRowTotals(row))
 <template>
   <tr class="ReportDocumentRow">
     <td>{{ index + 1 }}</td>
-    <td>{{ formatDateForUi(row.date, { withTrailingDot: true }) + ' ' + row.description }}</td>
+    <td>{{ formatDateForUi(row.date) + ', ' + row.description }}</td>
     <td class="Text_AlginRight">
       {{ formatMoney(row.amounts.goods.rsdCents ?? 0) }}
     </td>

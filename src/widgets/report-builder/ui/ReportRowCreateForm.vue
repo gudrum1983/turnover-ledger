@@ -72,9 +72,7 @@ const isCalculateDisabled = computed(
 )
 
 const summary = computed(() =>
-  [date.value ? formatDateForUi(date.value, { withTrailingDot: true }) : '', counterparty.value, description.value]
-    .filter(Boolean)
-    .join(', '),
+  [date.value ? formatDateForUi(date.value) : '', counterparty.value, description.value].filter(Boolean).join(', '),
 )
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
 

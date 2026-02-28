@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { BaseDivider, BaseTag, ConfirmDialog } from '@/shared/ui'
 import ReportTableRowButton from '@/widgets/report-builder/ui/ReportTableRowButton.vue'
 import type { ReportRow } from '@/shared/types/report.ts'
-import { formatMoneySafe, getRowTotals } from '@/shared/lib'
+import { formatDateForUi, formatMoneySafe, getRowTotals } from '@/shared/lib'
 import { useLocale } from '@/shared/i18n'
 import type { I18nLocale } from '@/shared/i18n'
 
@@ -75,7 +75,7 @@ function handleClearRow() {
     <div class="ReportTableRow_Column ReportTableRow_Column_type_description">
       <div class="ReportTableRow_Description">
         <BaseTag class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
-        {{ [row.date, row.description].filter(Boolean).join(', ') }}
+        {{ [formatDateForUi(row.date), row.description].filter(Boolean).join(', ') }}
       </div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
