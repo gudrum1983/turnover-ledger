@@ -10,7 +10,7 @@ type Props = {
   landscape?: boolean
 }
 
-const { landscape = false } = defineProps<Props>()
+const { landscape = true } = defineProps<Props>()
 
 const store = useMetaDataStore()
 const { formData } = storeToRefs(store)

@@ -14,6 +14,7 @@ type Props = {
   debounceMs?: number
   mask?: MaskOptions
   datalist?: string[]
+  maxLength?: number
 }
 
 const {
@@ -26,10 +27,12 @@ const {
   debounceMs = 400,
   mask,
   datalist,
+  maxLength,
 } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
+  (e: 'blur', value: string | null): void
 }>()
 
 const isDatalist = computed(() => Array.isArray(datalist) && datalist.length > 0)
@@ -58,7 +61,15 @@ function scheduleEmit(e: Event) {
 }
 
 function readValue(input: HTMLInputElement): string | null {
-  return input.value
+  const nextValue = input.value
+
+  if (typeof maxLength === 'number' && maxLength >= 0 && nextValue.length > maxLength) {
+    const trimmed = nextValue.slice(0, maxLength)
+    input.value = trimmed
+    return trimmed
+  }
+
+  return nextValue
 }
 
 function commitNow(e: Event) {
@@ -67,6 +78,7 @@ function commitNow(e: Event) {
 
   clearTimer() // важно: чтобы не было второго эмита после blur
   emit('update:modelValue', next)
+  emit('blur', next)
 }
 
 onBeforeUnmount(clearTimer)
@@ -85,6 +97,7 @@ onBeforeUnmount(clearTimer)
       :type="type"
       :name="name"
       :placeholder="placeholder"
+      :maxlength="maxLength"
     />
   </label>
 
@@ -100,6 +113,7 @@ onBeforeUnmount(clearTimer)
       :name="name"
       :placeholder="placeholder"
       :list="datalistId"
+      :maxlength="maxLength"
       autocomplete="off"
     />
 
