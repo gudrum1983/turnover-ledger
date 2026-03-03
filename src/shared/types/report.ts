@@ -11,6 +11,7 @@ export type ReportRow = {
   date: string
   description: string
   currency: CurrencyCode
+  exchangeRate?: number | null
   amounts: {
     goods: MoneyPart
     services: MoneyPart

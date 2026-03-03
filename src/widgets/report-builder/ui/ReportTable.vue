@@ -2,7 +2,10 @@
 import { computed, ref } from 'vue'
 import { BaseButton, BaseDividerToggle, BaseModal, IconAdd, IconCompress, IconExpand, ConfirmDialog } from '@/shared/ui'
 import ReportTableRow from './ReportTableRow.vue'
-import ReportRowCreateForm, { type ReportRowPayload } from '@/widgets/create-form/ui/ReportRowCreateForm.vue'
+import ReportRowCreateForm, {
+  type ReportRowFormInitialValue,
+  type ReportRowPayload,
+} from '@/widgets/create-form/ui/ReportRowCreateForm.vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/shared/types/report.ts'
@@ -23,29 +26,77 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 const tableTotals = computed(() => getTableTotals(rows.value))
 const displayTotalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: localeStore.currentLocale }))
 
+type FormMode = 'create' | 'edit'
+
+const open = ref(false)
+const canSubmit = ref(false)
+const formKey = ref(0)
+const formMode = ref<FormMode>('create')
+const editingRowId = ref<string | null>(null)
+const formInitialValue = ref<ReportRowFormInitialValue | null>(null)
+
+const openConfirmDialog = ref(false)
+
+const modalTitle = computed(() =>
+  formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.addRowModalTitle'),
+)
+const submitLabel = computed(() => (formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.add')))
+
+const fromCents = (value: number | null | undefined) => (typeof value === 'number' ? value / 100 : null)
+
+const mapRowToInitialValue = (row: ReportRow): ReportRowFormInitialValue => ({
+  date: row.date,
+  currency: row.currency,
+  description: row.description,
+  goodsAmount: fromCents(row.amounts.goods.foreignCents),
+  servicesAmount: fromCents(row.amounts.services.foreignCents),
+  goodsAmountRsd: fromCents(row.amounts.goods.rsdCents),
+  servicesAmountRsd: fromCents(row.amounts.services.rsdCents),
+  totalAmountRsd: fromCents(row.amounts.goods.rsdCents + row.amounts.services.rsdCents),
+  exchangeRate: row.exchangeRate ?? null,
+})
+
+function openCreateModal(initialValue: ReportRowFormInitialValue | null = null) {
+  formMode.value = 'create'
+  editingRowId.value = null
+  formInitialValue.value = initialValue
+  canSubmit.value = false
+  formKey.value += 1
+  open.value = true
+}
+
+function openEditModal(rowId: string) {
+  const row = store.getRowById(rowId)
+  if (!row) return
+
+  formMode.value = 'edit'
+  editingRowId.value = row.id
+  formInitialValue.value = mapRowToInitialValue(row)
+  canSubmit.value = false
+  formKey.value += 1
+  open.value = true
+}
+
 function handleEdit(id: string) {
-  void id
-  alert(t('ui.reportTable.editAlert'))
+  openEditModal(id)
 }
 
 function handleCopy(id: string) {
   const row = store.getRowById(id)
   if (!row) return
-  store.addRow({ ...row, id: createRowId() })
+  openCreateModal(mapRowToInitialValue(row))
 }
 
 function handleRemove(id: string) {
   store.removeRowById(id)
 }
-const open = ref(false)
-const canSubmit = ref(false)
-const formKey = ref(0)
-
-const openConfirmDialog = ref(false)
 
 function closeModal() {
   open.value = false
   canSubmit.value = false
+  formMode.value = 'create'
+  editingRowId.value = null
+  formInitialValue.value = null
 }
 
 function closeConfirmDialog() {
@@ -68,28 +119,33 @@ const createRowId = () => {
 
 function onSubmit(payload: ReportRowPayload) {
   if (!payload.currency || !payload.date) return
-  if (payload.calculatedGoodsConverted === null || payload.calculatedServicesConverted === null) return
+  if (payload.goodsAmountRsd === null || payload.servicesAmountRsd === null) return
 
+  const rowId = formMode.value === 'edit' && editingRowId.value ? editingRowId.value : createRowId()
   const row: ReportRow = {
-    id: createRowId(),
+    id: rowId,
     date: payload.date,
     description: payload.description,
     currency: payload.currency.toUpperCase(),
+    exchangeRate: payload.exchangeRate,
     amounts: {
       goods: {
         foreignCents: toCents(payload.goodsAmount),
-        rsdCents: toCents(payload.calculatedGoodsConverted),
+        rsdCents: toCents(payload.goodsAmountRsd),
       },
       services: {
         foreignCents: toCents(payload.servicesAmount),
-        rsdCents: toCents(payload.calculatedServicesConverted),
+        rsdCents: toCents(payload.servicesAmountRsd),
       },
     },
   }
 
-  store.addRow(row)
+  if (formMode.value === 'edit') {
+    store.updateRowById(row.id, row)
+  } else {
+    store.addRow(row)
+  }
   closeModal()
-  formKey.value += 1
 }
 
 /*todo № на русском, br. ser, # на английском*/
@@ -108,7 +164,7 @@ function onSubmit(payload: ReportRowPayload) {
 
     <div class="ReportTable_Fieldset">
       <div class="ReportTable_Actions">
-        <BaseButton color="primary" size="xs" @click="open = true" class="">{{
+        <BaseButton color="primary" size="xs" @click="openCreateModal()" class="">{{
           t('ui.reportTable.addRow')
         }}</BaseButton>
         <BaseButton color="danger" size="xs" v-if="rows.length > 0" @click="openConfirmDialog = true">{{
@@ -139,7 +195,7 @@ function onSubmit(payload: ReportRowPayload) {
         </div>
         <div v-if="rows.length < 1" class="ReportTable_Empty">
           {{ t('ui.reportTable.emptyHint') }}
-          <BaseButton color="primary" size="xs" @click="open = true" variant="outline" isIconOnly>
+          <BaseButton color="primary" size="xs" @click="openCreateModal()" variant="outline" isIconOnly>
             <template #icon>
               <IconAdd style="width: 18px; height: 18px" />
             </template>
@@ -157,12 +213,18 @@ function onSubmit(payload: ReportRowPayload) {
       </div>
     </div>
     <BaseModal :open="open" @close="closeModal" closeOnEsc>
-      <h2>{{ t('ui.reportTable.addRowModalTitle') }}</h2>
-      <ReportRowCreateForm :key="formKey" @update:canSubmit="canSubmit = $event" @submit="onSubmit" id="testForm" />
+      <h2>{{ modalTitle }}</h2>
+      <ReportRowCreateForm
+        :key="formKey"
+        :initial-value="formInitialValue"
+        @update:canSubmit="canSubmit = $event"
+        @submit="onSubmit"
+        id="testForm"
+      />
       <template #actions>
         <BaseButton size="md" @click="closeModal">{{ t('ui.reportTable.cancel') }}</BaseButton>
         <BaseButton color="primary" size="md" :disabled="!canSubmit" type="submit" form="testForm">
-          {{ t('ui.reportTable.add') }}
+          {{ submitLabel }}
         </BaseButton>
       </template>
     </BaseModal>

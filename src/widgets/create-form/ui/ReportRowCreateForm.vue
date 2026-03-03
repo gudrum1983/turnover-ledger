@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { BaseButton, BaseDatePicker, BaseDropdownButton, FieldWithCounter, MoneyField } from '@/shared/ui'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
@@ -20,7 +20,19 @@ const description = ref('')
 const goodsAmount = ref<string | null>(null)
 const servicesAmount = ref<string | null>(null)
 
-const currentCurs = ref<number | null>(null)
+export type ReportRowFormInitialValue = {
+  date?: string
+  currency?: string
+  description?: string
+  goodsAmount?: number | null
+  servicesAmount?: number | null
+  goodsAmountRsd?: number | null
+  servicesAmountRsd?: number | null
+  totalAmountRsd?: number | null
+  exchangeRate?: number | null
+}
+
+const exchangeRate = ref<number | null>(null)
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
@@ -39,10 +51,19 @@ export type ReportRowPayload = {
   description: string
   goodsAmount: number
   servicesAmount: number
-  calculatedGoodsConverted: number | null
-  calculatedServicesConverted: number | null
-  calculatedTotalConverted: number | null
+  exchangeRate: number | null
+  goodsAmountRsd: number | null
+  servicesAmountRsd: number | null
+  totalAmountRsd: number | null
 }
+
+type ReportRowCreateFormProps = {
+  initialValue?: ReportRowFormInitialValue | null
+}
+
+const props = withDefaults(defineProps<ReportRowCreateFormProps>(), {
+  initialValue: null,
+})
 
 const emit = defineEmits<{
   (event: 'update:canSubmit', value: boolean): void
@@ -60,12 +81,11 @@ const parseMoney = (value: string | null) => {
   return Number.isFinite(result) ? result : 0
 }
 
-const calculatedGoods = ref<number | null>(null)
-const calculatedServices = ref<number | null>(null)
-const calculatedGoodsConverted = ref<number | null>(null)
-const calculatedServicesConverted = ref<number | null>(null)
-const calculatedTotalConverted = ref<number | null>(null)
+const goodsAmountRsd = ref<number | null>(null)
+const servicesAmountRsd = ref<number | null>(null)
+const totalAmountRsd = ref<number | null>(null)
 const isCalculated = ref(false)
+const isApplyingInitialValue = ref(false)
 const isCalculateDisabled = computed(
   () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value,
 )
@@ -80,16 +100,27 @@ const toCents = (value: number) => Math.round(value * 100)
 const formatValue = (value: number | null) =>
   value === null ? '—' : formatMoney(toCents(value), { showMinorZeros: true, locale: uiLocale.value })
 
-const resetCalculated = () => {
-  calculatedGoods.value = null
-  calculatedServices.value = null
-  calculatedGoodsConverted.value = null
-  calculatedServicesConverted.value = null
-  calculatedTotalConverted.value = null
-  if (isCalculated.value) {
-    isCalculated.value = false
-    emit('update:canSubmit', false)
+const formatInputMoney = (value: number | null | undefined): string | null => {
+  if (value === null || value === undefined) {
+    return null
   }
+  return String(value)
+}
+
+const clearCalculated = () => {
+  goodsAmountRsd.value = null
+  servicesAmountRsd.value = null
+  totalAmountRsd.value = null
+  exchangeRate.value = null
+  isCalculated.value = false
+  emit('update:canSubmit', false)
+}
+
+const resetCalculated = () => {
+  if (isApplyingInitialValue.value) {
+    return
+  }
+  clearCalculated()
 }
 
 const handleCalculate = async () => {
@@ -102,7 +133,7 @@ const handleCalculate = async () => {
   if (totalAmount <= 0) return
 
   isCalculating.value = true
-  currentCurs.value = null
+  exchangeRate.value = null
 
   try {
     const conversionGoods =
@@ -118,14 +149,12 @@ const handleCalculate = async () => {
 
     const exchangeRateGoods = conversionGoods?.rate.exchange_middle
     const exchangeRateServices = conversionServices?.rate.exchange_middle
-    const exchangeRate = exchangeRateGoods ?? exchangeRateServices
+    const resolvedExchangeRate = exchangeRateGoods ?? exchangeRateServices
 
-    calculatedGoods.value = goodsValue
-    calculatedServices.value = servicesValue
-    calculatedGoodsConverted.value = goodsConverted
-    calculatedServicesConverted.value = servicesConverted
-    calculatedTotalConverted.value = totalConverted
-    currentCurs.value = exchangeRate ?? 0
+    goodsAmountRsd.value = goodsConverted
+    servicesAmountRsd.value = servicesConverted
+    totalAmountRsd.value = totalConverted
+    exchangeRate.value = resolvedExchangeRate ?? 0
 
     if (!isCalculated.value) {
       isCalculated.value = true
@@ -144,7 +173,7 @@ const handleSubmit = (event: Event) => {
     return
   }
 
-  if (calculatedGoodsConverted.value === null || calculatedServicesConverted.value === null) {
+  if (goodsAmountRsd.value === null || servicesAmountRsd.value === null) {
     emit('update:canSubmit', false)
     return
   }
@@ -155,18 +184,51 @@ const handleSubmit = (event: Event) => {
     description: description.value,
     goodsAmount: parseMoney(goodsAmount.value),
     servicesAmount: parseMoney(servicesAmount.value),
-    calculatedGoodsConverted: calculatedGoodsConverted.value,
-    calculatedServicesConverted: calculatedServicesConverted.value,
-    calculatedTotalConverted: calculatedTotalConverted.value,
+    exchangeRate: exchangeRate.value,
+    goodsAmountRsd: goodsAmountRsd.value,
+    servicesAmountRsd: servicesAmountRsd.value,
+    totalAmountRsd: totalAmountRsd.value,
+  })
+}
+
+const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
+  isApplyingInitialValue.value = true
+  date.value = initialValue?.date ?? ''
+  currency.value = initialValue?.currency ?? metaDataStore.lastUsedCurrencyCode
+  description.value = initialValue?.description ?? ''
+  goodsAmount.value = formatInputMoney(initialValue?.goodsAmount)
+  servicesAmount.value = formatInputMoney(initialValue?.servicesAmount)
+
+  const hasPrecalculatedValues =
+    initialValue?.goodsAmountRsd !== undefined && initialValue?.servicesAmountRsd !== undefined
+
+  if (hasPrecalculatedValues) {
+    goodsAmountRsd.value = initialValue?.goodsAmountRsd ?? null
+    servicesAmountRsd.value = initialValue?.servicesAmountRsd ?? null
+    totalAmountRsd.value =
+      initialValue?.totalAmountRsd ?? (initialValue?.goodsAmountRsd ?? 0) + (initialValue?.servicesAmountRsd ?? 0)
+    exchangeRate.value = initialValue?.exchangeRate ?? null
+    isCalculated.value = true
+    emit('update:canSubmit', true)
+  } else {
+    clearCalculated()
+  }
+
+  void nextTick(() => {
+    isApplyingInitialValue.value = false
   })
 }
 
 watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
+watch(
+  () => props.initialValue,
+  (next) => {
+    applyInitialValue(next)
+  },
+  { immediate: true },
+)
 
 onMounted(() => {
-  if (!currency.value) {
-    currency.value = metaDataStore.lastUsedCurrencyCode
-  }
   currencyStore.hydrateFromLocalStorage()
   void currencyStore.loadCurrencies()
 })
@@ -233,7 +295,7 @@ onMounted(() => {
         {{ t('ui.reportRowForm.calculate') }}
       </BaseButton>
       <div v-if="isCalculated" class="ReportRowForm_Hint">
-        {{ t('ui.reportRowForm.officialRatePrefix') }} {{ currentCurs }}
+        {{ t('ui.reportRowForm.officialRatePrefix') }} {{ exchangeRate ?? '—' }}
       </div>
       <div v-if="!isCalculated" class="ReportRowForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
     </div>
@@ -243,7 +305,7 @@ onMounted(() => {
         <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.goodsRsd') }}</div>
 
         <div class="ReportRowForm_Card">
-          <div class="ReportRowForm_Value">{{ formatValue(calculatedGoodsConverted) }}</div>
+          <div class="ReportRowForm_Value">{{ formatValue(goodsAmountRsd) }}</div>
         </div>
       </div>
 
@@ -251,14 +313,14 @@ onMounted(() => {
         <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.servicesRsd') }}</div>
 
         <div class="ReportRowForm_Card">
-          <div class="ReportRowForm_Value">{{ formatValue(calculatedServicesConverted) }}</div>
+          <div class="ReportRowForm_Value">{{ formatValue(servicesAmountRsd) }}</div>
         </div>
       </div>
 
       <div>
         <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.totalRsd') }}</div>
         <div class="ReportRowForm_Card">
-          <div class="ReportRowForm_Value">{{ formatValue(calculatedTotalConverted) }}</div>
+          <div class="ReportRowForm_Value">{{ formatValue(totalAmountRsd) }}</div>
         </div>
       </div>
     </div>
