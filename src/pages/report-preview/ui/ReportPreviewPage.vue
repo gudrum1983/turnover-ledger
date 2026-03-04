@@ -2,10 +2,10 @@
 import ReportDocument from '@/widgets/report-document/ui/ReportDocument.vue'
 import AppHeader from '@/app/AppHeader.vue'
 import { ROUTES } from '@/shared/constants/routes.ts'
-import { BaseButton } from '@/shared/ui'
-import router from '@/app/router'
+import { BaseButton, BaseButtonGroup, BaseLink } from '@/shared/ui'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useLocale } from '@/shared/i18n'
+import type { ReportScript } from '@/shared/types/report.ts'
 
 const onPrint = () => {
   window.print()
@@ -13,7 +13,8 @@ const onPrint = () => {
 
 const directionLandscape = ref<boolean>(true)
 const { t } = useLocale()
-
+const script = ref<ReportScript>('srLat')
+/*const store = useMetaDataStore()*/
 /*function onCross() {
   directionLandscape.value = !directionLandscape.value
 }*/
@@ -21,6 +22,20 @@ const { t } = useLocale()
 /*const labelButtonDirection = computed(() =>
   directionLandscape.value ? t('ui.reportPreview.landscape') : t('ui.reportPreview.portrait'),
 )*/
+
+const reportScriptOptions = computed(() => [
+  { value: 'srLat', label: t('ui.languageSwitcher.reportScriptLatin') },
+  { value: 'srCyr', label: t('ui.languageSwitcher.reportScriptCyrillic') },
+])
+
+const reportScriptModel = computed<string>({
+  get: () => script.value,
+  set: (value) => {
+    if (value === 'srLat' || value === 'srCyr') {
+      script.value = value as ReportScript
+    }
+  },
+})
 
 const classes = computed(() => [{ ReportPreviewPage_Document_landscape: directionLandscape.value }])
 
@@ -56,12 +71,24 @@ onBeforeUnmount(() => {
         <!--        <BaseButton color="info" @click="onCross">
           {{ labelButtonDirection }}
         </BaseButton>-->
-        <BaseButton color="default" variant="outline" @click="router.push({ name: ROUTES.reportBuilder.name })">
-          {{ t('ui.reportPreview.toHome') }}
-        </BaseButton>
-        <BaseButton color="primary" variant="outline" @click="onPrint">{{ t('ui.reportPreview.print') }}</BaseButton>
+        <div class="ReportPreviewPage_Actions">
+          <BaseLink :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 на главную</BaseLink>
+
+          <div class="language_switch">
+            <div class="Typo_Caption">{{ t('ui.languageSwitcher.reportScript') }}:</div>
+            <BaseButtonGroup
+              v-model="reportScriptModel"
+              :options="reportScriptOptions"
+              :aria-label="t('ui.languageSwitcher.reportScript')"
+              size="xs"
+            />
+          </div>
+
+          <BaseButton size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</BaseButton>
+        </div>
       </template>
     </AppHeader>
+
     <section class="ReportPreviewPage_Document" :class="classes">
       <ReportDocument :landscape="directionLandscape" />
     </section>
@@ -75,8 +102,13 @@ onBeforeUnmount(() => {
   align-items: center;
 
   &_Header {
-    margin-block-start: 20px;
-    margin-block-end: 40px;
+    margin-block-end: 16px;
+  }
+
+  &_Actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
   }
 
   &_Document {
@@ -94,6 +126,12 @@ onBeforeUnmount(() => {
       min-height: 210mm;
     }
   }
+}
+
+.language_switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 @media print {

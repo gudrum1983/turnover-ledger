@@ -164,12 +164,14 @@ function onSubmit(payload: ReportRowPayload) {
 
     <div class="ReportTable_Fieldset">
       <div class="ReportTable_Actions">
-        <BaseButton color="primary" size="xs" @click="openCreateModal()" class="">{{
-          t('ui.reportTable.addRow')
-        }}</BaseButton>
-        <BaseButton color="danger" size="xs" v-if="rows.length > 0" @click="openConfirmDialog = true">{{
-          t('ui.reportTable.clearTable')
-        }}</BaseButton>
+        <div class="ReportTable_RowActions">
+          <BaseButton color="primary" size="xs" @click="openCreateModal()" class="">{{
+            t('ui.reportTable.addRow')
+          }}</BaseButton>
+          <BaseButton color="danger" size="xs" v-if="rows.length > 0" @click="openConfirmDialog = true">{{
+            t('ui.reportTable.clearTable')
+          }}</BaseButton>
+        </div>
       </div>
       <div>
         <div class="ReportTable_Header">
@@ -251,12 +253,29 @@ function onSubmit(payload: ReportRowPayload) {
   }
 
   &_Actions {
-    display: grid;
-    grid-template-columns: repeat(2, 160px);
-    grid-auto-columns: 160px;
-    grid-auto-flow: column;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+    gap: 12px;
     width: 100%;
+  }
+
+  &_ReportControls {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  &_YearField {
+    width: 100%;
+    max-width: 230px;
+  }
+
+  &_RowActions {
+    display: flex;
+    gap: 10px;
+    // margin-left: auto;
   }
 
   &_Header {
