@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ROUTES } from '@/shared/constants/routes.ts'
+import { BaseLink } from '@/shared/ui'
 </script>
 
 <template>
@@ -7,22 +8,22 @@ import { ROUTES } from '@/shared/constants/routes.ts'
     <div class="Typo_Display">404 страница не найдена</div>
 
     <div>
-      <RouterLink :to="{ name: ROUTES.reportBuilder.name }">Спокойно — возвращаемся домой</RouterLink>
+      <BaseLink :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Спокойно — возвращаемся домой</BaseLink>
       <p>Ничего страшного, вы просто немного свернули не туда</p>
     </div>
 
     <div>
-      <RouterLink :to="{ name: ROUTES.reportBuilder.name }">Polako — hajde kući</RouterLink>
+      <BaseLink :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Polako — hajde kući</BaseLink>
       <p>Ništa strašno, samo ste malo skrenuli</p>
     </div>
 
     <div>
-      <RouterLink :to="{ name: ROUTES.reportBuilder.name }">Easy — let’s go home</RouterLink>
+      <BaseLink :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Easy — let’s go home</BaseLink>
       <p>No worries, you just took a wrong turn</p>
     </div>
 
     <div>
-      <RouterLink :to="{ name: ROUTES.reportBuilder.name }">Полако — хајде кући</RouterLink>
+      <BaseLink :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Полако — хајде кући</BaseLink>
       <p>Ништа страшно, само сте мало скренули</p>
     </div>
   </div>
