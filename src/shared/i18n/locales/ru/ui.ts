@@ -73,4 +73,9 @@ export const ruUi = {
     confirm: 'Удалить всё',
     cancel: 'Отмена',
   },
+  languageSwitcher: {
+    reportScript: 'Язык отчета',
+    reportScriptLatin: 'Latinica',
+    reportScriptCyrillic: 'Ћирилица',
+  },
 } as const

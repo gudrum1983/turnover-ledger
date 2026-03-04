@@ -75,4 +75,9 @@ export const srCyrUi = {
     confirm: 'Обриши све',
     cancel: 'Откажи',
   },
+  languageSwitcher: {
+    reportScript: 'Писмо извештаја',
+    reportScriptLatin: 'Латиница',
+    reportScriptCyrillic: 'Ћирилица',
+  },
 } as const satisfies I18nLocaleMessages['ui']

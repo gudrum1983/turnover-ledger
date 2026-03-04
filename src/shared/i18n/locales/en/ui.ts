@@ -75,4 +75,9 @@ export const enUi = {
     confirm: 'Delete all',
     cancel: 'Cancel',
   },
+  languageSwitcher: {
+    reportScript: 'Report script',
+    reportScriptLatin: 'Latinica',
+    reportScriptCyrillic: 'Cyrillic',
+  },
 } as const satisfies I18nLocaleMessages['ui']
