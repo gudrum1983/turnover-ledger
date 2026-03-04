@@ -3,49 +3,64 @@ import { computed } from 'vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
 import ReportDocumentRow from '@/widgets/report-document/ui/ReportDocumentRow.vue'
-import { HEADER_FIELDS } from '@/shared/constants/reportFields.ts'
-import { useLocale } from '@/shared/i18n'
+import {
+  HEADER_FIELDS,
+  type FooterField,
+  type HeaderField,
+  type TableField,
+  type TitleField,
+} from '@/shared/constants/reportFields.ts'
+import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
+import type { ReportScript } from '@/shared/types/report.ts'
 
 type Props = {
   landscape?: boolean
+  script?: ReportScript
 }
 
-const { landscape = true } = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  landscape: true,
+  script: 'srLat',
+})
 
 const store = useMetaDataStore()
 const { formData } = storeToRefs(store)
-const { t } = useLocale()
 
-const classColumn = computed(() => [{ ReportDocument_Column_landscape: landscape }])
-const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape: landscape }])
+const classColumn = computed(() => [{ ReportDocument_Column_landscape: props.landscape }])
+const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape: props.landscape }])
+
+const getHeaderLabel = (key: HeaderField) => KPO_DICTIONARY.header[key][props.script]
+const getTitleLabel = (key: TitleField) => KPO_DICTIONARY.title[key][props.script]
+const getTableLabel = (key: TableField) => KPO_DICTIONARY.table[key][props.script]
+const getFooterLabel = (key: FooterField) => KPO_DICTIONARY.footer[key][props.script]
 </script>
 
 <template>
   <div class="ReportDocument Typo_ReportBody">
     <ul class="ReportDocument_Header">
       <li v-for="field in HEADER_FIELDS" :key="field">
-        <span class="Typo_ReportBodyAccent">{{ t(`report.header.${field}`) }}:</span> {{ formData.header[field] }}
+        <span class="Typo_ReportBodyAccent">{{ getHeaderLabel(field) }}:</span> {{ formData.header[field] }}
       </li>
     </ul>
 
     <div class="ReportDocument_Title Typo_ReportTitle">
-      <div>{{ t('report.title.firstLine') }}</div>
-      <div>{{ t('report.title.secondLine') }}</div>
+      <div>{{ getTitleLabel('firstLine') }}</div>
+      <div>{{ getTitleLabel('secondLine') }}</div>
     </div>
 
     <table class="ReportDocument_Table">
       <thead class="Typo_ReportTableAccent">
         <tr>
-          <td rowspan="2" colspan="1">{{ t('report.table.rowNumber') }}</td>
+          <td rowspan="2" colspan="1">{{ getTableLabel('rowNumber') }}</td>
           <td rowspan="2" colspan="1">
-            {{ t('report.table.dateAndDescription') }}
+            {{ getTableLabel('dateAndDescription') }}
           </td>
-          <td rowspan="1" colspan="2" class="Typo_Uppercase">{{ t('report.table.income') }}</td>
-          <td rowspan="2" colspan="1" class="Typo_Uppercase">{{ t('report.table.totalIncome') }}</td>
+          <td rowspan="1" colspan="2" class="Typo_Uppercase">{{ getTableLabel('income') }}</td>
+          <td rowspan="2" colspan="1" class="Typo_Uppercase">{{ getTableLabel('totalIncome') }}</td>
         </tr>
         <tr>
-          <td>{{ t('report.table.incomeFromProducts') }}</td>
-          <td>{{ t('report.table.incomeFromServices') }}</td>
+          <td>{{ getTableLabel('incomeFromProducts') }}</td>
+          <td>{{ getTableLabel('incomeFromServices') }}</td>
         </tr>
         <tr :class="classColumn">
           <td class="ReportDocument_Column ReportDocument_Column_type_num">1</td>
@@ -56,18 +71,24 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
         </tr>
       </thead>
       <tbody>
-        <ReportDocumentRow v-for="(row, index) in store.rows" :key="row.id" :index="index" :row="row" />
+        <ReportDocumentRow
+          v-for="(row, index) in store.rows"
+          :key="row.id"
+          :index="index"
+          :row="row"
+          :script="props.script"
+        />
       </tbody>
     </table>
 
     <div class="ReportDocument_Footer">
       <div class="ReportDocument_SignaturePlace" :class="classSignature">
-        <div class="Typo_ReportTableAccent">{{ t('report.footer.preparedBy') }}</div>
+        <div class="Typo_ReportTableAccent">{{ getFooterLabel('preparedBy') }}</div>
         <div class="ReportDocument_Signature">{{ formData.footer.preparedBy }}</div>
       </div>
 
       <div class="ReportDocument_SignaturePlace" :class="classSignature">
-        <div class="Typo_ReportTableAccent">{{ t('report.footer.responsiblePerson') }}</div>
+        <div class="Typo_ReportTableAccent">{{ getFooterLabel('responsiblePerson') }}</div>
         <div class="ReportDocument_Signature">{{ formData.footer.responsiblePerson }}</div>
       </div>
     </div>
