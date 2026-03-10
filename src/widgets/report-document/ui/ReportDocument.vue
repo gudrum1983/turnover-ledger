@@ -12,6 +12,7 @@ import {
 } from '@/shared/constants/reportFields.ts'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
 import type { ReportScript } from '@/shared/types/report.ts'
+import { formatMoney, getTableTotals } from '@/shared/lib'
 
 type Props = {
   landscape?: boolean
@@ -23,16 +24,24 @@ const props = withDefaults(defineProps<Props>(), {
   script: 'srLat',
 })
 
+const TOTAL_LABEL_BY_SCRIPT: Record<ReportScript, string> = {
+  srLat: 'Ukupno',
+  srCyr: 'Укупно',
+}
+
 const store = useMetaDataStore()
-const { formData } = storeToRefs(store)
+const { formData, rows } = storeToRefs(store)
 
 const classColumn = computed(() => [{ ReportDocument_Column_landscape: props.landscape }])
 const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape: props.landscape }])
+const tableTotals = computed(() => getTableTotals(rows.value))
+const totalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: props.script }))
 
 const getHeaderLabel = (key: HeaderField) => KPO_DICTIONARY.header[key][props.script]
 const getTitleLabel = (key: TitleField) => KPO_DICTIONARY.title[key][props.script]
 const getTableLabel = (key: TableField) => KPO_DICTIONARY.table[key][props.script]
 const getFooterLabel = (key: FooterField) => KPO_DICTIONARY.footer[key][props.script]
+const getTableTotalLabel = () => TOTAL_LABEL_BY_SCRIPT[props.script]
 </script>
 
 <template>
@@ -79,6 +88,12 @@ const getFooterLabel = (key: FooterField) => KPO_DICTIONARY.footer[key][props.sc
           :script="props.script"
         />
       </tbody>
+      <tfoot>
+        <tr class="Typo_ReportTableAccent">
+          <td colspan="4" class="Text_AlginRight">{{ getTableTotalLabel() }}</td>
+          <td class="Text_AlginRight">{{ totalRsd }}</td>
+        </tr>
+      </tfoot>
     </table>
 
     <div class="ReportDocument_Footer">
