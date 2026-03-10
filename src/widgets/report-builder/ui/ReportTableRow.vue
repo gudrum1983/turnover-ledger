@@ -54,6 +54,14 @@ const displayServicesRsd = computed(() =>
   formatMoneySafe(servicesRsd.value, { showMinorZeros: true, locale: props.locale }),
 )
 const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMinorZeros: true, locale: props.locale }))
+const deleteRowDetails = computed(() => {
+  const summary = [formatDateForUi(props.row.date), props.row.description].filter(Boolean).join(', ')
+  const totals = hasCurrency.value
+    ? `${displayTotalForeign.value || '-'} ${currencyLabel.value} (${displayTotalRsd.value} RSD)`
+    : `${displayTotalRsd.value} RSD`
+
+  return [summary, totals].filter(Boolean).join(' - ')
+})
 
 const openConfirmDialog = ref(false)
 
@@ -127,7 +135,11 @@ function handleClearRow() {
       :labelActiveButton="t('ui.deleteRowModal.confirm')"
       :labelCancelButton="t('ui.deleteRowModal.cancel')"
       type="delete"
-    />
+    >
+      <template v-if="deleteRowDetails" #content>
+        {{ deleteRowDetails }}
+      </template>
+    </ConfirmDialog>
   </div>
 </template>
 
