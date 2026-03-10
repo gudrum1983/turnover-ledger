@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
 import type { ReportRow, ReportState } from '@/shared/types/report.ts'
+import { cloneReportState, isReportState } from '@/shared/lib'
 
 export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
   const LOCAL_STORAGE_KEY = 'reportState'
@@ -42,6 +43,30 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
   })
 
   const lastUsedCurrencyCode = computed(() => rows.value.at(-1)?.currency ?? 'EUR')
+
+  function exportState(): ReportState {
+    return cloneReportState({
+      meta: {
+        header: { ...formData.header },
+        footer: { ...formData.footer },
+      },
+      rows: rows.value,
+    })
+  }
+
+  function replaceState(nextState: ReportState) {
+    const snapshot = cloneReportState(nextState)
+
+    for (const key of Object.keys(formData.header) as HeaderField[]) {
+      formData.header[key] = snapshot.meta.header[key]
+    }
+
+    for (const key of Object.keys(formData.footer) as FooterField[]) {
+      formData.footer[key] = snapshot.meta.footer[key]
+    }
+
+    rows.value = snapshot.rows
+  }
 
   function setHeaderValue(field: HeaderField, value: string) {
     formData.header[field] = value
@@ -98,24 +123,29 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
     const savedState = localStorage.getItem(LOCAL_STORAGE_KEY)
     if (savedState) {
       try {
-        const parsed = JSON.parse(savedState) as ReportState
+        const parsed = JSON.parse(savedState) as unknown
 
-        if (parsed?.meta?.header) {
+        if (isReportState(parsed)) {
+          replaceState(parsed)
+          return
+        }
+
+        if (typeof parsed === 'object' && parsed !== null && 'meta' in parsed && parsed.meta && typeof parsed.meta === 'object' && 'header' in parsed.meta) {
           for (const key of Object.keys(formData.header) as HeaderField[]) {
-            const value = parsed.meta.header[key]
+            const value = (parsed.meta as ReportState['meta']).header[key]
             if (typeof value === 'string') formData.header[key] = value
           }
         }
 
-        if (parsed?.meta?.footer) {
+        if (typeof parsed === 'object' && parsed !== null && 'meta' in parsed && parsed.meta && typeof parsed.meta === 'object' && 'footer' in parsed.meta) {
           for (const key of Object.keys(formData.footer) as FooterField[]) {
-            const value = parsed.meta.footer[key]
+            const value = (parsed.meta as ReportState['meta']).footer[key]
             if (typeof value === 'string') formData.footer[key] = value
           }
         }
 
-        if (Array.isArray(parsed?.rows)) {
-          rows.value = parsed.rows
+        if (typeof parsed === 'object' && parsed !== null && 'rows' in parsed && Array.isArray(parsed.rows)) {
+          rows.value = parsed.rows as ReportRow[]
         }
 
         return
@@ -128,13 +158,7 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
   watch(
     () => [formData, rows.value] as const,
     () => {
-      const payload: ReportState = {
-        meta: {
-          header: { ...formData.header },
-          footer: { ...formData.footer },
-        },
-        rows: rows.value,
-      }
+      const payload = exportState()
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload))
     },
     { deep: true },
@@ -145,6 +169,8 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
     rows,
     usedCurrencyCodes,
     lastUsedCurrencyCode,
+    exportState,
+    replaceState,
     setHeaderValue,
     setFooterValue,
     addRow,
