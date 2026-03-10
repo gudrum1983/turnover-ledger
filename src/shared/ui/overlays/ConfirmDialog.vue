@@ -39,7 +39,10 @@ function handleCancel() {
 <template>
   <BaseModal :open="open" closeOnOverlay closeOnEsc @close="closeDialog" size="xs">
     <h2 class="Text_AlginCenter Typo_Heading2">{{ title }}</h2>
-    <p class="Text_AlginCenter Typo_Body">{{ message }}</p>
+    <div v-if="$slots.content" class="ConfirmDialog_Content Text_AlginCenter Typo_BodyAccent">
+      <slot name="content" />
+    </div>
+    <p class="ConfirmDialog_Message Text_AlginCenter Typo_Body">{{ message }}</p>
     <template #actions>
       <BaseButton v-autofocus="autoFocusCancelButton" size="lg" color="default" @click="handleCancel">{{
         labelCancelButton
@@ -55,4 +58,11 @@ function handleCancel() {
   </BaseModal>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.ConfirmDialog {
+  &_Content {
+    color: var(--color-text-secondary);
+    overflow-wrap: break-word;
+  }
+}
+</style>

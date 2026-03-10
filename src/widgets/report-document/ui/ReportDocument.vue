@@ -184,7 +184,7 @@ const getFooterLabel = (key: FooterField) => KPO_DICTIONARY.footer[key][props.sc
 
       &_type {
         &_num {
-          max-width: 5%;
+          max-width: 7%;
         }
 
         &_description {
