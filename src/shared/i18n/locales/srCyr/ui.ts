@@ -58,8 +58,6 @@ export const srCyrUi = {
     row: 'Ред',
   },
   reportPreview: {
-    landscape: 'Хоризонтално',
-    portrait: 'Вертикално',
     toHome: 'На почетну',
     print: 'ШТАМПА',
   },
@@ -74,5 +72,10 @@ export const srCyrUi = {
     description: 'Сви подаци ће бити трајно уклоњени.',
     confirm: 'Обриши све',
     cancel: 'Откажи',
+  },
+  languageSwitcher: {
+    reportScript: 'Писмо извештаја',
+    reportScriptLatin: 'Латиница',
+    reportScriptCyrillic: 'Ћирилица',
   },
 } as const satisfies I18nLocaleMessages['ui']

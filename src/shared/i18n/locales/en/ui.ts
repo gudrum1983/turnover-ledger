@@ -58,8 +58,6 @@ export const enUi = {
     row: 'Row',
   },
   reportPreview: {
-    landscape: 'Landscape',
-    portrait: 'Portrait',
     toHome: 'Back home',
     print: 'PRINT',
   },
@@ -74,5 +72,10 @@ export const enUi = {
     description: 'All data will be permanently removed.',
     confirm: 'Delete all',
     cancel: 'Cancel',
+  },
+  languageSwitcher: {
+    reportScript: 'Report script',
+    reportScriptLatin: 'Latinica',
+    reportScriptCyrillic: 'Cyrillic',
   },
 } as const satisfies I18nLocaleMessages['ui']

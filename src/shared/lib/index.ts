@@ -1,5 +1,6 @@
 export { formatDateForUi } from './date/date'
 export { formatMoney, formatMoneySafe, sumCents } from './money/money'
 export { getRowTotals, getTableTotals } from './report/report'
+export { useReportScript } from './report/useReportScript'
 export { toPxString } from './number/number'
 export { default as vAutofocus } from './directives/autofocus'

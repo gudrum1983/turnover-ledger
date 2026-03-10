@@ -1,6 +1,8 @@
 import type { CurrencyCode } from './currency'
 import type { FooterField, HeaderField } from '../constants/reportFields'
 
+export type ReportScript = 'srLat' | 'srCyr'
+
 export type MoneyPart = {
   rsdCents: number
   foreignCents?: number | null

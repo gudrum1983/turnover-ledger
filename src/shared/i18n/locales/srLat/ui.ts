@@ -58,8 +58,6 @@ export const srLatUi = {
     row: 'Red',
   },
   reportPreview: {
-    landscape: 'Horizontalno',
-    portrait: 'Vertikalno',
     toHome: 'Na početnu',
     print: 'ŠTAMPA',
   },
@@ -74,5 +72,10 @@ export const srLatUi = {
     description: 'Svi podaci će biti trajno uklonjeni.',
     confirm: 'Obriši sve',
     cancel: 'Otkaži',
+  },
+  languageSwitcher: {
+    reportScript: 'Pismo izveštaja',
+    reportScriptLatin: 'Latinica',
+    reportScriptCyrillic: 'Ćirilica',
   },
 } as const satisfies I18nLocaleMessages['ui']

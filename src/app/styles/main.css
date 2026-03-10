@@ -24,3 +24,8 @@ body {
 ul:where([class]) {
   list-style: none;
 }
+
+@page {
+    size: A4 landscape;
+    margin: 15mm;
+}

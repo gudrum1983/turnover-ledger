@@ -32,9 +32,8 @@ const handleLocaleUpdate = (value: string | null) => {
 
 <template>
   <header class="Container AppHeader no-print">
-    <h1>{{ msg }}</h1>
-
-    <div class="AppHeader_Actions">
+    <div class="AppHeader_main">
+      <h1 class="Typo_Heading1">{{ msg }}</h1>
       <div class="AppHeader_Locale">
         <BaseDropdownButton
           size="xs"
@@ -45,6 +44,9 @@ const handleLocaleUpdate = (value: string | null) => {
           @update:model-value="handleLocaleUpdate"
         />
       </div>
+    </div>
+
+    <div class="AppHeader_Actions">
       <slot name="actionButtons" />
     </div>
   </header>
@@ -54,13 +56,22 @@ const handleLocaleUpdate = (value: string | null) => {
 .AppHeader {
   min-height: 42px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
 }
+
+.AppHeader_main {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .AppHeader_Actions {
+  width: 100%;
   display: flex;
   gap: 4px;
-  align-items: center;
 }
 .AppHeader_Locale {
   display: inline-flex;

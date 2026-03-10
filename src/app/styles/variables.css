@@ -50,7 +50,8 @@
   --color-text-placeholder: #6b7280;
   --color-text-caption: #4b5563;
   --color-text-link: #1d4ed8;
-  --color-text-visited: #7e22ce;
+  --color-text-link-hovered: #1e40af;
+  --color-text-link-visited: #7e22ce;
   --color-text-loading: #374151;
   --color-text-disabled: #9ca3af;
 

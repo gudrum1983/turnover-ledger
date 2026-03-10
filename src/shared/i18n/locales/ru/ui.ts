@@ -56,8 +56,6 @@ export const ruUi = {
     row: 'Строка',
   },
   reportPreview: {
-    landscape: 'Горизонтальная',
-    portrait: 'Вертикальная',
     toHome: 'На главную',
     print: 'ПЕЧАТЬ',
   },
@@ -72,5 +70,10 @@ export const ruUi = {
     description: 'Все данные будут удалены без возможности восстановления.',
     confirm: 'Удалить всё',
     cancel: 'Отмена',
+  },
+  languageSwitcher: {
+    reportScript: 'Язык отчета',
+    reportScriptLatin: 'Latinica',
+    reportScriptCyrillic: 'Ћирилица',
   },
 } as const

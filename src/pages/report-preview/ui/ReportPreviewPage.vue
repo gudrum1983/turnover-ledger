@@ -1,48 +1,21 @@
 <script setup lang="ts">
 import ReportDocument from '@/widgets/report-document/ui/ReportDocument.vue'
+import { ReportScriptToggle } from '@/widgets/report-preview/ui'
 import AppHeader from '@/app/AppHeader.vue'
 import { ROUTES } from '@/shared/constants/routes.ts'
-import { BaseButton } from '@/shared/ui'
-import router from '@/app/router'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { BaseButton, BaseLink } from '@/shared/ui'
+import { onBeforeUnmount } from 'vue'
 import { useLocale } from '@/shared/i18n'
+import { useReportScript } from '@/shared/lib'
 
 const onPrint = () => {
   window.print()
 }
 
-const directionLandscape = ref<boolean>(true)
 const { t } = useLocale()
-
-/*function onCross() {
-  directionLandscape.value = !directionLandscape.value
-}*/
-
-/*const labelButtonDirection = computed(() =>
-  directionLandscape.value ? t('ui.reportPreview.landscape') : t('ui.reportPreview.portrait'),
-)*/
-
-const classes = computed(() => [{ ReportPreviewPage_Document_landscape: directionLandscape.value }])
+const { script } = useReportScript()
 
 const printStyleId = 'print-page-size'
-
-const updatePrintPageStyle = (isLandscape: boolean) => {
-  const existing = document.getElementById(printStyleId)
-  const style = existing ?? document.createElement('style')
-  style.id = printStyleId
-  style.textContent = `@page { size: A4 ${isLandscape ? 'landscape' : 'portrait'}; margin: 15mm; }`
-  if (!existing) {
-    document.head.appendChild(style)
-  }
-}
-
-onMounted(() => {
-  updatePrintPageStyle(directionLandscape.value)
-})
-
-watch(directionLandscape, (value) => {
-  updatePrintPageStyle(value)
-})
 
 onBeforeUnmount(() => {
   document.getElementById(printStyleId)?.remove()
@@ -53,17 +26,18 @@ onBeforeUnmount(() => {
   <div class="ReportPreviewPage">
     <AppHeader :msg="t('ui.app.reportPreviewTitle')" class="ReportPreviewPage_Header">
       <template v-slot:actionButtons>
-        <!--        <BaseButton color="info" @click="onCross">
-          {{ labelButtonDirection }}
-        </BaseButton>-->
-        <BaseButton color="default" variant="outline" @click="router.push({ name: ROUTES.reportBuilder.name })">
-          {{ t('ui.reportPreview.toHome') }}
-        </BaseButton>
-        <BaseButton color="primary" variant="outline" @click="onPrint">{{ t('ui.reportPreview.print') }}</BaseButton>
+        <div class="ReportPreviewPage_Actions">
+          <BaseLink :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 {{ t('ui.reportPreview.toHome') }}</BaseLink>
+
+          <ReportScriptToggle v-model="script" class="no-print" />
+
+          <BaseButton size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</BaseButton>
+        </div>
       </template>
     </AppHeader>
-    <section class="ReportPreviewPage_Document" :class="classes">
-      <ReportDocument :landscape="directionLandscape" />
+
+    <section class="ReportPreviewPage_Document">
+      <ReportDocument :script="script" />
     </section>
   </div>
 </template>
@@ -75,24 +49,27 @@ onBeforeUnmount(() => {
   align-items: center;
 
   &_Header {
-    margin-block-start: 20px;
-    margin-block-end: 40px;
+    margin-block-end: 16px;
+  }
+
+  &_Actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
   }
 
   &_Document {
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
     font-size: 12px;
-    width: 210mm;
+
     height: fit-content;
-    min-height: 297mm;
+
     padding: 15mm;
     background: white;
 
-    &_landscape {
-      width: 297mm;
-      min-height: 210mm;
-    }
+    width: 297mm;
+    min-height: 210mm;
   }
 }
 
