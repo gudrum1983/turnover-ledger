@@ -154,7 +154,7 @@ const getFooterLabel = (key: FooterField) => KPO_DICTIONARY.footer[key][props.sc
     display: table-cell;
     vertical-align: inherit;
     unicode-bidi: isolate;
-    padding: 2px 10px;
+    padding: 2px 5px;
   }
 
   thead {

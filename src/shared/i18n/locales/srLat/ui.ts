@@ -58,8 +58,6 @@ export const srLatUi = {
     row: 'Red',
   },
   reportPreview: {
-    landscape: 'Horizontalno',
-    portrait: 'Vertikalno',
     toHome: 'Na početnu',
     print: 'ŠTAMPA',
   },

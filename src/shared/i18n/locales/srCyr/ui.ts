@@ -58,8 +58,6 @@ export const srCyrUi = {
     row: 'Ред',
   },
   reportPreview: {
-    landscape: 'Хоризонтално',
-    portrait: 'Вертикално',
     toHome: 'На почетну',
     print: 'ШТАМПА',
   },

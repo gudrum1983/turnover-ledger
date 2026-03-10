@@ -58,8 +58,6 @@ export const enUi = {
     row: 'Row',
   },
   reportPreview: {
-    landscape: 'Landscape',
-    portrait: 'Portrait',
     toHome: 'Back home',
     print: 'PRINT',
   },

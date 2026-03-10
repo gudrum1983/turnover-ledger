@@ -9,10 +9,8 @@
     }
 
     @bottom-right {
-      content: 'Page ' counter(page) ' / ' counter(pages);
+      content: counter(page) ' / ' counter(pages);
     }
-
-    margin: 15mm;
   }
 
   body {
@@ -26,3 +24,4 @@
     padding: 0;
   }
 }
+

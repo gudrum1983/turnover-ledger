@@ -56,8 +56,6 @@ export const ruUi = {
     row: 'Строка',
   },
   reportPreview: {
-    landscape: 'Горизонтальная',
-    portrait: 'Вертикальная',
     toHome: 'На главную',
     print: 'ПЕЧАТЬ',
   },

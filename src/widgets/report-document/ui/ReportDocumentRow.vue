@@ -35,7 +35,7 @@ td {
   display: table-cell;
   vertical-align: inherit;
   unicode-bidi: isolate;
-  padding: 2px 10px;
+  padding: 2px 5px;
   border: 1px solid black;
 }
 </style>
