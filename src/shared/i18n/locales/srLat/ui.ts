@@ -16,6 +16,13 @@ export const srLatUi = {
     export: 'Izvoz podataka',
     import: 'Uvoz podataka',
   },
+  importData: {
+    title: 'Uvesti podatke?',
+    description: 'Trenutni podaci će biti u potpunosti zamenjeni uvezenim fajlom.',
+    confirm: 'Uvezi',
+    cancel: 'Otkaži',
+    invalidFile: 'Uvoz nije uspeo. Proverite da li je fajl ispravan JSON izvoz ove aplikacije.',
+  },
   reportMetaForm: {
     taxpayerInfo: 'Informacije o obvezniku',
     responsiblePeople: 'Odgovorna lica',
@@ -28,6 +35,7 @@ export const srLatUi = {
     clearTable: 'Obriši tabelu',
     emptyHint: 'Tabela je prazna, dodajte red ...',
     total: 'Ukupno',
+    totalLimitExceeded: 'Upozorenje: ukupan iznos je premašio limit',
     addRowModalTitle: 'Dodaj red',
     cancel: 'Otkaži',
     add: 'Dodaj',

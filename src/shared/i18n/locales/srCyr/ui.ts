@@ -16,6 +16,13 @@ export const srCyrUi = {
     export: 'Извоз података',
     import: 'Увоз података',
   },
+  importData: {
+    title: 'Увести податке?',
+    description: 'Тренутни подаци ће бити у потпуности замењени увезеним фајлом.',
+    confirm: 'Увези',
+    cancel: 'Откажи',
+    invalidFile: 'Увоз није успео. Проверите да ли је фајл исправан JSON извоз ове апликације.',
+  },
   reportMetaForm: {
     taxpayerInfo: 'Информације о обвезнику',
     responsiblePeople: 'Одговорна лица',
@@ -28,6 +35,7 @@ export const srCyrUi = {
     clearTable: 'Обриши табелу',
     emptyHint: 'Табела је празна, додајте ред ...',
     total: 'Укупно',
+    totalLimitExceeded: 'Упозорење: укупан износ је премашио лимит',
     addRowModalTitle: 'Додај ред',
     cancel: 'Откажи',
     add: 'Додај',

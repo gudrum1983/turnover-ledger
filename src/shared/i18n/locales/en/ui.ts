@@ -16,6 +16,13 @@ export const enUi = {
     export: 'Export data',
     import: 'Import data',
   },
+  importData: {
+    title: 'Import data?',
+    description: 'Current data will be fully replaced with the imported file.',
+    confirm: 'Import',
+    cancel: 'Cancel',
+    invalidFile: 'Import failed. Make sure the file is a valid JSON export from this app.',
+  },
   reportMetaForm: {
     taxpayerInfo: 'Taxpayer information',
     responsiblePeople: 'Responsible persons',
@@ -28,6 +35,7 @@ export const enUi = {
     clearTable: 'Clear table',
     emptyHint: 'The table is empty, add a row ...',
     total: 'Total',
+    totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
     addRowModalTitle: 'Add row',
     cancel: 'Cancel',
     add: 'Add',

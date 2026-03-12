@@ -14,6 +14,13 @@ export const ruUi = {
     export: 'Экспорт данных',
     import: 'Импорт данных',
   },
+  importData: {
+    title: 'Импортировать данные?',
+    description: 'Текущие данные будут полностью заменены импортированными.',
+    confirm: 'Импортировать',
+    cancel: 'Отмена',
+    invalidFile: 'Не удалось импортировать файл. Проверьте, что это корректный JSON-экспорт приложения.',
+  },
   reportMetaForm: {
     taxpayerInfo: 'Информация о налогоплательщике',
     responsiblePeople: 'Ответственные лица',
@@ -26,6 +33,7 @@ export const ruUi = {
     clearTable: 'Очистить таблицу',
     emptyHint: 'Таблица пустая, добавьте строку ...',
     total: 'Итого',
+    totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
     addRowModalTitle: 'Добавить строку',
     cancel: 'Отмена',
     add: 'Добавить',

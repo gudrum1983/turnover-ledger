@@ -29,3 +29,11 @@ export type ReportState = {
   meta: ReportMeta
   rows: ReportRow[]
 }
+
+export const REPORT_EXPORT_VERSION = 1 as const
+
+export type ReportExportFile = {
+  version: typeof REPORT_EXPORT_VERSION
+  exportedAt: string
+  data: ReportState
+}
