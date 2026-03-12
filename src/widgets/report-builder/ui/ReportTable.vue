@@ -20,11 +20,14 @@ const localeStore = useLocaleStore()
 const { t } = useLocale()
 
 const isFullTable = ref<boolean>(true)
+const totalLimitRsdCents = 6_000_000 * 100
 
 const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 
 const tableTotals = computed(() => getTableTotals(rows.value))
 const displayTotalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: localeStore.currentLocale }))
+const displayTotalLimitRsd = computed(() => formatMoney(totalLimitRsdCents, { locale: localeStore.currentLocale }))
+const isTotalLimitExceeded = computed(() => tableTotals.value.rsdCents > totalLimitRsdCents)
 
 type FormMode = 'create' | 'edit'
 
@@ -204,13 +207,20 @@ function onSubmit(payload: ReportRowPayload) {
           </BaseButton>
         </div>
 
-        <div v-if="rows.length > 0" class="ReportTable_TotalRow">
+        <div
+          v-if="rows.length > 0"
+          class="ReportTable_TotalRow"
+          :class="{ ReportTable_TotalRow_withWarning: isTotalLimitExceeded }"
+        >
           <div></div>
           <div></div>
           <div></div>
           <div class="ReportTable_TotalCell Typo_BodyAccent">{{ t('ui.reportTable.total') }}</div>
           <div class="ReportTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
           <div></div>
+        </div>
+        <div v-if="isTotalLimitExceeded" class="ReportTable_Warning Typo_BodyAccent" role="alert">
+          {{ t('ui.reportTable.totalLimitExceeded') }} {{ displayTotalLimitRsd }}.
         </div>
       </div>
     </div>
@@ -325,6 +335,10 @@ function onSubmit(payload: ReportRowPayload) {
     border-top: none;
     border-radius: 0 0 6px 6px;
     background: var(--color-background-default);
+
+    &_withWarning {
+      border-radius: 0;
+    }
   }
 
   &_TotalCell {
@@ -347,6 +361,16 @@ function onSubmit(payload: ReportRowPayload) {
     &_type_value {
       font-weight: 600;
     }
+  }
+
+  &_Warning {
+    padding: 12px 14px;
+    color: var(--color-text-danger);
+    background: color-mix(in srgb, var(--color-background-danger) 10%, white);
+    border: 1px solid var(--color-border-danger);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    text-align: center;
   }
 }
 </style>

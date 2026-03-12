@@ -33,6 +33,7 @@ export const ruUi = {
     clearTable: 'Очистить таблицу',
     emptyHint: 'Таблица пустая, добавьте строку ...',
     total: 'Итого',
+    totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
     addRowModalTitle: 'Добавить строку',
     cancel: 'Отмена',
     add: 'Добавить',

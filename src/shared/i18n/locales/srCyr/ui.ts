@@ -35,6 +35,7 @@ export const srCyrUi = {
     clearTable: 'Обриши табелу',
     emptyHint: 'Табела је празна, додајте ред ...',
     total: 'Укупно',
+    totalLimitExceeded: 'Упозорење: укупан износ је премашио лимит',
     addRowModalTitle: 'Додај ред',
     cancel: 'Откажи',
     add: 'Додај',

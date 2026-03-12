@@ -35,6 +35,7 @@ export const srLatUi = {
     clearTable: 'Obriši tabelu',
     emptyHint: 'Tabela je prazna, dodajte red ...',
     total: 'Ukupno',
+    totalLimitExceeded: 'Upozorenje: ukupan iznos je premašio limit',
     addRowModalTitle: 'Dodaj red',
     cancel: 'Otkaži',
     add: 'Dodaj',

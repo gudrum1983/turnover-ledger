@@ -35,6 +35,7 @@ export const enUi = {
     clearTable: 'Clear table',
     emptyHint: 'The table is empty, add a row ...',
     total: 'Total',
+    totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
     addRowModalTitle: 'Add row',
     cancel: 'Cancel',
     add: 'Add',
