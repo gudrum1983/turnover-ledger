@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-
-type Size = 'xs' | 'sm' | 'md' | 'lg'
+import type { Sizes } from '@/shared/types'
 
 export type BaseButtonGroupOption = {
   value: string
@@ -16,7 +15,7 @@ type Props = {
   name?: string
   ariaLabel?: string
   fullWidth?: boolean
-  size?: Size
+  size?: Sizes
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -193,9 +192,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     }
 
     &:focus-visible {
-      z-index: 2;
-      outline: 1px solid var(--color-border-ring);
-      outline-offset: -1px;
+      outline: -webkit-focus-ring-color auto 1px;
     }
 
     &:disabled {

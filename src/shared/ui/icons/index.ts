@@ -1,5 +1,6 @@
 export { default as IconAdd } from './IconAdd.vue'
 export { default as IconChevron } from './IconChevron.vue'
+export { default as IconClose } from './IconClose.vue'
 export { default as IconCopy } from './IconCopy.vue'
 export { default as IconEdit } from './IconEdit.vue'
 export { default as IconInput } from './IconInput.vue'

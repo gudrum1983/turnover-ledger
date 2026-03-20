@@ -2,12 +2,9 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import BaseButton from './BaseButton.vue'
 
-import type { Colors } from '../../types/colorsProp'
+import type { Colors, Sizes, Variants } from '../../types'
 import { BaseListBox } from '../forms'
 import { IconChevron } from '../icons'
-
-type Variant = 'fill' | 'outline'
-type Size = 'xs' | 'sm' | 'md' | 'lg'
 
 type Option = {
   value: string
@@ -19,8 +16,8 @@ type Props = {
   options: Option[]
   modelValue?: string
   placeholder?: string
-  size?: Size
-  variant?: Variant
+  size?: Sizes
+  variant?: Variants
   color?: Colors
   disabled?: boolean
   favorites?: string[]
@@ -32,7 +29,7 @@ const {
   modelValue,
   placeholder = 'Выбрать',
   size = 'md',
-  variant = 'outline',
+  variant = 'outlined',
   color = 'default',
   disabled = false,
   favorites,
@@ -141,6 +138,7 @@ onBeforeUnmount(() => {
 
 .BaseDropdownButton_CustomClass {
   justify-content: space-between;
+  border-radius: 4px;
 }
 
 .BaseDropdownButton_Label {

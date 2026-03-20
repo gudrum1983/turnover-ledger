@@ -1,25 +1,24 @@
 <script setup lang="ts">
-import type { Colors } from '../../types/colorsProp'
+import type { Colors, HorizontalAlign, Sizes, Variants } from '../../types'
 import { computed } from 'vue'
 
+type ContentPosition = Exclude<HorizontalAlign, 'right'>
 type TypeButton = 'button' | 'submit' | 'reset'
-type Variant = 'fill' | 'outline'
-type Size = 'xs' | 'sm' | 'md' | 'lg'
 
 type Props = {
   color?: Colors
-  variant?: Variant
+  variant?: Variants
   fullWidth?: boolean
-  size?: Size
+  size?: Sizes
   type?: TypeButton
   disabled?: boolean
   isIconOnly?: boolean
-  contentPosition?: 'left' | 'center'
+  contentPosition?: ContentPosition
 }
 
 const {
   color = 'default',
-  variant = 'fill',
+  variant = 'filled',
   fullWidth = false,
   size = 'md',
   type = 'button',
@@ -32,9 +31,8 @@ const classes = computed(() => [
   `BaseButton_color_${color}`,
   `BaseButton_variant_${variant}`,
   `BaseButton_size_${size}`,
-  { BaseButton_fullWidth: fullWidth },
-  { BaseButton_iconOnly: isIconOnly },
-  { BaseButton_left: contentPosition === 'left' },
+  `BaseButton_align_${contentPosition}`,
+  { BaseButton_fullWidth: fullWidth, BaseButton_iconOnly: isIconOnly },
 ])
 </script>
 
@@ -72,28 +70,39 @@ const classes = computed(() => [
   --button-gap: 8px;
   --button-font-size: var(--font-medium-text-base);
 
+  /*var algin */
+  --button-algin-content: center;
+
   border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
   width: auto;
-  /*  min-width: fit-content;*/
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: var(--button-algin-content);
   height: fit-content;
   padding: var(--button-padding-block) var(--button-padding-inline);
   gap: var(--button-gap);
   font: var(--button-font-size);
 
-  &_left {
-    justify-content: flex-start;
+  &_align {
+    &_center {
+      --button-algin-content: center;
+    }
+    &_left {
+      --button-algin-content: flex-start;
+    }
+    &_right {
+      --button-algin-content: flex-end;
+    }
   }
 
   &:disabled {
     cursor: not-allowed;
+    pointer-events: none;
   }
 
-  &:focus {
+  &:focus-visible {
     outline: -webkit-focus-ring-color auto 1px;
   }
 }
@@ -129,7 +138,7 @@ const classes = computed(() => [
   }
 }
 
-.BaseButton_variant_fill {
+.BaseButton_variant_filled {
   background: var(--btn-fill-bg);
   color: var(--btn-fill-clr-text);
 
@@ -235,7 +244,3 @@ const classes = computed(() => [
   }
 }
 </style>
-
-<!--todo - есть материал на подумать по рефакторингу
-docs/questions.md
--->
