@@ -109,3 +109,5 @@ src/
 
 
 ````
+
+https://feature-sliced.design/docs/reference/public-api - Публичные апи и barrel files
