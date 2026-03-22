@@ -3,7 +3,8 @@ import ReportDocument from '@/widgets/report-document/ui/ReportDocument.vue'
 import { ReportScriptToggle } from '@/widgets/report-preview/ui'
 import AppHeader from '@/app/AppHeader.vue'
 import { ROUTES } from '@/shared/constants/routes.ts'
-import { BaseButton, BaseLink } from '@/shared/ui'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { LinkBase } from '@/shared/ui/link-base'
 import { onBeforeUnmount } from 'vue'
 import { useLocale } from '@/shared/i18n'
 import { useReportScript } from '@/shared/lib'
@@ -27,13 +28,13 @@ onBeforeUnmount(() => {
     <AppHeader :msg="t('ui.app.reportPreviewTitle')" class="ReportPreviewPage_Header">
       <template v-slot:actionButtons>
         <div class="ReportPreviewPage_Actions">
-          <BaseLink :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding
-            >🡄 {{ t('ui.reportPreview.toHome') }}</BaseLink
+          <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding
+            >🡄 {{ t('ui.reportPreview.toHome') }}</LinkBase
           >
 
           <ReportScriptToggle v-model="script" class="no-print" />
 
-          <BaseButton size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</BaseButton>
+          <ButtonBase size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</ButtonBase>
         </div>
       </template>
     </AppHeader>

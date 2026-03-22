@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { BaseDivider, BaseTag, ConfirmDialog } from '@/shared/ui'
+import { DividerBase } from '@/shared/ui/divider-base'
+import { TagBase } from '@/shared/ui/tag-base'
+import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import ReportTableRowButton from '@/widgets/report-builder/ui/ReportTableRowButton.vue'
 import type { ReportRow } from '@/shared/types/report.ts'
 import { formatDateForUi, formatMoneySafe, getRowTotals } from '@/shared/lib'
@@ -63,15 +65,15 @@ const deleteRowDetails = computed(() => {
   return [summary, totals].filter(Boolean).join(' - ')
 })
 
-const openConfirmDialog = ref(false)
+const openDialogConfirm = ref(false)
 
-function closeConfirmDialog() {
-  openConfirmDialog.value = false
+function closeDialogConfirm() {
+  openDialogConfirm.value = false
 }
 
 function handleClearRow() {
   emit('remove', props.row.id)
-  closeConfirmDialog()
+  closeDialogConfirm()
 }
 </script>
 
@@ -82,29 +84,29 @@ function handleClearRow() {
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_description">
       <div class="ReportTableRow_Description">
-        <BaseTag class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
+        <TagBase class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
         {{ [formatDateForUi(row.date), row.description].filter(Boolean).join(', ') }}
       </div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
       <div v-if="!isShort">{{ t('ui.reportTableRow.goodsShort') }}</div>
-      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
+      <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ t('ui.reportTableRow.servicesShort') }}</div>
-      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
+      <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div>{{ t('ui.reportTableRow.subtotalShort') }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income ReportTableRow_Column_font_secondary">
       <div v-if="!isShort">{{ displayGoodsForeign || '-' }}</div>
-      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
+      <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ displayServicesForeign || '-' }}</div>
-      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
+      <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div class="Typo_BodyAccent">{{ displayTotalForeign || '-' }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
       <div v-if="!isShort" class="Text_AlginRight">{{ displayGoodsRsd }}</div>
-      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
+      <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ displayServicesRsd }}</div>
-      <BaseDivider v-if="!isShort" color="table-cell" line-style="dotted" />
+      <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div class="Typo_BodyAccent">{{ displayTotalRsd }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_actions">
@@ -124,11 +126,11 @@ function handleClearRow() {
         :size="size"
         icon="trash"
         :label="t('ui.reportTableRow.remove')"
-        @click="openConfirmDialog = true"
+        @click="openDialogConfirm = true"
       />
     </div>
-    <ConfirmDialog
-      v-model:open="openConfirmDialog"
+    <DialogConfirm
+      v-model:open="openDialogConfirm"
       @confirm="handleClearRow"
       :title="t('ui.deleteRowModal.title')"
       :message="t('ui.deleteRowModal.description')"
@@ -139,7 +141,7 @@ function handleClearRow() {
       <template v-if="deleteRowDetails" #content>
         {{ deleteRowDetails }}
       </template>
-    </ConfirmDialog>
+    </DialogConfirm>
   </div>
 </template>
 

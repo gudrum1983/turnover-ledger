@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { BaseButtonGroup } from '@/shared/ui'
+import { ButtonGroup } from '@/shared/ui/button-group'
 import { useLocale } from '@/shared/i18n'
 import type { ReportScript } from '@/shared/types/report.ts'
 
@@ -34,7 +34,7 @@ const model = computed<string>({
 <template>
   <div class="ReportScriptToggle">
     <div class="Typo_Caption">{{ t('ui.languageSwitcher.reportScript') }}:</div>
-    <BaseButtonGroup v-model="model" :options="options" :aria-label="t('ui.languageSwitcher.reportScript')" size="xs" />
+    <ButtonGroup v-model="model" :options="options" :aria-label="t('ui.languageSwitcher.reportScript')" size="xs" />
   </div>
 </template>
 

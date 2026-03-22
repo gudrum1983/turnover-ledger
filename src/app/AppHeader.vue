@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, type VNode } from 'vue'
-import { BaseDropdownButton } from '@/shared/ui'
+import { ButtonDropdown } from '@/shared/ui/button-dropdown'
 import { useLocale } from '@/shared/i18n'
 import { LOCALE_LABEL_KEY_BY_LOCALE, SUPPORTED_LOCALES, isSupportedLocale } from '@/shared/i18n'
 
@@ -35,7 +35,7 @@ const handleLocaleUpdate = (value: string | null) => {
     <div class="AppHeader_main">
       <h1 class="Typo_Heading1">{{ msg }}</h1>
       <div class="AppHeader_Locale">
-        <BaseDropdownButton
+        <ButtonDropdown
           size="xs"
           variant="outline"
           color="primary"

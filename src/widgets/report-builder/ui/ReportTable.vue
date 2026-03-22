@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { BaseButton, BaseDividerToggle, BaseModal, IconAdd, IconCompress, IconExpand, ConfirmDialog } from '@/shared/ui'
+import { IconAdd, IconCompress, IconExpand } from '@/shared/ui/icons'
+import { DialogConfirm } from '@/shared/ui/dialog-confirm'
+import { ModalBase } from '@/shared/ui/modal-base'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { DividerToggle } from '@/shared/ui/divider-toggle'
 import ReportTableRow from './ReportTableRow.vue'
 import ReportRowCreateForm, {
   type ReportRowFormInitialValue,
@@ -38,7 +42,7 @@ const formMode = ref<FormMode>('create')
 const editingRowId = ref<string | null>(null)
 const formInitialValue = ref<ReportRowFormInitialValue | null>(null)
 
-const openConfirmDialog = ref(false)
+const openDialogConfirm = ref(false)
 
 const modalTitle = computed(() =>
   formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.addRowModalTitle'),
@@ -102,13 +106,13 @@ function closeModal() {
   formInitialValue.value = null
 }
 
-function closeConfirmDialog() {
-  openConfirmDialog.value = false
+function closeDialogConfirm() {
+  openDialogConfirm.value = false
 }
 
 function handleClearTable() {
   store.clearRows()
-  closeConfirmDialog()
+  closeDialogConfirm()
 }
 
 const toCents = (value: number) => Math.round(value * 100)
@@ -156,24 +160,24 @@ function onSubmit(payload: ReportRowPayload) {
 
 <template>
   <div class="ReportTable">
-    <BaseDividerToggle
+    <DividerToggle
       v-model="isFullTable"
       :label="`${t('report.title.firstLine')} ${t('report.title.secondLine')}`"
       color="disabled"
     >
       <template #icon-active><IconExpand style="width: 18px; height: 18px" /></template>
       <template #icon><IconCompress style="width: 18px; height: 18px" /></template>
-    </BaseDividerToggle>
+    </DividerToggle>
 
     <div class="ReportTable_Fieldset">
       <div class="ReportTable_Actions">
         <div class="ReportTable_RowActions">
-          <BaseButton color="primary" size="xs" @click="openCreateModal()" class="">{{
+          <ButtonBase color="primary" size="xs" @click="openCreateModal()" class="">{{
             t('ui.reportTable.addRow')
-          }}</BaseButton>
-          <BaseButton color="danger" size="xs" v-if="rows.length > 0" @click="openConfirmDialog = true">{{
+          }}</ButtonBase>
+          <ButtonBase color="danger" size="xs" v-if="rows.length > 0" @click="openDialogConfirm = true">{{
             t('ui.reportTable.clearTable')
-          }}</BaseButton>
+          }}</ButtonBase>
         </div>
       </div>
       <div>
@@ -200,11 +204,11 @@ function onSubmit(payload: ReportRowPayload) {
         </div>
         <div v-if="rows.length < 1" class="ReportTable_Empty">
           {{ t('ui.reportTable.emptyHint') }}
-          <BaseButton color="primary" size="xs" @click="openCreateModal()" variant="outline" isIconOnly>
+          <ButtonBase color="primary" size="xs" @click="openCreateModal()" variant="outline" isIconOnly>
             <template #icon>
               <IconAdd style="width: 18px; height: 18px" />
             </template>
-          </BaseButton>
+          </ButtonBase>
         </div>
 
         <div
@@ -224,7 +228,7 @@ function onSubmit(payload: ReportRowPayload) {
         </div>
       </div>
     </div>
-    <BaseModal :open="open" @close="closeModal" closeOnEsc>
+    <ModalBase :open="open" @close="closeModal" closeOnEsc>
       <h2>{{ modalTitle }}</h2>
       <ReportRowCreateForm
         :key="formKey"
@@ -234,15 +238,15 @@ function onSubmit(payload: ReportRowPayload) {
         id="testForm"
       />
       <template #actions>
-        <BaseButton size="md" @click="closeModal">{{ t('ui.reportTable.cancel') }}</BaseButton>
-        <BaseButton color="primary" size="md" :disabled="!canSubmit" type="submit" form="testForm">
+        <ButtonBase size="md" @click="closeModal">{{ t('ui.reportTable.cancel') }}</ButtonBase>
+        <ButtonBase color="primary" size="md" :disabled="!canSubmit" type="submit" form="testForm">
           {{ submitLabel }}
-        </BaseButton>
+        </ButtonBase>
       </template>
-    </BaseModal>
+    </ModalBase>
 
-    <ConfirmDialog
-      v-model:open="openConfirmDialog"
+    <DialogConfirm
+      v-model:open="openDialogConfirm"
       @confirm="handleClearTable"
       :title="t('ui.deleteAllRowsModal.title')"
       :message="t('ui.deleteAllRowsModal.description')"

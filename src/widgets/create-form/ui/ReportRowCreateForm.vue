@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { BaseButton, BaseDatePicker, BaseDropdownButton, FieldWithCounter, MoneyField } from '@/shared/ui'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { ButtonDropdown } from '@/shared/ui/button-dropdown'
+import { FieldCounter } from '@/shared/ui/field-counter'
+import { FieldDate } from '@/shared/ui/field-date'
+import { FieldMoney } from '@/shared/ui/field-money'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
@@ -238,14 +242,14 @@ onMounted(() => {
   <form class="ReportRowForm" @submit="handleSubmit" v-autofocus>
     <div class="ReportRowForm_Fields">
       <div class="ReportRowForm_Currency">
-        <BaseDatePicker
+        <FieldDate
           name="dateCurrency"
           :label="t('ui.reportRowForm.date')"
           :model-value="date"
           @update:modelValue="date = $event ?? ''"
           required
         />
-        <BaseDropdownButton
+        <ButtonDropdown
           class="ReportRowForm_CurrencyDropdown"
           :label="t('ui.reportRowForm.currency')"
           size="xs"
@@ -257,7 +261,7 @@ onMounted(() => {
           @update:model-value="currency = $event ?? ''"
         />
       </div>
-      <FieldWithCounter
+      <FieldCounter
         :maxLength="55"
         name="description"
         :label="t('ui.reportRowForm.description')"
@@ -267,14 +271,14 @@ onMounted(() => {
       />
     </div>
     <div class="ReportRowForm_AmountFields">
-      <MoneyField
+      <FieldMoney
         name="goodsAmount"
         :label="t('ui.reportRowForm.goodsAmount')"
         placeholder="0,00"
         :model-value="goodsAmount"
         @update:modelValue="goodsAmount = $event"
       />
-      <MoneyField
+      <FieldMoney
         name="servicesAmount"
         :label="t('ui.reportRowForm.servicesAmount')"
         placeholder="0,00"
@@ -291,9 +295,9 @@ onMounted(() => {
     </div>
 
     <div class="ReportRowForm_Toolbar">
-      <BaseButton size="xs" color="primary" :disabled="isCalculateDisabled" @click="handleCalculate">
+      <ButtonBase size="xs" color="primary" :disabled="isCalculateDisabled" @click="handleCalculate">
         {{ t('ui.reportRowForm.calculate') }}
-      </BaseButton>
+      </ButtonBase>
       <div v-if="isCalculated" class="ReportRowForm_Hint">
         {{ t('ui.reportRowForm.officialRatePrefix') }} {{ exchangeRate ?? '—' }}
       </div>

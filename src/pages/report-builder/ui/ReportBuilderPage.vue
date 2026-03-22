@@ -3,7 +3,7 @@ import ReportBuilderMetaForm from '@/widgets/report-builder/ui/ReportBuilderMeta
 import ReportActions from '@/widgets/report-builder/ui/ReportActions.vue'
 import ReportTable from '@/widgets/report-builder/ui/ReportTable.vue'
 
-import { BasePaper } from '@/shared/ui'
+import { PaperBase } from '@/shared/ui/paper-base'
 import AppHeader from '@/app/AppHeader.vue'
 import { useLocale } from '@/shared/i18n'
 
@@ -14,11 +14,11 @@ const { t } = useLocale()
   <div class="ReportBuilderPage">
     <AppHeader :msg="t('ui.app.reportBuilderTitle')" class="ReportBuilderPage_Header" />
     <main class="ReportBuilderPage_Main Container">
-      <BasePaper class="ReportBuilderPage_layout">
+      <PaperBase class="ReportBuilderPage_layout">
         <ReportActions />
         <ReportBuilderMetaForm />
         <ReportTable />
-      </BasePaper>
+      </PaperBase>
     </main>
   </div>
 </template>
