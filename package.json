@@ -13,7 +13,16 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "prepare": "husky install",
+    "lint:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,vue}": [
+      "eslint",
+      "prettier --write"
+    ],
+    "*.{css,scss,json,md}": "prettier --write"
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^12.1.0",
@@ -33,7 +42,9 @@
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.39.2",
     "eslint-plugin-vue": "~10.6.2",
+    "husky": "^9.1.7",
     "jiti": "^2.6.1",
+    "lint-staged": "^16.4.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.7.4",
     "sass": "^1.97.2",

@@ -8,7 +8,7 @@ const { label } = defineProps<{ label: string }>()
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .TagBase {
   padding: 2px 6px;
   border-radius: 20px;
