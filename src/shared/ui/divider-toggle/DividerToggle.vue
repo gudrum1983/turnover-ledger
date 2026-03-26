@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import { DividerBase } from '../divider-base'
-import { ButtonBase } from '../button-base'
-import { IconChevron } from '../icons'
+import { DividerBase } from '@/shared/ui/divider-base'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { IconChevron } from '@/shared/ui/icons'
 
 type DividerLineStyle = 'solid' | 'dashed' | 'dotted' | 'double' | 'groove' | 'ridge'
 

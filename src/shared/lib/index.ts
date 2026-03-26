@@ -9,5 +9,4 @@ export {
   isReportExportFile,
   parseImportedReportState,
 } from './report/state'
-export { toPxString } from './number/number'
 export { default as vAutofocus } from './directives/autofocus'

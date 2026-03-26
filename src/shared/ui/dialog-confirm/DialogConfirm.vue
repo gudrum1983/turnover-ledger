@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ModalBase } from '../modal-base'
-import type { ModalBaseSize } from '../modal-base'
-import { ButtonBase } from '../button-base'
+import { ModalBase } from '@/shared/ui/modal-base'
+import type { ModalBaseSize } from '@/shared/ui/modal-base'
+import { ButtonBase } from '@/shared/ui/button-base'
 
 const {
   open,

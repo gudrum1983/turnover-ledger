@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { toPxString } from '../../lib'
+import { toPxString } from '@/shared/lib/number/number'
 
 type DividerLineStyle = 'solid' | 'dashed' | 'dotted' | 'double' | 'groove' | 'ridge'
 

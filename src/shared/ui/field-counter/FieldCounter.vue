@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { FieldBase } from '../field-base'
+import { FieldBase } from '@/shared/ui/field-base'
 
 type Props = {
   name: string

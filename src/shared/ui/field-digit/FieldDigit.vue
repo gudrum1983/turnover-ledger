@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FieldBase } from '../field-base'
+import { FieldBase } from '@/shared/ui/field-base'
 
 type Props = {
   name: string

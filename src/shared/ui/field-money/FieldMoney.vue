@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { FieldBase } from '../field-base'
+import { FieldBase } from '@/shared/ui/field-base'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 
 type Props = {

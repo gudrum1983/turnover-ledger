@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MaskOptions } from 'maska'
 import { computed, onBeforeUnmount } from 'vue'
-import { IconClose } from '../icons'
+import { IconClose } from '@/shared/ui/icons'
 
 type Props = {
   name: string
