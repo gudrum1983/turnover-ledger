@@ -1,53 +1,63 @@
 <script setup lang="ts">
 import { onBeforeUnmount, watch } from 'vue'
-import { PaperBase } from '../paper-base'
+import { PaperBase } from '@/shared/ui/paper-base'
+import type { ModalBaseProps } from './types'
 
 const {
   size = 'md',
-  open,
-  closeOnOverlay = false,
-  closeOnEsc = false,
-} = defineProps<{
-  size?: 'xs' | 'sm' | 'md' | 'lg'
-  open: boolean
-  closeOnOverlay?: boolean
-  closeOnEsc?: boolean
-}>()
+  open = false,
+  shouldCloseOnOverlay = false,
+  shouldCloseOnEsc = false,
+} = defineProps<ModalBaseProps>()
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'update:open', value: boolean): void
 }>()
 
+const isClient = typeof document !== 'undefined'
+
+function closeModal() {
+  emit('update:open', false)
+}
+
 const handleOverlayClick = () => {
-  if (closeOnOverlay) {
-    emit('close')
-  }
-}
-
-let isEscListenerActive = false
-let originalBodyOverflow: string | null = null
-
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && closeOnEsc) {
-    emit('close')
-  }
-}
-
-const updateEscListener = (shouldListen: boolean) => {
-  if (shouldListen && !isEscListenerActive) {
-    document.addEventListener('keydown', handleKeydown)
-    isEscListenerActive = true
+  if (!shouldCloseOnOverlay) {
     return
   }
 
-  if (!shouldListen && isEscListenerActive) {
+  closeModal()
+}
+
+let hasEscListener = false
+let originalBodyOverflow: string | null = null
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key !== 'Escape' || !shouldCloseOnEsc) {
+    return
+  }
+
+  closeModal()
+}
+
+const toggleEscListener = (shouldListen: boolean) => {
+  if (!isClient) {
+    return
+  }
+
+  if (shouldListen && !hasEscListener) {
+    document.addEventListener('keydown', handleKeydown)
+    hasEscListener = true
+    return
+  }
+
+  if (!shouldListen && hasEscListener) {
     document.removeEventListener('keydown', handleKeydown)
-    isEscListenerActive = false
+    hasEscListener = false
   }
 }
 
-const updateBodyScrollLock = (shouldLock: boolean) => {
-  if (typeof document === 'undefined') {
+const setBodyScrollLock = (shouldLock: boolean) => {
+  if (!isClient) {
     return
   }
 
@@ -68,17 +78,24 @@ const updateBodyScrollLock = (shouldLock: boolean) => {
 }
 
 watch(
-  () => [open, closeOnEsc],
-  ([isOpen, allowEsc]) => {
-    updateEscListener(Boolean(isOpen && allowEsc))
-    updateBodyScrollLock(Boolean(isOpen))
+  () => open && shouldCloseOnEsc,
+  (shouldListenEsc) => {
+    toggleEscListener(shouldListenEsc)
+  },
+  { immediate: true },
+)
+
+watch(
+  () => open,
+  (shouldLockScroll) => {
+    setBodyScrollLock(shouldLockScroll)
   },
   { immediate: true },
 )
 
 onBeforeUnmount(() => {
-  updateEscListener(false)
-  updateBodyScrollLock(false)
+  toggleEscListener(false)
+  setBodyScrollLock(false)
 })
 </script>
 
@@ -86,7 +103,7 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <div v-if="open" class="ModalBase" role="dialog" aria-modal="true">
       <div class="ModalBase_Overlay" @click.self="handleOverlayClick">
-        <PaperBase class="ModalBase_Panel" :class="`ModalBase_Panel_size_${size}`">
+        <PaperBase class="ModalBase_Container" :class="`ModalBase_Container_size_${size}`">
           <div class="ModalBase_Content">
             <slot />
           </div>
@@ -104,49 +121,49 @@ onBeforeUnmount(() => {
   position: fixed;
   inset: 0;
   z-index: 1000;
-}
 
-.ModalBase_Overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-background-overlay);
-}
+  &_Overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background-overlay);
+  }
 
-.ModalBase_Panel {
-  max-width: min(740px, 100%);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  &_Container {
+    max-width: min(740px, 100%);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 
-  &_size {
-    &_xs {
-      max-width: min(400px, 100%);
-    }
-    &_sm {
-      max-width: min(600px, 100%);
-    }
-    &_md {
-      max-width: min(740px, 100%);
-    }
-    &_lg {
-      max-width: min(800px, 100%);
+    &_size {
+      &_xs {
+        max-width: min(400px, 100%);
+      }
+      &_sm {
+        max-width: min(600px, 100%);
+      }
+      &_md {
+        max-width: min(740px, 100%);
+      }
+      &_lg {
+        max-width: min(800px, 100%);
+      }
     }
   }
-}
 
-.ModalBase_Content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+  &_Content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 
-.ModalBase_Actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  &_Actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
 }
 </style>

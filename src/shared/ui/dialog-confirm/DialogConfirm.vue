@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ModalBase } from '../modal-base'
+import type { ModalBaseSize } from '../modal-base'
 import { ButtonBase } from '../button-base'
 
 const {
   open,
+  size = 'xs',
   title,
   message,
   type,
@@ -12,6 +14,7 @@ const {
   autoFocusCancelButton = true,
 } = defineProps<{
   open: boolean
+  size?: ModalBaseSize
   type: 'confirm' | 'delete'
   message: string
   title: string
@@ -37,7 +40,7 @@ function handleCancel() {
 </script>
 
 <template>
-  <ModalBase :open="open" closeOnOverlay closeOnEsc @close="closeDialog" size="xs">
+  <ModalBase :open="open" @update:open="closeDialog" shouldCloseOnOverlay shouldCloseOnEsc :size="size">
     <h2 class="Text_AlginCenter Typo_Heading2">{{ title }}</h2>
     <div v-if="$slots.content" class="DialogConfirm_Content Text_AlginCenter Typo_BodyAccent">
       <slot name="content" />

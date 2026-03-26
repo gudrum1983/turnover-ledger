@@ -204,7 +204,7 @@ function onSubmit(payload: ReportRowPayload) {
         </div>
         <div v-if="rows.length < 1" class="ReportTable_Empty">
           {{ t('ui.reportTable.emptyHint') }}
-          <ButtonBase color="primary" size="xs" @click="openCreateModal()" variant="outline" isIconOnly>
+          <ButtonBase color="primary" size="xs" @click="openCreateModal()" variant="outlined" isIconOnly>
             <template #icon>
               <IconAdd style="width: 18px; height: 18px" />
             </template>
@@ -228,7 +228,7 @@ function onSubmit(payload: ReportRowPayload) {
         </div>
       </div>
     </div>
-    <ModalBase :open="open" @close="closeModal" closeOnEsc>
+    <ModalBase v-model:open="open" shouldCloseOnEsc>
       <h2>{{ modalTitle }}</h2>
       <ReportRowCreateForm
         :key="formKey"

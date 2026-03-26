@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .PaperBase {
   border-radius: 24px;
   padding: 30px;
