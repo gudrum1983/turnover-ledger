@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Sizes } from '../../types'
+
+type Sizes = 'xs' | 'sm' | 'md' | 'lg'
 
 export type ButtonGroupOption = {
   value: string

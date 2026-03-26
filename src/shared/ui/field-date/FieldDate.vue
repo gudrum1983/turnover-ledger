@@ -8,11 +8,10 @@ type Props = {
   name: string
   label?: string
   modelValue: string | null
-  fullWidth?: boolean
   required?: boolean
 }
 
-const { name, label, modelValue, fullWidth = false, required = false } = defineProps<Props>()
+const { name, label, modelValue, required = false } = defineProps<Props>()
 
 const inputConfig: Partial<InputAttributesConfig> = {
   name: name,
@@ -24,9 +23,7 @@ const emit = defineEmits<{
 }>()
 
 const localeStore = useLocaleStore()
-const inputClassName = computed(() =>
-  fullWidth ? 'FieldDate_Input FieldDate_FullWidth' : 'FieldDate_Input',
-)
+const inputClassName = computed(() => 'FieldDate_Input')
 </script>
 
 <template>
@@ -74,10 +71,6 @@ const inputClassName = computed(() =>
   &:focus-visible {
     outline: -webkit-focus-ring-color auto 1px;
   }
-}
-
-.FieldDate_FullWidth {
-  width: 100%;
 }
 
 :deep(.FieldDate_Input:hover) {

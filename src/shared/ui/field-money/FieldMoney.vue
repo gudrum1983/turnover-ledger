@@ -8,10 +8,9 @@ type Props = {
   label?: string
   placeholder?: string
   modelValue: string | null
-  fullWidth?: boolean
 }
 
-const { name, label, placeholder, modelValue, fullWidth = false } = defineProps<Props>()
+const { name, label, placeholder, modelValue } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -48,11 +47,11 @@ function handleBlur(value: string | null) {
 
 <template>
   <FieldBase
+    class="FieldMoney"
     :name="name"
     :label="label"
     :placeholder="placeholder"
     :model-value="modelValue"
-    :full-width="fullWidth"
     :mask="moneyMask"
     @update:modelValue="emit('update:modelValue', $event)"
     @blur="handleBlur"

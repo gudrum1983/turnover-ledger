@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { FieldBase } from '../field-base/FieldBase.vue'
+import { FieldBase } from '../field-base'
 
 type Props = {
   name: string
   label?: string
   placeholder?: string
   modelValue: string | null
-  fullWidth?: boolean
 }
 
-const { name, label, placeholder, modelValue, fullWidth = false } = defineProps<Props>()
+const { name, label, placeholder, modelValue } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -25,11 +24,11 @@ const digitsMask = {
 
 <template>
   <FieldBase
+    class="FieldDigit"
     :name="name"
     :label="label"
     :placeholder="placeholder"
     :model-value="modelValue"
-    :full-width="fullWidth"
     :mask="digitsMask"
     @update:modelValue="emit('update:modelValue', $event)"
   />

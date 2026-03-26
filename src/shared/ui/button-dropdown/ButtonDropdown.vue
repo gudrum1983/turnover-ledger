@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { ButtonBase } from '../button-base'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { FieldListBox } from '@/shared/ui/field-list-box'
+import { IconChevron } from '@/shared/ui/icons'
 
-import type { Colors, Sizes, Variants } from '../../types'
-import { FieldListBox } from '../field-list-box'
-import { IconChevron } from '../icons'
+type Colors = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
+type Sizes = 'xs' | 'sm' | 'md' | 'lg'
+type Variants = 'filled' | 'outlined'
 
 type Option = {
   value: string
@@ -110,11 +112,7 @@ onBeforeUnmount(() => {
     >
       <span class="ButtonDropdown_Label">{{ activeLabel }}</span>
       <template #end-icon>
-        <IconChevron
-          class="ButtonDropdown_Caret"
-          :class="{ ButtonDropdown_Caret_open: isOpen }"
-          aria-hidden="true"
-        />
+        <IconChevron class="ButtonDropdown_Caret" :class="{ ButtonDropdown_Caret_open: isOpen }" aria-hidden="true" />
       </template>
     </ButtonBase>
     <FieldListBox

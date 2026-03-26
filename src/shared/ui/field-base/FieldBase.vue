@@ -1,46 +1,26 @@
 <script setup lang="ts">
 import type { MaskOptions } from 'maska'
 import { computed, onBeforeUnmount } from 'vue'
-import { IconClose } from '../icons/IconClose.vue'
-
-type TypeInput = 'text' | 'datalist' | 'date'
+import { IconClose } from '../icons'
 
 type Props = {
   name: string
   label?: string
-  fullWidth?: boolean
-  type?: TypeInput
   placeholder?: string
   modelValue: string | null
   debounceMs?: number
   mask?: MaskOptions
-  datalist?: string[]
   maxLength?: number
 }
 
-const {
-  label,
-  placeholder,
-  fullWidth = false,
-  type = 'text',
-  name,
-  modelValue,
-  debounceMs = 400,
-  mask,
-  datalist,
-  maxLength,
-} = defineProps<Props>()
+const { label, placeholder, name, modelValue, debounceMs = 400, mask, maxLength } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
   (e: 'blur', value: string | null): void
 }>()
 
-const isDatalist = computed(() => Array.isArray(datalist) && datalist.length > 0)
-const datalistId = computed(() => `${name}list`)
 const hasValue = computed(() => Boolean(modelValue))
-
-const classInput = computed(() => [{ FieldBase_fullWidth: fullWidth }])
 
 let t: number | null = null
 
@@ -93,7 +73,7 @@ onBeforeUnmount(clearTimer)
 </script>
 
 <template>
-  <label class="FieldBase Typo_Caption" v-if="!isDatalist">
+  <label v-bind="$attrs" class="FieldBase Typo_Caption">
     {{ label }}
     <span class="FieldBase_Control">
       <input
@@ -102,38 +82,8 @@ onBeforeUnmount(clearTimer)
         :value="modelValue"
         v-maska="mask"
         class="FieldBase_Input"
-        :class="classInput"
-        :type="type"
         :name="name"
         :placeholder="placeholder"
-        :maxlength="maxLength"
-      />
-      <button
-        v-if="hasValue"
-        class="FieldBase_Clear"
-        type="button"
-        aria-label="Clear field"
-        @mousedown.prevent
-        @click="clearValue"
-      >
-        <IconClose />
-      </button>
-    </span>
-  </label>
-
-  <label v-if="isDatalist" class="FieldBase Typo_Caption">
-    {{ label }}
-    <span class="FieldBase_Control">
-      <input
-        @input="scheduleEmit"
-        @blur="commitNow"
-        :value="modelValue"
-        class="FieldBase_Input"
-        :class="classInput"
-        :type="type"
-        :name="name"
-        :placeholder="placeholder"
-        :list="datalistId"
         :maxlength="maxLength"
         autocomplete="off"
       />
@@ -148,10 +98,6 @@ onBeforeUnmount(clearTimer)
         <IconClose />
       </button>
     </span>
-
-    <datalist :id="datalistId" v-if="isDatalist">
-      <option v-for="item in datalist" :key="item" :value="item"></option>
-    </datalist>
   </label>
 </template>
 

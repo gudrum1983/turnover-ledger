@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
-import type { Sizes } from '../../types'
 
 type Props = {
-  size?: Sizes
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   to: RouteLocationRaw
 }
 
@@ -20,7 +19,6 @@ const sizeClass = `LinkBase_size_${size}`
 
 <style scoped lang="scss">
 .LinkBase {
-  /*var size */
   --link-font-size: var(--font-medium-text-base);
   --link-color: var(--color-text-link);
   --link-color-hover: var(--color-text-link-hovered);
@@ -37,23 +35,23 @@ const sizeClass = `LinkBase_size_${size}`
     color: var(--link-color-hover);
     text-decoration: underline;
   }
-}
 
-.LinkBase_size {
-  &_xs {
-    --link-font-size: var(--font-medium-text-sm);
-  }
+  &_size {
+    &_xs {
+      --link-font-size: var(--font-medium-text-sm);
+    }
 
-  &_sm {
-    --link-font-size: var(--font-medium-text-sm);
-  }
+    &_sm {
+      --link-font-size: var(--font-medium-text-sm);
+    }
 
-  &_md {
-    --link-font-size: var(--font-medium-text-base);
-  }
+    &_md {
+      --link-font-size: var(--font-medium-text-base);
+    }
 
-  &_lg {
-    --link-font-size: var(--font-medium-text-lg);
+    &_lg {
+      --link-font-size: var(--font-medium-text-lg);
+    }
   }
 }
 </style>

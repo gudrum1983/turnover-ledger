@@ -37,7 +37,7 @@ const handleLocaleUpdate = (value: string | null) => {
       <div class="AppHeader_Locale">
         <ButtonDropdown
           size="xs"
-          variant="outline"
+          variant="outlined"
           color="primary"
           :options="localeOptions"
           :model-value="locale"

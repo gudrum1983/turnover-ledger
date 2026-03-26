@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import type { Colors, HorizontalAlign, Sizes, Variants } from '../../types'
 import { computed } from 'vue'
 
-type ContentPosition = Exclude<HorizontalAlign, 'right'>
+type Colors = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
+type Sizes = 'xs' | 'sm' | 'md' | 'lg'
+type Variants = 'filled' | 'outlined'
+type ContentPosition = 'left' | 'center'
 type TypeButton = 'button' | 'submit' | 'reset'
 
 type Props = {
@@ -38,9 +40,13 @@ const classes = computed(() => [
 
 <template>
   <button class="ButtonBase" :class="classes" :disabled="disabled" :type="type">
-    <slot name="icon" />
+    <span v-if="$slots.icon" class="ButtonBase_Icon">
+      <slot name="icon" />
+    </span>
     <slot v-if="!isIconOnly" />
-    <slot name="end-icon" class="ButtonBase_endIcon" />
+    <span v-if="$slots['end-icon']" class="ButtonBase_EndIcon">
+      <slot name="end-icon" />
+    </span>
   </button>
 </template>
 
@@ -105,6 +111,12 @@ const classes = computed(() => [
   &:focus-visible {
     outline: -webkit-focus-ring-color auto 1px;
   }
+}
+
+.ButtonBase_Icon,
+.ButtonBase_EndIcon {
+  display: inline-flex;
+  align-items: center;
 }
 
 .ButtonBase_fullWidth {

@@ -28,9 +28,7 @@ onBeforeUnmount(() => {
     <AppHeader :msg="t('ui.app.reportPreviewTitle')" class="ReportPreviewPage_Header">
       <template v-slot:actionButtons>
         <div class="ReportPreviewPage_Actions">
-          <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding
-            >🡄 {{ t('ui.reportPreview.toHome') }}</LinkBase
-          >
+          <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 {{ t('ui.reportPreview.toHome') }}</LinkBase>
 
           <ReportScriptToggle v-model="script" class="no-print" />
 

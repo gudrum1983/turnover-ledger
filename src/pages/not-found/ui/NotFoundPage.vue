@@ -8,22 +8,22 @@ import { LinkBase } from '@/shared/ui/link-base'
     <div class="Typo_Display">404 страница не найдена</div>
 
     <div>
-      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Спокойно — возвращаемся домой</LinkBase>
+      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">Спокойно — возвращаемся домой</LinkBase>
       <p>Ничего страшного, вы просто немного свернули не туда</p>
     </div>
 
     <div>
-      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Polako — hajde kući</LinkBase>
+      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">Polako — hajde kući</LinkBase>
       <p>Ništa strašno, samo ste malo skrenuli</p>
     </div>
 
     <div>
-      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Easy — let’s go home</LinkBase>
+      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">Easy — let’s go home</LinkBase>
       <p>No worries, you just took a wrong turn</p>
     </div>
 
     <div>
-      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg" noPadding>Полако — хајде кући</LinkBase>
+      <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">Полако — хајде кући</LinkBase>
       <p>Ништа страшно, само сте мало скренули</p>
     </div>
   </div>
