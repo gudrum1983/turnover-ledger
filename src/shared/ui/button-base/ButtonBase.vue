@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
-type Colors = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
-type Sizes = 'xs' | 'sm' | 'md' | 'lg'
-type Variants = 'filled' | 'outlined'
-type ContentPosition = 'left' | 'center'
-type TypeButton = 'button' | 'submit' | 'reset'
+import { computed, useSlots } from 'vue'
 
 type Props = {
-  color?: Colors
-  variant?: Variants
+  /** Основной цвет кнопки */
+  color?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
+  /** Визуальный вариант отображения */
+  variant?: 'filled' | 'outlined'
+  /** Растягивает кнопку на всю ширину контейнера */
   fullWidth?: boolean
-  size?: Sizes
-  type?: TypeButton
+  /** Размер кнопки */
+  size?: 'xs' | 'sm' | 'md' | 'lg'
+  /** HTML-тип кнопки */
+  type?: 'button' | 'submit' | 'reset'
+  /** Отключает взаимодействие с кнопкой */
   disabled?: boolean
+  /** Отображает только иконку без текстового содержимого */
   isIconOnly?: boolean
-  contentPosition?: ContentPosition
+  /** Выравнивание содержимого внутри кнопки */
+  contentPosition?: 'left' | 'center'
 }
 
 const {
@@ -36,14 +38,21 @@ const classes = computed(() => [
   `ButtonBase_align_${contentPosition}`,
   { ButtonBase_fullWidth: fullWidth, ButtonBase_iconOnly: isIconOnly },
 ])
+
+const slots = useSlots()
+
+const hasIconSlot = computed(() => Boolean(slots.icon))
+const hasLabelSlot = computed(() => Boolean(slots.default))
 </script>
 
 <template>
   <button class="ButtonBase" :class="classes" :disabled="disabled" :type="type">
-    <span v-if="$slots.icon" class="ButtonBase_Icon">
+    <span v-if="hasIconSlot" class="ButtonBase_Icon">
       <slot name="icon" />
     </span>
-    <slot v-if="!isIconOnly" />
+    <slot v-if="!isIconOnly && hasLabelSlot" />
+    <span v-else-if="!isIconOnly">Нет лейбла</span>
+    <span v-else-if="!hasIconSlot">Нет иконки</span>
     <span v-if="$slots['end-icon']" class="ButtonBase_EndIcon">
       <slot name="end-icon" />
     </span>
@@ -168,7 +177,7 @@ const classes = computed(() => [
   }
 }
 
-.ButtonBase_variant_outline {
+.ButtonBase_variant_outlined {
   background: var(--btn-outline-bg);
   border-color: var(--btn-outline-clr-border);
   color: var(--btn-outline-clr-text);

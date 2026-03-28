@@ -9,6 +9,14 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-onboarding',
   ],
-  framework: '@storybook/vue3-vite',
+  framework: {
+    name: '@storybook/vue3-vite',
+    options: {
+      docgen: {
+        plugin: 'vue-component-meta',
+        tsconfig: 'tsconfig.app.json',
+      },
+    },
+  },
 }
 export default config
