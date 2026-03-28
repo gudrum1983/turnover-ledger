@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ButtonBase } from '@/shared/ui/button-base'
-import { FieldListBox } from '@/shared/ui/field-list-box'
+import { ListBox } from '@/shared/ui/list-box'
 import { IconChevron } from '@/shared/ui/icons'
 
 type Colors = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
         <IconChevron class="ButtonDropdown_Caret" :class="{ ButtonDropdown_Caret_open: isOpen }" aria-hidden="true" />
       </template>
     </ButtonBase>
-    <FieldListBox
+    <ListBox
       class="ButtonDropdown_Menu"
       :options="options"
       :model-value="modelValue"

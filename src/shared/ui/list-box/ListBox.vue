@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { DividerBase } from '@/shared/ui/divider-base'
 
 type Option = {
   value: string
   label: string
 }
 
-type Props = {
+interface Props {
   options: Option[]
   modelValue?: string
   favorites?: string[]
@@ -38,13 +39,13 @@ const handleSelect = (value: string) => {
 </script>
 
 <template>
-  <div class="FieldListBox" role="listbox">
-    <div class="FieldListBox_List">
+  <div class="ListBox" role="listbox">
+    <div class="ListBox_List">
       <button
         v-for="option in favoriteOptions"
         :key="option.value"
-        class="FieldListBox_Item"
-        :class="{ FieldListBox_Item_selected: option.value === modelValue }"
+        class="ListBox_Item"
+        :class="{ ListBox_Item_selected: option.value === modelValue }"
         type="button"
         role="option"
         :aria-selected="option.value === modelValue"
@@ -52,12 +53,12 @@ const handleSelect = (value: string) => {
       >
         {{ option.label }}
       </button>
-      <div v-if="favoriteOptions.length > 0 && otherOptions.length > 0" class="FieldListBox_Divider" role="separator" />
+      <DividerBase v-if="favoriteOptions.length > 0 && otherOptions.length > 0" :edge-offset="5" lineStyle="dashed" />
       <button
         v-for="option in otherOptions"
         :key="option.value"
-        class="FieldListBox_Item"
-        :class="{ FieldListBox_Item_selected: option.value === modelValue }"
+        class="ListBox_Item"
+        :class="{ ListBox_Item_selected: option.value === modelValue }"
         type="button"
         role="option"
         :aria-selected="option.value === modelValue"
@@ -70,7 +71,7 @@ const handleSelect = (value: string) => {
 </template>
 
 <style scoped lang="scss">
-.FieldListBox {
+.ListBox {
   display: flex;
   border-radius: 4px;
   background: var(--color-background-surface);
