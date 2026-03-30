@@ -1,4 +1,4 @@
-export type ToPxStringOptions = {
+type ToPxStringOptions = {
   min?: number
   max?: number
 }

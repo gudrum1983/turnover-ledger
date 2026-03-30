@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { BaseButton, IconCopy, IconEdit, IconTrash } from '@/shared/ui'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { IconCopy, IconEdit, IconTrash } from '@/shared/ui/icons'
 
 type Props = {
   size: 'short' | 'full'
@@ -30,7 +31,7 @@ const config = computed(() => configMap[icon])
 </script>
 
 <template>
-  <BaseButton
+  <ButtonBase
     class="ReportTableRowButton"
     :color="config.color"
     size="xs"
@@ -44,7 +45,7 @@ const config = computed(() => configMap[icon])
     <template v-if="size === 'full'">
       <p class="ReportTableRowButton_Label">{{ label }}</p>
     </template>
-  </BaseButton>
+  </ButtonBase>
 </template>
 
 <style scoped lang="scss">

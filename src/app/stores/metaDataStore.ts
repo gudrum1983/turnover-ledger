@@ -130,14 +130,28 @@ export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
           return
         }
 
-        if (typeof parsed === 'object' && parsed !== null && 'meta' in parsed && parsed.meta && typeof parsed.meta === 'object' && 'header' in parsed.meta) {
+        if (
+          typeof parsed === 'object' &&
+          parsed !== null &&
+          'meta' in parsed &&
+          parsed.meta &&
+          typeof parsed.meta === 'object' &&
+          'header' in parsed.meta
+        ) {
           for (const key of Object.keys(formData.header) as HeaderField[]) {
             const value = (parsed.meta as ReportState['meta']).header[key]
             if (typeof value === 'string') formData.header[key] = value
           }
         }
 
-        if (typeof parsed === 'object' && parsed !== null && 'meta' in parsed && parsed.meta && typeof parsed.meta === 'object' && 'footer' in parsed.meta) {
+        if (
+          typeof parsed === 'object' &&
+          parsed !== null &&
+          'meta' in parsed &&
+          parsed.meta &&
+          typeof parsed.meta === 'object' &&
+          'footer' in parsed.meta
+        ) {
           for (const key of Object.keys(formData.footer) as FooterField[]) {
             const value = (parsed.meta as ReportState['meta']).footer[key]
             if (typeof value === 'string') formData.footer[key] = value

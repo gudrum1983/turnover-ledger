@@ -37,3 +37,6 @@ __screenshots__/
 
 # Codex CLI
 /AGENTS.md
+
+*storybook.log
+storybook-static

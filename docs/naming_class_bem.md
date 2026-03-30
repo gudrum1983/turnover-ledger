@@ -1,16 +1,37 @@
-* **BEM-like** нейминг внутри SCSS-модулей (BlockName_ElemName_modName_modVal)
-Так как уже привыкла к такому стилю нейминга в реакте
+# Нейминг классов и компонентов
 
+В проекте используется **BEM-like** нотация:
 
+`BlockName_ElemName_modName_modVal`
 
-BlockName = BaseButton
+Это не классический BEM, а проектная конвенция с `PascalCase` для блоков и элементов и `camelCase` для модификаторов и значений.
 
-BlockName_ElemName = BaseButton_Icon
+## Базовые правила
 
-BlockName_modName (boolean) = BaseButton_isDisabled
+1. Каждый Vue-компонент с разметкой считается блоком.
+2. Корневой DOM-элемент компонента должен иметь класс с именем блока, даже если у блока пока нет собственных стилей.
+3. Блоки и элементы называются в `PascalCase`.
+4. Модификаторы называются в `camelCase`.
+5. Значения модификаторов записываются после `_`.
+6. Разделитель блоков, элементов, модификаторов и значений: `_`.
 
-BlockName_modName_modVal = BaseButton_size_sm
+## Формат имен
 
-BlockName_ElemName_modName = BaseButton_Icon_active
+| Описание                                  | Нейминг                           | Пример нейминга              |
+|:------------------------------------------|:----------------------------------|:-----------------------------|
+| Блок                                      | BlockName                         | ButtonBase                   |
+| Блок с модификатором (булево)             | BlockName_modName                 | ButtonBase_fullWidth         |
+| Блок с модификатором (значение)           | BlockName_modName_modVal          | ButtonBase_size_sm           |
+| Блок + Элемент                            | BlockName_ElemName                | ButtonBase_Icon              |
+| Блок + Элемент с модификатором (булево)   | BlockName_ElemName_modName        | ButtonBase_Icon_isActive     |
+| Блок + Элемент с модификатором (значение) | BlockName_ElemName_modName_modVal | ButtonBase_Icon_size_sm      |
+| Модификатор из двух слов                  | modFirstSecond                    | ButtonBase_sizeIcon_extraSmall |
 
-BlockName_ElemName_modName_modVal = BaseButton_Icon_size_sm
+## Как читать модификаторы
+
+- `size` в `ButtonBase_size_sm` это имя модификатора в `camelCase`.
+- `sm` это значение модификатора.
+- Если модификатор/значение состоит из двух слов, он записывается как `camelCase`: `sizeIcon`.
+- Пример: `ButtonBase_sizeIcon_extraSmall`.
+
+??? - Немного о семантике имен тут docs/questions.md

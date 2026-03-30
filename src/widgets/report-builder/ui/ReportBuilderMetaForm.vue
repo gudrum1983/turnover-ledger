@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { BaseDividerToggle, BaseField, DigitField } from '@/shared/ui'
+import { DividerToggle } from '@/shared/ui/divider-toggle'
+import { FieldBase } from '@/shared/ui/field-base'
+import { FieldDigit } from '@/shared/ui/field-digit'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { HEADER_FIELDS, FOOTER_FIELDS } from '@/shared/constants/reportFields.ts'
@@ -40,12 +42,12 @@ const isOpenFooter = ref(true)
 <template>
   <div>
     <div class="ReportMetaForm">
-      <BaseDividerToggle v-model="isOpenHeader" :label="t('ui.reportMetaForm.taxpayerInfo')" color="disabled" />
+      <DividerToggle v-model="isOpenHeader" :label="t('ui.reportMetaForm.taxpayerInfo')" color="disabled" />
       <div v-show="isOpenHeader" class="ReportMetaForm_Fieldset">
         <component
           v-for="field in headerMetaFields"
           :key="field.key"
-          :is="field.isDigit ? DigitField : BaseField"
+          :is="field.isDigit ? FieldDigit : FieldBase"
           :name="field.key"
           :label="`${field.label}:`"
           :modelValue="formData.header[field.key]"
@@ -53,9 +55,9 @@ const isOpenFooter = ref(true)
         />
       </div>
 
-      <BaseDividerToggle v-model="isOpenFooter" :label="t('ui.reportMetaForm.responsiblePeople')" color="disabled" />
+      <DividerToggle v-model="isOpenFooter" :label="t('ui.reportMetaForm.responsiblePeople')" color="disabled" />
       <div v-show="isOpenFooter" class="ReportMetaForm_Fieldset">
-        <BaseField
+        <FieldBase
           v-for="field in footerMetaFields"
           :key="field.key"
           :name="field.key"

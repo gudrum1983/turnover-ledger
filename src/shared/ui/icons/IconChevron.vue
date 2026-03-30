@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
   <svg width="20" height="24" viewBox="0 0 20 24" fill="currentColor">
     <path
@@ -7,5 +5,3 @@
     />
   </svg>
 </template>
-
-<style scoped></style>

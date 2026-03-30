@@ -26,6 +26,6 @@ ul:where([class]) {
 }
 
 @page {
-    size: A4 landscape;
-    margin: 15mm;
+  size: A4 landscape;
+  margin: 15mm;
 }
