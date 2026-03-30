@@ -3,6 +3,12 @@ import '@/app/styles/main.css'
 
 const preview: Preview = {
   parameters: {
+    docs: {
+      toc: {
+        headingSelector: 'h2, h3',
+        title: 'На этой странице',
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
