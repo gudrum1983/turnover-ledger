@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
+import { useLocale } from '@/shared/i18n'
 import { DividerBase } from '@/shared/ui/divider-base'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { IconChevron } from '@/shared/ui/icons'
@@ -39,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   labelPosition: 'left',
 })
+const { t } = useLocale()
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
@@ -52,6 +54,12 @@ const hasIconActiveSlot = computed(() => Boolean(slots['icon-active']))
 const isOpen = computed({
   get: () => props.modelValue,
   set: (value: boolean) => emit('update:modelValue', value),
+})
+
+const buttonAriaLabel = computed(() => {
+  const action = isOpen.value ? t('ui.accessibility.collapseSection') : t('ui.accessibility.expandSection')
+
+  return props.label ? `${action}: ${props.label}` : action
 })
 
 const handleClick = () => {
@@ -71,6 +79,7 @@ const handleClick = () => {
         size="xs"
         type="button"
         :disabled="disabled"
+        :aria-label="buttonAriaLabel"
         :aria-expanded="isOpen"
         @click="handleClick"
       >

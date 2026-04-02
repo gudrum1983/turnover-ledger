@@ -84,4 +84,8 @@ export const ruUi = {
     reportScriptLatin: 'Latinica',
     reportScriptCyrillic: 'Ћирилица',
   },
+  accessibility: {
+    expandSection: 'Развернуть секцию',
+    collapseSection: 'Свернуть секцию',
+  },
 } as const

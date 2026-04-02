@@ -38,6 +38,7 @@ const config = computed(() => configMap[icon])
     :contentPosition="size !== 'short' ? 'left' : 'center'"
     fullWidth
     :isIconOnly="size === 'short'"
+    :aria-label="size === 'short' ? label : undefined"
   >
     <template #icon>
       <component :is="config.icon" class="ReportTableRowButton_Icon" />

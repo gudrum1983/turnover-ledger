@@ -204,7 +204,14 @@ function onSubmit(payload: ReportRowPayload) {
         </div>
         <div v-if="rows.length < 1" class="ReportTable_Empty">
           {{ t('ui.reportTable.emptyHint') }}
-          <ButtonBase color="primary" size="xs" @click="openCreateModal()" variant="outlined" isIconOnly>
+          <ButtonBase
+            color="primary"
+            size="xs"
+            @click="openCreateModal()"
+            variant="outlined"
+            isIconOnly
+            :aria-label="t('ui.reportTable.addRow')"
+          >
             <template #icon>
               <IconAdd style="width: 18px; height: 18px" />
             </template>

@@ -51,8 +51,6 @@ const hasLabelSlot = computed(() => Boolean(slots.default))
       <slot name="icon" />
     </span>
     <slot v-if="!isIconOnly && hasLabelSlot" />
-    <span v-else-if="!isIconOnly">Нет лейбла</span>
-    <span v-else-if="!hasIconSlot">Нет иконки</span>
     <span v-if="$slots['end-icon']" class="ButtonBase_EndIcon">
       <slot name="end-icon" />
     </span>

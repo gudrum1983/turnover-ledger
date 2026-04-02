@@ -86,4 +86,8 @@ export const srCyrUi = {
     reportScriptLatin: 'Латиница',
     reportScriptCyrillic: 'Ћирилица',
   },
+  accessibility: {
+    expandSection: 'Прошири секцију',
+    collapseSection: 'Скупи секцију',
+  },
 } as const satisfies I18nLocaleMessages['ui']

@@ -86,4 +86,8 @@ export const enUi = {
     reportScriptLatin: 'Latinica',
     reportScriptCyrillic: 'Cyrillic',
   },
+  accessibility: {
+    expandSection: 'Expand section',
+    collapseSection: 'Collapse section',
+  },
 } as const satisfies I18nLocaleMessages['ui']
