@@ -4,24 +4,27 @@ import { ButtonBase } from '@/shared/ui/button-base'
 import { ListBox } from '@/shared/ui/list-box'
 import { IconChevron } from '@/shared/ui/icons'
 
-type Colors = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
-type Sizes = 'xs' | 'sm' | 'md' | 'lg'
-type Variants = 'filled' | 'outlined'
-
-type Option = {
-  value: string
-  label: string
-}
-
 type Props = {
+  /** Текстовый лейбл над кнопкой */
   label?: string
-  options: Option[]
+  /** Список доступных вариантов */
+  options: Array<{
+    value: string
+    label: string
+  }>
+  /** Текущее выбранное значение */
   modelValue?: string
+  /** Текст кнопки, когда значение не выбрано */
   placeholder?: string
-  size?: Sizes
-  variant?: Variants
-  color?: Colors
+  /** Размер кнопки */
+  size?: 'xs' | 'sm' | 'md' | 'lg'
+  /** Визуальный вариант кнопки */
+  variant?: 'filled' | 'outlined'
+  /** Цвет кнопки */
+  color?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
+  /** Отключает взаимодействие с выпадающим списком */
   disabled?: boolean
+  /** Значения, которые нужно показывать в начале списка как избранные */
   favorites?: string[]
 }
 

@@ -1,28 +1,28 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-type Sizes = 'xs' | 'sm' | 'md' | 'lg'
-
-export type ButtonGroupOption = {
-  value: string
-  label: string
-  disabled?: boolean
-}
-
 type Props = {
+  /** Выбранное значение кнопки */
   modelValue?: string
-  options: ButtonGroupOption[]
+  /** Варианты значений группы кнопок */
+  options: Array<{
+    value: string
+    label: string
+    disabled?: boolean
+  }>
+  /** Отключение кнопки */
   disabled?: boolean
-  name?: string
+  /** Лейбл для доступности */
   ariaLabel?: string
+  /** Растягивает группу кнопок на всю ширину контейнера */
   fullWidth?: boolean
-  size?: Sizes
+  /** Размеры кнопок */
+  size?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
   disabled: false,
-  name: '',
   ariaLabel: '',
   fullWidth: false,
   size: 'md',
@@ -114,7 +114,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     class="ButtonGroup"
     :class="{ ButtonGroup_fullWidth: fullWidth }"
     role="radiogroup"
-    :aria-label="ariaLabel || name || 'button-group'"
+    :aria-label="ariaLabel || 'button-group'"
     @keydown="handleKeydown"
   >
     <button

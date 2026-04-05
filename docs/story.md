@@ -40,3 +40,6 @@
 - конкретную структуру папок для stories в твоем репозитории
 - готовый preview.ts под твои Pinia + i18n + directives
 - пример \*.stories.ts для одного из твоих компонентов, например ButtonBase или FieldMoney
+
+Практики для сторибука
+https://blog.openreplay.com/storybook-building-ui-documentation/

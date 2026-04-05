@@ -2,14 +2,15 @@
 import { computed } from 'vue'
 import { DividerBase } from '@/shared/ui/divider-base'
 
-type Option = {
-  value: string
-  label: string
-}
-
 interface Props {
-  options: Option[]
+  /** Варианты значений */
+  options: Array<{
+    value: string
+    label: string
+  }>
+  /** Выбранное значение из списка */
   modelValue?: string
+  /** Избранные значения для отображения вверху списка (строки из options.value) */
   favorites?: string[]
 }
 
@@ -78,9 +79,11 @@ const handleSelect = (value: string) => {
   box-shadow: var(--shadow);
   color: var(--color-text-default);
   overflow: hidden;
+  width: 100%;
 
   &_List {
     overflow: auto;
+    width: 100%;
   }
 
   &_Divider {

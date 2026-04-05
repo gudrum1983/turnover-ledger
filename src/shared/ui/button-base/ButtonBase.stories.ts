@@ -3,19 +3,19 @@ import { IconAdd } from '@/shared/ui/icons'
 import { ButtonBase } from './index'
 
 const meta = {
-  title: 'UI/ButtonBase',
+  title: 'UI-Компоненты/ButtonBase',
+  parameters: {
+    docs: {
+      description: {
+        component: 'Описание всего компонента ButtonBase.',
+      },
+    },
+  },
   component: ButtonBase,
   tags: ['autodocs'],
   args: {
-    color: 'default',
-    variant: 'filled',
-    size: 'md',
-    type: 'button',
-    disabled: false,
-    fullWidth: false,
-    isIconOnly: false,
-    contentPosition: 'center',
-    default: 'Кнопочка Жмяк',
+    color: undefined,
+    default: 'Кнопочка',
   },
   argTypes: {
     color: {
@@ -90,93 +90,121 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const Playground: Story = {
   args: {
-    default: 'Кнопка по умолчанию',
+    color: 'primary',
   },
-  render: (args) => ({
-    components: { ButtonBase },
-    setup() {
-      return { args }
-    },
-    template: '<ButtonBase>{{ args.default }}</ButtonBase>',
-  }),
+  name: 'Песочница',
   parameters: {
     docs: {
-      source: {
-        code: `
-<ButtonBase>
-  Кнопка по умолчанию
-</ButtonBase>
-        `.trim(),
+      description: {
+        story: 'Интерактивная история для проверки всех основных пропсов кнопки и подбора подходящей конфигурации.',
       },
     },
   },
 }
 
-export const Playground: Story = {}
+export const Default: Story = {
+  name: 'По умолчанию',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Базовый вариант кнопки со стандартными значениями пропсов. Подходит для основного действия без дополнительных акцентов.',
+      },
+    },
+  },
+}
 
 export const Outlined: Story = {
+  name: 'Контурная',
   args: {
     variant: 'outlined',
-    color: 'default',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Вариант кнопки без заливки. Подходит для второстепенных действий, которые должны быть заметны, но не конкурировать с основной кнопкой.',
+      },
+    },
   },
 }
 
 export const Disabled: Story = {
+  name: 'Неактивная',
   args: {
     disabled: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Кнопка в отключенном состоянии. Используется, когда действие временно недоступно, например до заполнения обязательных полей формы.',
+      },
+    },
   },
 }
 
 export const FullWidth: Story = {
+  name: 'На всю ширину по центру',
   args: {
     fullWidth: true,
-    contentPosition: 'center',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Кнопка растягивается на всю ширину контейнера, а содержимое остаётся выровненным по центру. Подходит для мобильных экранов и узких колонок.',
+      },
+    },
   },
 }
 
-export const WithoutLabel: Story = {
+export const FullWidthLeft: Story = {
+  name: 'На всю ширину с лева',
   args: {
-    color: 'danger',
+    fullWidth: true,
+    contentPosition: 'left',
+    default: 'На всю ширину с лева',
   },
   parameters: {
-    controls: {
-      disable: true,
+    docs: {
+      description: {
+        story:
+          'Кнопка на всю ширину контейнера с выравниванием содержимого по левому краю. Подходит для списков действий и строковых интерфейсов.',
+      },
     },
   },
-
-  render: (args) => ({
-    components: { ButtonBase },
-    setup() {
-      return { args }
-    },
-    template: '<ButtonBase v-bind="args" />',
-  }),
 }
 
 export const WithIcon: Story = {
+  name: 'С иконкой',
   args: {
-    color: 'danger',
+    color: 'info',
+    size: 'lg',
   },
   parameters: {
     controls: {
       disable: true,
     },
     docs: {
+      description: {
+        story:
+          'Кнопка с иконкой перед текстом. Используется, когда важно визуально подсветить тип действия, не теряя текстовый лейбл.',
+      },
       source: {
         code: `
-<ButtonBase v-bind="args">
+<ButtonBase color="info" size="lg">
   <template #icon>
     <IconAdd style="width: 18px; height: 18px" />
   </template>
-  Add row
+  {{args.default}}
 </ButtonBase>
         `,
       },
     },
   },
-
   render: (args) => ({
     components: { ButtonBase, IconAdd },
     setup() {
@@ -187,21 +215,36 @@ export const WithIcon: Story = {
         <template #icon>
           <IconAdd style="width: 18px; height: 18px" />
         </template>
-        Add row
+        {{args.default}}
       </ButtonBase>
     `,
   }),
 }
 
 export const IconOnly: Story = {
+  name: 'Только иконка',
   args: {
     isIconOnly: true,
-    size: 'xs',
-    color: 'danger',
+    size: 'lg',
+    color: 'info',
   },
   parameters: {
     controls: {
       disable: true,
+    },
+    docs: {
+      description: {
+        story:
+          'Компактный вариант кнопки только с иконкой. Используйте его там, где смысл действия понятен по контексту и задан доступный `aria-label`.',
+      },
+      source: {
+        code: `
+<ButtonBase color="info" size="lg" isIconOnly>
+  
+  Add row
+</ButtonBase>
+        `,
+      },
     },
   },
   render: (args) => ({
@@ -210,7 +253,7 @@ export const IconOnly: Story = {
       return { args }
     },
     template: `
-      <ButtonBase v-bind="args" aria-label="Add">
+      <ButtonBase v-bind="args">
         <template #icon>
           <IconAdd style="width: 18px; height: 18px" />
         </template>
@@ -219,16 +262,45 @@ export const IconOnly: Story = {
   }),
 }
 
-export const IconOnlyWithoutIcon: Story = {
+export const WithoutLabel: Story = {
+  name: '❗ Без текста',
   args: {
     color: 'danger',
-    variant: 'outlined',
-    isIconOnly: true,
-    size: 'xs',
   },
   parameters: {
     controls: {
       disable: true,
+    },
+    docs: {
+      description: {
+        story: 'Некорректный сценарий использования: кнопка рендерится без текстового содержимого.',
+      },
+    },
+  },
+  render: (args) => ({
+    components: { ButtonBase },
+    setup() {
+      return { args }
+    },
+    template: '<ButtonBase v-bind="args" />',
+  }),
+}
+
+export const IconOnlyWithoutIcon: Story = {
+  name: '❗ Только иконка без иконки',
+  args: {
+    color: 'danger',
+    variant: 'outlined',
+    isIconOnly: true,
+  },
+  parameters: {
+    controls: {
+      disable: true,
+    },
+    docs: {
+      description: {
+        story: 'Некорректный сценарий использования: включён режим "только иконка", но иконка в слот не передана.',
+      },
     },
   },
   render: (args) => ({
