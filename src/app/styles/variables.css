@@ -99,37 +99,46 @@
   --bp-2xl: 1536px;
 
   /* container */
+  --container-sm: 600px;
+  --container-md: 720px;
+  --container-lg: 960px;
+  --container-xl: 1120px;
+  --container-2xl: 1200px;
+
+  /* container */
   --container-max: 100%;
-  --container-gutter: clamp(16px, 3vw, 32px); /* боковые отступы */
+
+  /* боковые отступы */
+  --container-gutter: clamp(16px, 3vw, 32px);
 }
 
-@media (min-width: 640px) {
+@media (min-width: var(--bp-sm)) {
   :root {
-    --container-max: 600px;
+    --container-max: var(--container-sm);
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: var(--bp-md)) {
   :root {
-    --container-max: 720px;
+    --container-max: var(--container-md);
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: var(--bp-lg)) {
   :root {
-    --container-max: 960px;
+    --container-max: var(--container-lg);
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: var(--bp-xl)) {
   :root {
-    --container-max: 1120px;
+    --container-max: var(--container-xl);
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: var(--bp-2xl)) {
   :root {
-    --container-max: 1200px;
+    --container-max: var(--container-2xl);
   }
 }
 
