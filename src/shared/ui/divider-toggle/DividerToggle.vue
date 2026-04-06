@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import { useLocale } from '@/shared/i18n'
 import { DividerBase } from '@/shared/ui/divider-base'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { IconChevron } from '@/shared/ui/icons'
@@ -32,6 +31,8 @@ type Props = {
   labelPosition?: DividerLabelPosition
   labelOffset?: number
   edgeOffset?: number
+  ariaExpandLabel?: string
+  ariaCollapseLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,8 +40,9 @@ const props = withDefaults(defineProps<Props>(), {
   label: '',
   disabled: false,
   labelPosition: 'left',
+  ariaExpandLabel: 'Развернуть раздел',
+  ariaCollapseLabel: 'Свернуть раздел',
 })
-const { t } = useLocale()
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
@@ -57,7 +59,7 @@ const isOpen = computed({
 })
 
 const buttonAriaLabel = computed(() => {
-  const action = isOpen.value ? t('ui.accessibility.collapseSection') : t('ui.accessibility.expandSection')
+  const action = isOpen.value ? props.ariaCollapseLabel : props.ariaExpandLabel
 
   return props.label ? `${action}: ${props.label}` : action
 })
