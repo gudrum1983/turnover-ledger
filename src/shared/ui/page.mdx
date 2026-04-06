@@ -1,42 +1,65 @@
-import { Meta } from "@storybook/addon-docs/blocks";
+import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Оглавление" />
 
-# Getting Started
+# Turnover Ledger UI
 
-Welcome! Whether you're a designer or a developer, this guide will help you get started and connect you to the essential resources you need.
+Storybook для общих UI-компонентов и CSS-утилит проекта.
 
-## Table of Contents
+Здесь собраны базовые элементы из `src/shared/ui`: кнопки, поля, списки, модалки, layout-токены, типографика и иконки. Истории нужны как живая документация: проверить состояния компонента, посмотреть доступные props и быстро найти пример использования.
 
-- [Design Resources](#design-resources)
+## Как читать
 
-- [Figma](#figma)
-- [UI/UX Design Guidelines](#uiux-design-guidelines)
-- [Design Assets](#design-assets)
+- **Песочница** — интерактивная история с controls для проверки props.
+- **По умолчанию** — базовый сценарий компонента.
+- **❗ Истории** — некорректные или пограничные состояния, которые полезно видеть при разработке.
 
-- [Development Resources](#development-resources)
-- [Coding Standards](#coding-standards)
-- [Version Control](#version-control)
-- [Development Tools](#development-tools)
+## Оглавление
 
----
+### Foundation
 
-## Design Resources
+- [Layout](?path=/docs/ui-утилиты-layout--docs) — `Container`, breakpoints, container tokens и формула ширины.
+- [Typography](?path=/docs/ui-утилиты-typography--docs) — текстовые классы и шрифтовые токены.
+- [Text](?path=/docs/ui-утилиты-text--docs) — утилитарные классы для текста.
 
-### Figma
+### Actions
 
-[Figma](https://www.figma.com/) is a collaborative design and prototyping tool. It's the heart of the design process, allowing designers to work together seamlessly.
+- [ButtonBase](?path=/docs/ui-компоненты-buttonbase--docs) — базовая кнопка с вариантами, цветами, размерами и слотами иконок.
+- [ButtonDropdown](?path=/docs/ui-компоненты-buttondropdown--docs) — кнопка с выпадающим списком и одиночным выбором.
+- [ButtonGroup](?path=/docs/ui-компоненты-buttongroup--docs) — группа кнопок с одиночным выбором и клавиатурной навигацией.
+- [LinkBase](?path=/docs/ui-компоненты-linkbase--docs) — внутренняя ссылка на `RouterLink`.
 
-- **Get Access**: If you're not already part of the Figma project, request access from the project lead or manager.
+### Inputs
 
-### UI/UX Design Guidelines
+- [FieldBase](?path=/docs/ui-компоненты-fieldbase--docs) — базовое текстовое поле с очисткой, debounce и `blur`.
+- [FieldCounter](?path=/docs/ui-компоненты-fieldcounter--docs) — текстовое поле со счётчиком длины.
+- [FieldDate](?path=/docs/ui-компоненты-fielddate--docs) — выбор даты через `@vuepic/vue-datepicker`.
+- [FieldDigit](?path=/docs/ui-компоненты-fielddigit--docs) — поле только для цифр.
+- [FieldMoney](?path=/docs/ui-компоненты-fieldmoney--docs) — денежное поле с локальным десятичным разделителем.
 
-Before you dive into designing, familiarize yourself with our UI/UX design guidelines. They provide valuable insights into our design philosophy and standards.
+### Selection
 
-- [UI/UX Guidelines Document](https://your-design-guidelines-link.com)
+- [ListBox](?path=/docs/ui-компоненты-listbox--docs) — список опций с одиночным выбором и избранными значениями.
 
-### Design Assets
+### Layout And Surfaces
 
-All the essential design assets like logos, icons, and brand guidelines can be found in the Figma project. Ensure you have access and familiarize yourself with these assets for consistency.
+- [DividerBase](?path=/docs/ui-компоненты-dividerbase--docs) — горизонтальный или вертикальный разделитель.
+- [DividerToggle](?path=/docs/ui-компоненты-dividertoggle--docs) — разделитель с кнопкой раскрытия.
+- [PaperBase](?path=/docs/ui-компоненты-paperbase--docs) — базовая поверхность с отступами, фоном и тенью.
 
----
+### Feedback And Overlays
+
+- [ModalBase](?path=/docs/ui-компоненты-modalbase--docs) — базовая модалка с overlay, teleport и блокировкой скролла.
+- [DialogConfirm](?path=/docs/ui-компоненты-dialogconfirm--docs) — готовый диалог подтверждения или удаления.
+- [TagBase](?path=/docs/ui-компоненты-tagbase--docs) — компактная служебная метка.
+
+### Assets
+
+- [Icons](?path=/docs/ui-компоненты-icons--docs) — обзор SVG-иконок из `src/shared/ui/icons`.
+
+## Быстрый маршрут
+
+- Нужно подобрать состояние кнопки: [ButtonBase Playground](?path=/story/ui-компоненты-buttonbase--playground).
+- Нужно проверить ввод суммы: [FieldMoney Playground](?path=/story/ui-компоненты-fieldmoney--playground).
+- Нужно посмотреть контейнеры и брейкпоинты: [Layout Overview](?path=/story/ui-утилиты-layout--overview).
+- Нужно проверить модалку: [ModalBase Playground](?path=/story/ui-компоненты-modalbase--playground).

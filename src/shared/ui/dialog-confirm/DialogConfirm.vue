@@ -2,6 +2,7 @@
 import { ModalBase } from '@/shared/ui/modal-base'
 import type { ModalBaseSize } from '@/shared/ui/modal-base'
 import { ButtonBase } from '@/shared/ui/button-base'
+import vAutofocus from '@/shared/lib/directives/autofocus'
 
 const {
   open,
@@ -18,8 +19,8 @@ const {
   type: 'confirm' | 'delete'
   message: string
   title: string
-  labelActiveButton: string
-  labelCancelButton: string
+  labelActiveButton?: string
+  labelCancelButton?: string
   autoFocusCancelButton?: boolean
 }>()
 
