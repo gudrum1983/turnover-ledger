@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ReportDocument from '@/widgets/report-document/ui/ReportDocument.vue'
-import { ReportScriptToggle } from '@/widgets/report-preview/ui'
+import { ReportScriptToggle } from '@/features/report-script-toggle'
 import AppHeader from '@/app/AppHeader.vue'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { ButtonBase } from '@/shared/ui/button-base'
