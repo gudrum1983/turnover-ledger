@@ -709,6 +709,8 @@ src/entities/report-row/@x/report.ts
 Если блок показывает сущность, это скорее `entity`.
 Если блок реализует сценарий пользователя, это скорее `feature`.
 
+---
+
 1. Довести report entity
    Сейчас entities/report уже есть как модель, но стор всё ещё лежит в app/stores/metaDataStore.ts. По смыслу это уже не metaDataStore, а reportStore.
 

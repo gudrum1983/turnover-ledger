@@ -6,10 +6,10 @@ import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { HEADER_FIELDS, FOOTER_FIELDS } from '@/shared/constants/reportFields.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { useReportStore } from '@/entities/report'
 import { useLocale } from '@/shared/i18n'
 
-const store = useMetaDataStore()
+const store = useReportStore()
 const { formData } = storeToRefs(store)
 const { setHeaderValue, setFooterValue } = store
 const { t } = useLocale()

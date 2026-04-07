@@ -1,5 +1,5 @@
 export const STORE_NAME = {
-  MetaData: 'meta-data-store',
+  Report: 'report-store',
   Currencies: 'currencies-store',
   Locale: 'locale-store',
 } as const

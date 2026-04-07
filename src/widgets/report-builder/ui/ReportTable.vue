@@ -10,15 +10,14 @@ import ReportRowCreateForm, {
   type ReportRowFormInitialValue,
   type ReportRowPayload,
 } from '@/widgets/create-form/ui/ReportRowCreateForm.vue'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/entities/report-row'
-import { getTableTotals } from '@/entities/report'
+import { getTableTotals, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 import { useLocale } from '@/shared/i18n'
 
-const store = useMetaDataStore()
+const store = useReportStore()
 const { rows } = storeToRefs(store)
 
 const localeStore = useLocaleStore()

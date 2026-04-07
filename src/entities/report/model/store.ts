@@ -3,9 +3,10 @@ import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
 import type { ReportRow } from '@/entities/report-row'
-import { cloneReportState, isReportState, type ReportState } from '@/entities/report'
+import { cloneReportState, isReportState } from './lib'
+import type { ReportState } from './types'
 
-export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
+export const useReportStore = defineStore(STORE_NAME.Report, () => {
   const LOCAL_STORAGE_KEY = 'reportState'
 
   const formData = reactive({

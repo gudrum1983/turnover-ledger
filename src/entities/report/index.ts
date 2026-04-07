@@ -9,4 +9,5 @@ export {
   isReportState,
   parseImportedReportState,
 } from './model/lib'
+export { useReportStore } from './model/store'
 export { useReportScript } from './model/useReportScript'

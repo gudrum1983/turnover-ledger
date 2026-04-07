@@ -6,12 +6,11 @@ import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import { useRouter } from 'vue-router'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { useLocale } from '@/shared/i18n'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
-import { createReportExportFile, parseImportedReportState, type ReportState } from '@/entities/report'
+import { createReportExportFile, parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
 
 const router = useRouter()
 const { t } = useLocale()
-const metaDataStore = useMetaDataStore()
+const reportStore = useReportStore()
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const importError = ref('')
@@ -39,7 +38,7 @@ function resetFileInput() {
 function handleExport() {
   importError.value = ''
 
-  const payload = JSON.stringify(createReportExportFile(metaDataStore.exportState()), null, 2)
+  const payload = JSON.stringify(createReportExportFile(reportStore.exportState()), null, 2)
   const blob = new Blob([payload], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
@@ -93,7 +92,7 @@ function closeImportConfirm() {
 function applyImport() {
   if (!pendingImportState.value) return
 
-  metaDataStore.replaceState(pendingImportState.value)
+  reportStore.replaceState(pendingImportState.value)
   closeImportConfirm()
 }
 </script>
