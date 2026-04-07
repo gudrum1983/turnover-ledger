@@ -7,8 +7,7 @@ import { useRouter } from 'vue-router'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { useLocale } from '@/shared/i18n'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
-import { createReportExportFile, parseImportedReportState } from '@/shared/lib'
-import type { ReportState } from '@/shared/types/report.ts'
+import { createReportExportFile, parseImportedReportState, type ReportState } from '@/entities/report'
 
 const router = useRouter()
 const { t } = useLocale()

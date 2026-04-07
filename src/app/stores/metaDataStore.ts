@@ -2,8 +2,8 @@ import { computed, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
 import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
-import type { ReportRow, ReportState } from '@/shared/types/report.ts'
-import { cloneReportState, isReportState } from '@/shared/lib'
+import type { ReportRow } from '@/entities/report-row'
+import { cloneReportState, isReportState, type ReportState } from '@/entities/report'
 
 export const useMetaDataStore = defineStore(STORE_NAME.MetaData, () => {
   const LOCAL_STORAGE_KEY = 'reportState'

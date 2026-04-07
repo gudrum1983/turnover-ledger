@@ -11,8 +11,8 @@ import {
   type TitleField,
 } from '@/shared/constants/reportFields.ts'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
-import type { ReportScript } from '@/shared/types/report.ts'
-import { formatMoney, getTableTotals } from '@/shared/lib'
+import { getTableTotals, type ReportScript } from '@/entities/report'
+import { formatMoney } from '@/shared/lib'
 
 type Props = {
   landscape?: boolean

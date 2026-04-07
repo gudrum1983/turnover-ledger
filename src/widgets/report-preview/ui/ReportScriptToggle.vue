@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { ButtonGroup } from '@/shared/ui/button-group'
 import { useLocale } from '@/shared/i18n'
-import type { ReportScript } from '@/shared/types/report.ts'
+import type { ReportScript } from '@/entities/report'
 
 type Props = {
   modelValue: ReportScript
