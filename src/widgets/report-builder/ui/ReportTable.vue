@@ -6,10 +6,7 @@ import { ModalBase } from '@/shared/ui/modal-base'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { DividerToggle } from '@/shared/ui/divider-toggle'
 import { ReportTableRow } from '@/entities/report-row'
-import ReportRowCreateForm, {
-  type ReportRowFormInitialValue,
-  type ReportRowPayload,
-} from '@/widgets/create-form/ui/ReportRowCreateForm.vue'
+import { ReportRowCreateForm, type ReportRowFormInitialValue, type ReportRowPayload } from '@/features/report-row-form'
 import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/entities/report-row'
 import { getTableTotals, useReportStore } from '@/entities/report'
