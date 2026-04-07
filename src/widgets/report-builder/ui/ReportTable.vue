@@ -5,7 +5,7 @@ import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import { ModalBase } from '@/shared/ui/modal-base'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { DividerToggle } from '@/shared/ui/divider-toggle'
-import ReportTableRow from './ReportTableRow.vue'
+import { ReportTableRow } from '@/entities/report-row'
 import ReportRowCreateForm, {
   type ReportRowFormInitialValue,
   type ReportRowPayload,

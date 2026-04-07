@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
-import ReportDocumentRow from '@/widgets/report-document/ui/ReportDocumentRow.vue'
+import { ReportDocumentRow } from '@/entities/report-row'
 import {
   HEADER_FIELDS,
   type FooterField,
