@@ -7,7 +7,7 @@ import { ButtonBase } from '@/shared/ui/button-base'
 import { LinkBase } from '@/shared/ui/link-base'
 import { onBeforeUnmount } from 'vue'
 import { useLocale } from '@/shared/i18n'
-import { useReportScript } from '@/shared/lib'
+import { useReportScript } from '@/entities/report'
 
 const onPrint = () => {
   window.print()

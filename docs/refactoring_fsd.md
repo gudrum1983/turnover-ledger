@@ -708,3 +708,48 @@ src/entities/report-row/@x/report.ts
 Если блок просто большой, это не делает его `widget`.
 Если блок показывает сущность, это скорее `entity`.
 Если блок реализует сценарий пользователя, это скорее `feature`.
+
+1. Довести report entity
+   Сейчас entities/report уже есть как модель, но стор всё ещё лежит в app/stores/metaDataStore.ts. По смыслу это уже не metaDataStore, а reportStore.
+
+Следующий хороший шаг:
+
+src/entities/report/model/store.ts
+
+И туда перенести useMetaDataStore, возможно с переименованием:
+
+useReportStore
+
+Но чтобы не ломать всё резко, можно временно оставить старый файл как реэкспорт/алиас.
+
+2. Вынести UI меты отчёта
+   ReportBuilderMetaForm.vue работает с ReportMeta, значит по смыслу это не совсем widget. Но тут есть нюанс: это форма редактирования, то есть может быть не entities/report/ui, а будущая feature.
+
+Я бы пока не торопилась. Лучше сначала вынести store, потому что граница модели важнее.
+
+3. Разобраться с ReportRowCreateForm.vue
+   Он сейчас лежит в widgets/create-form, но по смыслу это не widget. Это сценарий создания/редактирования строки.
+
+Ему больше подходит:
+
+src/features/report-row-form/ui/ReportRowCreateForm.vue
+
+или точнее:
+
+src/features/report-row/edit/ui/ReportRowForm.vue
+
+Но его лучше переносить после store, потому что он сейчас тянет currencyStore, metaDataStore, расчёт валюты, initial value и payload.
+
+4. Потом оставить widgets только композиционными
+   В идеале:
+
+widgets/report-builder
+ReportActions
+ReportTable
+
+Но ReportTable должен быть именно сборщиком: открыть модалку, вызвать форму, добавить/изменить/удалить строку. А отображение строки уже правильно ушло в entities/report-row.
+
+widgets/report-document/ReportDocument.vue пока нормальный widget: он собирает весь документ из report state + строк entity.
+
+Мой следующий конкретный шаг: перенести useMetaDataStore в entities/report/model/store.ts и переименовать в useReportStore, а старый src/app/stores/metaDataStore.ts оставить совместимостью. Это даст
+нормальную основу для дальнейшего переноса формы и действий.

@@ -1,5 +1,5 @@
 import { computed, ref, watch } from 'vue'
-import type { ReportScript } from '@/entities/report'
+import type { ReportScript } from './types'
 
 const DEFAULT_STORAGE_KEY = 'report-script'
 const REPORT_SCRIPTS: ReportScript[] = ['srLat', 'srCyr']
