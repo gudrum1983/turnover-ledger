@@ -42,7 +42,13 @@ const isOpenFooter = ref(true)
 <template>
   <div>
     <div class="ReportMetaForm">
-      <DividerToggle v-model="isOpenHeader" :label="t('ui.reportMetaForm.taxpayerInfo')" color="disabled" />
+      <DividerToggle
+        v-model="isOpenHeader"
+        :label="t('ui.reportMetaForm.taxpayerInfo')"
+        :aria-expand-label="t('ui.accessibility.expandSection')"
+        :aria-collapse-label="t('ui.accessibility.collapseSection')"
+        color="disabled"
+      />
       <div v-show="isOpenHeader" class="ReportMetaForm_Fieldset">
         <component
           v-for="field in headerMetaFields"
@@ -55,7 +61,13 @@ const isOpenFooter = ref(true)
         />
       </div>
 
-      <DividerToggle v-model="isOpenFooter" :label="t('ui.reportMetaForm.responsiblePeople')" color="disabled" />
+      <DividerToggle
+        v-model="isOpenFooter"
+        :label="t('ui.reportMetaForm.responsiblePeople')"
+        :aria-expand-label="t('ui.accessibility.expandSection')"
+        :aria-collapse-label="t('ui.accessibility.collapseSection')"
+        color="disabled"
+      />
       <div v-show="isOpenFooter" class="ReportMetaForm_Fieldset">
         <FieldBase
           v-for="field in footerMetaFields"

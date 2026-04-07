@@ -49,6 +49,13 @@ const currencyOptions = computed(() => {
   return currencyStore.currencies.map((code) => ({ value: code, label: code }))
 })
 
+const moneyLocale = computed(() => {
+  if (localeStore.currentLocale === 'en') return 'en-US'
+  if (localeStore.currentLocale === 'srLat' || localeStore.currentLocale === 'srCyr') return 'sr-RS'
+
+  return 'ru-RU'
+})
+
 export type ReportRowPayload = {
   date: string
   currency: string
@@ -246,6 +253,7 @@ onMounted(() => {
           name="dateCurrency"
           :label="t('ui.reportRowForm.date')"
           :model-value="date"
+          :date-fns-locale="localeStore.dateFnsLocale"
           @update:modelValue="date = $event ?? ''"
           required
         />
@@ -276,6 +284,7 @@ onMounted(() => {
         :label="t('ui.reportRowForm.goodsAmount')"
         placeholder="0,00"
         :model-value="goodsAmount"
+        :locale="moneyLocale"
         @update:modelValue="goodsAmount = $event"
       />
       <FieldMoney
@@ -283,6 +292,7 @@ onMounted(() => {
         :label="t('ui.reportRowForm.servicesAmount')"
         placeholder="0,00"
         :model-value="servicesAmount"
+        :locale="moneyLocale"
         @update:modelValue="servicesAmount = $event"
       />
 

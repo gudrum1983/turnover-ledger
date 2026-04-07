@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { FieldBase } from '@/shared/ui/field-base'
-import { useLocaleStore } from '@/app/stores/localeStore.ts'
 
 type Props = {
   name: string
   label?: string
   placeholder?: string
   modelValue: string | null
+  locale?: Intl.LocalesArgument
 }
 
-const { name, label, placeholder, modelValue } = defineProps<Props>()
+const { name, label, placeholder, modelValue, locale = 'ru-RU' } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
 }>()
 
-const localeStore = useLocaleStore()
+const decimalSeparator = computed(() => {
+  const decimalPart = new Intl.NumberFormat(locale).formatToParts(1.1).find((part) => part.type === 'decimal')
 
-const decimalSeparator = computed(() => (localeStore.currentLocale === 'en' ? '.' : ','))
+  return decimalPart?.value ?? ','
+})
 
 const moneyMask = computed(() => ({
   mask: `0${decimalSeparator.value}99`,
@@ -36,8 +38,11 @@ function formatMoneyValue(value: string | null): string | null {
 
   if (Number.isNaN(parsed)) return value
 
-  const formatted = parsed.toFixed(2)
-  return decimalSeparator.value === ',' ? formatted.replace('.', ',') : formatted
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: false,
+  }).format(parsed)
 }
 
 function handleBlur(value: string | null) {

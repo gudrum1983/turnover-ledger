@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MaskOptions } from 'maska'
+import { vMaska } from 'maska/vue'
 import { computed, onBeforeUnmount } from 'vue'
 import { IconClose } from '@/shared/ui/icons'
 

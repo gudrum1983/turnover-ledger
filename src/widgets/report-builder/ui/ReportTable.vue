@@ -163,6 +163,8 @@ function onSubmit(payload: ReportRowPayload) {
     <DividerToggle
       v-model="isFullTable"
       :label="`${t('report.title.firstLine')} ${t('report.title.secondLine')}`"
+      :aria-expand-label="t('ui.accessibility.expandSection')"
+      :aria-collapse-label="t('ui.accessibility.collapseSection')"
       color="disabled"
     >
       <template #icon-active><IconExpand style="width: 18px; height: 18px" /></template>

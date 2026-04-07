@@ -1,44 +1,48 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { Locale } from 'date-fns'
+import { ru } from 'date-fns/locale'
 import { type InputAttributesConfig, VueDatePicker } from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { useLocaleStore } from '@/app/stores/localeStore.ts'
 
 type Props = {
   name: string
   label?: string
   modelValue: string | null
   required?: boolean
+  dateFnsLocale?: Locale
 }
 
-const { name, label, modelValue, required = false } = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  required: false,
+  dateFnsLocale: () => ru,
+})
 
-const inputConfig: Partial<InputAttributesConfig> = {
-  name: name,
-  required: required,
-}
+const inputConfig = computed<Partial<InputAttributesConfig>>(() => ({
+  name: props.name,
+  required: props.required,
+}))
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
 }>()
 
-const localeStore = useLocaleStore()
 const inputClassName = computed(() => 'FieldDate_Input')
 </script>
 
 <template>
   <label class="FieldDate Typo_Caption">
-    {{ label }}
+    {{ props.label }}
     <VueDatePicker
-      :model-value="modelValue"
-      :name="name"
+      :model-value="props.modelValue"
+      :name="props.name"
       :input-attrs="inputConfig"
       :year-range="[2012, new Date().getFullYear()]"
       :min-date="new Date(2020, 0, 1)"
       :max-date="new Date()"
       placeholder="DD.MM.YYYY"
       text-input
-      :locale="localeStore.dateFnsLocale"
+      :locale="props.dateFnsLocale"
       model-type="yyyy-MM-dd"
       format="dd.MM.yyyy"
       :formats="{ input: 'dd.MM.yyyy' }"
