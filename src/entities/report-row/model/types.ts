@@ -1,4 +1,4 @@
-import type { CurrencyCode } from '@/shared/types/currency'
+import type { CurrencyCode } from '@/entities/currency'
 
 export type MoneyPart = {
   rsdCents: number

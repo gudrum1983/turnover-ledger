@@ -7,8 +7,8 @@ import './styles/main.css'
 
 import App from './App.vue'
 import router from './router'
+import { useCurrencyStore } from '@/entities/currency'
 import { useReportStore } from '@/entities/report'
-import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import { i18n, useLocaleStore } from '@/shared/i18n'
 
 const app = createApp(App)
