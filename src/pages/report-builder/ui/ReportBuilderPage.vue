@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ReportBuilderMetaForm } from '@/features/report-meta-form'
-import ReportActions from '@/widgets/report-builder/ui/ReportActions.vue'
-import ReportTable from '@/widgets/report-builder/ui/ReportTable.vue'
+import ReportActions from './ReportActions.vue'
+import ReportTable from './ReportTable.vue'
 
 import { PaperBase } from '@/shared/ui/paper-base'
-import AppHeader from '@/app/AppHeader.vue'
+import AppHeader from '@/widgets/app-header/ui/AppHeader.vue'
 import { useLocale } from '@/shared/i18n'
 
 const { t } = useLocale()
