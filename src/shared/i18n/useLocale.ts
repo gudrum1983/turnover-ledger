@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useLocaleStore } from '@/app/stores/localeStore.ts'
+import { useLocaleStore } from './model/localeStore'
 import type { I18nMessageKey } from './types'
 import type { I18nLocale } from './locales.ts'
 

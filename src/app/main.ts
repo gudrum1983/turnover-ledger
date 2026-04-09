@@ -9,8 +9,7 @@ import App from './App.vue'
 import router from './router'
 import { useReportStore } from '@/entities/report'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
-import { useLocaleStore } from '@/app/stores/localeStore.ts'
-import { i18n } from '@/shared/i18n'
+import { i18n, useLocaleStore } from '@/shared/i18n'
 
 const app = createApp(App)
 
