@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
 import { storeToRefs } from 'pinia'
-import ReportDocumentRow from '@/widgets/report-document/ui/ReportDocumentRow.vue'
+import { ReportDocumentRow } from '@/entities/report-row'
 import {
   HEADER_FIELDS,
   type FooterField,
@@ -11,8 +10,8 @@ import {
   type TitleField,
 } from '@/shared/constants/reportFields.ts'
 import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
-import type { ReportScript } from '@/shared/types/report.ts'
-import { formatMoney, getTableTotals } from '@/shared/lib'
+import { getTableTotals, type ReportScript, useReportStore } from '@/entities/report'
+import { formatMoney } from '@/shared/lib'
 
 type Props = {
   landscape?: boolean
@@ -29,7 +28,7 @@ const TOTAL_LABEL_BY_SCRIPT: Record<ReportScript, string> = {
   srCyr: 'Укупно',
 }
 
-const store = useMetaDataStore()
+const store = useReportStore()
 const { formData, rows } = storeToRefs(store)
 
 const classColumn = computed(() => [{ ReportDocument_Column_landscape: props.landscape }])

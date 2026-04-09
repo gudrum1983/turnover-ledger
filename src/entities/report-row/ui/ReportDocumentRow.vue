@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { formatDateForUi, formatMoney, getRowTotals } from '@/shared/lib'
-import type { ReportRow, ReportScript } from '@/shared/types/report.ts'
+import { getRowTotals, type ReportRow } from '@/entities/report-row'
+import type { ReportScript } from '@/entities/report'
+import { formatDateForUi, formatMoney } from '@/shared/lib'
 
 type ReportRowProps = {
   index: number

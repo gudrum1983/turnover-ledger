@@ -7,7 +7,7 @@ import './styles/main.css'
 
 import App from './App.vue'
 import router from './router'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { useReportStore } from '@/entities/report'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 import { i18n } from '@/shared/i18n'
@@ -22,7 +22,7 @@ app.use(router)
 app.directive('maska', vMaska)
 app.directive('autofocus', vAutofocus)
 
-useMetaDataStore(pinia).hydrateFromLocalStorage()
+useReportStore(pinia).hydrateFromLocalStorage()
 const currencyStore = useCurrencyStore(pinia)
 currencyStore.hydrateFromLocalStorage()
 useLocaleStore(pinia).hydrateFromLocalStorage()

@@ -1,11 +1,12 @@
-import { FOOTER_FIELDS, HEADER_FIELDS, type FooterField, type HeaderField } from '../../constants/reportFields.ts'
-import {
-  REPORT_EXPORT_VERSION,
-  type MoneyPart,
-  type ReportExportFile,
-  type ReportRow,
-  type ReportState,
-} from '../../types/report.ts'
+import { FOOTER_FIELDS, HEADER_FIELDS, type FooterField, type HeaderField } from '@/shared/constants/reportFields'
+import { getRowTotals, type MoneyPart, type ReportRow } from '@/entities/report-row/@x/report'
+import { sumCents } from '@/shared/lib/money/money'
+import { REPORT_EXPORT_VERSION, type ReportExportFile, type ReportState } from './types'
+
+export type ReportTableTotals = {
+  foreignCents: number
+  rsdCents: number
+}
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -37,6 +38,18 @@ const isReportRow = (value: unknown): value is ReportRow => {
   if (!isObject(value.amounts)) return false
 
   return isMoneyPart(value.amounts.goods) && isMoneyPart(value.amounts.services)
+}
+
+export const getTableTotals = (rows: ReportRow[]): ReportTableTotals => {
+  return rows.reduce<ReportTableTotals>(
+    (acc, row) => {
+      const totals = getRowTotals(row)
+      acc.foreignCents = sumCents([acc.foreignCents, totals.foreignCents])
+      acc.rsdCents = sumCents([acc.rsdCents, totals.rsdCents])
+      return acc
+    },
+    { foreignCents: 0, rsdCents: 0 },
+  )
 }
 
 export function isReportState(value: unknown): value is ReportState {

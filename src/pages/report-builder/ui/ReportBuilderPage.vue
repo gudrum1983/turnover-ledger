@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ReportBuilderMetaForm from '@/widgets/report-builder/ui/ReportBuilderMetaForm.vue'
+import { ReportBuilderMetaForm } from '@/features/report-meta-form'
 import ReportActions from '@/widgets/report-builder/ui/ReportActions.vue'
 import ReportTable from '@/widgets/report-builder/ui/ReportTable.vue'
 

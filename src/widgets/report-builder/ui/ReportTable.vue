@@ -5,19 +5,16 @@ import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import { ModalBase } from '@/shared/ui/modal-base'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { DividerToggle } from '@/shared/ui/divider-toggle'
-import ReportTableRow from './ReportTableRow.vue'
-import ReportRowCreateForm, {
-  type ReportRowFormInitialValue,
-  type ReportRowPayload,
-} from '@/widgets/create-form/ui/ReportRowCreateForm.vue'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { ReportTableRow } from '@/entities/report-row'
+import { ReportRowCreateForm, type ReportRowFormInitialValue, type ReportRowPayload } from '@/features/report-row-form'
 import { storeToRefs } from 'pinia'
-import type { ReportRow } from '@/shared/types/report.ts'
-import { formatMoney, getTableTotals } from '@/shared/lib'
+import type { ReportRow } from '@/entities/report-row'
+import { getTableTotals, useReportStore } from '@/entities/report'
+import { formatMoney } from '@/shared/lib'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 import { useLocale } from '@/shared/i18n'
 
-const store = useMetaDataStore()
+const store = useReportStore()
 const { rows } = storeToRefs(store)
 
 const localeStore = useLocaleStore()

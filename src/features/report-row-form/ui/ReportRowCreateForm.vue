@@ -6,7 +6,7 @@ import { FieldCounter } from '@/shared/ui/field-counter'
 import { FieldDate } from '@/shared/ui/field-date'
 import { FieldMoney } from '@/shared/ui/field-money'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
-import { useMetaDataStore } from '@/app/stores/metaDataStore.ts'
+import { useReportStore } from '@/entities/report'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { useLocaleStore } from '@/app/stores/localeStore.ts'
 import { useLocale } from '@/shared/i18n'
@@ -40,10 +40,10 @@ const exchangeRate = ref<number | null>(null)
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
-const metaDataStore = useMetaDataStore()
+const reportStore = useReportStore()
 const localeStore = useLocaleStore()
 const { t } = useLocale()
-const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(metaDataStore.usedCurrencyCodes))
+const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(reportStore.usedCurrencyCodes))
 
 const currencyOptions = computed(() => {
   return currencyStore.currencies.map((code) => ({ value: code, label: code }))
@@ -205,7 +205,7 @@ const handleSubmit = (event: Event) => {
 const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
   isApplyingInitialValue.value = true
   date.value = initialValue?.date ?? ''
-  currency.value = initialValue?.currency ?? metaDataStore.lastUsedCurrencyCode
+  currency.value = initialValue?.currency ?? reportStore.lastUsedCurrencyCode
   description.value = initialValue?.description ?? ''
   goodsAmount.value = formatInputMoney(initialValue?.goodsAmount)
   servicesAmount.value = formatInputMoney(initialValue?.servicesAmount)
