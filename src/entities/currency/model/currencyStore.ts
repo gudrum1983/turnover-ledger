@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
-import { fetchConversion, fetchCurrencies } from '@/shared/api/currencies.ts'
-import type { ConversionResponse, Currency, CurrencyCode } from '@/shared/types/currency.ts'
+import { fetchConversion, fetchCurrencies } from '../api/currencies'
+import type { ConversionResponse, Currency, CurrencyCode } from './types'
 
 const LOCAL_STORAGE_KEY = 'currenciesState'
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
