@@ -8,8 +8,7 @@ import { FieldMoney } from '@/shared/ui/field-money'
 import { useCurrencyStore } from '@/app/stores/currencyStore.ts'
 import { useReportStore } from '@/entities/report'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
-import { useLocaleStore } from '@/app/stores/localeStore.ts'
-import { useLocale } from '@/shared/i18n'
+import { useLocale, useLocaleStore } from '@/shared/i18n'
 
 /*
  * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА

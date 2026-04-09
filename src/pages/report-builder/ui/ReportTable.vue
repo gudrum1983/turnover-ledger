@@ -11,8 +11,7 @@ import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/entities/report-row'
 import { getTableTotals, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
-import { useLocaleStore } from '@/app/stores/localeStore.ts'
-import { useLocale } from '@/shared/i18n'
+import { useLocale, useLocaleStore } from '@/shared/i18n'
 
 const store = useReportStore()
 const { rows } = storeToRefs(store)
