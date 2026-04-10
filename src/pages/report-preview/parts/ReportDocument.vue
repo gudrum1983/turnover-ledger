@@ -4,7 +4,11 @@ import { storeToRefs } from 'pinia'
 import { ReportDocumentRow } from '@/entities/report-row'
 import {
   HEADER_FIELDS,
-  KPO_DICTIONARY,
+  getReportFooterLabel,
+  getReportHeaderLabel,
+  getReportTableLabel,
+  getReportTitleLabel,
+  getReportTotalLabel,
   type FooterField,
   type HeaderField,
   type TableField,
@@ -23,11 +27,6 @@ const props = withDefaults(defineProps<Props>(), {
   script: 'srLat',
 })
 
-const TOTAL_LABEL_BY_SCRIPT: Record<ReportScript, string> = {
-  srLat: 'Ukupno',
-  srCyr: 'Укупно',
-}
-
 const store = useReportStore()
 const { formData, rows } = storeToRefs(store)
 
@@ -36,11 +35,11 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
 const tableTotals = computed(() => getTableTotals(rows.value))
 const totalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: props.script }))
 
-const getHeaderLabel = (key: HeaderField) => KPO_DICTIONARY.header[key][props.script]
-const getTitleLabel = (key: TitleField) => KPO_DICTIONARY.title[key][props.script]
-const getTableLabel = (key: TableField) => KPO_DICTIONARY.table[key][props.script]
-const getFooterLabel = (key: FooterField) => KPO_DICTIONARY.footer[key][props.script]
-const getTableTotalLabel = () => TOTAL_LABEL_BY_SCRIPT[props.script]
+const getHeaderLabel = (key: HeaderField) => getReportHeaderLabel(key, props.script)
+const getTitleLabel = (key: TitleField) => getReportTitleLabel(key, props.script)
+const getTableLabel = (key: TableField) => getReportTableLabel(key, props.script)
+const getFooterLabel = (key: FooterField) => getReportFooterLabel(key, props.script)
+const getTableTotalLabel = () => getReportTotalLabel(props.script)
 </script>
 
 <template>

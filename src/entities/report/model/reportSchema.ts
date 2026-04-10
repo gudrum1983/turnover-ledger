@@ -1,118 +1,101 @@
-import type { FooterField, HeaderField, TableField, TitleField } from './reportFields'
+import type { ReportScript } from './types'
+
+export const HEADER_FIELDS = ['pib', 'taxpayer', 'companyName', 'address', 'taxNumber', 'activityCode'] as const
+export const FOOTER_FIELDS = ['preparedBy', 'responsiblePerson'] as const
+export const TITLE_FIELDS = ['firstLine', 'secondLine'] as const
+export const TABLE_FIELDS = [
+  'rowNumber',
+  'dateAndDescription',
+  'income',
+  'incomeFromProducts',
+  'incomeFromServices',
+  'totalIncome',
+] as const
+
+export type HeaderField = (typeof HEADER_FIELDS)[number]
+export type FooterField = (typeof FOOTER_FIELDS)[number]
+export type TitleField = (typeof TITLE_FIELDS)[number]
+export type TableField = (typeof TABLE_FIELDS)[number]
 
 type DictionaryEntry = {
-  ru: string
   srLat: string
   srCyr: string
-  en: string
 }
 
-export const KPO_DICTIONARY = {
+export const REPORT_LABELS = {
   header: {
     pib: {
-      ru: 'ПИБ',
       srLat: 'PIB',
       srCyr: 'ПИБ',
-      en: 'Tax ID (PIB)',
     },
     taxpayer: {
-      ru: 'Налогоплательщик (имя и фамилия)',
       srLat: 'Obveznik',
       srCyr: 'Обвезник',
-      en: 'Taxpayer',
     },
     companyName: {
-      ru: 'Фирма',
       srLat: 'Firma – radnja',
       srCyr: 'Фирма – радња',
-      en: 'Business name',
     },
     address: {
-      ru: 'Юридический адрес',
       srLat: 'Sedište',
       srCyr: 'Седиште',
-      en: 'Registered address',
     },
     taxNumber: {
-      ru: 'Налоговый номер',
       srLat: 'Šifra poreskog obveznika',
       srCyr: 'Шифра пореског обвезника',
-      en: 'Taxpayer code',
     },
     activityCode: {
-      ru: 'Код деятельности',
       srLat: 'Šifra delatnosti',
       srCyr: 'Шифра делатности',
-      en: 'Activity code',
     },
   },
 
   title: {
     firstLine: {
-      ru: 'Книга о полученном доходе',
       srLat: 'Knjiga o ostvarenoj delatnosti',
       srCyr: 'Књига о оствареној делатности',
-      en: 'Book of Realized Turnover',
     },
     secondLine: {
-      ru: '(паушальное налогообложение)',
       srLat: 'paušalno oporezovanih obveznika',
       srCyr: 'паушално опорезованих обвезника',
-      en: '(Lump-Sum Taxation)',
     },
   },
 
   table: {
     rowNumber: {
-      ru: '№ п/п',
       srLat: 'Redni broj',
       srCyr: 'Редни број',
-      en: 'No.',
     },
     dateAndDescription: {
-      ru: 'Дата и описание операции',
       srLat: 'Datum i opis knjiženja',
       srCyr: 'Датум и опис књижења',
-      en: 'Date and description',
     },
     income: {
-      ru: 'ДОХОД',
       srLat: 'PRIHOD OD DELATNOSTI',
       srCyr: 'ПРИХОД ОД ДЕЛАТНОСТИ',
-      en: 'INCOME',
     },
     incomeFromProducts: {
-      ru: 'от продажи товаров',
       srLat: 'оd prodaje proizvoda',
       srCyr: 'oд продаје производа',
-      en: 'from goods',
     },
     incomeFromServices: {
-      ru: 'от оказанных услуг',
       srLat: 'od izvršenih usluga',
       srCyr: 'од извршених услуга',
-      en: 'from services',
     },
     totalIncome: {
-      ru: 'Общий доход (3 + 4)',
       srLat: 'Svega prihod od delatnosti (3 + 4)',
       srCyr: 'Свега приход од делатности (3 + 4)',
-      en: 'Total income (3 + 4)',
     },
   },
 
   footer: {
     preparedBy: {
-      ru: 'Составил',
       srLat: 'Sastavio',
       srCyr: 'Саставио',
-      en: 'Prepared by',
     },
     responsiblePerson: {
-      ru: 'Ответственное лицо',
       srLat: 'Odgovorno lice',
       srCyr: 'Одговорно лице',
-      en: 'Responsible person',
     },
   },
 } satisfies {
@@ -121,3 +104,21 @@ export const KPO_DICTIONARY = {
   table: Record<TableField, DictionaryEntry>
   footer: Record<FooterField, DictionaryEntry>
 }
+
+export const REPORT_TOTAL_LABEL_BY_SCRIPT: Record<ReportScript, string> = {
+  srLat: 'Ukupno',
+  srCyr: 'Укупно',
+}
+
+export const getReportHeaderLabel = (field: HeaderField, script: ReportScript) => REPORT_LABELS.header[field][script]
+
+export const getReportFooterLabel = (field: FooterField, script: ReportScript) => REPORT_LABELS.footer[field][script]
+
+export const getReportTitleLabel = (field: TitleField, script: ReportScript) => REPORT_LABELS.title[field][script]
+
+export const getReportTableLabel = (field: TableField, script: ReportScript) => REPORT_LABELS.table[field][script]
+
+export const getReportTitle = (script: ReportScript) =>
+  `${getReportTitleLabel('firstLine', script)} ${getReportTitleLabel('secondLine', script)}`
+
+export const getReportTotalLabel = (script: ReportScript) => REPORT_TOTAL_LABEL_BY_SCRIPT[script]

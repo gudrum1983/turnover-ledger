@@ -4,13 +4,23 @@ import { FieldBase } from '@/shared/ui/field-base'
 import { FieldDigit } from '@/shared/ui/field-digit'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { FOOTER_FIELDS, HEADER_FIELDS, type FooterField, type HeaderField, useReportStore } from '@/entities/report'
+import {
+  FOOTER_FIELDS,
+  HEADER_FIELDS,
+  getReportFooterLabel,
+  getReportHeaderLabel,
+  type FooterField,
+  type HeaderField,
+  useReportScript,
+  useReportStore,
+} from '@/entities/report'
 import { useLocale } from '@/shared/i18n'
 
 const store = useReportStore()
 const { formData } = storeToRefs(store)
 const { setHeaderValue, setFooterValue } = store
 const { t } = useLocale()
+const { script } = useReportScript()
 
 type HeaderMetaField = { key: HeaderField; label: string; isDigit: boolean }
 type FooterMetaField = { key: FooterField; label: string; isDigit: boolean }
@@ -20,7 +30,7 @@ const DIGIT_FIELDS: HeaderField[] = ['pib', 'taxNumber']
 const headerMetaFields = computed<HeaderMetaField[]>(() =>
   HEADER_FIELDS.map((key) => ({
     key,
-    label: t(`report.header.${key}`),
+    label: getReportHeaderLabel(key, script.value),
     isDigit: DIGIT_FIELDS.includes(key),
   })),
 )
@@ -28,7 +38,7 @@ const headerMetaFields = computed<HeaderMetaField[]>(() =>
 const footerMetaFields = computed<FooterMetaField[]>(() =>
   FOOTER_FIELDS.map((key) => ({
     key,
-    label: t(`report.footer.${key}`),
+    label: getReportFooterLabel(key, script.value),
     isDigit: false,
   })),
 )

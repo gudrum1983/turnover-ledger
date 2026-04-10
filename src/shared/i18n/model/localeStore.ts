@@ -1,10 +1,10 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { STORE_NAME } from '@/shared/constants/nameStore.ts'
 import { enUS, ru, sr, srLatn } from 'date-fns/locale'
 import { DEFAULT_LOCALE, isSupportedLocale, setI18nLocale } from '@/shared/i18n'
 import type { I18nLocale } from '@/shared/i18n'
 
+const STORE_ID = 'locale-store'
 const LOCAL_STORAGE_KEY = 'localeState'
 
 const localeMap = {
@@ -14,7 +14,7 @@ const localeMap = {
   srCyr: sr,
 } as const
 
-export const useLocaleStore = defineStore(STORE_NAME.Locale, () => {
+export const useLocaleStore = defineStore(STORE_ID, () => {
   const currentLocale = ref<I18nLocale>(DEFAULT_LOCALE)
 
   const dateFnsLocale = computed(() => localeMap[currentLocale.value])

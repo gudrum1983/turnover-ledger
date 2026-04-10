@@ -9,12 +9,13 @@ import { ReportTableRow } from '@/entities/report-row'
 import { ReportRowCreateForm, type ReportRowFormInitialValue, type ReportRowPayload } from '@/features/report-row-form'
 import { storeToRefs } from 'pinia'
 import type { ReportRow } from '@/entities/report-row'
-import { getTableTotals, useReportStore } from '@/entities/report'
+import { getReportTableLabel, getReportTitle, getTableTotals, useReportScript, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 
 const store = useReportStore()
 const { rows } = storeToRefs(store)
+const { script } = useReportScript()
 
 const localeStore = useLocaleStore()
 const { t } = useLocale()
@@ -44,6 +45,8 @@ const modalTitle = computed(() =>
   formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.addRowModalTitle'),
 )
 const submitLabel = computed(() => (formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.add')))
+const reportTitle = computed(() => getReportTitle(script.value))
+const dateAndDescriptionLabel = computed(() => getReportTableLabel('dateAndDescription', script.value))
 
 const fromCents = (value: number | null | undefined) => (typeof value === 'number' ? value / 100 : null)
 
@@ -158,7 +161,7 @@ function onSubmit(payload: ReportRowPayload) {
   <div class="ReportTable">
     <DividerToggle
       v-model="isFullTable"
-      :label="`${t('report.title.firstLine')} ${t('report.title.secondLine')}`"
+      :label="reportTitle"
       :aria-expand-label="t('ui.accessibility.expandSection')"
       :aria-collapse-label="t('ui.accessibility.collapseSection')"
       color="disabled"
@@ -181,7 +184,7 @@ function onSubmit(payload: ReportRowPayload) {
       <div>
         <div class="ReportTable_Header">
           <div>{{ t('ui.reportTable.rowNumber') }}</div>
-          <div>{{ t('report.table.dateAndDescription') }}</div>
+          <div>{{ dateAndDescriptionLabel }}</div>
           <div></div>
           <div>{{ t('ui.reportTable.income') }}<br />{{ t('ui.reportTable.currency') }}</div>
           <div>{{ t('ui.reportTable.income') }}<br />RSD</div>
