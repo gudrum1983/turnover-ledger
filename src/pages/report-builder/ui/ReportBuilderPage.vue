@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ReportBuilderMetaForm } from '@/features/report-meta-form'
-import ReportActions from './ReportActions.vue'
-import ReportTable from './ReportTable.vue'
+import ReportActions from '../parts/ReportActions.vue'
+import ReportTable from '../parts/ReportTable.vue'
 
 import { PaperBase } from '@/shared/ui/paper-base'
 import AppHeader from '@/widgets/app-header/ui/AppHeader.vue'
