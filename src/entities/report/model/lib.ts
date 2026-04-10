@@ -1,4 +1,4 @@
-import { FOOTER_FIELDS, HEADER_FIELDS, type FooterField, type HeaderField } from '@/shared/constants/reportFields'
+import { FOOTER_FIELDS, HEADER_FIELDS, type FooterField, type HeaderField } from './reportFields'
 import { getRowTotals, type MoneyPart, type ReportRow } from '@/entities/report-row/@x/report'
 import { sumCents } from '@/shared/lib/money/money'
 import { REPORT_EXPORT_VERSION, type ReportExportFile, type ReportState } from './types'

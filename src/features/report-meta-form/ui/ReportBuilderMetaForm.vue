@@ -4,9 +4,7 @@ import { FieldBase } from '@/shared/ui/field-base'
 import { FieldDigit } from '@/shared/ui/field-digit'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { HEADER_FIELDS, FOOTER_FIELDS } from '@/shared/constants/reportFields.ts'
-import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
-import { useReportStore } from '@/entities/report'
+import { FOOTER_FIELDS, HEADER_FIELDS, type FooterField, type HeaderField, useReportStore } from '@/entities/report'
 import { useLocale } from '@/shared/i18n'
 
 const store = useReportStore()

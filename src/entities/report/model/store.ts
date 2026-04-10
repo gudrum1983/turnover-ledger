@@ -1,8 +1,8 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { STORE_NAME } from '@/shared/constants/nameStore.ts'
-import type { FooterField, HeaderField } from '@/shared/constants/reportFields.ts'
 import type { ReportRow } from '@/entities/report-row'
+import type { FooterField, HeaderField } from './reportFields'
 import { cloneReportState, isReportState } from './lib'
 import type { ReportState } from './types'
 

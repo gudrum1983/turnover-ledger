@@ -1,4 +1,4 @@
-import type { FooterField, HeaderField } from '@/shared/constants/reportFields'
+import type { FooterField, HeaderField } from './reportFields'
 import type { ReportRow } from '@/entities/report-row/@x/report'
 
 export type ReportScript = 'srLat' | 'srCyr'

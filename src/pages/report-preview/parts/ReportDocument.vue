@@ -4,12 +4,12 @@ import { storeToRefs } from 'pinia'
 import { ReportDocumentRow } from '@/entities/report-row'
 import {
   HEADER_FIELDS,
+  KPO_DICTIONARY,
   type FooterField,
   type HeaderField,
   type TableField,
   type TitleField,
-} from '@/shared/constants/reportFields.ts'
-import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
+} from '@/entities/report'
 import { getTableTotals, type ReportScript, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 
