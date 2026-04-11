@@ -4,7 +4,7 @@ import ReportActions from '../parts/ReportActions.vue'
 import ReportTable from '../parts/ReportTable.vue'
 
 import { PaperBase } from '@/shared/ui/paper-base'
-import AppHeader from '@/widgets/app-header/ui/AppHeader.vue'
+import { AppHeader } from '@/widgets/app-header'
 import { useLocale } from '@/shared/i18n'
 
 const { t } = useLocale()
