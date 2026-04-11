@@ -1,7 +1,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { ReportRow } from '@/entities/report-row'
-import type { FooterField, HeaderField } from './reportSchema'
+import type { FooterField, HeaderField } from './fields'
 import { cloneReportState, isReportState } from './lib'
 import type { ReportState } from './types'
 

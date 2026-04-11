@@ -32,14 +32,14 @@ const model = computed<string>({
 </script>
 
 <template>
-  <div class="ReportScriptToggle">
+  <div class="ReportScriptSwitch">
     <div class="Typo_Caption">{{ t('ui.languageSwitcher.reportScript') }}:</div>
     <ButtonGroup v-model="model" :options="options" :aria-label="t('ui.languageSwitcher.reportScript')" size="xs" />
   </div>
 </template>
 
 <style scoped lang="scss">
-.ReportScriptToggle {
+.ReportScriptSwitch {
   display: flex;
   align-items: center;
   gap: 10px;

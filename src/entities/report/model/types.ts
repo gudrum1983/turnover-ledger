@@ -1,4 +1,4 @@
-import type { FooterField, HeaderField } from './reportSchema'
+import type { FooterField, HeaderField } from './fields'
 import type { ReportRow } from '@/entities/report-row/@x/report'
 
 export type ReportScript = 'srLat' | 'srCyr'

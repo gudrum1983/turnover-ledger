@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ReportBuilderMetaForm } from '@/features/report-meta-form'
+import { ReportMetaEditForm } from '@/features/report-meta-edit'
 import { LocaleSwitcher } from '@/features/locale-switcher'
 import { ReportImportExportActions } from '@/features/report-import-export'
 import { ReportRowManage } from '@/features/report-row-manage'
@@ -21,7 +21,7 @@ const { t } = useLocale()
     <main class="ReportBuilderPage_Main Container">
       <PaperBase class="ReportBuilderPage_layout">
         <ReportImportExportActions />
-        <ReportBuilderMetaForm />
+        <ReportMetaEditForm />
         <ReportRowManage />
       </PaperBase>
     </main>

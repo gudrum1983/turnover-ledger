@@ -6,7 +6,6 @@ import { FieldCounter } from '@/shared/ui/field-counter'
 import { FieldDate } from '@/shared/ui/field-date'
 import { FieldMoney } from '@/shared/ui/field-money'
 import { useCurrencyStore } from '@/entities/currency'
-import { useReportStore } from '@/entities/report'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 
@@ -39,10 +38,8 @@ const exchangeRate = ref<number | null>(null)
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
-const reportStore = useReportStore()
 const localeStore = useLocaleStore()
 const { t } = useLocale()
-const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(reportStore.usedCurrencyCodes))
 
 const currencyOptions = computed(() => {
   return currencyStore.currencies.map((code) => ({ value: code, label: code }))
@@ -67,12 +64,16 @@ export type ReportRowPayload = {
   totalAmountRsd: number | null
 }
 
-type ReportRowCreateFormProps = {
+type ReportRowEditFormProps = {
   initialValue?: ReportRowFormInitialValue | null
+  defaultCurrency?: string
+  favoriteCurrencyCodes?: string[]
 }
 
-const props = withDefaults(defineProps<ReportRowCreateFormProps>(), {
+const props = withDefaults(defineProps<ReportRowEditFormProps>(), {
   initialValue: null,
+  defaultCurrency: '',
+  favoriteCurrencyCodes: () => [],
 })
 
 const emit = defineEmits<{
@@ -204,7 +205,7 @@ const handleSubmit = (event: Event) => {
 const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
   isApplyingInitialValue.value = true
   date.value = initialValue?.date ?? ''
-  currency.value = initialValue?.currency ?? reportStore.lastUsedCurrencyCode
+  currency.value = initialValue?.currency ?? props.defaultCurrency
   description.value = initialValue?.description ?? ''
   goodsAmount.value = formatInputMoney(initialValue?.goodsAmount)
   servicesAmount.value = formatInputMoney(initialValue?.servicesAmount)
@@ -231,9 +232,9 @@ const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
 
 watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
 watch(
-  () => props.initialValue,
-  (next) => {
-    applyInitialValue(next)
+  [() => props.initialValue, () => props.defaultCurrency],
+  ([nextInitialValue]) => {
+    applyInitialValue(nextInitialValue)
   },
   { immediate: true },
 )

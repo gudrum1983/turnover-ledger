@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useCurrencyStore } from '@/entities/currency'
 import { type ReportRow } from '@/entities/report-row'
-import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowCreateForm } from '@/features/report-row-form'
+import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
 import { getReportTableLabel, getReportTitle, getTableTotals, useReportScript, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
@@ -12,7 +13,8 @@ import { ModalBase } from '@/shared/ui/modal-base'
 import { ReportRowsTable } from '@/widgets/report-rows-table'
 
 const store = useReportStore()
-const { rows } = storeToRefs(store)
+const currencyStore = useCurrencyStore()
+const { rows, usedCurrencyCodes, lastUsedCurrencyCode } = storeToRefs(store)
 const { script } = useReportScript()
 
 const localeStore = useLocaleStore()
@@ -42,6 +44,7 @@ const modalTitle = computed(() =>
 const submitLabel = computed(() => (formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.add')))
 const reportTitle = computed(() => getReportTitle(script.value))
 const dateAndDescriptionLabel = computed(() => getReportTableLabel('dateAndDescription', script.value))
+const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(usedCurrencyCodes.value))
 
 const fromCents = (value: number | null | undefined) => (typeof value === 'number' ? value / 100 : null)
 
@@ -167,10 +170,12 @@ function onSubmit(payload: ReportRowPayload) {
 
     <ModalBase v-model:open="open" shouldCloseOnEsc>
       <h2>{{ modalTitle }}</h2>
-      <ReportRowCreateForm
+      <ReportRowEditForm
         :key="formKey"
         id="report-row-form"
         :initial-value="formInitialValue"
+        :default-currency="lastUsedCurrencyCode"
+        :favorite-currency-codes="favoriteCurrencyCodes"
         @update:canSubmit="canSubmit = $event"
         @submit="onSubmit"
       />
