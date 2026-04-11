@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ReportDocument from '../parts/ReportDocument.vue'
 import { LocaleSwitcher } from '@/features/locale-switcher'
 import { ReportScriptToggle } from '@/features/report-script-toggle'
 import { AppHeader } from '@/widgets/app-header'
+import { ReportPreviewDocument } from '@/widgets/report-preview-document'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { LinkBase } from '@/shared/ui/link-base'
@@ -42,7 +42,7 @@ onBeforeUnmount(() => {
     </AppHeader>
 
     <section class="ReportPreviewPage_Document">
-      <ReportDocument :script="script" />
+      <ReportPreviewDocument :script="script" />
     </section>
   </div>
 </template>

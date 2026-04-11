@@ -9,12 +9,14 @@ import {
   getReportTableLabel,
   getReportTitleLabel,
   getReportTotalLabel,
+  getTableTotals,
   type FooterField,
   type HeaderField,
+  type ReportScript,
   type TableField,
   type TitleField,
+  useReportStore,
 } from '@/entities/report'
-import { getTableTotals, type ReportScript, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 
 type Props = {
@@ -115,6 +117,7 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
   &_Header {
     margin-block-end: 20mm;
   }
+
   &_Title {
     display: flex;
     flex-direction: column;
@@ -137,6 +140,7 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
     gap: 8px;
     align-items: center;
     justify-content: space-between;
+
     &_landscape {
       min-width: 18%;
       max-width: 30%;
@@ -158,6 +162,7 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
   border-collapse: collapse;
   border-spacing: 0;
   margin-block-end: 20mm;
+
   td,
   th {
     border: 1px solid black;
