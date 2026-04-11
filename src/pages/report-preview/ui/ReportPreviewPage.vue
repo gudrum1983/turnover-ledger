@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ReportDocument from '../parts/ReportDocument.vue'
+import { LocaleSwitcher } from '@/features/locale-switcher'
 import { ReportScriptToggle } from '@/features/report-script-toggle'
 import { AppHeader } from '@/widgets/app-header'
 import { ROUTES } from '@/shared/constants/routes.ts'
@@ -26,6 +27,9 @@ onBeforeUnmount(() => {
 <template>
   <div class="ReportPreviewPage">
     <AppHeader :msg="t('ui.app.reportPreviewTitle')" class="ReportPreviewPage_Header">
+      <template #controls>
+        <LocaleSwitcher />
+      </template>
       <template v-slot:actionButtons>
         <div class="ReportPreviewPage_Actions">
           <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 {{ t('ui.reportPreview.toHome') }}</LinkBase>
