@@ -2,7 +2,7 @@
 import { ReportBuilderMetaForm } from '@/features/report-meta-form'
 import { LocaleSwitcher } from '@/features/locale-switcher'
 import { ReportImportExportActions } from '@/features/report-import-export'
-import ReportTable from '../parts/ReportTable.vue'
+import { ReportRowManage } from '@/features/report-row-manage'
 
 import { PaperBase } from '@/shared/ui/paper-base'
 import { AppHeader } from '@/widgets/app-header'
@@ -22,7 +22,7 @@ const { t } = useLocale()
       <PaperBase class="ReportBuilderPage_layout">
         <ReportImportExportActions />
         <ReportBuilderMetaForm />
-        <ReportTable />
+        <ReportRowManage />
       </PaperBase>
     </main>
   </div>
