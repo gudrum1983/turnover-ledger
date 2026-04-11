@@ -1,4 +1,4 @@
-export type CurrencyCode = string
+import type { CurrencyCode } from '@/shared/types'
 
 export type Currency = {
   code: CurrencyCode

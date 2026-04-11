@@ -1,31 +1,14 @@
 <script setup lang="ts">
-import { computed, type VNode } from 'vue'
-import { ButtonDropdown } from '@/shared/ui/button-dropdown'
-import { useLocale } from '@/shared/i18n'
-import { LOCALE_LABEL_KEY_BY_LOCALE, SUPPORTED_LOCALES, isSupportedLocale } from '@/shared/i18n'
+import type { VNode } from 'vue'
 
 defineProps<{
   msg: string
 }>()
 
 defineSlots<{
+  controls?: () => VNode | VNode[]
   actionButtons?: () => VNode | VNode[]
 }>()
-
-const { locale, setLocale, t } = useLocale()
-
-const localeOptions = computed(() =>
-  SUPPORTED_LOCALES.map((code) => ({
-    value: code,
-    label: t(LOCALE_LABEL_KEY_BY_LOCALE[code]),
-  })),
-)
-
-const handleLocaleUpdate = (value: string | null) => {
-  if (value && isSupportedLocale(value)) {
-    setLocale(value)
-  }
-}
 
 /*Todo - чекнуть по ошибке апдейта и изменить компоновку лейаута*/
 </script>
@@ -35,14 +18,7 @@ const handleLocaleUpdate = (value: string | null) => {
     <div class="AppHeader_main">
       <h1 class="Typo_Heading1">{{ msg }}</h1>
       <div class="AppHeader_Locale">
-        <ButtonDropdown
-          size="xs"
-          variant="outlined"
-          color="primary"
-          :options="localeOptions"
-          :model-value="locale"
-          @update:model-value="handleLocaleUpdate"
-        />
+        <slot name="controls" />
       </div>
     </div>
 

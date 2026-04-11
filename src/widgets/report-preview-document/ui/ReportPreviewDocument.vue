@@ -4,13 +4,19 @@ import { storeToRefs } from 'pinia'
 import { ReportDocumentRow } from '@/entities/report-row'
 import {
   HEADER_FIELDS,
+  getReportFooterLabel,
+  getReportHeaderLabel,
+  getReportTableLabel,
+  getReportTitleLabel,
+  getReportTotalLabel,
+  getTableTotals,
   type FooterField,
   type HeaderField,
+  type ReportScript,
   type TableField,
   type TitleField,
-} from '@/shared/constants/reportFields.ts'
-import { KPO_DICTIONARY } from '@/shared/constants/kpoDictionary.ts'
-import { getTableTotals, type ReportScript, useReportStore } from '@/entities/report'
+  useReportStore,
+} from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 
 type Props = {
@@ -23,11 +29,6 @@ const props = withDefaults(defineProps<Props>(), {
   script: 'srLat',
 })
 
-const TOTAL_LABEL_BY_SCRIPT: Record<ReportScript, string> = {
-  srLat: 'Ukupno',
-  srCyr: 'Укупно',
-}
-
 const store = useReportStore()
 const { formData, rows } = storeToRefs(store)
 
@@ -36,11 +37,11 @@ const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape
 const tableTotals = computed(() => getTableTotals(rows.value))
 const totalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: props.script }))
 
-const getHeaderLabel = (key: HeaderField) => KPO_DICTIONARY.header[key][props.script]
-const getTitleLabel = (key: TitleField) => KPO_DICTIONARY.title[key][props.script]
-const getTableLabel = (key: TableField) => KPO_DICTIONARY.table[key][props.script]
-const getFooterLabel = (key: FooterField) => KPO_DICTIONARY.footer[key][props.script]
-const getTableTotalLabel = () => TOTAL_LABEL_BY_SCRIPT[props.script]
+const getHeaderLabel = (key: HeaderField) => getReportHeaderLabel(key, props.script)
+const getTitleLabel = (key: TitleField) => getReportTitleLabel(key, props.script)
+const getTableLabel = (key: TableField) => getReportTableLabel(key, props.script)
+const getFooterLabel = (key: FooterField) => getReportFooterLabel(key, props.script)
+const getTableTotalLabel = () => getReportTotalLabel(props.script)
 </script>
 
 <template>
@@ -116,6 +117,7 @@ const getTableTotalLabel = () => TOTAL_LABEL_BY_SCRIPT[props.script]
   &_Header {
     margin-block-end: 20mm;
   }
+
   &_Title {
     display: flex;
     flex-direction: column;
@@ -138,6 +140,7 @@ const getTableTotalLabel = () => TOTAL_LABEL_BY_SCRIPT[props.script]
     gap: 8px;
     align-items: center;
     justify-content: space-between;
+
     &_landscape {
       min-width: 18%;
       max-width: 30%;
@@ -159,6 +162,7 @@ const getTableTotalLabel = () => TOTAL_LABEL_BY_SCRIPT[props.script]
   border-collapse: collapse;
   border-spacing: 0;
   margin-block-end: 20mm;
+
   td,
   th {
     border: 1px solid black;
