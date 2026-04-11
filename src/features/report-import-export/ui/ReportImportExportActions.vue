@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ButtonBase } from '@/shared/ui/button-base'
-import { IconInput } from '@/shared/ui/icons'
-import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import { useRouter } from 'vue-router'
+import { createReportExportFile, parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { useLocale } from '@/shared/i18n'
-import { createReportExportFile, parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { DialogConfirm } from '@/shared/ui/dialog-confirm'
+import { IconInput } from '@/shared/ui/icons'
 
 const router = useRouter()
 const { t } = useLocale()
@@ -99,11 +99,10 @@ function applyImport() {
 
 <template>
   <div class="ReportActions">
-    <!-- todo - пример как иконку использовать, переделать на актуальную кнопку -->
     <ButtonBase color="success" size="xs" @click="router.push({ name: ROUTES.reportPreview.name })">
-      <template #icon><IconInput style="width: 20px; height: 20px" /></template
-      >{{ t('ui.reportActions.preview') }}</ButtonBase
-    >
+      <template #icon><IconInput style="width: 20px; height: 20px" /></template>
+      {{ t('ui.reportActions.preview') }}
+    </ButtonBase>
     <ButtonBase color="primary" size="xs" @click="handleExport">{{ t('ui.reportActions.export') }}</ButtonBase>
     <ButtonBase color="info" size="xs" @click="openImportDialog">{{ t('ui.reportActions.import') }}</ButtonBase>
     <input

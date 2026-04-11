@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ReportBuilderMetaForm } from '@/features/report-meta-form'
 import { LocaleSwitcher } from '@/features/locale-switcher'
-import ReportActions from '../parts/ReportActions.vue'
+import { ReportImportExportActions } from '@/features/report-import-export'
 import ReportTable from '../parts/ReportTable.vue'
 
 import { PaperBase } from '@/shared/ui/paper-base'
@@ -20,7 +20,7 @@ const { t } = useLocale()
     </AppHeader>
     <main class="ReportBuilderPage_Main Container">
       <PaperBase class="ReportBuilderPage_layout">
-        <ReportActions />
+        <ReportImportExportActions />
         <ReportBuilderMetaForm />
         <ReportTable />
       </PaperBase>
