@@ -21,6 +21,7 @@ const handleLocaleUpdate = (value: string | null) => {
 
 <template>
   <ButtonDropdown
+    rootClass="LocaleSwitcher"
     size="xs"
     variant="outlined"
     color="primary"

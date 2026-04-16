@@ -12,9 +12,10 @@ type Props = {
   debounceMs?: number
   mask?: MaskOptions
   maxLength?: number
+  rootClass?: string
 }
 
-const { label, placeholder, name, modelValue, debounceMs = 400, mask, maxLength } = defineProps<Props>()
+const { label, placeholder, name, modelValue, debounceMs = 400, mask, maxLength, rootClass = '' } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -74,7 +75,7 @@ onBeforeUnmount(clearTimer)
 </script>
 
 <template>
-  <label v-bind="$attrs" class="FieldBase Typo_Caption">
+  <label v-bind="$attrs" class="FieldBase Typo_Caption" :class="rootClass">
     {{ label }}
     <span class="FieldBase_Control">
       <input

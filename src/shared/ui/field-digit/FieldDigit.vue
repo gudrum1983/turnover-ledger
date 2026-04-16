@@ -24,7 +24,7 @@ const digitsMask = {
 
 <template>
   <FieldBase
-    class="FieldDigit"
+    rootClass="FieldDigit"
     :name="name"
     :label="label"
     :placeholder="placeholder"

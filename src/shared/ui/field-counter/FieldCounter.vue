@@ -22,7 +22,7 @@ const currentLength = computed(() => modelValue?.length ?? 0)
 
 <template>
   <FieldBase
-    class="FieldCounter"
+    rootClass="FieldCounter"
     :name="name"
     :label="label ? `${label} (${currentLength}/${maxLength})` : ''"
     :placeholder="placeholder"

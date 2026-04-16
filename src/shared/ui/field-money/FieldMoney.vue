@@ -52,7 +52,7 @@ function handleBlur(value: string | null) {
 
 <template>
   <FieldBase
-    class="FieldMoney"
+    rootClass="FieldMoney"
     :name="name"
     :label="label"
     :placeholder="placeholder"

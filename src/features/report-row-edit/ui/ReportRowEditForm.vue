@@ -246,9 +246,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <form class="ReportRowForm" @submit="handleSubmit" v-autofocus>
-    <div class="ReportRowForm_Fields">
-      <div class="ReportRowForm_Currency">
+  <form class="ReportRowEditForm" @submit="handleSubmit" v-autofocus>
+    <div class="ReportRowEditForm_Fields">
+      <div class="ReportRowEditForm_Currency">
         <FieldDate
           name="dateCurrency"
           :label="t('ui.reportRowForm.date')"
@@ -258,7 +258,7 @@ onMounted(() => {
           required
         />
         <ButtonDropdown
-          class="ReportRowForm_CurrencyDropdown"
+          class="ReportRowEditForm_CurrencyDropdown"
           :label="t('ui.reportRowForm.currency')"
           size="xs"
           variant="outlined"
@@ -278,7 +278,7 @@ onMounted(() => {
         @update:modelValue="description = $event ?? ''"
       />
     </div>
-    <div class="ReportRowForm_AmountFields">
+    <div class="ReportRowEditForm_AmountFields">
       <FieldMoney
         name="goodsAmount"
         :label="t('ui.reportRowForm.goodsAmount')"
@@ -297,105 +297,105 @@ onMounted(() => {
       />
 
       <div>
-        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.total') }}</div>
-        <div class="ReportRowForm_Card">
-          <div class="ReportRowForm_Value">{{ formatValue(totalValue) }}</div>
+        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.total') }}</div>
+        <div class="ReportRowEditForm_Card">
+          <div class="ReportRowEditForm_Value">{{ formatValue(totalValue) }}</div>
         </div>
       </div>
     </div>
 
-    <div class="ReportRowForm_Toolbar">
+    <div class="ReportRowEditForm_Toolbar">
       <ButtonBase size="xs" color="primary" :disabled="isCalculateDisabled" @click="handleCalculate">
         {{ t('ui.reportRowForm.calculate') }}
       </ButtonBase>
-      <div v-if="isCalculated" class="ReportRowForm_Hint">
+      <div v-if="isCalculated" class="ReportRowEditForm_Hint">
         {{ t('ui.reportRowForm.officialRatePrefix') }} {{ exchangeRate ?? '—' }}
       </div>
-      <div v-if="!isCalculated" class="ReportRowForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
+      <div v-if="!isCalculated" class="ReportRowEditForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
     </div>
 
-    <div class="ReportRowForm_Calculations">
+    <div class="ReportRowEditForm_Calculations">
       <div>
-        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.goodsRsd') }}</div>
+        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.goodsRsd') }}</div>
 
-        <div class="ReportRowForm_Card">
-          <div class="ReportRowForm_Value">{{ formatValue(goodsAmountRsd) }}</div>
+        <div class="ReportRowEditForm_Card">
+          <div class="ReportRowEditForm_Value">{{ formatValue(goodsAmountRsd) }}</div>
         </div>
       </div>
 
       <div>
-        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.servicesRsd') }}</div>
+        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.servicesRsd') }}</div>
 
-        <div class="ReportRowForm_Card">
-          <div class="ReportRowForm_Value">{{ formatValue(servicesAmountRsd) }}</div>
+        <div class="ReportRowEditForm_Card">
+          <div class="ReportRowEditForm_Value">{{ formatValue(servicesAmountRsd) }}</div>
         </div>
       </div>
 
       <div>
-        <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.totalRsd') }}</div>
-        <div class="ReportRowForm_Card">
-          <div class="ReportRowForm_Value">{{ formatValue(totalAmountRsd) }}</div>
+        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.totalRsd') }}</div>
+        <div class="ReportRowEditForm_Card">
+          <div class="ReportRowEditForm_Value">{{ formatValue(totalAmountRsd) }}</div>
         </div>
       </div>
     </div>
 
     <div>
-      <div class="ReportRowForm_Label">{{ t('ui.reportRowForm.row') }}</div>
-      <div class="ReportRowForm_Summary">
-        <div class="ReportRowForm_Value">{{ summary || '—' }}</div>
+      <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.row') }}</div>
+      <div class="ReportRowEditForm_Summary">
+        <div class="ReportRowEditForm_Value">{{ summary || '—' }}</div>
       </div>
     </div>
   </form>
 </template>
 
 <style scoped>
-.ReportRowForm {
+.ReportRowEditForm {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.ReportRowForm_Fields {
+.ReportRowEditForm_Fields {
   display: flex;
   width: 100%;
   gap: 16px;
 }
 
-.ReportRowForm_Currency {
+.ReportRowEditForm_Currency {
   display: flex;
   min-width: calc(110px + 160px + 16px);
   gap: 16px;
 
-  .ReportRowForm_CurrencyDropdown {
+  .ReportRowEditForm_CurrencyDropdown {
     min-width: 110px;
   }
 }
 
-.ReportRowForm_AmountFields {
+.ReportRowEditForm_AmountFields {
   gap: 16px;
   display: grid;
   align-items: end;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
-.ReportRowForm_Calculations {
+.ReportRowEditForm_Calculations {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
 }
 
-.ReportRowForm_Toolbar {
+.ReportRowEditForm_Toolbar {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.ReportRowForm_Hint {
+.ReportRowEditForm_Hint {
   color: var(--color-text-disabled);
   font: var(--font-medium-text-xs);
 }
 
-.ReportRowForm_Card {
+.ReportRowEditForm_Card {
   height: fit-content;
   border: 1px dashed var(--color-border-default);
   background: var(--color-background-surface-accent);
@@ -407,7 +407,7 @@ onMounted(() => {
   color: var(--color-text-default);
 }
 
-.ReportRowForm_Summary {
+.ReportRowEditForm_Summary {
   padding: 12px 16px;
   border-radius: 6px;
   border: 1px dashed var(--color-border-default);
@@ -417,12 +417,12 @@ onMounted(() => {
   gap: 6px;
 }
 
-.ReportRowForm_Label {
+.ReportRowEditForm_Label {
   color: var(--color-text-disabled);
   font: var(--font-medium-text-xs);
 }
 
-.ReportRowForm_Value {
+.ReportRowEditForm_Value {
   color: var(--color-text-default);
   font: var(--font-medium-text-sm);
   line-height: 1.15;

@@ -48,56 +48,54 @@ const isOpenFooter = ref(true)
 </script>
 
 <template>
-  <div>
-    <div class="ReportMetaForm">
-      <DividerToggle
-        v-model="isOpenHeader"
-        :label="t('ui.reportMetaForm.taxpayerInfo')"
-        :aria-expand-label="t('ui.accessibility.expandSection')"
-        :aria-collapse-label="t('ui.accessibility.collapseSection')"
-        color="disabled"
+  <div class="ReportMetaEditForm">
+    <DividerToggle
+      v-model="isOpenHeader"
+      :label="t('ui.reportMetaForm.taxpayerInfo')"
+      :aria-expand-label="t('ui.accessibility.expandSection')"
+      :aria-collapse-label="t('ui.accessibility.collapseSection')"
+      color="disabled"
+    />
+    <div v-show="isOpenHeader" class="ReportMetaEditForm_Fieldset">
+      <component
+        v-for="field in headerMetaFields"
+        :key="field.key"
+        :is="field.isDigit ? FieldDigit : FieldBase"
+        :name="field.key"
+        :label="`${field.label}:`"
+        :modelValue="formData.header[field.key]"
+        @update:modelValue="setHeaderValue(field.key, $event ?? '')"
       />
-      <div v-show="isOpenHeader" class="ReportMetaForm_Fieldset">
-        <component
-          v-for="field in headerMetaFields"
-          :key="field.key"
-          :is="field.isDigit ? FieldDigit : FieldBase"
-          :name="field.key"
-          :label="`${field.label}:`"
-          :modelValue="formData.header[field.key]"
-          @update:modelValue="setHeaderValue(field.key, $event ?? '')"
-        />
-      </div>
+    </div>
 
-      <DividerToggle
-        v-model="isOpenFooter"
-        :label="t('ui.reportMetaForm.responsiblePeople')"
-        :aria-expand-label="t('ui.accessibility.expandSection')"
-        :aria-collapse-label="t('ui.accessibility.collapseSection')"
-        color="disabled"
+    <DividerToggle
+      v-model="isOpenFooter"
+      :label="t('ui.reportMetaForm.responsiblePeople')"
+      :aria-expand-label="t('ui.accessibility.expandSection')"
+      :aria-collapse-label="t('ui.accessibility.collapseSection')"
+      color="disabled"
+    />
+    <div v-show="isOpenFooter" class="ReportMetaEditForm_Fieldset">
+      <FieldBase
+        v-for="field in footerMetaFields"
+        :key="field.key"
+        :name="field.key"
+        :label="`${field.label}:`"
+        :modelValue="formData.footer[field.key]"
+        @update:modelValue="setFooterValue(field.key, $event ?? '')"
       />
-      <div v-show="isOpenFooter" class="ReportMetaForm_Fieldset">
-        <FieldBase
-          v-for="field in footerMetaFields"
-          :key="field.key"
-          :name="field.key"
-          :label="`${field.label}:`"
-          :modelValue="formData.footer[field.key]"
-          @update:modelValue="setFooterValue(field.key, $event ?? '')"
-        />
-      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.ReportMetaForm {
+.ReportMetaEditForm {
   display: flex;
   flex-direction: column;
   row-gap: 16px;
 }
 
-.ReportMetaForm_Fieldset {
+.ReportMetaEditForm_Fieldset {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   row-gap: 6px;

@@ -8,6 +8,7 @@ const {
   open = false,
   shouldCloseOnOverlay = false,
   shouldCloseOnEsc = false,
+  rootClass = '',
 } = defineProps<ModalBaseProps>()
 
 const emit = defineEmits<{
@@ -101,7 +102,7 @@ onBeforeUnmount(() => {
 
 <template>
   <Teleport to="body">
-    <div v-if="open" class="ModalBase" role="dialog" aria-modal="true">
+    <div v-if="open" class="ModalBase" :class="rootClass" role="dialog" aria-modal="true">
       <div class="ModalBase_Overlay" @click.self="handleOverlayClick">
         <PaperBase class="ModalBase_Container" :class="`ModalBase_Container_size_${size}`">
           <div class="ModalBase_Content">

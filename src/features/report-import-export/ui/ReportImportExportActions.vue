@@ -98,7 +98,7 @@ function applyImport() {
 </script>
 
 <template>
-  <div class="ReportActions">
+  <div class="ReportImportExportActions">
     <ButtonBase color="success" size="xs" @click="router.push({ name: ROUTES.reportPreview.name })">
       <template #icon><IconInput style="width: 20px; height: 20px" /></template>
       {{ t('ui.reportActions.preview') }}
@@ -107,12 +107,12 @@ function applyImport() {
     <ButtonBase color="info" size="xs" @click="openImportDialog">{{ t('ui.reportActions.import') }}</ButtonBase>
     <input
       ref="fileInput"
-      class="ReportActions_FileInput"
+      class="ReportImportExportActions_FileInput"
       type="file"
       accept="application/json,.json"
       @change="handleFileChange"
     />
-    <div v-if="importError" class="ReportActions_Error Typo_Caption">{{ importError }}</div>
+    <div v-if="importError" class="ReportImportExportActions_Error Typo_Caption">{{ importError }}</div>
   </div>
   <DialogConfirm
     v-model:open="isImportConfirmOpen"
@@ -131,7 +131,7 @@ function applyImport() {
 </template>
 
 <style scoped>
-.ReportActions {
+.ReportImportExportActions {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -139,11 +139,11 @@ function applyImport() {
   width: 100%;
 }
 
-.ReportActions_FileInput {
+.ReportImportExportActions_FileInput {
   display: none;
 }
 
-.ReportActions_Error {
+.ReportImportExportActions_Error {
   width: 100%;
   color: var(--color-text-danger);
 }
