@@ -18,7 +18,6 @@ const meta = {
   argTypes: {
     label: {
       control: 'text',
-      description: 'Текст метки',
     },
   },
 } satisfies Meta<typeof TagBase>

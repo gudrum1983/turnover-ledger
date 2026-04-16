@@ -25,12 +25,10 @@ const meta = {
     label: { control: 'text' },
     modelValue: {
       control: 'text',
-      description: 'Дата в формате `yyyy-MM-dd`',
     },
     required: { control: 'boolean' },
     dateFnsLocale: {
       control: false,
-      description: 'Локаль date-fns для календаря. По умолчанию используется `ru`.',
     },
   },
   render: (args) => ({

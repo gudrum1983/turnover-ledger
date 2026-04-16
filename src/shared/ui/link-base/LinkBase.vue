@@ -2,7 +2,9 @@
 import type { RouteLocationRaw } from 'vue-router'
 
 type Props = {
+  /** Размер шрифта ссылки */
   size?: 'xs' | 'sm' | 'md' | 'lg'
+  /** Маршрут или путь для перехода */
   to: RouteLocationRaw
 }
 

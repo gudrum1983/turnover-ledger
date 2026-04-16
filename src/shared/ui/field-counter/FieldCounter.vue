@@ -3,11 +3,17 @@ import { computed } from 'vue'
 import { FieldBase } from '@/shared/ui/field-base'
 
 type Props = {
+  /** Имя поля для формы */
   name: string
+  /** Базовая подпись поля */
   label?: string
+  /** Плейсхолдер для input */
   placeholder?: string
+  /** Текущее значение поля */
   modelValue: string | null
+  /** Задержка перед emit обновления значения */
   debounceMs?: number
+  /** Максимальное число символов */
   maxLength: number
 }
 

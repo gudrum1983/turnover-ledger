@@ -29,15 +29,12 @@ const meta = {
   argTypes: {
     options: {
       control: 'object',
-      description: 'Список доступных значений для выбора',
     },
     modelValue: {
       control: 'text',
-      description: 'Текущее выбранное значение',
     },
     favorites: {
       control: 'object',
-      description: 'Список значений, которые нужно показать в начале списка',
     },
   },
   render: (args) => ({

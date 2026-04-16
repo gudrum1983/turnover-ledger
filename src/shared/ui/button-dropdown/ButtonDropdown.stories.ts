@@ -35,19 +35,15 @@ const meta = {
   argTypes: {
     label: {
       control: 'text',
-      description: 'Текстовый лейбл над кнопкой',
     },
     options: {
       control: 'object',
-      description: 'Список доступных вариантов',
     },
     modelValue: {
       control: 'text',
-      description: 'Текущее выбранное значение',
     },
     placeholder: {
       control: 'text',
-      description: 'Текст кнопки, когда значение не выбрано',
     },
     size: {
       control: 'select',
@@ -66,7 +62,6 @@ const meta = {
     },
     favorites: {
       control: 'object',
-      description: 'Список значений, которые нужно показать в начале списка',
     },
   },
   render: (args) => ({

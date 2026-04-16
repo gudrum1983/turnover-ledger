@@ -25,7 +25,6 @@ const meta = {
   argTypes: {
     name: {
       control: 'text',
-      description: 'Имя HTML-поля',
     },
     label: {
       control: 'text',
@@ -35,7 +34,6 @@ const meta = {
     },
     modelValue: {
       control: 'text',
-      description: 'Текущее значение поля',
     },
     debounceMs: {
       control: { type: 'number', min: 0 },
@@ -45,7 +43,6 @@ const meta = {
     },
     mask: {
       control: false,
-      description: 'Конфигурация маски `maska`',
     },
   },
   render: (args) => ({
