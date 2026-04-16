@@ -20,13 +20,21 @@ type DividerColorToken =
 type DividerLabelPosition = 'left' | 'center' | 'right'
 
 type DividerProps = {
+  /** Толщина линии в пикселях */
   thickness?: number
+  /** Стиль линии разделителя */
   lineStyle?: DividerLineStyle
+  /** Токен цвета линии */
   color?: DividerColorToken
+  /** Переключает разделитель в вертикальный режим */
   isVertical?: boolean
+  /** Подпись по центру линии */
   label?: string
+  /** Положение подписи относительно линии */
   labelPosition?: DividerLabelPosition
+  /** Смещение подписи от края в пикселях */
   labelOffset?: number
+  /** Внутренний отступ разделителя от краев в пикселях */
   edgeOffset?: number
 }
 

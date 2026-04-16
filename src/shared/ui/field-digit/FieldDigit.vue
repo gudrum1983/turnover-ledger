@@ -2,9 +2,13 @@
 import { FieldBase } from '@/shared/ui/field-base'
 
 type Props = {
+  /** Имя поля для формы */
   name: string
+  /** Подпись поля */
   label?: string
+  /** Плейсхолдер для input */
   placeholder?: string
+  /** Текущее значение поля */
   modelValue: string | null
 }
 

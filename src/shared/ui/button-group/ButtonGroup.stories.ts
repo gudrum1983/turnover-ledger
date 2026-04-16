@@ -31,15 +31,12 @@ const meta = {
   argTypes: {
     modelValue: {
       control: 'text',
-      description: 'Текущее выбранное значение',
     },
     options: {
       control: 'object',
-      description: 'Набор кнопок для выбора',
     },
     ariaLabel: {
       control: 'text',
-      description: 'Текст для `aria-label` у группы кнопок',
     },
     disabled: {
       control: 'boolean',

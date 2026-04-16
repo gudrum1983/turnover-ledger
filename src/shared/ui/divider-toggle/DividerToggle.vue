@@ -22,16 +22,27 @@ type DividerColorToken =
 type DividerLabelPosition = 'left' | 'center' | 'right'
 
 type Props = {
+  /** Состояние раскрытия секции */
   modelValue?: boolean
+  /** Текст подписи рядом с разделителем */
   label?: string
+  /** Блокирует взаимодействие с переключателем */
   disabled?: boolean
+  /** Стиль линии разделителя */
   lineStyle?: DividerLineStyle
+  /** Цвет разделителя */
   color?: DividerColorToken
+  /** Толщина линии разделителя */
   thickness?: number
+  /** Позиция подписи на линии */
   labelPosition?: DividerLabelPosition
+  /** Смещение подписи на линии */
   labelOffset?: number
+  /** Отступ разделителя от краев */
   edgeOffset?: number
+  /** Текст для aria-label в состоянии "развернуть" */
   ariaExpandLabel?: string
+  /** Текст для aria-label в состоянии "свернуть" */
   ariaCollapseLabel?: string
 }
 

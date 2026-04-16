@@ -6,10 +6,15 @@ import { type InputAttributesConfig, VueDatePicker } from '@vuepic/vue-datepicke
 import '@vuepic/vue-datepicker/dist/main.css'
 
 type Props = {
+  /** Имя поля для формы */
   name: string
+  /** Подпись поля */
   label?: string
+  /** Текущее значение даты в строковом формате */
   modelValue: string | null
+  /** Делает поле обязательным */
   required?: boolean
+  /** Локаль для date-fns и календаря */
   dateFnsLocale?: Locale
 }
 

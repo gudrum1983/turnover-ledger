@@ -21,7 +21,6 @@ const meta = {
   argTypes: {
     to: {
       control: 'text',
-      description: 'Маршрут для `RouterLink`',
     },
     size: {
       control: 'select',

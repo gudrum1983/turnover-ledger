@@ -5,12 +5,19 @@ import { computed, onBeforeUnmount } from 'vue'
 import { IconClose } from '@/shared/ui/icons'
 
 type Props = {
+  /** Имя поля для формы */
   name: string
+  /** Текстовая подпись поля */
   label?: string
+  /** Плейсхолдер для input */
   placeholder?: string
+  /** Текущее значение поля */
   modelValue: string | null
+  /** Задержка перед emit обновления значения */
   debounceMs?: number
+  /** Маска ввода для `maska` */
   mask?: MaskOptions
+  /** Максимальная длина вводимого значения */
   maxLength?: number
   rootClass?: string
 }

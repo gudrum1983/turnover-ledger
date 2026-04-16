@@ -14,13 +14,21 @@ const {
   labelCancelButton = 'Cancel',
   autoFocusCancelButton = true,
 } = defineProps<{
+  /** Управляет видимостью диалога */
   open: boolean
+  /** Размер модального окна */
   size?: ModalBaseSize
+  /** Визуальный тип подтверждающего действия */
   type: 'confirm' | 'delete'
+  /** Основной текст сообщения */
   message: string
+  /** Заголовок диалога */
   title: string
+  /** Текст кнопки подтверждения */
   labelActiveButton?: string
+  /** Текст кнопки отмены */
   labelCancelButton?: string
+  /** Ставит автофокус на кнопку отмены при открытии */
   autoFocusCancelButton?: boolean
 }>()
 
