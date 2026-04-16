@@ -43,7 +43,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 </script>
 
 <template>
-  <div class="ReportTable">
+  <div class="ReportRowsTable">
     <DividerToggle
       v-model="isFullTable"
       :label="reportTitle"
@@ -55,9 +55,9 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
       <template #icon><IconCompress style="width: 18px; height: 18px" /></template>
     </DividerToggle>
 
-    <div class="ReportTable_Fieldset">
-      <div class="ReportTable_Actions">
-        <div class="ReportTable_RowActions">
+    <div class="ReportRowsTable_Fieldset">
+      <div class="ReportRowsTable_Actions">
+        <div class="ReportRowsTable_RowActions">
           <ButtonBase color="primary" size="xs" @click="emit('add')">{{ t('ui.reportTable.addRow') }}</ButtonBase>
           <ButtonBase v-if="rows.length > 0" color="danger" size="xs" @click="emit('clear')">
             {{ t('ui.reportTable.clearTable') }}
@@ -65,7 +65,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
         </div>
       </div>
       <div>
-        <div class="ReportTable_Header">
+        <div class="ReportRowsTable_Header">
           <div>{{ t('ui.reportTable.rowNumber') }}</div>
           <div>{{ dateAndDescriptionLabel }}</div>
           <div></div>
@@ -73,7 +73,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
           <div>{{ t('ui.reportTable.income') }}<br />RSD</div>
           <div></div>
         </div>
-        <div class="ReportTable_Rows">
+        <div class="ReportRowsTable_Rows">
           <ReportTableRow
             v-for="(row, index) in rows"
             :key="row.id"
@@ -86,7 +86,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
             @remove="emit('remove', $event)"
           />
         </div>
-        <div v-if="rows.length < 1" class="ReportTable_Empty">
+        <div v-if="rows.length < 1" class="ReportRowsTable_Empty">
           {{ t('ui.reportTable.emptyHint') }}
           <ButtonBase
             color="primary"
@@ -104,17 +104,17 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 
         <div
           v-if="rows.length > 0"
-          class="ReportTable_TotalRow"
-          :class="{ ReportTable_TotalRow_withWarning: isTotalLimitExceeded }"
+          class="ReportRowsTable_TotalRow"
+          :class="{ ReportRowsTable_TotalRow_withWarning: isTotalLimitExceeded }"
         >
           <div></div>
           <div></div>
           <div></div>
-          <div class="ReportTable_TotalCell Typo_BodyAccent">{{ t('ui.reportTable.total') }}</div>
-          <div class="ReportTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
+          <div class="ReportRowsTable_TotalCell Typo_BodyAccent">{{ t('ui.reportTable.total') }}</div>
+          <div class="ReportRowsTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
           <div></div>
         </div>
-        <div v-if="isTotalLimitExceeded" class="ReportTable_Warning Typo_BodyAccent" role="alert">
+        <div v-if="isTotalLimitExceeded" class="ReportRowsTable_Warning Typo_BodyAccent" role="alert">
           {{ t('ui.reportTable.totalLimitExceeded') }} {{ displayTotalLimitRsd }}.
         </div>
       </div>
@@ -123,7 +123,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 </template>
 
 <style scoped lang="scss">
-.ReportTable {
+.ReportRowsTable {
   &_Fieldset {
     display: flex;
     flex-direction: column;

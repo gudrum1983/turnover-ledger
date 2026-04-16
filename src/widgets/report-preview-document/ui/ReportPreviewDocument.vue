@@ -32,8 +32,8 @@ const props = withDefaults(defineProps<Props>(), {
 const store = useReportStore()
 const { formData, rows } = storeToRefs(store)
 
-const classColumn = computed(() => [{ ReportDocument_Column_landscape: props.landscape }])
-const classSignature = computed(() => [{ ReportDocument_SignaturePlace_landscape: props.landscape }])
+const classColumn = computed(() => [{ ReportPreviewDocument_Column_landscape: props.landscape }])
+const classSignature = computed(() => [{ ReportPreviewDocument_SignaturePlace_landscape: props.landscape }])
 const tableTotals = computed(() => getTableTotals(rows.value))
 const totalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: props.script }))
 
@@ -45,19 +45,19 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
 </script>
 
 <template>
-  <div class="ReportDocument Typo_ReportBody">
-    <ul class="ReportDocument_Header">
+  <div class="ReportPreviewDocument Typo_ReportBody">
+    <ul class="ReportPreviewDocument_Header">
       <li v-for="field in HEADER_FIELDS" :key="field">
         <span class="Typo_ReportBodyAccent">{{ getHeaderLabel(field) }}:</span> {{ formData.header[field] }}
       </li>
     </ul>
 
-    <div class="ReportDocument_Title Typo_ReportTitle">
+    <div class="ReportPreviewDocument_Title Typo_ReportTitle">
       <div>{{ getTitleLabel('firstLine') }}</div>
       <div>{{ getTitleLabel('secondLine') }}</div>
     </div>
 
-    <table class="ReportDocument_Table">
+    <table class="ReportPreviewDocument_Table">
       <thead class="Typo_ReportTableAccent">
         <tr>
           <td rowspan="2" colspan="1">{{ getTableLabel('rowNumber') }}</td>
@@ -72,11 +72,11 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
           <td>{{ getTableLabel('incomeFromServices') }}</td>
         </tr>
         <tr :class="classColumn">
-          <td class="ReportDocument_Column ReportDocument_Column_type_num">1</td>
-          <td class="ReportDocument_Column ReportDocument_Column_type_description">2</td>
-          <td class="ReportDocument_Column">3</td>
-          <td class="ReportDocument_Column">4</td>
-          <td class="ReportDocument_Column">5</td>
+          <td class="ReportPreviewDocument_Column ReportPreviewDocument_Column_type_num">1</td>
+          <td class="ReportPreviewDocument_Column ReportPreviewDocument_Column_type_description">2</td>
+          <td class="ReportPreviewDocument_Column">3</td>
+          <td class="ReportPreviewDocument_Column">4</td>
+          <td class="ReportPreviewDocument_Column">5</td>
         </tr>
       </thead>
       <tbody>
@@ -96,22 +96,22 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
       </tfoot>
     </table>
 
-    <div class="ReportDocument_Footer">
-      <div class="ReportDocument_SignaturePlace" :class="classSignature">
+    <div class="ReportPreviewDocument_Footer">
+      <div class="ReportPreviewDocument_SignaturePlace" :class="classSignature">
         <div class="Typo_ReportTableAccent">{{ getFooterLabel('preparedBy') }}</div>
-        <div class="ReportDocument_Signature">{{ formData.footer.preparedBy }}</div>
+        <div class="ReportPreviewDocument_Signature">{{ formData.footer.preparedBy }}</div>
       </div>
 
-      <div class="ReportDocument_SignaturePlace" :class="classSignature">
+      <div class="ReportPreviewDocument_SignaturePlace" :class="classSignature">
         <div class="Typo_ReportTableAccent">{{ getFooterLabel('responsiblePerson') }}</div>
-        <div class="ReportDocument_Signature">{{ formData.footer.responsiblePerson }}</div>
+        <div class="ReportPreviewDocument_Signature">{{ formData.footer.responsiblePerson }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.ReportDocument {
+.ReportPreviewDocument {
   font-family: 'Open Sans', sans-serif !important;
 
   &_Header {
@@ -156,7 +156,7 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
   }
 }
 
-.ReportDocument_Table {
+.ReportPreviewDocument_Table {
   display: table;
   box-sizing: border-box;
   border-collapse: collapse;
@@ -179,7 +179,7 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
     text-align: center;
   }
 
-  .ReportDocument_Column {
+  .ReportPreviewDocument_Column {
     width: 100%;
     max-width: 20%;
     padding: 0 10px;
@@ -195,8 +195,8 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
     }
   }
 
-  .ReportDocument_Column_landscape {
-    .ReportDocument_Column {
+  .ReportPreviewDocument_Column_landscape {
+    .ReportPreviewDocument_Column {
       width: 100%;
       max-width: 13%;
 

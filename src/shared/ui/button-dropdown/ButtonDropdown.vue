@@ -26,6 +26,8 @@ type Props = {
   disabled?: boolean
   /** Значения, которые нужно показывать в начале списка как избранные */
   favorites?: string[]
+  /** Класс корневого DOM-элемента */
+  rootClass?: string
 }
 
 const {
@@ -38,6 +40,7 @@ const {
   color = 'default',
   disabled = false,
   favorites,
+  rootClass = '',
 } = defineProps<Props>()
 
 const emit = defineEmits<{
@@ -100,7 +103,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="dropdownRef" class="ButtonDropdown">
+  <div ref="dropdownRef" class="ButtonDropdown" :class="rootClass">
     <p v-if="label" class="Typo_Caption">{{ label }}</p>
     <ButtonBase
       :size="size"

@@ -151,7 +151,7 @@ function onSubmit(payload: ReportRowPayload) {
 </script>
 
 <template>
-  <div>
+  <div class="ReportRowManage">
     <ReportRowsTable
       v-model:is-full-table="isFullTable"
       :rows="rows"

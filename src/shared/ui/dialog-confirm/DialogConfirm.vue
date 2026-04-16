@@ -41,7 +41,14 @@ function handleCancel() {
 </script>
 
 <template>
-  <ModalBase :open="open" @update:open="closeDialog" shouldCloseOnOverlay shouldCloseOnEsc :size="size">
+  <ModalBase
+    :open="open"
+    rootClass="DialogConfirm"
+    @update:open="closeDialog"
+    shouldCloseOnOverlay
+    shouldCloseOnEsc
+    :size="size"
+  >
     <h2 class="Text_AlginCenter Typo_Heading2">{{ title }}</h2>
     <div v-if="$slots.content" class="DialogConfirm_Content Text_AlginCenter Typo_BodyAccent">
       <slot name="content" />

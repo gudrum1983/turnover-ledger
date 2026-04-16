@@ -5,4 +5,5 @@ export type ModalBaseProps = {
   open: boolean
   shouldCloseOnOverlay?: boolean
   shouldCloseOnEsc?: boolean
+  rootClass?: string
 }
