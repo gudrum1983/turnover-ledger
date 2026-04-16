@@ -2,7 +2,7 @@
 import type { MaskOptions } from 'maska'
 import { vMaska } from 'maska/vue'
 import { computed, onBeforeUnmount } from 'vue'
-import { IconClose } from '@/shared/ui/icons'
+import { IconClose, IconInfo } from '@/shared/ui/icons'
 
 type Props = {
   /** Имя поля для формы */
@@ -83,7 +83,12 @@ onBeforeUnmount(clearTimer)
 
 <template>
   <label v-bind="$attrs" class="FieldBase Typo_Caption" :class="rootClass">
-    {{ label }}
+    <div class="FieldBase_Label">
+      {{ label }}
+
+      <IconInfo class="FieldBase_LabelInfo" />
+    </div>
+
     <span class="FieldBase_Control">
       <input
         @input="scheduleEmit"
@@ -115,6 +120,21 @@ onBeforeUnmount(clearTimer)
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.FieldBase_Label {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.FieldBase_LabelInfo {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-link);
+  &:hover {
+    color: var(--color-text-link-hovered);
+  }
 }
 
 .FieldBase_Control {
