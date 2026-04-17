@@ -17,6 +17,7 @@ const meta = {
   args: {
     name: 'description',
     label: 'Описание',
+    hint: '',
     placeholder: 'Введите текст',
     modelValue: 'Текст',
     debounceMs: 0,
@@ -30,6 +31,9 @@ const meta = {
       control: 'text',
     },
     placeholder: {
+      control: 'text',
+    },
+    hint: {
       control: 'text',
     },
     modelValue: {
@@ -98,5 +102,15 @@ export const WithMaxLength: Story = {
     label: 'Комментарий',
     modelValue: 'Коротко',
     maxLength: 12,
+  },
+}
+
+export const WithHint: Story = {
+  name: 'С подсказкой',
+  args: {
+    label: 'ИНН',
+    hint: 'Укажите ИНН без пробелов и разделителей.',
+    modelValue: null,
+    placeholder: 'Введите ИНН',
   },
 }

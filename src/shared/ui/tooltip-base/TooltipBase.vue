@@ -9,7 +9,7 @@ type Props = {
 
 const { size = 'md', maxWidth } = defineProps<Props>()
 
-const maxWidthValue = computed(() => (typeof maxWidth === 'number' ? toPxString(maxWidth, { min: 0 }) : 'fit-content'))
+const maxWidthValue = computed(() => (typeof maxWidth === 'number' ? toPxString(maxWidth, { min: 0 }) : 'max-content'))
 
 const classes = computed(() => [`TooltipBase_size_${size}`])
 </script>
@@ -22,6 +22,7 @@ const classes = computed(() => [`TooltipBase_size_${size}`])
 
 <style scoped lang="scss">
 .TooltipBase {
+  width: max-content;
   word-wrap: break-word;
   max-width: v-bind(maxWidthValue);
   color: var(--color-text-base);
@@ -31,7 +32,6 @@ const classes = computed(() => [`TooltipBase_size_${size}`])
   position: relative;
   padding: 4px 8px;
   font: var(--font-regular-text-sm);
-  overflow: hidden;
 }
 
 .TooltipBase_size_sm {

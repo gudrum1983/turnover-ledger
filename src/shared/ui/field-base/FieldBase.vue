@@ -2,13 +2,16 @@
 import type { MaskOptions } from 'maska'
 import { vMaska } from 'maska/vue'
 import { computed, onBeforeUnmount } from 'vue'
-import { IconClose, IconInfo } from '@/shared/ui/icons'
+import { IconClose } from '@/shared/ui/icons'
+import { InfoHint } from '@/shared/ui/info-hint'
 
 type Props = {
   /** Имя поля для формы */
   name: string
   /** Текстовая подпись поля */
   label?: string
+  /** Текст информационной подсказки рядом с label */
+  hint?: string
   /** Плейсхолдер для input */
   placeholder?: string
   /** Текущее значение поля */
@@ -22,7 +25,17 @@ type Props = {
   rootClass?: string
 }
 
-const { label, placeholder, name, modelValue, debounceMs = 400, mask, maxLength, rootClass = '' } = defineProps<Props>()
+const {
+  label,
+  hint,
+  placeholder,
+  name,
+  modelValue,
+  debounceMs = 400,
+  mask,
+  maxLength,
+  rootClass = '',
+} = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -84,9 +97,8 @@ onBeforeUnmount(clearTimer)
 <template>
   <label v-bind="$attrs" class="FieldBase Typo_Caption" :class="rootClass">
     <div class="FieldBase_Label">
-      {{ label }}
-
-      <IconInfo class="FieldBase_LabelInfo" />
+      <span class="FieldBase_LabelText">{{ label }}</span>
+      <InfoHint v-if="hint" :text="hint" />
     </div>
 
     <span class="FieldBase_Control">
@@ -124,17 +136,12 @@ onBeforeUnmount(clearTimer)
 
 .FieldBase_Label {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   gap: 4px;
 }
 
-.FieldBase_LabelInfo {
-  width: 16px;
-  height: 16px;
-  color: var(--color-text-link);
-  &:hover {
-    color: var(--color-text-link-hovered);
-  }
+.FieldBase_LabelText {
+  flex: 1 1 auto;
 }
 
 .FieldBase_Control {

@@ -7,6 +7,8 @@ type Props = {
   name: string
   /** Базовая подпись поля */
   label?: string
+  /** Текст информационной подсказки рядом с label */
+  hint?: string
   /** Плейсхолдер для input */
   placeholder?: string
   /** Текущее значение поля */
@@ -17,7 +19,7 @@ type Props = {
   maxLength: number
 }
 
-const { name, label, placeholder, modelValue, debounceMs = 0, maxLength } = defineProps<Props>()
+const { name, label, hint, placeholder, modelValue, debounceMs = 0, maxLength } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -31,6 +33,7 @@ const currentLength = computed(() => modelValue?.length ?? 0)
     rootClass="FieldCounter"
     :name="name"
     :label="label ? `${label} (${currentLength}/${maxLength})` : ''"
+    :hint="hint"
     :placeholder="placeholder"
     :model-value="modelValue"
     :debounce-ms="debounceMs"

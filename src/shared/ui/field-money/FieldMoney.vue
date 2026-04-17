@@ -7,6 +7,8 @@ type Props = {
   name: string
   /** Подпись поля */
   label?: string
+  /** Текст информационной подсказки рядом с label */
+  hint?: string
   /** Плейсхолдер для input */
   placeholder?: string
   /** Текущее значение поля */
@@ -15,7 +17,7 @@ type Props = {
   locale?: Intl.LocalesArgument
 }
 
-const { name, label, placeholder, modelValue, locale = 'ru-RU' } = defineProps<Props>()
+const { name, label, hint, placeholder, modelValue, locale = 'ru-RU' } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -60,6 +62,7 @@ function handleBlur(value: string | null) {
     rootClass="FieldMoney"
     :name="name"
     :label="label"
+    :hint="hint"
     :placeholder="placeholder"
     :model-value="modelValue"
     :mask="moneyMask"
