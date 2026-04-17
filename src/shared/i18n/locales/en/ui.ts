@@ -2,14 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 
 export const enUi = {
   app: {
-    reportBuilderTitle: 'Turnover Book (lump sum)',
-    reportPreviewTitle: 'Turnover Book (lump sum) report',
-  },
-  locale: {
-    ru: 'Русский',
-    en: 'English',
-    srLat: 'Srpski',
-    srCyr: 'Српски',
+    headerTitle: 'KPO Book (Paušal)',
   },
   reportActions: {
     preview: 'Preview',

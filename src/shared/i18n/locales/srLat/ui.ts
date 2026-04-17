@@ -2,14 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 
 export const srLatUi = {
   app: {
-    reportBuilderTitle: 'KPO knjiga (paušal)',
-    reportPreviewTitle: 'KPO knjiga (paušal) izveštaj',
-  },
-  locale: {
-    ru: 'Русский',
-    en: 'English',
-    srLat: 'Srpski',
-    srCyr: 'Српски',
+    headerTitle: 'KPO knjiga (paušal)',
   },
   reportActions: {
     preview: 'Pregled',

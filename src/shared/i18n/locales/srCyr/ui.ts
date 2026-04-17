@@ -2,14 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 
 export const srCyrUi = {
   app: {
-    reportBuilderTitle: 'КПО књига (паушал)',
-    reportPreviewTitle: 'КПО књига (паушал) извештај',
-  },
-  locale: {
-    ru: 'Русский',
-    en: 'English',
-    srLat: 'Srpski',
-    srCyr: 'Српски',
+    headerTitle: 'КПО књига (паушал)',
   },
   reportActions: {
     preview: 'Преглед',

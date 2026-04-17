@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ButtonDropdown } from '@/shared/ui/button-dropdown'
-import { LOCALE_LABEL_KEY_BY_LOCALE, SUPPORTED_LOCALES, isSupportedLocale, useLocale } from '@/shared/i18n'
+import { LOCALE_LABEL_BY_LOCALE, SUPPORTED_LOCALES, isSupportedLocale, useLocale } from '@/shared/i18n'
 
-const { locale, setLocale, t } = useLocale()
+const { locale, setLocale } = useLocale()
 
 const localeOptions = computed(() =>
   SUPPORTED_LOCALES.map((code) => ({
     value: code,
-    label: t(LOCALE_LABEL_KEY_BY_LOCALE[code]),
+    label: LOCALE_LABEL_BY_LOCALE[code],
   })),
 )
 

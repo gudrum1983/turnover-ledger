@@ -1,13 +1,6 @@
 export const ruUi = {
   app: {
-    reportBuilderTitle: 'Книга КПО (паушал)',
-    reportPreviewTitle: 'Книга КПО (паушал) отчет',
-  },
-  locale: {
-    ru: 'Русский',
-    en: 'English',
-    srLat: 'Srpski',
-    srCyr: 'Српски',
+    headerTitle: 'Книга КПО (паушал)',
   },
   reportActions: {
     preview: 'Просмотр',

@@ -13,7 +13,7 @@ const { t } = useLocale()
 
 <template>
   <div class="ReportBuilderPage">
-    <AppHeader :msg="t('ui.app.reportBuilderTitle')" class="ReportBuilderPage_Header">
+    <AppHeader :msg="t('ui.app.headerTitle')" class="ReportBuilderPage_Header">
       <template #controls>
         <LocaleSwitcher />
       </template>
