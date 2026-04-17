@@ -6,9 +6,14 @@ import {
   IconCompress,
   IconCopy,
   IconEdit,
+  IconExport,
   IconExpand,
+  IconImport,
   IconInfo,
-  IconInput,
+  IconLanguage,
+  IconPDF,
+  IconPrint,
+  IconPreview,
   IconTrash,
 } from './index'
 
@@ -19,9 +24,14 @@ const icons = [
   { name: 'IconCompress', component: IconCompress },
   { name: 'IconCopy', component: IconCopy },
   { name: 'IconEdit', component: IconEdit },
+  { name: 'IconExport', component: IconExport },
   { name: 'IconExpand', component: IconExpand },
+  { name: 'IconImport', component: IconImport },
   { name: 'IconInfo', component: IconInfo },
-  { name: 'IconInput', component: IconInput },
+  { name: 'IconLanguage', component: IconLanguage },
+  { name: 'IconPDF', component: IconPDF },
+  { name: 'IconPrint', component: IconPrint },
+  { name: 'IconPreview', component: IconPreview },
   { name: 'IconTrash', component: IconTrash },
 ]
 

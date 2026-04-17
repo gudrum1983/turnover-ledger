@@ -6,7 +6,7 @@ import { ROUTES } from '@/shared/constants/routes.ts'
 import { useLocale } from '@/shared/i18n'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { DialogConfirm } from '@/shared/ui/dialog-confirm'
-import { IconInput } from '@/shared/ui/icons'
+import { IconExport, IconImport, IconPreview } from '@/shared/ui/icons'
 
 const router = useRouter()
 const { t } = useLocale()
@@ -100,11 +100,17 @@ function applyImport() {
 <template>
   <div class="ReportImportExportActions">
     <ButtonBase color="success" size="xs" @click="router.push({ name: ROUTES.reportPreview.name })">
-      <template #icon><IconInput style="width: 20px; height: 20px" /></template>
+      <template #icon><IconPreview style="width: 20px; height: 20px" /></template>
       {{ t('ui.reportActions.preview') }}
     </ButtonBase>
-    <ButtonBase color="primary" size="xs" @click="handleExport">{{ t('ui.reportActions.export') }}</ButtonBase>
-    <ButtonBase color="info" size="xs" @click="openImportDialog">{{ t('ui.reportActions.import') }}</ButtonBase>
+    <ButtonBase color="primary" size="xs" @click="handleExport">
+      <template #icon><IconExport style="width: 20px; height: 20px" /></template>
+      {{ t('ui.reportActions.export') }}</ButtonBase
+    >
+    <ButtonBase color="info" size="xs" @click="openImportDialog">
+      <template #icon><IconImport style="width: 20px; height: 20px" /></template>
+      {{ t('ui.reportActions.import') }}</ButtonBase
+    >
     <input
       ref="fileInput"
       class="ReportImportExportActions_FileInput"
