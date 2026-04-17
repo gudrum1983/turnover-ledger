@@ -30,6 +30,11 @@ type Props = {
   rootClass?: string
 }
 
+type DropdownOption = {
+  value: string
+  label: string
+}
+
 const {
   label,
   options,
@@ -51,9 +56,10 @@ const emit = defineEmits<{
 const dropdownRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
 
+const activeOption = computed<DropdownOption | undefined>(() => options.find((option) => option.value === modelValue))
+
 const activeLabel = computed(() => {
-  const match = options.find((option) => option.value === modelValue)
-  return match?.label ?? placeholder
+  return activeOption.value?.label ?? placeholder
 })
 
 const toggleMenu = () => {
@@ -116,7 +122,15 @@ onBeforeUnmount(() => {
       @click="toggleMenu"
       class="ButtonDropdown_CustomClass"
     >
-      <span class="ButtonDropdown_Label">{{ activeLabel }}</span>
+      <slot
+        name="trigger"
+        :active-option="activeOption"
+        :active-label="activeLabel"
+        :placeholder="placeholder"
+        :is-open="isOpen"
+      >
+        <span class="ButtonDropdown_Label">{{ activeLabel }}</span>
+      </slot>
       <template #end-icon>
         <IconChevron class="ButtonDropdown_Caret" :class="{ ButtonDropdown_Caret_open: isOpen }" aria-hidden="true" />
       </template>
@@ -137,7 +151,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 110px;
+  width: 94px;
 }
 
 .ButtonDropdown_CustomClass {
@@ -157,7 +171,7 @@ onBeforeUnmount(() => {
   position: absolute;
   right: 0;
   top: calc(100% + 4px);
-  width: 110px;
+  width: 94px;
   z-index: 10;
   max-height: 260px;
   overflow-y: auto;

@@ -1,6 +1,7 @@
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ButtonDropdown } from './index'
+import { IconLanguage } from '@/shared/ui/icons'
 
 const baseOptions = [
   { value: 'eur', label: 'EUR' },
@@ -145,6 +146,72 @@ export const Disabled: Story = {
       },
     },
   },
+}
+
+export const WithCustomTrigger: Story = {
+  name: 'С кастомным trigger',
+  args: {
+    label: 'Язык',
+    modelValue: 'en',
+    options: [
+      { value: 'ru', label: 'Русский' },
+      { value: 'en', label: 'English' },
+      { value: 'srLat', label: 'Srpski' },
+      { value: 'srCyr', label: 'Српски' },
+    ],
+    size: 'xs',
+    color: 'primary',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Пример использования слота `trigger`: кнопка показывает кастомное содержимое для выбранного значения, а список опций остаётся обычным.',
+      },
+    },
+  },
+  render: (args) => ({
+    components: { ButtonDropdown, IconLanguage },
+    setup() {
+      const model = ref(args.modelValue)
+
+      const shortLabelByLocale = {
+        ru: 'РУС',
+        en: 'ENG',
+        srLat: 'SRP',
+        srCyr: 'СРП',
+      } as const
+
+      const activeShortLabel = computed(
+        () => shortLabelByLocale[model.value as keyof typeof shortLabelByLocale] ?? args.placeholder,
+      )
+
+      watch(
+        () => args.modelValue,
+        (value) => {
+          model.value = value
+        },
+      )
+
+      return { args, model, activeShortLabel }
+    },
+    template: `
+      <div style="width: 220px; padding: 24px">
+        <ButtonDropdown
+          v-bind="args"
+          :model-value="model"
+          @update:modelValue="model = $event; args.modelValue = $event"
+        >
+          <template #trigger>
+            <span style="display: inline-flex; align-items: center; gap: 6px;">
+              <IconLanguage style="width: 16px; height: 16px;" />
+              <span>{{ activeShortLabel }}</span>
+            </span>
+          </template>
+        </ButtonDropdown>
+      </div>
+    `,
+  }),
 }
 
 export const WithoutOptions: Story = {

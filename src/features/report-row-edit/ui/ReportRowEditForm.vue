@@ -363,11 +363,11 @@ onMounted(() => {
 
 .ReportRowEditForm_Currency {
   display: flex;
-  min-width: calc(110px + 160px + 16px);
+  min-width: calc(94px + 160px + 16px);
   gap: 16px;
 
   .ReportRowEditForm_CurrencyDropdown {
-    min-width: 110px;
+    min-width: 94px;
   }
 }
 
