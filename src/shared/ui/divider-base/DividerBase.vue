@@ -54,7 +54,7 @@ const labelOffsetPx = computed(() => toPxString(labelOffset, { min: 0 }))
 const edgeOffsetPx = computed(() => toPxString(edgeOffset, { min: 0 }))
 
 const isLabelVisible = computed(() => Boolean(label) && !isVertical)
-
+//todo - разобрать как работает
 const styleVars = computed(() => ({
   '--divider-color': `var(--color-border-${color})`,
   '--label-offset': labelOffsetPx.value,
