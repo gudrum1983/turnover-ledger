@@ -7,6 +7,7 @@ import {
   IconCopy,
   IconEdit,
   IconExpand,
+  IconInfo,
   IconInput,
   IconTrash,
 } from './index'
@@ -19,6 +20,7 @@ const icons = [
   { name: 'IconCopy', component: IconCopy },
   { name: 'IconEdit', component: IconEdit },
   { name: 'IconExpand', component: IconExpand },
+  { name: 'IconInfo', component: IconInfo },
   { name: 'IconInput', component: IconInput },
   { name: 'IconTrash', component: IconTrash },
 ]

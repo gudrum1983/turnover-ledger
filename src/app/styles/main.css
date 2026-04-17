@@ -12,6 +12,8 @@
 
 :root {
   scrollbar-gutter: stable;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body {
