@@ -14,10 +14,13 @@ export const srCyrUi = {
     description: 'Тренутни подаци ће бити у потпуности замењени увезеним фајлом.',
     confirm: 'Увези',
     cancel: 'Откажи',
+    close: 'Затвори',
+    rowsInTable: 'редова у табели',
+    invalidFileTitle: 'Увоз података није успео',
     invalidFile: 'Увоз није успео. Проверите да ли је фајл исправан JSON извоз ове апликације.',
   },
   reportMetaForm: {
-    taxpayerInfo: 'Информације о обвезнику',
+    taxpayerInfo: 'Информације о пореском обвезнику',
     responsiblePeople: 'Одговорна лица',
   },
   reportTable: {

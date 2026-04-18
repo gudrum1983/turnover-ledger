@@ -1,1 +1,1 @@
-export { default as ReportImportExportActions } from './ui/ReportImportExportActions.vue'
+export { default as ReportActions } from './ui/ReportActions.vue'

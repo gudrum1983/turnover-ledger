@@ -14,10 +14,13 @@ export const srLatUi = {
     description: 'Trenutni podaci će biti u potpunosti zamenjeni uvezenim fajlom.',
     confirm: 'Uvezi',
     cancel: 'Otkaži',
+    close: 'Zatvori',
+    rowsInTable: 'redova u tabeli',
+    invalidFileTitle: 'Uvoz podataka nije uspeo',
     invalidFile: 'Uvoz nije uspeo. Proverite da li je fajl ispravan JSON izvoz ove aplikacije.',
   },
   reportMetaForm: {
-    taxpayerInfo: 'Informacije o obvezniku',
+    taxpayerInfo: 'Informacije o poreskom obvezniku',
     responsiblePeople: 'Odgovorna lica',
   },
   reportTable: {
