@@ -2,46 +2,15 @@
 import { DividerToggle } from '@/shared/ui/divider-toggle'
 import { FieldBase } from '@/shared/ui/field-base'
 import { FieldDigit } from '@/shared/ui/field-digit'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-  FOOTER_FIELDS,
-  HEADER_FIELDS,
-  getReportFooterLabel,
-  getReportHeaderLabel,
-  type FooterField,
-  type HeaderField,
-  useReportScript,
-  useReportStore,
-} from '@/entities/report'
+import { FOOTER_META_FIELDS, HEADER_META_FIELDS, useReportStore } from '@/entities/report'
 import { useLocale } from '@/shared/i18n'
 
 const store = useReportStore()
 const { formData } = storeToRefs(store)
 const { setHeaderValue, setFooterValue } = store
 const { t } = useLocale()
-const { script } = useReportScript()
-
-type HeaderMetaField = { key: HeaderField; label: string; isDigit: boolean }
-type FooterMetaField = { key: FooterField; label: string; isDigit: boolean }
-
-const DIGIT_FIELDS: HeaderField[] = ['pib', 'taxNumber']
-
-const headerMetaFields = computed<HeaderMetaField[]>(() =>
-  HEADER_FIELDS.map((key) => ({
-    key,
-    label: getReportHeaderLabel(key, script.value),
-    isDigit: DIGIT_FIELDS.includes(key),
-  })),
-)
-
-const footerMetaFields = computed<FooterMetaField[]>(() =>
-  FOOTER_FIELDS.map((key) => ({
-    key,
-    label: getReportFooterLabel(key, script.value),
-    isDigit: false,
-  })),
-)
 
 const isOpenHeader = ref(true)
 const isOpenFooter = ref(true)
@@ -58,11 +27,13 @@ const isOpenFooter = ref(true)
     />
     <div v-show="isOpenHeader" class="ReportMetaEditForm_Fieldset">
       <component
-        v-for="field in headerMetaFields"
+        v-for="field in HEADER_META_FIELDS"
         :key="field.key"
         :is="field.isDigit ? FieldDigit : FieldBase"
         :name="field.key"
-        :label="`${field.label}:`"
+        :label="`${t(field.labelKey)}:`"
+        :placeholder="t(field.placeholderKey)"
+        :hint="t(field.hintKey) || undefined"
         :modelValue="formData.header[field.key]"
         @update:modelValue="setHeaderValue(field.key, $event ?? '')"
       />
@@ -76,11 +47,14 @@ const isOpenFooter = ref(true)
       color="disabled"
     />
     <div v-show="isOpenFooter" class="ReportMetaEditForm_Fieldset">
-      <FieldBase
-        v-for="field in footerMetaFields"
+      <component
+        v-for="field in FOOTER_META_FIELDS"
         :key="field.key"
+        :is="field.isDigit ? FieldDigit : FieldBase"
         :name="field.key"
-        :label="`${field.label}:`"
+        :label="`${t(field.labelKey)}:`"
+        :placeholder="t(field.placeholderKey)"
+        :hint="t(field.hintKey) || undefined"
         :modelValue="formData.footer[field.key]"
         @update:modelValue="setFooterValue(field.key, $event ?? '')"
       />

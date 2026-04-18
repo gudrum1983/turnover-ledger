@@ -1,5 +1,12 @@
-export { FOOTER_FIELDS, HEADER_FIELDS, TABLE_FIELDS, TITLE_FIELDS } from './model/fields'
-export type { FooterField, HeaderField, TableField, TitleField } from './model/fields'
+export {
+  FOOTER_FIELDS,
+  FOOTER_META_FIELDS,
+  HEADER_FIELDS,
+  HEADER_META_FIELDS,
+  TABLE_FIELDS,
+  TITLE_FIELDS,
+} from './model/fields'
+export type { FooterField, FooterMetaField, HeaderField, HeaderMetaField, TableField, TitleField } from './model/fields'
 export type { ReportExportFile, ReportMeta, ReportScript, ReportState } from './model/types'
 export { REPORT_EXPORT_VERSION } from './model/types'
 export { REPORT_LABELS } from './model/labels'

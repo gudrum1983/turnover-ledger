@@ -11,17 +11,63 @@ export const srCyrUi = {
   },
   importData: {
     title: 'Увести податке?',
-    description: 'Тренутни подаци ће бити у потпуности замењени увезеним фајлом.',
+    description: 'Тренутни подаци ће бити у потпуности замењени подацима из увезеног фајла.',
     confirm: 'Увези',
     cancel: 'Откажи',
     close: 'Затвори',
     rowsInTable: 'редова у табели',
     invalidFileTitle: 'Увоз података није успео',
-    invalidFile: 'Увоз није успео. Проверите да ли је фајл исправан JSON извоз ове апликације.',
+    invalidFile: 'Увоз није успео. Проверите да ли је фајл исправан JSON извоз из ове апликације.',
   },
   reportMetaForm: {
     taxpayerInfo: 'Информације о пореском обвезнику',
     responsiblePeople: 'Одговорна лица',
+  },
+  reportMetaFields: {
+    header: {
+      pib: {
+        label: 'ПИБ',
+        placeholder: '123456789',
+        hint: '"PIB" из извода АПР',
+      },
+      taxpayer: {
+        label: 'Обвезник',
+        placeholder: 'Ivan Markov',
+        hint: '"Име и презиме" из извода АПР',
+      },
+      companyName: {
+        label: 'Фирма - радње',
+        placeholder: 'IVAN MARKOV PR BEOGRAD',
+        hint: '"Пословно име" из извода АПР',
+      },
+      address: {
+        label: 'Седиште',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        hint: '"Адреса седишта" из извода АПР',
+      },
+      taxNumber: {
+        label: 'Шифра пореског обвезника',
+        placeholder: '12345678',
+        hint: '"Регистарски/матични брой" из извода АПР',
+      },
+      activityCode: {
+        label: 'Шифра делатности',
+        placeholder: '6201 - Рачунарско програмирање',
+        hint: '"Претежна делатност" из извода АПР',
+      },
+    },
+    footer: {
+      preparedBy: {
+        label: 'Саставио',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+      responsiblePerson: {
+        label: 'Одговорно лице',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+    },
   },
   reportTable: {
     rowNumber: 'Бр.',

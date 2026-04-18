@@ -11,17 +11,63 @@ export const srLatUi = {
   },
   importData: {
     title: 'Uvesti podatke?',
-    description: 'Trenutni podaci će biti u potpunosti zamenjeni uvezenim fajlom.',
+    description: 'Trenutni podaci će biti u potpunosti zamenjeni podacima iz uvezenog fajla.',
     confirm: 'Uvezi',
     cancel: 'Otkaži',
     close: 'Zatvori',
     rowsInTable: 'redova u tabeli',
     invalidFileTitle: 'Uvoz podataka nije uspeo',
-    invalidFile: 'Uvoz nije uspeo. Proverite da li je fajl ispravan JSON izvoz ove aplikacije.',
+    invalidFile: 'Uvoz nije uspeo. Proverite da li je fajl ispravan JSON izvoz iz ove aplikacije.',
   },
   reportMetaForm: {
     taxpayerInfo: 'Informacije o poreskom obvezniku',
     responsiblePeople: 'Odgovorna lica',
+  },
+  reportMetaFields: {
+    header: {
+      pib: {
+        label: 'PIB',
+        placeholder: '123456789',
+        hint: '"PIB" iz izvoda APR',
+      },
+      taxpayer: {
+        label: 'Obveznik',
+        placeholder: 'Ivan Markov',
+        hint: '"Име и презиме" iz izvoda APR',
+      },
+      companyName: {
+        label: 'Firma – radnja',
+        placeholder: 'IVAN MARKOV PR BEOGRAD',
+        hint: '"Пословно име" iz izvoda APR',
+      },
+      address: {
+        label: 'Sedište',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        hint: '"Адреса седишта" iz izvoda APR',
+      },
+      taxNumber: {
+        label: 'Šifra poreskog obveznika',
+        placeholder: '12345678',
+        hint: '"Регистарски/матични брой" iz izvoda APR',
+      },
+      activityCode: {
+        label: 'Šifra delatnosti',
+        placeholder: '6201 - Рачунарско програмирање',
+        hint: '"Претежна делатност" iz izvoda APR',
+      },
+    },
+    footer: {
+      preparedBy: {
+        label: 'Sastavio',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+      responsiblePerson: {
+        label: 'Odgovorno lice',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+    },
   },
   reportTable: {
     rowNumber: 'Br.',

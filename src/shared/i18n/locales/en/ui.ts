@@ -15,13 +15,59 @@ export const enUi = {
     confirm: 'Import',
     cancel: 'Cancel',
     close: 'Close',
-    rowsInTable: 'table rows',
+    rowsInTable: 'rows in the table',
     invalidFileTitle: 'Import failed',
     invalidFile: 'Import failed. Make sure the file is a valid JSON export from this app.',
   },
   reportMetaForm: {
     taxpayerInfo: 'Taxpayer information',
     responsiblePeople: 'Responsible persons',
+  },
+  reportMetaFields: {
+    header: {
+      pib: {
+        label: 'PIB',
+        placeholder: '123456789',
+        hint: '"PIB" from the SBRA excerpt (АПР Извод)',
+      },
+      taxpayer: {
+        label: 'Taxpayer',
+        placeholder: 'Ivan Markov',
+        hint: '"Име и презиме" from the SBRA excerpt (АПР Извод)',
+      },
+      companyName: {
+        label: 'Company / shop',
+        placeholder: 'IVAN MARKOV PR BEOGRAD',
+        hint: '"Пословно име" from the SBRA excerpt (АПР Извод)',
+      },
+      address: {
+        label: 'Registered office',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        hint: '"Адреса седишта" from the SBRA excerpt (АПР Извод)',
+      },
+      taxNumber: {
+        label: 'Taxpayer code',
+        placeholder: '12345678',
+        hint: '"Регистарски/матични брой" from the SBRA excerpt (АПР Извод)',
+      },
+      activityCode: {
+        label: 'Activity code',
+        placeholder: '6201 - Рачунарско програмирање',
+        hint: '"Претежна делатност" from the SBRA excerpt (АПР Извод)',
+      },
+    },
+    footer: {
+      preparedBy: {
+        label: 'Prepared by',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+      responsiblePerson: {
+        label: 'Responsible person',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+    },
   },
   reportTable: {
     rowNumber: 'No.',

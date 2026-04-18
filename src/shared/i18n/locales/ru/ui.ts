@@ -21,6 +21,52 @@ export const ruUi = {
     taxpayerInfo: 'Информация о налогоплательщике',
     responsiblePeople: 'Ответственные лица',
   },
+  reportMetaFields: {
+    header: {
+      pib: {
+        label: 'ПИБ',
+        placeholder: '123456789',
+        hint: '"ПИБ" из выписки АПР',
+      },
+      taxpayer: {
+        label: 'Налогоплательщик',
+        placeholder: 'Ivan Markov',
+        hint: '"Име и презиме" из выписки АПР',
+      },
+      companyName: {
+        label: 'Название фирмы',
+        placeholder: 'IVAN MARKOV PR BEOGRAD',
+        hint: '"Пословно име" из выписки АПР',
+      },
+      address: {
+        label: 'Адрес',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        hint: '"Адреса седишта" из выписки АПР',
+      },
+      taxNumber: {
+        label: 'Код налогоплательщика',
+        placeholder: '12345678',
+        hint: '"Регистарски/матични брой" из выписки АПР',
+      },
+      activityCode: {
+        label: 'Код деятельности',
+        placeholder: '6201 - Рачунарско програмирање',
+        hint: '"Претежна делатност" из выписки АПР',
+      },
+    },
+    footer: {
+      preparedBy: {
+        label: 'Составил',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+      responsiblePerson: {
+        label: 'Ответственное лицо',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+    },
+  },
   reportTable: {
     rowNumber: '№',
     income: 'Доход',
