@@ -25,8 +25,8 @@ export const enUi = {
     responsiblePeople: 'Responsible persons',
     incomeRecords: 'Income Records',
   },
-  reportMetaFields: {
-    header: {
+  reportBuilderMetaFields: {
+    taxpayerInfo: {
       pib: {
         label: 'PIB',
         placeholder: '123456789',
@@ -58,7 +58,7 @@ export const enUi = {
         hint: '"Претежна делатност" from the SBRA excerpt (АПР Извод)',
       },
     },
-    footer: {
+    responsiblePeople: {
       preparedBy: {
         label: 'Prepared by',
         placeholder: 'Ivan Markov',
@@ -123,10 +123,6 @@ export const enUi = {
       incomeFromServices: 'from services rendered',
       totalIncome: 'Total business income (3 + 4)',
       total: 'Total',
-    },
-    footer: {
-      preparedBy: 'Prepared by',
-      responsiblePerson: 'Responsible person',
     },
   },
   deleteRowModal: {

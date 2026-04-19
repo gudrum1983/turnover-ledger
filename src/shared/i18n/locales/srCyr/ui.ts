@@ -25,8 +25,8 @@ export const srCyrUi = {
     responsiblePeople: 'Одговорна лица',
     incomeRecords: 'Остварени приходи',
   },
-  reportMetaFields: {
-    header: {
+  reportBuilderMetaFields: {
+    taxpayerInfo: {
       pib: {
         label: 'ПИБ',
         placeholder: '123456789',
@@ -58,7 +58,7 @@ export const srCyrUi = {
         hint: '"Претежна делатност" из извода АПР',
       },
     },
-    footer: {
+    responsiblePeople: {
       preparedBy: {
         label: 'Саставио',
         placeholder: 'Ivan Markov',
@@ -123,10 +123,6 @@ export const srCyrUi = {
       incomeFromServices: 'од извршених услуга',
       totalIncome: 'Свега приход од делатности (3 + 4)',
       total: 'Укупно',
-    },
-    footer: {
-      preparedBy: 'Саставио',
-      responsiblePerson: 'Одговорно лице',
     },
   },
   deleteRowModal: {

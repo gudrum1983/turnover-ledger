@@ -25,8 +25,8 @@ export const srLatUi = {
     responsiblePeople: 'Odgovorna lica',
     incomeRecords: 'Ostvareni prihodi',
   },
-  reportMetaFields: {
-    header: {
+  reportBuilderMetaFields: {
+    taxpayerInfo: {
       pib: {
         label: 'PIB',
         placeholder: '123456789',
@@ -58,7 +58,7 @@ export const srLatUi = {
         hint: '"Претежна делатност" iz izvoda APR',
       },
     },
-    footer: {
+    responsiblePeople: {
       preparedBy: {
         label: 'Sastavio',
         placeholder: 'Ivan Markov',
@@ -123,10 +123,6 @@ export const srLatUi = {
       incomeFromServices: 'od izvršenih usluga',
       totalIncome: 'Svega prihod od delatnosti (3 + 4)',
       total: 'Ukupno',
-    },
-    footer: {
-      preparedBy: 'Sastavio',
-      responsiblePerson: 'Odgovorno lice',
     },
   },
   deleteRowModal: {

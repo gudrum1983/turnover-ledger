@@ -23,8 +23,8 @@ export const ruUi = {
     responsiblePeople: 'Ответственные лица',
     incomeRecords: 'Полученные доходы',
   },
-  reportMetaFields: {
-    header: {
+  reportBuilderMetaFields: {
+    taxpayerInfo: {
       pib: {
         label: 'ПИБ',
         placeholder: '123456789',
@@ -56,7 +56,7 @@ export const ruUi = {
         hint: '"Претежна делатност" из выписки АПР',
       },
     },
-    footer: {
+    responsiblePeople: {
       preparedBy: {
         label: 'Составил',
         placeholder: 'Ivan Markov',
@@ -121,10 +121,6 @@ export const ruUi = {
       incomeFromServices: 'от оказанных услуг',
       totalIncome: 'Всего доход от деятельности (3 + 4)',
       total: 'Итого',
-    },
-    footer: {
-      preparedBy: 'Составил',
-      responsiblePerson: 'Ответственное лицо',
     },
   },
   deleteRowModal: {
