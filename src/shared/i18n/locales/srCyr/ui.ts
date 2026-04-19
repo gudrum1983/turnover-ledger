@@ -137,10 +137,10 @@ export const srCyrUi = {
     confirm: 'Обриши све',
     cancel: 'Откажи',
   },
-  languageSwitcher: {
-    reportScript: 'Писмо извештаја',
-    reportScriptLatin: 'Латиница',
-    reportScriptCyrillic: 'Ћирилица',
+  reportPreviewScriptSwitcher: {
+    label: 'Извештај',
+    latin: 'Latinica',
+    cyrillic: 'Ћирилица',
   },
   accessibility: {
     expandSection: 'Прошири секцију',

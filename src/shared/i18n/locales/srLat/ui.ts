@@ -137,10 +137,10 @@ export const srLatUi = {
     confirm: 'Obriši sve',
     cancel: 'Otkaži',
   },
-  languageSwitcher: {
-    reportScript: 'Pismo izveštaja',
-    reportScriptLatin: 'Latinica',
-    reportScriptCyrillic: 'Ćirilica',
+  reportPreviewScriptSwitcher: {
+    label: ' Izveštaj',
+    latin: 'Latinica',
+    cyrillic: 'Ћирилица',
   },
   accessibility: {
     expandSection: 'Proširi sekciju',

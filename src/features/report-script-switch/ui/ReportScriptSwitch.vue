@@ -17,8 +17,8 @@ const emit = defineEmits<{
 const { t } = useLocale()
 
 const options = computed(() => [
-  { value: 'srLat', label: t('ui.languageSwitcher.reportScriptLatin') },
-  { value: 'srCyr', label: t('ui.languageSwitcher.reportScriptCyrillic') },
+  { value: 'srLat', label: t('ui.reportPreviewScriptSwitcher.latin') },
+  { value: 'srCyr', label: t('ui.reportPreviewScriptSwitcher.cyrillic') },
 ])
 
 const model = computed<string>({
@@ -33,8 +33,8 @@ const model = computed<string>({
 
 <template>
   <div class="ReportScriptSwitch">
-    <div class="Typo_Caption">{{ t('ui.languageSwitcher.reportScript') }}:</div>
-    <ButtonGroup v-model="model" :options="options" :aria-label="t('ui.languageSwitcher.reportScript')" size="xs" />
+    <div class="Typo_Caption">{{ t('ui.reportPreviewScriptSwitcher.label') }}:</div>
+    <ButtonGroup v-model="model" :options="options" :aria-label="t('ui.reportPreviewScriptSwitcher.label')" size="xs" />
   </div>
 </template>
 

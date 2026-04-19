@@ -135,10 +135,10 @@ export const ruUi = {
     confirm: 'Удалить всё',
     cancel: 'Отмена',
   },
-  languageSwitcher: {
-    reportScript: 'Язык отчета',
-    reportScriptLatin: 'Latinica',
-    reportScriptCyrillic: 'Ћирилица',
+  reportPreviewScriptSwitcher: {
+    label: 'Отчет',
+    latin: 'Latinica',
+    cyrillic: 'Ћирилица',
   },
   accessibility: {
     expandSection: 'Развернуть секцию',
