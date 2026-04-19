@@ -2,6 +2,9 @@ import type { I18nLocaleMessages } from '../../types'
 
 export const srCyrUi = {
   appHeaderTitle: 'КПО књига (паушал)',
+  common: {
+    clearField: 'Обриши поље',
+  },
   reportBuilderActions: {
     preview: 'Преглед',
     export: 'Извоз података',

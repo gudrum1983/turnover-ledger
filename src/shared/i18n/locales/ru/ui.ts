@@ -1,5 +1,8 @@
 export const ruUi = {
   appHeaderTitle: 'Книга КПО (паушал)',
+  common: {
+    clearField: 'Очистить поле',
+  },
   reportBuilderActions: {
     preview: 'Просмотр',
     export: 'Экспорт данных',

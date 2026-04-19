@@ -2,6 +2,9 @@ import type { I18nLocaleMessages } from '../../types'
 
 export const enUi = {
   appHeaderTitle: 'KPO Book (Paušal)',
+  common: {
+    clearField: 'Clear field',
+  },
   reportBuilderActions: {
     preview: 'Preview',
     export: 'Export data',

@@ -23,7 +23,6 @@ type Props = {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
   disabled: false,
-  ariaLabel: '',
   fullWidth: false,
   size: 'md',
 })
@@ -114,7 +113,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     class="ButtonGroup"
     :class="{ ButtonGroup_fullWidth: fullWidth }"
     role="radiogroup"
-    :aria-label="ariaLabel || 'button-group'"
+    :aria-label="ariaLabel || undefined"
     @keydown="handleKeydown"
   >
     <button

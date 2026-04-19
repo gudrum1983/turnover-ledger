@@ -2,6 +2,9 @@ import type { I18nLocaleMessages } from '../../types'
 
 export const srLatUi = {
   appHeaderTitle: 'KPO knjiga (paušal)',
+  common: {
+    clearField: 'Obrisi polje',
+  },
   reportBuilderActions: {
     preview: 'Pregled',
     export: 'Izvoz podataka',
