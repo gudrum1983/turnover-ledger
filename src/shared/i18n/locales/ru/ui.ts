@@ -1,13 +1,11 @@
 export const ruUi = {
-  app: {
-    headerTitle: 'Книга КПО (паушал)',
-  },
-  reportActions: {
+  appHeaderTitle: 'Книга КПО (паушал)',
+  reportBuilderActions: {
     preview: 'Просмотр',
     export: 'Экспорт данных',
     import: 'Импорт данных',
   },
-  importData: {
+  importDataModal: {
     title: 'Импортировать данные?',
     description: 'Текущие данные будут полностью заменены импортированными.',
     confirm: 'Импортировать',
@@ -17,9 +15,10 @@ export const ruUi = {
     invalidFileTitle: 'Не удалось импортировать данные',
     invalidFile: 'Не удалось импортировать файл. Проверьте, что это корректный JSON-экспорт приложения.',
   },
-  reportMetaForm: {
+  reportBuilderSections: {
     taxpayerInfo: 'Информация о налогоплательщике',
     responsiblePeople: 'Ответственные лица',
+    incomeRecords: 'Полученные доходы',
   },
   reportMetaFields: {
     header: {
@@ -108,6 +107,22 @@ export const ruUi = {
   reportPreview: {
     toHome: 'На главную',
     print: 'ПЕЧАТЬ',
+  },
+  reportLabels: {
+    title: 'Полученные доходы',
+    table: {
+      rowNumber: 'Порядковый номер',
+      dateAndDescription: 'Дата и описание проводки',
+      income: 'ДОХОД ОТ ДЕЯТЕЛЬНОСТИ',
+      incomeFromProducts: 'от продажи продукции',
+      incomeFromServices: 'от оказанных услуг',
+      totalIncome: 'Всего доход от деятельности (3 + 4)',
+      total: 'Итого',
+    },
+    footer: {
+      preparedBy: 'Составил',
+      responsiblePerson: 'Ответственное лицо',
+    },
   },
   deleteRowModal: {
     title: 'Удалить запись?',

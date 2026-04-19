@@ -26,7 +26,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="ReportPreviewPage">
-    <AppHeader :msg="t('ui.app.headerTitle')" class="ReportPreviewPage_Header">
+    <AppHeader :msg="t('ui.appHeaderTitle')" class="ReportPreviewPage_Header">
       <template #controls>
         <LocaleSwitcher />
       </template>

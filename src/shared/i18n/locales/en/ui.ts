@@ -1,15 +1,13 @@
 import type { I18nLocaleMessages } from '../../types'
 
 export const enUi = {
-  app: {
-    headerTitle: 'KPO Book (Paušal)',
-  },
-  reportActions: {
+  appHeaderTitle: 'KPO Book (Paušal)',
+  reportBuilderActions: {
     preview: 'Preview',
     export: 'Export data',
     import: 'Import data',
   },
-  importData: {
+  importDataModal: {
     title: 'Import data?',
     description: 'Current data will be fully replaced with the imported file.',
     confirm: 'Import',
@@ -19,9 +17,10 @@ export const enUi = {
     invalidFileTitle: 'Import failed',
     invalidFile: 'Import failed. Make sure the file is a valid JSON export from this app.',
   },
-  reportMetaForm: {
+  reportBuilderSections: {
     taxpayerInfo: 'Taxpayer information',
     responsiblePeople: 'Responsible persons',
+    incomeRecords: 'Income Records',
   },
   reportMetaFields: {
     header: {
@@ -110,6 +109,22 @@ export const enUi = {
   reportPreview: {
     toHome: 'Back home',
     print: 'PRINT',
+  },
+  reportLabels: {
+    title: 'Book of performed business activity for lump-sum taxed taxpayers',
+    table: {
+      rowNumber: 'Ordinal number',
+      dateAndDescription: 'Date and description of entry',
+      income: 'BUSINESS INCOME',
+      incomeFromProducts: 'from the sale of products',
+      incomeFromServices: 'from services rendered',
+      totalIncome: 'Total business income (3 + 4)',
+      total: 'Total',
+    },
+    footer: {
+      preparedBy: 'Prepared by',
+      responsiblePerson: 'Responsible person',
+    },
   },
   deleteRowModal: {
     title: 'Delete this record?',

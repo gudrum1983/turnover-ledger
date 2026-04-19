@@ -1,15 +1,13 @@
 import type { I18nLocaleMessages } from '../../types'
 
 export const srLatUi = {
-  app: {
-    headerTitle: 'KPO knjiga (paušal)',
-  },
-  reportActions: {
+  appHeaderTitle: 'KPO knjiga (paušal)',
+  reportBuilderActions: {
     preview: 'Pregled',
     export: 'Izvoz podataka',
     import: 'Uvoz podataka',
   },
-  importData: {
+  importDataModal: {
     title: 'Uvesti podatke?',
     description: 'Trenutni podaci će biti u potpunosti zamenjeni podacima iz uvezenog fajla.',
     confirm: 'Uvezi',
@@ -19,9 +17,10 @@ export const srLatUi = {
     invalidFileTitle: 'Uvoz podataka nije uspeo',
     invalidFile: 'Uvoz nije uspeo. Proverite da li je fajl ispravan JSON izvoz iz ove aplikacije.',
   },
-  reportMetaForm: {
+  reportBuilderSections: {
     taxpayerInfo: 'Informacije o poreskom obvezniku',
     responsiblePeople: 'Odgovorna lica',
+    incomeRecords: 'Ostvareni prihodi',
   },
   reportMetaFields: {
     header: {
@@ -110,6 +109,22 @@ export const srLatUi = {
   reportPreview: {
     toHome: 'Na početnu',
     print: 'ŠTAMPA',
+  },
+  reportLabels: {
+    title: 'Knjiga o ostvarenoj delatnosti paušalno oporezovanih obveznika',
+    table: {
+      rowNumber: 'Redni broj',
+      dateAndDescription: 'Datum i opis knjiženja',
+      income: 'PRIHOD OD DELATNOSTI',
+      incomeFromProducts: 'od prodaje proizvoda',
+      incomeFromServices: 'od izvršenih usluga',
+      totalIncome: 'Svega prihod od delatnosti (3 + 4)',
+      total: 'Ukupno',
+    },
+    footer: {
+      preparedBy: 'Sastavio',
+      responsiblePerson: 'Odgovorno lice',
+    },
   },
   deleteRowModal: {
     title: 'Obrisati zapis?',

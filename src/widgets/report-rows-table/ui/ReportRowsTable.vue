@@ -17,15 +17,8 @@ type Props = {
   isTotalLimitExceeded: boolean
 }
 
-const {
-  rows,
-  locale,
-  reportTitle,
-  dateAndDescriptionLabel,
-  displayTotalRsd,
-  displayTotalLimitRsd,
-  isTotalLimitExceeded,
-} = defineProps<Props>()
+const { rows, locale, dateAndDescriptionLabel, displayTotalRsd, displayTotalLimitRsd, isTotalLimitExceeded } =
+  defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'add'): void
@@ -46,7 +39,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
   <div class="ReportRowsTable">
     <DividerToggle
       v-model="isFullTable"
-      :label="reportTitle"
+      :label="t('ui.reportBuilderSections.incomeRecords')"
       :aria-expand-label="t('ui.accessibility.expandSection')"
       :aria-collapse-label="t('ui.accessibility.collapseSection')"
       color="disabled"

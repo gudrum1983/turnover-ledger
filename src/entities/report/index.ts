@@ -14,7 +14,6 @@ export {
   getReportFooterLabel,
   getReportHeaderLabel,
   getReportTableLabel,
-  getReportTitle,
   getReportTitleLabel,
   getReportTotalLabel,
 } from './model/labels'

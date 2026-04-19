@@ -22,7 +22,7 @@ const pendingImportFileName = ref('')
 const importRowsSummary = computed(() => {
   if (!pendingImportState.value) return ''
 
-  return `${t('ui.importData.rowsInTable')}: ${pendingImportState.value.rows.length}`
+  return `${t('ui.importDataModal.rowsInTable')}: ${pendingImportState.value.rows.length}`
 })
 
 const formatExportFileName = () => {
@@ -102,15 +102,15 @@ function applyImport() {
   <div class="ReportActions">
     <ButtonBase color="success" size="xs" @click="router.push({ name: ROUTES.reportPreview.name })">
       <template #icon><IconPreview style="width: 20px; height: 20px" /></template>
-      {{ t('ui.reportActions.preview') }}
+      {{ t('ui.reportBuilderActions.preview') }}
     </ButtonBase>
     <ButtonBase color="primary" size="xs" @click="handleExport">
       <template #icon><IconExport style="width: 20px; height: 20px" /></template>
-      {{ t('ui.reportActions.export') }}</ButtonBase
+      {{ t('ui.reportBuilderActions.export') }}</ButtonBase
     >
     <ButtonBase color="info" size="xs" @click="openImportDialog">
       <template #icon><IconImport style="width: 20px; height: 20px" /></template>
-      {{ t('ui.reportActions.import') }}</ButtonBase
+      {{ t('ui.reportBuilderActions.import') }}</ButtonBase
     >
     <input
       ref="fileInput"
@@ -123,17 +123,17 @@ function applyImport() {
   <DialogAlert
     v-model:open="isImportErrorDialogOpen"
     type="danger"
-    :title="t('ui.importData.invalidFileTitle')"
-    :message="t('ui.importData.invalidFile')"
-    :labelCloseButton="t('ui.importData.close')"
+    :title="t('ui.importDataModal.invalidFileTitle')"
+    :message="t('ui.importDataModal.invalidFile')"
+    :labelCloseButton="t('ui.importDataModal.close')"
     @update:open="closeImportErrorDialog"
   />
   <DialogConfirm
     v-model:open="isImportConfirmOpen"
-    :title="t('ui.importData.title')"
-    :message="t('ui.importData.description')"
-    :labelActiveButton="t('ui.importData.confirm')"
-    :labelCancelButton="t('ui.importData.cancel')"
+    :title="t('ui.importDataModal.title')"
+    :message="t('ui.importDataModal.description')"
+    :labelActiveButton="t('ui.importDataModal.confirm')"
+    :labelCancelButton="t('ui.importDataModal.cancel')"
     type="confirm"
     @confirm="applyImport"
     @cancel="closeImportConfirm"

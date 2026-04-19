@@ -20,7 +20,7 @@ const isOpenFooter = ref(true)
   <div class="ReportMetaEditForm">
     <DividerToggle
       v-model="isOpenHeader"
-      :label="t('ui.reportMetaForm.taxpayerInfo')"
+      :label="t('ui.reportBuilderSections.taxpayerInfo')"
       :aria-expand-label="t('ui.accessibility.expandSection')"
       :aria-collapse-label="t('ui.accessibility.collapseSection')"
       color="disabled"
@@ -41,7 +41,7 @@ const isOpenFooter = ref(true)
 
     <DividerToggle
       v-model="isOpenFooter"
-      :label="t('ui.reportMetaForm.responsiblePeople')"
+      :label="t('ui.reportBuilderSections.responsiblePeople')"
       :aria-expand-label="t('ui.accessibility.expandSection')"
       :aria-collapse-label="t('ui.accessibility.collapseSection')"
       color="disabled"

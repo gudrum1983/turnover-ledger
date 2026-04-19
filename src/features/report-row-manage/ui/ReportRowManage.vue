@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useCurrencyStore } from '@/entities/currency'
 import { type ReportRow } from '@/entities/report-row'
 import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
-import { getReportTableLabel, getReportTitle, getTableTotals, useReportScript, useReportStore } from '@/entities/report'
+import { getReportTableLabel, getTableTotals, useReportScript, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 import { ButtonBase } from '@/shared/ui/button-base'
@@ -42,7 +42,6 @@ const modalTitle = computed(() =>
   formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.addRowModalTitle'),
 )
 const submitLabel = computed(() => (formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.add')))
-const reportTitle = computed(() => getReportTitle(script.value))
 const dateAndDescriptionLabel = computed(() => getReportTableLabel('dateAndDescription', script.value))
 const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(usedCurrencyCodes.value))
 
@@ -156,7 +155,7 @@ function onSubmit(payload: ReportRowPayload) {
       v-model:is-full-table="isFullTable"
       :rows="rows"
       :locale="localeStore.currentLocale"
-      :report-title="reportTitle"
+      :report-title="t('ui.reportBuilderSections.incomeRecords')"
       :date-and-description-label="dateAndDescriptionLabel"
       :display-total-rsd="displayTotalRsd"
       :display-total-limit-rsd="displayTotalLimitRsd"

@@ -95,6 +95,4 @@ export const getReportHeaderLabel = (field: HeaderField, script: ReportScript) =
 export const getReportFooterLabel = (field: FooterField, script: ReportScript) => REPORT_LABELS.footer[field][script]
 export const getReportTitleLabel = (field: TitleField, script: ReportScript) => REPORT_LABELS.title[field][script]
 export const getReportTableLabel = (field: TableField, script: ReportScript) => REPORT_LABELS.table[field][script]
-export const getReportTitle = (script: ReportScript) =>
-  `${getReportTitleLabel('firstLine', script)} ${getReportTitleLabel('secondLine', script)}`
 export const getReportTotalLabel = (script: ReportScript) => REPORT_TOTAL_LABEL_BY_SCRIPT[script]

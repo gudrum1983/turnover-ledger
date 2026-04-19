@@ -1,15 +1,13 @@
 import type { I18nLocaleMessages } from '../../types'
 
 export const srCyrUi = {
-  app: {
-    headerTitle: 'КПО књига (паушал)',
-  },
-  reportActions: {
+  appHeaderTitle: 'КПО књига (паушал)',
+  reportBuilderActions: {
     preview: 'Преглед',
     export: 'Извоз података',
     import: 'Увоз података',
   },
-  importData: {
+  importDataModal: {
     title: 'Увести податке?',
     description: 'Тренутни подаци ће бити у потпуности замењени подацима из увезеног фајла.',
     confirm: 'Увези',
@@ -19,9 +17,10 @@ export const srCyrUi = {
     invalidFileTitle: 'Увоз података није успео',
     invalidFile: 'Увоз није успео. Проверите да ли је фајл исправан JSON извоз из ове апликације.',
   },
-  reportMetaForm: {
+  reportBuilderSections: {
     taxpayerInfo: 'Информације о пореском обвезнику',
     responsiblePeople: 'Одговорна лица',
+    incomeRecords: 'Остварени приходи',
   },
   reportMetaFields: {
     header: {
@@ -110,6 +109,22 @@ export const srCyrUi = {
   reportPreview: {
     toHome: 'На почетну',
     print: 'ШТАМПА',
+  },
+  reportLabels: {
+    title: 'Књига о оствареној делатности паушално опорезованих обвезника',
+    table: {
+      rowNumber: 'Редни број',
+      dateAndDescription: 'Датум и опис књижења',
+      income: 'ПРИХОД ОД ДЕЛАТНОСТИ',
+      incomeFromProducts: 'oд продаје производа',
+      incomeFromServices: 'од извршених услуга',
+      totalIncome: 'Свега приход од делатности (3 + 4)',
+      total: 'Укупно',
+    },
+    footer: {
+      preparedBy: 'Саставио',
+      responsiblePerson: 'Одговорно лице',
+    },
   },
   deleteRowModal: {
     title: 'Обрисати запис?',
