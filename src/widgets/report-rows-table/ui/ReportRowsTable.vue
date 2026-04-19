@@ -11,14 +11,12 @@ type Props = {
   rows: ReportRow[]
   locale: I18nLocale
   reportTitle: string
-  dateAndDescriptionLabel: string
   displayTotalRsd: string
   displayTotalLimitRsd: string
   isTotalLimitExceeded: boolean
 }
 
-const { rows, locale, dateAndDescriptionLabel, displayTotalRsd, displayTotalLimitRsd, isTotalLimitExceeded } =
-  defineProps<Props>()
+const { rows, locale, displayTotalRsd, displayTotalLimitRsd, isTotalLimitExceeded } = defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'add'): void
@@ -51,19 +49,25 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
     <div class="ReportRowsTable_Fieldset">
       <div class="ReportRowsTable_Actions">
         <div class="ReportRowsTable_RowActions">
-          <ButtonBase color="primary" size="xs" @click="emit('add')">{{ t('ui.reportTable.addRow') }}</ButtonBase>
+          <ButtonBase color="primary" size="xs" @click="emit('add')">{{
+            t('ui.reportBuilderIncomeRecordsTable.addRow')
+          }}</ButtonBase>
           <ButtonBase v-if="rows.length > 0" color="danger" size="xs" @click="emit('clear')">
-            {{ t('ui.reportTable.clearTable') }}
+            {{ t('ui.reportBuilderIncomeRecordsTable.clearTable') }}
           </ButtonBase>
         </div>
       </div>
       <div>
         <div class="ReportRowsTable_Header">
-          <div>{{ t('ui.reportTable.rowNumber') }}</div>
-          <div>{{ dateAndDescriptionLabel }}</div>
+          <div>{{ t('ui.reportBuilderIncomeRecordsTable.rowNumber') }}</div>
+          <div>{{ t('ui.reportBuilderIncomeRecordsTable.description') }}</div>
           <div></div>
-          <div>{{ t('ui.reportTable.income') }}<br />{{ t('ui.reportTable.currency') }}</div>
-          <div>{{ t('ui.reportTable.income') }}<br />RSD</div>
+          <div>
+            {{ t('ui.reportBuilderIncomeRecordsTable.income') }}<br />{{
+              t('ui.reportBuilderIncomeRecordsTable.currency')
+            }}
+          </div>
+          <div>{{ t('ui.reportBuilderIncomeRecordsTable.income') }}<br />RSD</div>
           <div></div>
         </div>
         <div class="ReportRowsTable_Rows">
@@ -80,13 +84,13 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
           />
         </div>
         <div v-if="rows.length < 1" class="ReportRowsTable_Empty">
-          {{ t('ui.reportTable.emptyHint') }}
+          {{ t('ui.reportBuilderIncomeRecordsTable.emptyHint') }}
           <ButtonBase
             color="primary"
             size="xs"
             variant="outlined"
             isIconOnly
-            :aria-label="t('ui.reportTable.addRow')"
+            :aria-label="t('ui.reportBuilderIncomeRecordsTable.addRow')"
             @click="emit('add')"
           >
             <template #icon>
@@ -103,12 +107,14 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
           <div></div>
           <div></div>
           <div></div>
-          <div class="ReportRowsTable_TotalCell Typo_BodyAccent">{{ t('ui.reportTable.total') }}</div>
+          <div class="ReportRowsTable_TotalCell Typo_BodyAccent">
+            {{ t('ui.reportBuilderIncomeRecordsTable.total') }}
+          </div>
           <div class="ReportRowsTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
           <div></div>
         </div>
         <div v-if="isTotalLimitExceeded" class="ReportRowsTable_Warning Typo_BodyAccent" role="alert">
-          {{ t('ui.reportTable.totalLimitExceeded') }} {{ displayTotalLimitRsd }}.
+          {{ t('ui.reportBuilderIncomeRecordsTable.totalLimitExceeded') }} {{ displayTotalLimitRsd }}.
         </div>
       </div>
     </div>

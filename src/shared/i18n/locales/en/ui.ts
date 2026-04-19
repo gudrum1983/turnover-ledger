@@ -71,8 +71,9 @@ export const enUi = {
       },
     },
   },
-  reportTable: {
+  reportBuilderIncomeRecordsTable: {
     rowNumber: 'No.',
+    description: 'Date and description',
     income: 'Income',
     currency: 'Currency',
     addRow: 'Add row',
@@ -80,12 +81,8 @@ export const enUi = {
     emptyHint: 'The table is empty, add a row ...',
     total: 'Total',
     totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
-    addRowModalTitle: 'Add row',
-    cancel: 'Cancel',
-    add: 'Add',
-    editAlert: 'Edit row',
   },
-  reportTableRow: {
+  reportBuilderIncomeRecordsRow: {
     goodsShort: 'Gds.',
     servicesShort: 'Srv.',
     subtotalShort: 'Sub.',
@@ -108,6 +105,10 @@ export const enUi = {
     servicesRsd: 'Services (RSD)',
     totalRsd: 'Total (RSD)',
     row: 'Row',
+    cancel: 'Cancel',
+    titleAdd: 'Add new row',
+    titleEdit: 'Edit row',
+    submit: 'Save',
   },
   reportPreview: {
     toHome: 'Back home',

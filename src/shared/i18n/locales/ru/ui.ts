@@ -69,21 +69,18 @@ export const ruUi = {
       },
     },
   },
-  reportTable: {
+  reportBuilderIncomeRecordsTable: {
     rowNumber: '№',
     income: 'Доход',
+    description: 'Дата и описание',
     currency: 'Валюта',
     addRow: 'Добавить строку',
     clearTable: 'Очистить таблицу',
     emptyHint: 'Таблица пустая, добавьте строку ...',
     total: 'Итого',
     totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
-    addRowModalTitle: 'Добавить строку',
-    cancel: 'Отмена',
-    add: 'Добавить',
-    editAlert: 'Редактирование строки',
   },
-  reportTableRow: {
+  reportBuilderIncomeRecordsRow: {
     goodsShort: 'Тов.',
     servicesShort: 'Усл.',
     subtotalShort: 'Сум.',
@@ -106,6 +103,10 @@ export const ruUi = {
     servicesRsd: 'По услугам (RSD)',
     totalRsd: 'Итого (RSD)',
     row: 'Строка',
+    cancel: 'Отмена',
+    titleAdd: 'Добавить новую строку',
+    titleEdit: 'Редактирование строки',
+    submit: 'Сохранить',
   },
   reportPreview: {
     toHome: 'На главную',

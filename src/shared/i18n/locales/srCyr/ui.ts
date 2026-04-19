@@ -71,8 +71,9 @@ export const srCyrUi = {
       },
     },
   },
-  reportTable: {
+  reportBuilderIncomeRecordsTable: {
     rowNumber: 'Бр.',
+    description: 'Датум и опис',
     income: 'Приход',
     currency: 'Валута',
     addRow: 'Додај ред',
@@ -80,12 +81,8 @@ export const srCyrUi = {
     emptyHint: 'Табела је празна, додајте ред ...',
     total: 'Укупно',
     totalLimitExceeded: 'Упозорење: укупан износ је премашио лимит',
-    addRowModalTitle: 'Додај ред',
-    cancel: 'Откажи',
-    add: 'Додај',
-    editAlert: 'Измена реда',
   },
-  reportTableRow: {
+  reportBuilderIncomeRecordsRow: {
     goodsShort: 'Роб.',
     servicesShort: 'Усл.',
     subtotalShort: 'Св.',
@@ -108,6 +105,10 @@ export const srCyrUi = {
     servicesRsd: 'Услуге (RSD)',
     totalRsd: 'Укупно (RSD)',
     row: 'Ред',
+    cancel: 'Откажи',
+    titleAdd: 'Додај ред',
+    titleEdit: 'Измена реда',
+    submit: 'Сачувај',
   },
   reportPreview: {
     toHome: 'На почетну',

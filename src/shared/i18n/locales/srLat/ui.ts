@@ -71,8 +71,9 @@ export const srLatUi = {
       },
     },
   },
-  reportTable: {
+  reportBuilderIncomeRecordsTable: {
     rowNumber: 'Br.',
+    description: 'Datum i opis',
     income: 'Prihod',
     currency: 'Valuta',
     addRow: 'Dodaj red',
@@ -80,12 +81,8 @@ export const srLatUi = {
     emptyHint: 'Tabela je prazna, dodajte red ...',
     total: 'Ukupno',
     totalLimitExceeded: 'Upozorenje: ukupan iznos je premašio limit',
-    addRowModalTitle: 'Dodaj red',
-    cancel: 'Otkaži',
-    add: 'Dodaj',
-    editAlert: 'Izmena reda',
   },
-  reportTableRow: {
+  reportBuilderIncomeRecordsRow: {
     goodsShort: 'Rob.',
     servicesShort: 'Usl.',
     subtotalShort: 'Sve.',
@@ -108,6 +105,10 @@ export const srLatUi = {
     servicesRsd: 'Usluge (RSD)',
     totalRsd: 'Ukupno (RSD)',
     row: 'Red',
+    cancel: 'Otkaži',
+    titleAdd: 'Dodaj red',
+    titleEdit: 'Izmena reda',
+    submit: 'Sačuvaj',
   },
   reportPreview: {
     toHome: 'Na početnu',
