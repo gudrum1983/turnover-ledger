@@ -90,11 +90,11 @@ function handleClearRow() {
       </div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
-      <div v-if="!isShort">{{ t('ui.reportTableRow.goodsShort') }}</div>
+      <div v-if="!isShort">{{ t('ui.reportBuilderIncomeRecordsRow.goodsShort') }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
-      <div v-if="!isShort">{{ t('ui.reportTableRow.servicesShort') }}</div>
+      <div v-if="!isShort">{{ t('ui.reportBuilderIncomeRecordsRow.servicesShort') }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
-      <div>{{ t('ui.reportTableRow.subtotalShort') }}</div>
+      <div>{{ t('ui.reportBuilderIncomeRecordsRow.subtotalShort') }}</div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_income ReportTableRow_Column_font_secondary">
       <div v-if="!isShort">{{ displayGoodsForeign || '-' }}</div>
@@ -114,19 +114,19 @@ function handleClearRow() {
       <ReportTableRowButton
         :size="size"
         icon="edit"
-        :label="t('ui.reportTableRow.edit')"
+        :label="t('ui.reportBuilderIncomeRecordsRow.edit')"
         @click="emit('edit', row.id)"
       />
       <ReportTableRowButton
         :size="size"
         icon="copy"
-        :label="t('ui.reportTableRow.copy')"
+        :label="t('ui.reportBuilderIncomeRecordsRow.copy')"
         @click="emit('copy', row.id)"
       />
       <ReportTableRowButton
         :size="size"
         icon="trash"
-        :label="t('ui.reportTableRow.remove')"
+        :label="t('ui.reportBuilderIncomeRecordsRow.remove')"
         @click="openDialogConfirm = true"
       />
     </div>

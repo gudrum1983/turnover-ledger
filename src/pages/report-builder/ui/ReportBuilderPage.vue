@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ReportMetaEditForm } from '@/features/report-meta-edit'
 import { LocaleSwitcher } from '@/features/locale-switcher'
-import { ReportImportExportActions } from '@/features/report-import-export'
+import { ReportActions } from '@/features/report-import-export'
 import { ReportRowManage } from '@/features/report-row-manage'
 
 import { PaperBase } from '@/shared/ui/paper-base'
@@ -13,14 +13,14 @@ const { t } = useLocale()
 
 <template>
   <div class="ReportBuilderPage">
-    <AppHeader :msg="t('ui.app.reportBuilderTitle')" class="ReportBuilderPage_Header">
+    <AppHeader :msg="t('ui.appHeaderTitle')" class="ReportBuilderPage_Header">
       <template #controls>
         <LocaleSwitcher />
       </template>
     </AppHeader>
     <main class="ReportBuilderPage_Main Container">
       <PaperBase class="ReportBuilderPage_layout">
-        <ReportImportExportActions />
+        <ReportActions />
         <ReportMetaEditForm />
         <ReportRowManage />
       </PaperBase>

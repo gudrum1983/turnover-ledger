@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useCurrencyStore } from '@/entities/currency'
 import { type ReportRow } from '@/entities/report-row'
 import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
-import { getReportTableLabel, getReportTitle, getTableTotals, useReportScript, useReportStore } from '@/entities/report'
+import { getTableTotals, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 import { ButtonBase } from '@/shared/ui/button-base'
@@ -13,9 +12,7 @@ import { ModalBase } from '@/shared/ui/modal-base'
 import { ReportRowsTable } from '@/widgets/report-rows-table'
 
 const store = useReportStore()
-const currencyStore = useCurrencyStore()
-const { rows, usedCurrencyCodes, lastUsedCurrencyCode } = storeToRefs(store)
-const { script } = useReportScript()
+const { rows } = storeToRefs(store)
 
 const localeStore = useLocaleStore()
 const { t } = useLocale()
@@ -39,12 +36,8 @@ const formInitialValue = ref<ReportRowFormInitialValue | null>(null)
 const openDialogConfirm = ref(false)
 
 const modalTitle = computed(() =>
-  formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.addRowModalTitle'),
+  formMode.value === 'edit' ? t('ui.reportRowForm.titleEdit') : t('ui.reportRowForm.titleAdd'),
 )
-const submitLabel = computed(() => (formMode.value === 'edit' ? t('ui.reportTableRow.edit') : t('ui.reportTable.add')))
-const reportTitle = computed(() => getReportTitle(script.value))
-const dateAndDescriptionLabel = computed(() => getReportTableLabel('dateAndDescription', script.value))
-const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(usedCurrencyCodes.value))
 
 const fromCents = (value: number | null | undefined) => (typeof value === 'number' ? value / 100 : null)
 
@@ -156,8 +149,7 @@ function onSubmit(payload: ReportRowPayload) {
       v-model:is-full-table="isFullTable"
       :rows="rows"
       :locale="localeStore.currentLocale"
-      :report-title="reportTitle"
-      :date-and-description-label="dateAndDescriptionLabel"
+      :report-title="t('ui.reportBuilderSections.incomeRecords')"
       :display-total-rsd="displayTotalRsd"
       :display-total-limit-rsd="displayTotalLimitRsd"
       :is-total-limit-exceeded="isTotalLimitExceeded"
@@ -174,15 +166,13 @@ function onSubmit(payload: ReportRowPayload) {
         :key="formKey"
         id="report-row-form"
         :initial-value="formInitialValue"
-        :default-currency="lastUsedCurrencyCode"
-        :favorite-currency-codes="favoriteCurrencyCodes"
         @update:canSubmit="canSubmit = $event"
         @submit="onSubmit"
       />
       <template #actions>
-        <ButtonBase size="md" @click="closeModal">{{ t('ui.reportTable.cancel') }}</ButtonBase>
+        <ButtonBase size="md" @click="closeModal">{{ t('ui.reportRowForm.cancel') }}</ButtonBase>
         <ButtonBase color="primary" size="md" :disabled="!canSubmit" type="submit" form="report-row-form">
-          {{ submitLabel }}
+          {{ t('ui.reportRowForm.submit') }}
         </ButtonBase>
       </template>
     </ModalBase>

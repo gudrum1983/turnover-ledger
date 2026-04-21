@@ -1,45 +1,108 @@
 export const ruUi = {
-  app: {
-    reportBuilderTitle: 'Книга КПО (паушал)',
-    reportPreviewTitle: 'Книга КПО (паушал) отчет',
+  appHeaderTitle: 'Книга КПО (паушал)',
+  common: {
+    clearField: 'Очистить поле',
   },
-  locale: {
-    ru: 'Русский',
-    en: 'English',
-    srLat: 'Srpski',
-    srCyr: 'Српски',
-  },
-  reportActions: {
+  reportBuilderActions: {
     preview: 'Просмотр',
     export: 'Экспорт данных',
     import: 'Импорт данных',
   },
-  importData: {
+  importDataModal: {
     title: 'Импортировать данные?',
     description: 'Текущие данные будут полностью заменены импортированными.',
     confirm: 'Импортировать',
     cancel: 'Отмена',
+    close: 'Закрыть',
+    rowsInTable: 'строк в таблице',
+    invalidFileTitle: 'Не удалось импортировать данные',
     invalidFile: 'Не удалось импортировать файл. Проверьте, что это корректный JSON-экспорт приложения.',
   },
-  reportMetaForm: {
+  reportBuilderSections: {
     taxpayerInfo: 'Информация о налогоплательщике',
     responsiblePeople: 'Ответственные лица',
+    incomeRecords: 'Полученные доходы',
   },
-  reportTable: {
+  reportBuilderMetaFields: {
+    taxpayerInfo: {
+      pib: {
+        label: 'ПИБ',
+        placeholder: '123456789',
+        hint: '"ПИБ" из выписки АПР',
+      },
+      taxpayer: {
+        label: 'Налогоплательщик',
+        placeholder: 'Ivan Markov',
+        hint: '"Име и презиме" из выписки АПР',
+      },
+      companyName: {
+        label: 'Название компании',
+        placeholder: 'IVAN MARKOV PR BEOGRAD',
+        hint: '"Пословно име" из выписки АПР',
+      },
+      address: {
+        label: 'Адрес',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        hint: '"Адреса седишта" из выписки АПР',
+      },
+      taxNumber: {
+        label: 'Код налогоплательщика',
+        placeholder: '12345678',
+        hint: '"Регистарски/матични брой" из выписки АПР',
+      },
+      activityCode: {
+        label: 'Код деятельности',
+        placeholder: '6201 - Рачунарско програмирање',
+        hint: '"Претежна делатност" из выписки АПР',
+      },
+    },
+    responsiblePeople: {
+      preparedBy: {
+        label: 'Составил',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+      responsiblePerson: {
+        label: 'Ответственное лицо',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+    },
+    incomeRecordsForm: {
+      date: {
+        label: 'Дата',
+        placeholder: 'ДД.ММ.ГГГГ',
+        hint: 'Дата счета',
+      },
+      description: {
+        label: 'Описание дохода',
+        placeholder: 'Фактура бр.25, Клијент - Beta Box d.o.o. Beograd',
+        hint: 'Номер счета (рекомендовано и наименование клиента, как он указан в счете)',
+      },
+      goodsAmount: {
+        label: 'Сумма по товарам',
+        placeholder: '0,00',
+        hint: 'Сумма доходов по счету от продажи товаров',
+      },
+      servicesAmount: {
+        label: 'Сумма по услугам',
+        placeholder: '0,00',
+        hint: 'Сумма доходов по счету от оказанных услуг',
+      },
+    },
+  },
+  reportBuilderIncomeRecordsTable: {
     rowNumber: '№',
     income: 'Доход',
+    description: 'Дата и описание',
     currency: 'Валюта',
     addRow: 'Добавить строку',
     clearTable: 'Очистить таблицу',
-    emptyHint: 'Таблица пустая, добавьте строку ...',
+    emptyHint: 'Таблица пустая, добавьте строку',
     total: 'Итого',
     totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
-    addRowModalTitle: 'Добавить строку',
-    cancel: 'Отмена',
-    add: 'Добавить',
-    editAlert: 'Редактирование строки',
   },
-  reportTableRow: {
+  reportBuilderIncomeRecordsRow: {
     goodsShort: 'Тов.',
     servicesShort: 'Усл.',
     subtotalShort: 'Сум.',
@@ -48,20 +111,19 @@ export const ruUi = {
     remove: 'Удалить',
   },
   reportRowForm: {
-    date: 'Дата',
     currency: 'Валюта',
-    description: 'Описание',
-    descriptionPlaceholder: 'Назначение платежа',
-    goodsAmount: 'Сумма по товарам',
-    servicesAmount: 'Сумма по услугам',
     total: 'Итого',
     calculate: 'Рассчитать',
-    officialRatePrefix: 'ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА',
+    officialRatePrefix: 'Официальный средний обменный курс RSD (NBS)',
     recalculateHint: 'Пересчитайте после изменений.',
     goodsRsd: 'По товарам (RSD)',
     servicesRsd: 'По услугам (RSD)',
     totalRsd: 'Итого (RSD)',
     row: 'Строка',
+    cancel: 'Отмена',
+    titleAdd: 'Добавить новую строку',
+    titleEdit: 'Редактирование строки',
+    submit: 'Сохранить',
   },
   reportPreview: {
     toHome: 'На главную',
@@ -79,10 +141,10 @@ export const ruUi = {
     confirm: 'Удалить всё',
     cancel: 'Отмена',
   },
-  languageSwitcher: {
-    reportScript: 'Язык отчета',
-    reportScriptLatin: 'Latinica',
-    reportScriptCyrillic: 'Ћирилица',
+  reportPreviewScriptSwitcher: {
+    label: 'Отчет',
+    latin: 'Latinica',
+    cyrillic: 'Ћирилица',
   },
   accessibility: {
     expandSection: 'Развернуть секцию',

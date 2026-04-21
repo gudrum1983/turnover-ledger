@@ -4,24 +4,25 @@ import { useRouter } from 'vue-router'
 import { createReportExportFile, parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { useLocale } from '@/shared/i18n'
+import { DialogAlert } from '@/shared/ui/dialog-alert'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { DialogConfirm } from '@/shared/ui/dialog-confirm'
-import { IconInput } from '@/shared/ui/icons'
+import { IconExport, IconImport, IconPreview } from '@/shared/ui/icons'
 
 const router = useRouter()
 const { t } = useLocale()
 const reportStore = useReportStore()
 
 const fileInput = ref<HTMLInputElement | null>(null)
-const importError = ref('')
+const isImportErrorDialogOpen = ref(false)
 const isImportConfirmOpen = ref(false)
 const pendingImportState = ref<ReportState | null>(null)
 const pendingImportFileName = ref('')
 
-const importFileSummary = computed(() => {
-  if (!pendingImportState.value) return pendingImportFileName.value
+const importRowsSummary = computed(() => {
+  if (!pendingImportState.value) return ''
 
-  return `${pendingImportFileName.value} (${pendingImportState.value.rows.length})`
+  return `${t('ui.importDataModal.rowsInTable')}: ${pendingImportState.value.rows.length}`
 })
 
 const formatExportFileName = () => {
@@ -36,8 +37,6 @@ function resetFileInput() {
 }
 
 function handleExport() {
-  importError.value = ''
-
   const payload = JSON.stringify(createReportExportFile(reportStore.exportState()), null, 2)
   const blob = new Blob([payload], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
@@ -51,7 +50,6 @@ function handleExport() {
 }
 
 function openImportDialog() {
-  importError.value = ''
   fileInput.value?.click()
 }
 
@@ -73,14 +71,17 @@ async function handleFileChange(event: Event) {
     pendingImportState.value = importedState
     pendingImportFileName.value = file.name
     isImportConfirmOpen.value = true
-    importError.value = ''
   } catch {
     pendingImportState.value = null
     pendingImportFileName.value = ''
-    importError.value = t('ui.importData.invalidFile')
+    isImportErrorDialogOpen.value = true
   } finally {
     resetFileInput()
   }
+}
+
+function closeImportErrorDialog() {
+  isImportErrorDialogOpen.value = false
 }
 
 function closeImportConfirm() {
@@ -98,40 +99,60 @@ function applyImport() {
 </script>
 
 <template>
-  <div class="ReportImportExportActions">
+  <div class="ReportActions">
     <ButtonBase color="success" size="xs" @click="router.push({ name: ROUTES.reportPreview.name })">
-      <template #icon><IconInput style="width: 20px; height: 20px" /></template>
-      {{ t('ui.reportActions.preview') }}
+      <template #icon><IconPreview style="width: 20px; height: 20px" /></template>
+      {{ t('ui.reportBuilderActions.preview') }}
     </ButtonBase>
-    <ButtonBase color="primary" size="xs" @click="handleExport">{{ t('ui.reportActions.export') }}</ButtonBase>
-    <ButtonBase color="info" size="xs" @click="openImportDialog">{{ t('ui.reportActions.import') }}</ButtonBase>
+    <ButtonBase color="primary" size="xs" @click="handleExport">
+      <template #icon><IconExport style="width: 20px; height: 20px" /></template>
+      {{ t('ui.reportBuilderActions.export') }}</ButtonBase
+    >
+    <ButtonBase color="info" size="xs" @click="openImportDialog">
+      <template #icon><IconImport style="width: 20px; height: 20px" /></template>
+      {{ t('ui.reportBuilderActions.import') }}</ButtonBase
+    >
     <input
       ref="fileInput"
-      class="ReportImportExportActions_FileInput"
+      class="ReportActions_FileInput"
       type="file"
       accept="application/json,.json"
       @change="handleFileChange"
     />
-    <div v-if="importError" class="ReportImportExportActions_Error Typo_Caption">{{ importError }}</div>
   </div>
+  <DialogAlert
+    v-model:open="isImportErrorDialogOpen"
+    type="danger"
+    :title="t('ui.importDataModal.invalidFileTitle')"
+    :message="t('ui.importDataModal.invalidFile')"
+    :labelCloseButton="t('ui.importDataModal.close')"
+    @update:open="closeImportErrorDialog"
+  />
   <DialogConfirm
     v-model:open="isImportConfirmOpen"
-    :title="t('ui.importData.title')"
-    :message="t('ui.importData.description')"
-    :labelActiveButton="t('ui.importData.confirm')"
-    :labelCancelButton="t('ui.importData.cancel')"
+    :title="t('ui.importDataModal.title')"
+    :message="t('ui.importDataModal.description')"
+    :labelActiveButton="t('ui.importDataModal.confirm')"
+    :labelCancelButton="t('ui.importDataModal.cancel')"
     type="confirm"
     @confirm="applyImport"
     @cancel="closeImportConfirm"
   >
-    <template v-if="importFileSummary" #content>
-      {{ importFileSummary }}
+    <template v-if="pendingImportFileName" #content>
+      <div class="ReportActions_ImportSummary">
+        <div class="ReportActions_ImportFileName">
+          {{ pendingImportFileName }}
+        </div>
+        <div v-if="importRowsSummary" class="ReportActions_ImportRows">
+          {{ importRowsSummary }}
+        </div>
+      </div>
     </template>
   </DialogConfirm>
 </template>
 
 <style scoped>
-.ReportImportExportActions {
+.ReportActions {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -139,12 +160,21 @@ function applyImport() {
   width: 100%;
 }
 
-.ReportImportExportActions_FileInput {
+.ReportActions_FileInput {
   display: none;
 }
 
-.ReportImportExportActions_Error {
-  width: 100%;
-  color: var(--color-text-danger);
+.ReportActions_ImportSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ReportActions_ImportFileName {
+  overflow-wrap: anywhere;
+}
+
+.ReportActions_ImportRows {
+  white-space: nowrap;
 }
 </style>

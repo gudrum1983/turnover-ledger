@@ -1,47 +1,110 @@
 import type { I18nLocaleMessages } from '../../types'
 
 export const srLatUi = {
-  app: {
-    reportBuilderTitle: 'KPO knjiga (paušal)',
-    reportPreviewTitle: 'KPO knjiga (paušal) izveštaj',
+  appHeaderTitle: 'KPO knjiga (paušal)',
+  common: {
+    clearField: 'Obrisi polje',
   },
-  locale: {
-    ru: 'Русский',
-    en: 'English',
-    srLat: 'Srpski',
-    srCyr: 'Српски',
-  },
-  reportActions: {
+  reportBuilderActions: {
     preview: 'Pregled',
     export: 'Izvoz podataka',
     import: 'Uvoz podataka',
   },
-  importData: {
+  importDataModal: {
     title: 'Uvesti podatke?',
-    description: 'Trenutni podaci će biti u potpunosti zamenjeni uvezenim fajlom.',
+    description: 'Trenutni podaci će biti u potpunosti zamenjeni podacima iz uvezenog fajla.',
     confirm: 'Uvezi',
     cancel: 'Otkaži',
-    invalidFile: 'Uvoz nije uspeo. Proverite da li je fajl ispravan JSON izvoz ove aplikacije.',
+    close: 'Zatvori',
+    rowsInTable: 'redova u tabeli',
+    invalidFileTitle: 'Uvoz podataka nije uspeo',
+    invalidFile: 'Uvoz nije uspeo. Proverite da li je fajl ispravan JSON izvoz iz ove aplikacije.',
   },
-  reportMetaForm: {
-    taxpayerInfo: 'Informacije o obvezniku',
+  reportBuilderSections: {
+    taxpayerInfo: 'Informacije o poreskom obvezniku',
     responsiblePeople: 'Odgovorna lica',
+    incomeRecords: 'Ostvareni prihodi',
   },
-  reportTable: {
+  reportBuilderMetaFields: {
+    taxpayerInfo: {
+      pib: {
+        label: 'PIB',
+        placeholder: '123456789',
+        hint: '"PIB" iz izvoda APR',
+      },
+      taxpayer: {
+        label: 'Obveznik',
+        placeholder: 'Ivan Markov',
+        hint: '"Име и презиме" iz izvoda APR',
+      },
+      companyName: {
+        label: 'Firma – radnja',
+        placeholder: 'IVAN MARKOV PR BEOGRAD',
+        hint: '"Пословно име" iz izvoda APR',
+      },
+      address: {
+        label: 'Sedište',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        hint: '"Адреса седишта" iz izvoda APR',
+      },
+      taxNumber: {
+        label: 'Šifra poreskog obveznika',
+        placeholder: '12345678',
+        hint: '"Регистарски/матични брой" iz izvoda APR',
+      },
+      activityCode: {
+        label: 'Šifra delatnosti',
+        placeholder: '6201 - Рачунарско програмирање',
+        hint: '"Претежна делатност" iz izvoda APR',
+      },
+    },
+    responsiblePeople: {
+      preparedBy: {
+        label: 'Sastavio',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+      responsiblePerson: {
+        label: 'Odgovorno lice',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+    },
+    incomeRecordsForm: {
+      date: {
+        label: 'Datum',
+        placeholder: 'DD.MM.GGGG',
+        hint: 'Datum fakture',
+      },
+      description: {
+        label: 'Income description',
+        placeholder: 'Фактура бр.25, Клијент - Beta Box d.o.o. Beograd',
+        hint: 'Broj fakture (preporučljivo i naziv kupca)',
+      },
+      goodsAmount: {
+        label: 'Iznos robe',
+        placeholder: '0,00',
+        hint: 'Iznos prihoda po fakturi od prodaje robe',
+      },
+      servicesAmount: {
+        label: 'Iznos usluga',
+        placeholder: '0,00',
+        hint: 'Iznos prihoda po fakturi od pruženih usluga',
+      },
+    },
+  },
+  reportBuilderIncomeRecordsTable: {
     rowNumber: 'Br.',
+    description: 'Datum i opis',
     income: 'Prihod',
     currency: 'Valuta',
     addRow: 'Dodaj red',
     clearTable: 'Obriši tabelu',
-    emptyHint: 'Tabela je prazna, dodajte red ...',
+    emptyHint: 'Tabela je prazna, dodajte red',
     total: 'Ukupno',
     totalLimitExceeded: 'Upozorenje: ukupan iznos je premašio limit',
-    addRowModalTitle: 'Dodaj red',
-    cancel: 'Otkaži',
-    add: 'Dodaj',
-    editAlert: 'Izmena reda',
   },
-  reportTableRow: {
+  reportBuilderIncomeRecordsRow: {
     goodsShort: 'Rob.',
     servicesShort: 'Usl.',
     subtotalShort: 'Sve.',
@@ -50,20 +113,19 @@ export const srLatUi = {
     remove: 'Obriši',
   },
   reportRowForm: {
-    date: 'Datum',
     currency: 'Valuta',
-    description: 'Opis',
-    descriptionPlaceholder: 'Svrha plaćanja',
-    goodsAmount: 'Iznos robe',
-    servicesAmount: 'Iznos usluga',
     total: 'Ukupno',
     calculate: 'Izračunaj',
-    officialRatePrefix: 'ZVANIČNI SREDNJI KURS DINARA',
+    officialRatePrefix: 'Zvanični srednji kurs RSD (NBS)',
     recalculateHint: 'Preračunajte nakon izmena.',
     goodsRsd: 'Roba (RSD)',
     servicesRsd: 'Usluge (RSD)',
     totalRsd: 'Ukupno (RSD)',
     row: 'Red',
+    cancel: 'Otkaži',
+    titleAdd: 'Dodaj red',
+    titleEdit: 'Izmena reda',
+    submit: 'Sačuvaj',
   },
   reportPreview: {
     toHome: 'Na početnu',
@@ -81,10 +143,10 @@ export const srLatUi = {
     confirm: 'Obriši sve',
     cancel: 'Otkaži',
   },
-  languageSwitcher: {
-    reportScript: 'Pismo izveštaja',
-    reportScriptLatin: 'Latinica',
-    reportScriptCyrillic: 'Ćirilica',
+  reportPreviewScriptSwitcher: {
+    label: ' Izveštaj',
+    latin: 'Latinica',
+    cyrillic: 'Ћирилица',
   },
   accessibility: {
     expandSection: 'Proširi sekciju',

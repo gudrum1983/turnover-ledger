@@ -2,6 +2,7 @@
 import type { MaskOptions } from 'maska'
 import { vMaska } from 'maska/vue'
 import { computed, onBeforeUnmount } from 'vue'
+import { useLocale } from '@/shared/i18n'
 import { IconClose } from '@/shared/ui/icons'
 import { InfoHint } from '@/shared/ui/info-hint'
 
@@ -42,7 +43,9 @@ const emit = defineEmits<{
   (e: 'blur', value: string | null): void
 }>()
 
+const { t: translate } = useLocale()
 const hasValue = computed(() => Boolean(modelValue))
+const clearButtonLabel = computed(() => translate('ui.common.clearField'))
 
 let t: number | null = null
 
@@ -117,7 +120,7 @@ onBeforeUnmount(clearTimer)
         v-if="hasValue"
         class="FieldBase_Clear"
         type="button"
-        aria-label="Clear field"
+        :aria-label="clearButtonLabel"
         @mousedown.prevent
         @click="clearValue"
       >

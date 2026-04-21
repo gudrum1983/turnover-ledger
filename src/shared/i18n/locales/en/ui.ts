@@ -1,47 +1,110 @@
 import type { I18nLocaleMessages } from '../../types'
 
 export const enUi = {
-  app: {
-    reportBuilderTitle: 'Turnover Book (lump sum)',
-    reportPreviewTitle: 'Turnover Book (lump sum) report',
+  appHeaderTitle: 'KPO Book (Paušal)',
+  common: {
+    clearField: 'Clear field',
   },
-  locale: {
-    ru: 'Русский',
-    en: 'English',
-    srLat: 'Srpski',
-    srCyr: 'Српски',
-  },
-  reportActions: {
+  reportBuilderActions: {
     preview: 'Preview',
     export: 'Export data',
     import: 'Import data',
   },
-  importData: {
+  importDataModal: {
     title: 'Import data?',
     description: 'Current data will be fully replaced with the imported file.',
     confirm: 'Import',
     cancel: 'Cancel',
+    close: 'Close',
+    rowsInTable: 'rows in the table',
+    invalidFileTitle: 'Import failed',
     invalidFile: 'Import failed. Make sure the file is a valid JSON export from this app.',
   },
-  reportMetaForm: {
+  reportBuilderSections: {
     taxpayerInfo: 'Taxpayer information',
     responsiblePeople: 'Responsible persons',
+    incomeRecords: 'Income Records',
   },
-  reportTable: {
+  reportBuilderMetaFields: {
+    taxpayerInfo: {
+      pib: {
+        label: 'PIB',
+        placeholder: '123456789',
+        hint: '"PIB" from the SBRA excerpt (АПР Извод)',
+      },
+      taxpayer: {
+        label: 'Taxpayer',
+        placeholder: 'Ivan Markov',
+        hint: '"Име и презиме" from the SBRA excerpt (АПР Извод)',
+      },
+      companyName: {
+        label: 'Company name',
+        placeholder: 'IVAN MARKOV PR BEOGRAD',
+        hint: '"Пословно име" from the SBRA excerpt (АПР Извод)',
+      },
+      address: {
+        label: 'Registered office',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        hint: '"Адреса седишта" from the SBRA excerpt (АПР Извод)',
+      },
+      taxNumber: {
+        label: 'Taxpayer code',
+        placeholder: '12345678',
+        hint: '"Регистарски/матични брой" from the SBRA excerpt (АПР Извод)',
+      },
+      activityCode: {
+        label: 'Activity code',
+        placeholder: '6201 - Рачунарско програмирање',
+        hint: '"Претежна делатност" from the SBRA excerpt (АПР Извод)',
+      },
+    },
+    responsiblePeople: {
+      preparedBy: {
+        label: 'Prepared by',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+      responsiblePerson: {
+        label: 'Responsible person',
+        placeholder: 'Ivan Markov',
+        hint: '',
+      },
+    },
+    incomeRecordsForm: {
+      date: {
+        label: 'Date',
+        placeholder: 'DD.MM.YYYY',
+        hint: 'Invoice date',
+      },
+      description: {
+        label: 'Income description',
+        placeholder: 'Фактура бр.25, Клијент - Beta Box d.o.o. Beograd',
+        hint: 'Invoice number (buyer name is also recommended)',
+      },
+      goodsAmount: {
+        label: 'Goods amount',
+        placeholder: '0.00',
+        hint: 'Income amount per invoice from the sale of goods',
+      },
+      servicesAmount: {
+        label: 'Services amount',
+        placeholder: '0.00',
+        hint: 'Income amount per invoice from services provided',
+      },
+    },
+  },
+  reportBuilderIncomeRecordsTable: {
     rowNumber: 'No.',
+    description: 'Date and description',
     income: 'Income',
     currency: 'Currency',
     addRow: 'Add row',
     clearTable: 'Clear table',
-    emptyHint: 'The table is empty, add a row ...',
+    emptyHint: 'The table is empty, add a row',
     total: 'Total',
     totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
-    addRowModalTitle: 'Add row',
-    cancel: 'Cancel',
-    add: 'Add',
-    editAlert: 'Edit row',
   },
-  reportTableRow: {
+  reportBuilderIncomeRecordsRow: {
     goodsShort: 'Gds.',
     servicesShort: 'Srv.',
     subtotalShort: 'Sub.',
@@ -50,20 +113,19 @@ export const enUi = {
     remove: 'Delete',
   },
   reportRowForm: {
-    date: 'Date',
     currency: 'Currency',
-    description: 'Description',
-    descriptionPlaceholder: 'Payment purpose',
-    goodsAmount: 'Goods amount',
-    servicesAmount: 'Services amount',
     total: 'Total',
     calculate: 'Calculate',
-    officialRatePrefix: 'OFFICIAL MIDDLE RSD EXCHANGE RATE',
+    officialRatePrefix: 'Official middle RSD exchange rate (NBS)',
     recalculateHint: 'Recalculate after any changes.',
     goodsRsd: 'Goods (RSD)',
     servicesRsd: 'Services (RSD)',
     totalRsd: 'Total (RSD)',
     row: 'Row',
+    cancel: 'Cancel',
+    titleAdd: 'Add new row',
+    titleEdit: 'Edit row',
+    submit: 'Save',
   },
   reportPreview: {
     toHome: 'Back home',
@@ -81,10 +143,10 @@ export const enUi = {
     confirm: 'Delete all',
     cancel: 'Cancel',
   },
-  languageSwitcher: {
-    reportScript: 'Report script',
-    reportScriptLatin: 'Latinica',
-    reportScriptCyrillic: 'Cyrillic',
+  reportPreviewScriptSwitcher: {
+    label: 'Report',
+    latin: 'Latinica',
+    cyrillic: 'Ћирилица',
   },
   accessibility: {
     expandSection: 'Expand section',
