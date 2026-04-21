@@ -4,12 +4,15 @@ import type { Locale } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { type InputAttributesConfig, VueDatePicker } from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { InfoHint } from '@/shared/ui/info-hint'
 
 type Props = {
   /** Имя поля для формы */
   name: string
   /** Подпись поля */
   label?: string
+  /** Текст информационной подсказки рядом с label */
+  hint?: string
   /** Текущее значение даты в строковом формате */
   modelValue: string | null
   /** Делает поле обязательным */
@@ -36,8 +39,11 @@ const inputClassName = computed(() => 'FieldDate_Input')
 </script>
 
 <template>
-  <label class="FieldDate Typo_Caption">
-    {{ props.label }}
+  <label class="FieldDate">
+    <div class="FieldDate_Label">
+      <span class="FieldDate_LabelText Typo_Caption">{{ props.label }}</span>
+      <InfoHint v-if="props.hint" :text="props.hint" />
+    </div>
     <VueDatePicker
       :model-value="props.modelValue"
       :name="props.name"
@@ -65,6 +71,16 @@ const inputClassName = computed(() => 'FieldDate_Input')
   width: 100%;
   display: flex;
   flex-direction: column;
+
+  &_Label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &_LabelText {
+    flex: 1 1 auto;
+  }
 }
 
 :deep(.my-menu) {

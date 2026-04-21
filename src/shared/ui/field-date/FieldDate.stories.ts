@@ -17,12 +17,14 @@ const meta = {
   args: {
     name: 'reportDate',
     label: 'Дата отчёта',
+    hint: '',
     modelValue: '2025-01-15',
     required: false,
   },
   argTypes: {
     name: { control: 'text' },
     label: { control: 'text' },
+    hint: { control: 'text' },
     modelValue: {
       control: 'text',
     },
@@ -67,6 +69,14 @@ export const Playground: Story = {
 export const Empty: Story = {
   name: 'Пустое поле',
   args: {
+    modelValue: null,
+  },
+}
+
+export const WithHint: Story = {
+  name: 'С подсказкой',
+  args: {
+    hint: 'Укажите дату получения дохода.',
     modelValue: null,
   },
 }
