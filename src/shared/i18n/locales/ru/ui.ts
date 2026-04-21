@@ -36,7 +36,7 @@ export const ruUi = {
         hint: '"Име и презиме" из выписки АПР',
       },
       companyName: {
-        label: 'Название фирмы',
+        label: 'Название компании',
         placeholder: 'IVAN MARKOV PR BEOGRAD',
         hint: '"Пословно име" из выписки АПР',
       },
@@ -68,6 +68,28 @@ export const ruUi = {
         hint: '',
       },
     },
+    incomeRecordsForm: {
+      date: {
+        label: 'Дата',
+        placeholder: 'ДД.ММ.ГГГГ',
+        hint: 'Дата счета',
+      },
+      description: {
+        label: 'Описание дохода',
+        placeholder: 'Фактура бр.25, Клијент - Beta Box d.o.o. Beograd',
+        hint: 'Номер счета (рекомендовано и наименование клиента, как он указан в счете)',
+      },
+      goodsAmount: {
+        label: 'Сумма по товарам',
+        placeholder: '0,00',
+        hint: 'Сумма доходов по счету от продажи товаров',
+      },
+      servicesAmount: {
+        label: 'Сумма по услугам',
+        placeholder: '0,00',
+        hint: 'Сумма доходов по счету от оказанных услуг',
+      },
+    },
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: '№',
@@ -76,7 +98,7 @@ export const ruUi = {
     currency: 'Валюта',
     addRow: 'Добавить строку',
     clearTable: 'Очистить таблицу',
-    emptyHint: 'Таблица пустая, добавьте строку ...',
+    emptyHint: 'Таблица пустая, добавьте строку',
     total: 'Итого',
     totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
   },
@@ -89,15 +111,10 @@ export const ruUi = {
     remove: 'Удалить',
   },
   reportRowForm: {
-    date: 'Дата',
     currency: 'Валюта',
-    description: 'Описание',
-    descriptionPlaceholder: 'Назначение платежа',
-    goodsAmount: 'Сумма по товарам',
-    servicesAmount: 'Сумма по услугам',
     total: 'Итого',
     calculate: 'Рассчитать',
-    officialRatePrefix: 'ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА',
+    officialRatePrefix: 'Официальный средний обменный курс RSD (NBS)',
     recalculateHint: 'Пересчитайте после изменений.',
     goodsRsd: 'По товарам (RSD)',
     servicesRsd: 'По услугам (RSD)',
@@ -111,18 +128,6 @@ export const ruUi = {
   reportPreview: {
     toHome: 'На главную',
     print: 'ПЕЧАТЬ',
-  },
-  reportLabels: {
-    title: 'Полученные доходы',
-    table: {
-      rowNumber: 'Порядковый номер',
-      dateAndDescription: 'Дата и описание проводки',
-      income: 'ДОХОД ОТ ДЕЯТЕЛЬНОСТИ',
-      incomeFromProducts: 'от продажи продукции',
-      incomeFromServices: 'от оказанных услуг',
-      totalIncome: 'Всего доход от деятельности (3 + 4)',
-      total: 'Итого',
-    },
   },
   deleteRowModal: {
     title: 'Удалить запись?',

@@ -70,6 +70,28 @@ export const srCyrUi = {
         hint: '',
       },
     },
+    incomeRecordsForm: {
+      date: {
+        label: 'Датум',
+        placeholder: 'ДД.ММ.ГГГГ',
+        hint: 'Датум фактуре',
+      },
+      description: {
+        label: 'Описание дохода',
+        placeholder: 'Фактура бр.25, Клијент - Beta Box d.o.o. Beograd',
+        hint: 'Број фактуре (препоручљиво и назив купца)',
+      },
+      goodsAmount: {
+        label: 'Износ робе',
+        placeholder: '0,00',
+        hint: 'Износ прихода по фактури од продаје робе',
+      },
+      servicesAmount: {
+        label: 'Износ услуга',
+        placeholder: '0,00',
+        hint: 'Износ прихода по фактури од пружених услуга',
+      },
+    },
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'Бр.',
@@ -78,7 +100,7 @@ export const srCyrUi = {
     currency: 'Валута',
     addRow: 'Додај ред',
     clearTable: 'Обриши табелу',
-    emptyHint: 'Табела је празна, додајте ред ...',
+    emptyHint: 'Табела је празна, додајте ред',
     total: 'Укупно',
     totalLimitExceeded: 'Упозорење: укупан износ је премашио лимит',
   },
@@ -91,15 +113,10 @@ export const srCyrUi = {
     remove: 'Обриши',
   },
   reportRowForm: {
-    date: 'Датум',
     currency: 'Валута',
-    description: 'Опис',
-    descriptionPlaceholder: 'Сврха плаћања',
-    goodsAmount: 'Износ робе',
-    servicesAmount: 'Износ услуга',
     total: 'Укупно',
     calculate: 'Израчунај',
-    officialRatePrefix: 'ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА',
+    officialRatePrefix: 'Званични средњи курс RSD (NBS)',
     recalculateHint: 'Прерачунајте након измена.',
     goodsRsd: 'Роба (RSD)',
     servicesRsd: 'Услуге (RSD)',
@@ -113,18 +130,6 @@ export const srCyrUi = {
   reportPreview: {
     toHome: 'На почетну',
     print: 'ШТАМПА',
-  },
-  reportLabels: {
-    title: 'Књига о оствареној делатности паушално опорезованих обвезника',
-    table: {
-      rowNumber: 'Редни број',
-      dateAndDescription: 'Датум и опис књижења',
-      income: 'ПРИХОД ОД ДЕЛАТНОСТИ',
-      incomeFromProducts: 'oд продаје производа',
-      incomeFromServices: 'од извршених услуга',
-      totalIncome: 'Свега приход од делатности (3 + 4)',
-      total: 'Укупно',
-    },
   },
   deleteRowModal: {
     title: 'Обрисати запис?',

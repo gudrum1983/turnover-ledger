@@ -38,7 +38,7 @@ export const enUi = {
         hint: '"Име и презиме" from the SBRA excerpt (АПР Извод)',
       },
       companyName: {
-        label: 'Company / shop',
+        label: 'Company name',
         placeholder: 'IVAN MARKOV PR BEOGRAD',
         hint: '"Пословно име" from the SBRA excerpt (АПР Извод)',
       },
@@ -70,6 +70,28 @@ export const enUi = {
         hint: '',
       },
     },
+    incomeRecordsForm: {
+      date: {
+        label: 'Date',
+        placeholder: 'DD.MM.YYYY',
+        hint: 'Invoice date',
+      },
+      description: {
+        label: 'Income description',
+        placeholder: 'Фактура бр.25, Клијент - Beta Box d.o.o. Beograd',
+        hint: 'Invoice number (buyer name is also recommended)',
+      },
+      goodsAmount: {
+        label: 'Goods amount',
+        placeholder: '0.00',
+        hint: 'Income amount per invoice from the sale of goods',
+      },
+      servicesAmount: {
+        label: 'Services amount',
+        placeholder: '0.00',
+        hint: 'Income amount per invoice from services provided',
+      },
+    },
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'No.',
@@ -78,7 +100,7 @@ export const enUi = {
     currency: 'Currency',
     addRow: 'Add row',
     clearTable: 'Clear table',
-    emptyHint: 'The table is empty, add a row ...',
+    emptyHint: 'The table is empty, add a row',
     total: 'Total',
     totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
   },
@@ -91,15 +113,10 @@ export const enUi = {
     remove: 'Delete',
   },
   reportRowForm: {
-    date: 'Date',
     currency: 'Currency',
-    description: 'Description',
-    descriptionPlaceholder: 'Payment purpose',
-    goodsAmount: 'Goods amount',
-    servicesAmount: 'Services amount',
     total: 'Total',
     calculate: 'Calculate',
-    officialRatePrefix: 'OFFICIAL MIDDLE RSD EXCHANGE RATE',
+    officialRatePrefix: 'Official middle RSD exchange rate (NBS)',
     recalculateHint: 'Recalculate after any changes.',
     goodsRsd: 'Goods (RSD)',
     servicesRsd: 'Services (RSD)',
@@ -113,18 +130,6 @@ export const enUi = {
   reportPreview: {
     toHome: 'Back home',
     print: 'PRINT',
-  },
-  reportLabels: {
-    title: 'Book of performed business activity for lump-sum taxed taxpayers',
-    table: {
-      rowNumber: 'Ordinal number',
-      dateAndDescription: 'Date and description of entry',
-      income: 'BUSINESS INCOME',
-      incomeFromProducts: 'from the sale of products',
-      incomeFromServices: 'from services rendered',
-      totalIncome: 'Total business income (3 + 4)',
-      total: 'Total',
-    },
   },
   deleteRowModal: {
     title: 'Delete this record?',

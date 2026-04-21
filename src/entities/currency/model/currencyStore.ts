@@ -7,6 +7,7 @@ import type { CurrencyCode } from '@/shared/types'
 const STORE_ID = 'currencies-store'
 const LOCAL_STORAGE_KEY = 'currenciesState'
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
+const LOCAL_CURRENCY_CODE = 'RSD' as const
 const BASE_FAVORITE_CODES = ['USD', 'EUR', 'RSD'] as const
 const UNTIL_DATE = new Date('2020-01-01')
 
@@ -27,6 +28,51 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
     if (new Date(currency.until) < UNTIL_DATE) return false
 
     return true
+  }
+
+  function withLocalCurrency(codes: string[]) {
+    const unique = new Set<string>()
+    const ordered: CurrencyCode[] = []
+
+    const addCode = (code: string) => {
+      const normalized = code.trim().toUpperCase()
+      if (!normalized || unique.has(normalized)) return
+      unique.add(normalized)
+      ordered.push(normalized)
+    }
+
+    addCode(LOCAL_CURRENCY_CODE)
+
+    for (const code of codes) {
+      addCode(code)
+    }
+
+    return ordered
+  }
+
+  function createLocalConversionResponse(amount: number, date: string): ConversionResponse {
+    const normalizedAmount = Number.isFinite(amount) ? amount : 0
+
+    return {
+      rate: {
+        code: LOCAL_CURRENCY_CODE,
+        date,
+        date_from: date,
+        number: 941,
+        parity: 1,
+        cash_buy: 1,
+        cash_sell: 1,
+        exchange_buy: 1,
+        exchange_middle: 1,
+        exchange_sell: 1,
+      },
+      buy_middle: normalizedAmount,
+      sell_middle: normalizedAmount,
+      buy_exchange: normalizedAmount,
+      sell_exchange: normalizedAmount,
+      buy_cash: normalizedAmount,
+      sell_cash: normalizedAmount,
+    }
   }
 
   function favoriteCurrencyCodes(usedCodes: string[]) {
@@ -68,7 +114,7 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
       const parsed = JSON.parse(savedState) as CurrencyCache
 
       if (Array.isArray(parsed?.currencies)) {
-        currencies.value = parsed.currencies
+        currencies.value = withLocalCurrency(parsed.currencies)
       }
 
       if (typeof parsed?.updatedAt === 'string') {
@@ -97,7 +143,9 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
 
     try {
       const response = await fetchCurrencies()
-      currencies.value = response.currencies.filter(isActiveCurrencies).map((currency) => currency.code)
+      currencies.value = withLocalCurrency(
+        response.currencies.filter(isActiveCurrencies).map((currency) => currency.code),
+      )
       updatedAt.value = new Date().toISOString()
       persistToLocalStorage()
     } catch (err) {
@@ -108,6 +156,10 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
   }
 
   async function convertAmount(currencyCode: string, amount: number, date: string): Promise<ConversionResponse> {
+    if (currencyCode.trim().toUpperCase() === LOCAL_CURRENCY_CODE) {
+      return createLocalConversionResponse(amount, date)
+    }
+
     return await fetchConversion(currencyCode, amount, date)
   }
 

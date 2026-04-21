@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useCurrencyStore } from '@/entities/currency'
 import { type ReportRow } from '@/entities/report-row'
 import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
 import { getTableTotals, useReportStore } from '@/entities/report'
@@ -13,8 +12,7 @@ import { ModalBase } from '@/shared/ui/modal-base'
 import { ReportRowsTable } from '@/widgets/report-rows-table'
 
 const store = useReportStore()
-const currencyStore = useCurrencyStore()
-const { rows, usedCurrencyCodes, lastUsedCurrencyCode } = storeToRefs(store)
+const { rows } = storeToRefs(store)
 
 const localeStore = useLocaleStore()
 const { t } = useLocale()
@@ -40,7 +38,6 @@ const openDialogConfirm = ref(false)
 const modalTitle = computed(() =>
   formMode.value === 'edit' ? t('ui.reportRowForm.titleEdit') : t('ui.reportRowForm.titleAdd'),
 )
-const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(usedCurrencyCodes.value))
 
 const fromCents = (value: number | null | undefined) => (typeof value === 'number' ? value / 100 : null)
 
@@ -169,8 +166,6 @@ function onSubmit(payload: ReportRowPayload) {
         :key="formKey"
         id="report-row-form"
         :initial-value="formInitialValue"
-        :default-currency="lastUsedCurrencyCode"
-        :favorite-currency-codes="favoriteCurrencyCodes"
         @update:canSubmit="canSubmit = $event"
         @submit="onSubmit"
       />

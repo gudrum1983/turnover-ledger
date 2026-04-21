@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { useReportStore } from '@/entities/report'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { ButtonDropdown } from '@/shared/ui/button-dropdown'
 import { FieldCounter } from '@/shared/ui/field-counter'
@@ -8,16 +10,11 @@ import { FieldMoney } from '@/shared/ui/field-money'
 import { useCurrencyStore } from '@/entities/currency'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
+import { DisplayField } from '@/shared/ui/display-field'
 
-/*
- * ЗВАНИЧНИ СРЕДЊИ КУРС ДИНАРА
- *ZVANIČNI SREDNJI KURS DINARA
- *OFFICIAL MIDDLE RSD EXCHANGE RATE
- * */
-
+const LOCAL_CURRENCY_CODE = 'RSD'
 const currency = ref('')
 const date = ref('')
-const counterparty = ref('')
 const description = ref('')
 const goodsAmount = ref<string | null>(null)
 const servicesAmount = ref<string | null>(null)
@@ -38,13 +35,15 @@ const exchangeRate = ref<number | null>(null)
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
+const reportStore = useReportStore()
+const { usedCurrencyCodes, lastUsedCurrencyCode } = storeToRefs(reportStore)
 const localeStore = useLocaleStore()
 const { t } = useLocale()
 
 const currencyOptions = computed(() => {
   return currencyStore.currencies.map((code) => ({ value: code, label: code }))
 })
-
+const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(usedCurrencyCodes.value))
 const moneyLocale = computed(() => {
   if (localeStore.currentLocale === 'en') return 'en-US'
   if (localeStore.currentLocale === 'srLat' || localeStore.currentLocale === 'srCyr') return 'sr-RS'
@@ -66,14 +65,10 @@ export type ReportRowPayload = {
 
 type ReportRowEditFormProps = {
   initialValue?: ReportRowFormInitialValue | null
-  defaultCurrency?: string
-  favoriteCurrencyCodes?: string[]
 }
 
 const props = withDefaults(defineProps<ReportRowEditFormProps>(), {
   initialValue: null,
-  defaultCurrency: '',
-  favoriteCurrencyCodes: () => [],
 })
 
 const emit = defineEmits<{
@@ -97,13 +92,17 @@ const servicesAmountRsd = ref<number | null>(null)
 const totalAmountRsd = ref<number | null>(null)
 const isCalculated = ref(false)
 const isApplyingInitialValue = ref(false)
+const isLocalCurrency = computed(() => currency.value.trim().toUpperCase() === LOCAL_CURRENCY_CODE)
 const isCalculateDisabled = computed(
   () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value,
 )
 
-const summary = computed(() =>
-  [date.value ? formatDateForUi(date.value) : '', counterparty.value, description.value].filter(Boolean).join(', '),
-)
+const summary = computed(() => {
+  if (!date.value && !description.value) {
+    return undefined
+  }
+  return [date.value ? formatDateForUi(date.value) : '', description.value].filter(Boolean).join('. ')
+})
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
 
 const uiLocale = computed(() => localeStore.currentLocale)
@@ -131,6 +130,20 @@ const resetCalculated = () => {
   if (isApplyingInitialValue.value) {
     return
   }
+
+  if (isLocalCurrency.value && date.value && totalValue.value > 0) {
+    const goodsValue = parseMoney(goodsAmount.value)
+    const servicesValue = parseMoney(servicesAmount.value)
+
+    goodsAmountRsd.value = goodsValue
+    servicesAmountRsd.value = servicesValue
+    totalAmountRsd.value = goodsValue + servicesValue
+    exchangeRate.value = 1
+    isCalculated.value = true
+    emit('update:canSubmit', true)
+    return
+  }
+
   clearCalculated()
 }
 
@@ -205,7 +218,7 @@ const handleSubmit = (event: Event) => {
 const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
   isApplyingInitialValue.value = true
   date.value = initialValue?.date ?? ''
-  currency.value = initialValue?.currency ?? props.defaultCurrency
+  currency.value = initialValue?.currency ?? lastUsedCurrencyCode.value
   description.value = initialValue?.description ?? ''
   goodsAmount.value = formatInputMoney(initialValue?.goodsAmount)
   servicesAmount.value = formatInputMoney(initialValue?.servicesAmount)
@@ -221,6 +234,8 @@ const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
     exchangeRate.value = initialValue?.exchangeRate ?? null
     isCalculated.value = true
     emit('update:canSubmit', true)
+  } else if (isLocalCurrency.value && date.value && totalValue.value > 0) {
+    resetCalculated()
   } else {
     clearCalculated()
   }
@@ -232,7 +247,7 @@ const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
 
 watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
 watch(
-  [() => props.initialValue, () => props.defaultCurrency],
+  [() => props.initialValue, lastUsedCurrencyCode],
   ([nextInitialValue]) => {
     applyInitialValue(nextInitialValue)
   },
@@ -240,7 +255,6 @@ watch(
 )
 
 onMounted(() => {
-  currencyStore.hydrateFromLocalStorage()
   void currencyStore.loadCurrencies()
 })
 </script>
@@ -251,9 +265,11 @@ onMounted(() => {
       <div class="ReportRowEditForm_Currency">
         <FieldDate
           name="dateCurrency"
-          :label="t('ui.reportRowForm.date')"
+          :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.hint')"
+          :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.label')"
           :model-value="date"
           :date-fns-locale="localeStore.dateFnsLocale"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.placeholder')"
           @update:modelValue="date = $event ?? ''"
           required
         />
@@ -272,8 +288,9 @@ onMounted(() => {
       <FieldCounter
         :maxLength="55"
         name="description"
-        :label="t('ui.reportRowForm.description')"
-        :placeholder="t('ui.reportRowForm.descriptionPlaceholder')"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.hint')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
         :model-value="description"
         @update:modelValue="description = $event ?? ''"
       />
@@ -281,30 +298,26 @@ onMounted(() => {
     <div class="ReportRowEditForm_AmountFields">
       <FieldMoney
         name="goodsAmount"
-        :label="t('ui.reportRowForm.goodsAmount')"
-        placeholder="0,00"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.hint')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
         :model-value="goodsAmount"
         :locale="moneyLocale"
         @update:modelValue="goodsAmount = $event"
       />
       <FieldMoney
         name="servicesAmount"
-        :label="t('ui.reportRowForm.servicesAmount')"
-        placeholder="0,00"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.hint')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.placeholder')"
         :model-value="servicesAmount"
         :locale="moneyLocale"
         @update:modelValue="servicesAmount = $event"
       />
-
-      <div>
-        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.total') }}</div>
-        <div class="ReportRowEditForm_Card">
-          <div class="ReportRowEditForm_Value">{{ formatValue(totalValue) }}</div>
-        </div>
-      </div>
+      <DisplayField :label="t('ui.reportRowForm.total')" :value="formatValue(totalValue)" />
     </div>
 
-    <div class="ReportRowEditForm_Toolbar">
+    <div v-if="!isLocalCurrency" class="ReportRowEditForm_Toolbar">
       <ButtonBase size="xs" color="primary" :disabled="isCalculateDisabled" @click="handleCalculate">
         {{ t('ui.reportRowForm.calculate') }}
       </ButtonBase>
@@ -314,37 +327,13 @@ onMounted(() => {
       <div v-if="!isCalculated" class="ReportRowEditForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
     </div>
 
-    <div class="ReportRowEditForm_Calculations">
-      <div>
-        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.goodsRsd') }}</div>
-
-        <div class="ReportRowEditForm_Card">
-          <div class="ReportRowEditForm_Value">{{ formatValue(goodsAmountRsd) }}</div>
-        </div>
-      </div>
-
-      <div>
-        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.servicesRsd') }}</div>
-
-        <div class="ReportRowEditForm_Card">
-          <div class="ReportRowEditForm_Value">{{ formatValue(servicesAmountRsd) }}</div>
-        </div>
-      </div>
-
-      <div>
-        <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.totalRsd') }}</div>
-        <div class="ReportRowEditForm_Card">
-          <div class="ReportRowEditForm_Value">{{ formatValue(totalAmountRsd) }}</div>
-        </div>
-      </div>
+    <div class="ReportRowEditForm_Calculations" v-if="!isLocalCurrency">
+      <DisplayField :label="t('ui.reportRowForm.goodsRsd')" :value="formatValue(goodsAmountRsd)" />
+      <DisplayField :label="t('ui.reportRowForm.servicesRsd')" :value="formatValue(servicesAmountRsd)" />
+      <DisplayField :label="t('ui.reportRowForm.totalRsd')" :value="formatValue(totalAmountRsd)" />
     </div>
 
-    <div>
-      <div class="ReportRowEditForm_Label">{{ t('ui.reportRowForm.row') }}</div>
-      <div class="ReportRowEditForm_Summary">
-        <div class="ReportRowEditForm_Value">{{ summary || '—' }}</div>
-      </div>
-    </div>
+    <DisplayField :label="t('ui.reportRowForm.row')" :value="summary" />
   </form>
 </template>
 
@@ -393,39 +382,5 @@ onMounted(() => {
 .ReportRowEditForm_Hint {
   color: var(--color-text-disabled);
   font: var(--font-medium-text-xs);
-}
-
-.ReportRowEditForm_Card {
-  height: fit-content;
-  border: 1px dashed var(--color-border-default);
-  background: var(--color-background-surface-accent);
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  color: var(--color-text-default);
-}
-
-.ReportRowEditForm_Summary {
-  padding: 12px 16px;
-  border-radius: 6px;
-  border: 1px dashed var(--color-border-default);
-  background: var(--color-background-surface-accent);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.ReportRowEditForm_Label {
-  color: var(--color-text-disabled);
-  font: var(--font-medium-text-xs);
-}
-
-.ReportRowEditForm_Value {
-  color: var(--color-text-default);
-  font: var(--font-medium-text-sm);
-  line-height: 1.15;
-  word-break: break-word;
 }
 </style>

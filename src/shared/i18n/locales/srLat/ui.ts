@@ -70,6 +70,28 @@ export const srLatUi = {
         hint: '',
       },
     },
+    incomeRecordsForm: {
+      date: {
+        label: 'Datum',
+        placeholder: 'DD.MM.GGGG',
+        hint: 'Datum fakture',
+      },
+      description: {
+        label: 'Income description',
+        placeholder: 'Фактура бр.25, Клијент - Beta Box d.o.o. Beograd',
+        hint: 'Broj fakture (preporučljivo i naziv kupca)',
+      },
+      goodsAmount: {
+        label: 'Iznos robe',
+        placeholder: '0,00',
+        hint: 'Iznos prihoda po fakturi od prodaje robe',
+      },
+      servicesAmount: {
+        label: 'Iznos usluga',
+        placeholder: '0,00',
+        hint: 'Iznos prihoda po fakturi od pruženih usluga',
+      },
+    },
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'Br.',
@@ -78,7 +100,7 @@ export const srLatUi = {
     currency: 'Valuta',
     addRow: 'Dodaj red',
     clearTable: 'Obriši tabelu',
-    emptyHint: 'Tabela je prazna, dodajte red ...',
+    emptyHint: 'Tabela je prazna, dodajte red',
     total: 'Ukupno',
     totalLimitExceeded: 'Upozorenje: ukupan iznos je premašio limit',
   },
@@ -91,15 +113,10 @@ export const srLatUi = {
     remove: 'Obriši',
   },
   reportRowForm: {
-    date: 'Datum',
     currency: 'Valuta',
-    description: 'Opis',
-    descriptionPlaceholder: 'Svrha plaćanja',
-    goodsAmount: 'Iznos robe',
-    servicesAmount: 'Iznos usluga',
     total: 'Ukupno',
     calculate: 'Izračunaj',
-    officialRatePrefix: 'ZVANIČNI SREDNJI KURS DINARA',
+    officialRatePrefix: 'Zvanični srednji kurs RSD (NBS)',
     recalculateHint: 'Preračunajte nakon izmena.',
     goodsRsd: 'Roba (RSD)',
     servicesRsd: 'Usluge (RSD)',
@@ -113,18 +130,6 @@ export const srLatUi = {
   reportPreview: {
     toHome: 'Na početnu',
     print: 'ŠTAMPA',
-  },
-  reportLabels: {
-    title: 'Knjiga o ostvarenoj delatnosti paušalno oporezovanih obveznika',
-    table: {
-      rowNumber: 'Redni broj',
-      dateAndDescription: 'Datum i opis knjiženja',
-      income: 'PRIHOD OD DELATNOSTI',
-      incomeFromProducts: 'od prodaje proizvoda',
-      incomeFromServices: 'od izvršenih usluga',
-      totalIncome: 'Svega prihod od delatnosti (3 + 4)',
-      total: 'Ukupno',
-    },
   },
   deleteRowModal: {
     title: 'Obrisati zapis?',
