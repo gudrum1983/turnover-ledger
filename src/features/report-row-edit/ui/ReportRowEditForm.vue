@@ -114,7 +114,12 @@ const formatInputMoney = (value: number | null | undefined): string | null => {
   if (value === null || value === undefined) {
     return null
   }
-  return String(value)
+
+  return new Intl.NumberFormat(moneyLocale.value, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+    useGrouping: false,
+  }).format(value)
 }
 
 const clearCalculated = () => {
