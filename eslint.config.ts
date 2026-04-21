@@ -18,7 +18,7 @@ export default defineConfigWithVueTs(
   },
 
   // Глобально игнорируем сборочные артефакты.
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/storybook-static/**']),
   globalIgnores(['!.storybook'], 'Include Storybook Directory'),
   // Базовые правила Vue.
   ...pluginVue.configs['flat/essential'],
