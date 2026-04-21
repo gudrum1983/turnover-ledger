@@ -98,6 +98,7 @@ export const ruUi = {
     currency: 'Валюта',
     addRow: 'Добавить строку',
     clearTable: 'Очистить таблицу',
+    sortByDate: 'Сортировать по дате',
     emptyHint: 'Таблица пустая, добавьте строку',
     total: 'Итого',
     totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
@@ -124,6 +125,20 @@ export const ruUi = {
     titleAdd: 'Добавить новую строку',
     titleEdit: 'Редактирование строки',
     submit: 'Сохранить',
+  },
+  tableAlerts: {
+    annualLimit: {
+      message: 'Превышен лимит',
+      hint: 'Доход за год превысил 6 000 000 RSD.',
+    },
+    sortByDate: {
+      message: 'Не по дате',
+      hint: 'Отсортируйте записи по дате — от ранних к поздним.',
+    },
+    differentYears: {
+      message: 'Разные годы',
+      hint: 'В одном отчёте должен быть только один год.',
+    },
   },
   reportPreview: {
     toHome: 'На главную',

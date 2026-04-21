@@ -100,6 +100,7 @@ export const srCyrUi = {
     currency: 'Валута',
     addRow: 'Додај ред',
     clearTable: 'Обриши табелу',
+    sortByDate: 'Сортирај по датуму',
     emptyHint: 'Табела је празна, додајте ред',
     total: 'Укупно',
     totalLimitExceeded: 'Упозорење: укупан износ је премашио лимит',
@@ -126,6 +127,20 @@ export const srCyrUi = {
     titleAdd: 'Додај ред',
     titleEdit: 'Измена реда',
     submit: 'Сачувај',
+  },
+  tableAlerts: {
+    annualLimit: {
+      message: 'Лимит прекорачен',
+      hint: 'Приход за годину прелази 6.000.000 RSD.',
+    },
+    sortByDate: {
+      message: 'Није по датуму',
+      hint: 'Сортирајте записе по датуму — од ранијих ка каснијим.',
+    },
+    differentYears: {
+      message: 'Различите године',
+      hint: 'Један извештај треба да има само једну годину.',
+    },
   },
   reportPreview: {
     toHome: 'На почетну',
