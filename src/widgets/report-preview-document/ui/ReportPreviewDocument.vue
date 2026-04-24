@@ -34,6 +34,9 @@ const { formData, rows } = storeToRefs(store)
 
 const classColumn = computed(() => [{ ReportPreviewDocument_Column_landscape: props.landscape }])
 const classSignature = computed(() => [{ ReportPreviewDocument_SignaturePlace_landscape: props.landscape }])
+const footerRowsStartIndex = computed(() => Math.max(rows.value.length - 1, 0))
+const mainRows = computed(() => rows.value.slice(0, footerRowsStartIndex.value))
+const footerRows = computed(() => rows.value.slice(footerRowsStartIndex.value))
 const tableTotals = computed(() => getTableTotals(rows.value))
 const totalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: props.script }))
 
@@ -81,32 +84,42 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
       </thead>
       <tbody>
         <ReportDocumentRow
-          v-for="(row, index) in store.rows"
+          v-for="(row, index) in mainRows"
           :key="row.id"
           :index="index"
           :row="row"
           :script="props.script"
         />
       </tbody>
-      <tfoot>
+      <tbody class="ReportPreviewDocument_TrailingGroup">
+        <ReportDocumentRow
+          v-for="(row, index) in footerRows"
+          :key="row.id"
+          :index="footerRowsStartIndex + index"
+          :row="row"
+          :script="props.script"
+        />
         <tr class="Typo_ReportTableAccent">
           <td colspan="4" class="Text_AlginRight">{{ getTableTotalLabel() }}</td>
           <td class="Text_AlginRight">{{ totalRsd }}</td>
         </tr>
-      </tfoot>
+        <tr class="ReportPreviewDocument_FooterRow">
+          <td colspan="5" class="ReportPreviewDocument_FooterSignature">
+            <div class="ReportPreviewDocument_Footer">
+              <div class="ReportPreviewDocument_SignaturePlace" :class="classSignature">
+                <div class="Typo_ReportTableAccent">{{ getFooterLabel('preparedBy') }}</div>
+                <div class="ReportPreviewDocument_Signature">{{ formData.footer.preparedBy }}</div>
+              </div>
+
+              <div class="ReportPreviewDocument_SignaturePlace" :class="classSignature">
+                <div class="Typo_ReportTableAccent">{{ getFooterLabel('responsiblePerson') }}</div>
+                <div class="ReportPreviewDocument_Signature">{{ formData.footer.responsiblePerson }}</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
-
-    <div class="ReportPreviewDocument_Footer">
-      <div class="ReportPreviewDocument_SignaturePlace" :class="classSignature">
-        <div class="Typo_ReportTableAccent">{{ getFooterLabel('preparedBy') }}</div>
-        <div class="ReportPreviewDocument_Signature">{{ formData.footer.preparedBy }}</div>
-      </div>
-
-      <div class="ReportPreviewDocument_SignaturePlace" :class="classSignature">
-        <div class="Typo_ReportTableAccent">{{ getFooterLabel('responsiblePerson') }}</div>
-        <div class="ReportPreviewDocument_Signature">{{ formData.footer.responsiblePerson }}</div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -129,6 +142,22 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
   &_Footer {
     display: flex;
     justify-content: space-between;
+  }
+
+  &_TrailingGroup {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  &_FooterRow {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 0;
+
+    td {
+      border: 0;
+      padding: 10mm 0 0;
+    }
   }
 
   &_SignaturePlace {
@@ -161,7 +190,7 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
   box-sizing: border-box;
   border-collapse: collapse;
   border-spacing: 0;
-  margin-block-end: 20mm;
+  width: 100%;
 
   td,
   th {
@@ -210,6 +239,13 @@ const getTableTotalLabel = () => getReportTotalLabel(props.script)
         }
       }
     }
+  }
+}
+
+.ReportPreviewDocument_Table {
+  .ReportPreviewDocument_FooterSignature {
+    padding-top: 10mm;
+    border: 0;
   }
 }
 </style>
