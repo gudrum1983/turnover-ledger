@@ -12,7 +12,7 @@ import { ModalBase } from '@/shared/ui/modal-base'
 import { ReportRowsTable } from '@/widgets/report-rows-table'
 
 const store = useReportStore()
-const { rows } = storeToRefs(store)
+const { rows, hasUnsortedRows, hasRowsFromDifferentYears } = storeToRefs(store)
 
 const localeStore = useLocaleStore()
 const { t } = useLocale()
@@ -101,6 +101,10 @@ function handleClearTable() {
   closeDialogConfirm()
 }
 
+function handleSortRows() {
+  store.sortRowsByDate()
+}
+
 const toCents = (value: number) => Math.round(value * 100)
 
 const createRowId = () => {
@@ -153,7 +157,10 @@ function onSubmit(payload: ReportRowPayload) {
       :display-total-rsd="displayTotalRsd"
       :display-total-limit-rsd="displayTotalLimitRsd"
       :is-total-limit-exceeded="isTotalLimitExceeded"
+      :has-unsorted-rows="hasUnsortedRows"
+      :has-rows-from-different-years="hasRowsFromDifferentYears"
       @add="openCreateModal()"
+      @sort="handleSortRows"
       @clear="openDialogConfirm = true"
       @edit="openEditModal"
       @copy="handleCopy"

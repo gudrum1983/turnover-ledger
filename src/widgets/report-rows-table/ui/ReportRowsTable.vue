@@ -6,6 +6,7 @@ import { useLocale } from '@/shared/i18n'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { DividerToggle } from '@/shared/ui/divider-toggle'
 import { IconAdd, IconCompress, IconExpand } from '@/shared/ui/icons'
+import { InfoHint } from '@/shared/ui/info-hint'
 
 type Props = {
   rows: ReportRow[]
@@ -14,12 +15,16 @@ type Props = {
   displayTotalRsd: string
   displayTotalLimitRsd: string
   isTotalLimitExceeded: boolean
+  hasUnsortedRows: boolean
+  hasRowsFromDifferentYears: boolean
 }
 
-const { rows, locale, displayTotalRsd, displayTotalLimitRsd, isTotalLimitExceeded } = defineProps<Props>()
+const { rows, locale, displayTotalRsd, isTotalLimitExceeded, hasUnsortedRows, hasRowsFromDifferentYears } =
+  defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'add'): void
+  (event: 'sort'): void
   (event: 'clear'): void
   (event: 'edit', id: string): void
   (event: 'copy', id: string): void
@@ -49,11 +54,33 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
     <div class="ReportRowsTable_Fieldset">
       <div class="ReportRowsTable_Actions">
         <div class="ReportRowsTable_RowActions">
-          <ButtonBase color="primary" size="xs" @click="emit('add')">{{
-            t('ui.reportBuilderIncomeRecordsTable.addRow')
-          }}</ButtonBase>
+          <ButtonBase color="primary" size="xs" @click="emit('add')">
+            {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+          </ButtonBase>
+
           <ButtonBase v-if="rows.length > 0" color="danger" size="xs" @click="emit('clear')">
             {{ t('ui.reportBuilderIncomeRecordsTable.clearTable') }}
+          </ButtonBase>
+        </div>
+        <div class="ReportRowsTable_Alerts">
+          <div
+            v-if="isTotalLimitExceeded"
+            class="ReportRowsTable_Alert ReportRowsTable_Alert_Danger Typo_BodyAccent"
+            role="alert"
+          >
+            {{ t('ui.tableAlerts.annualLimit.message') }}.
+            <InfoHint :text="t('ui.tableAlerts.annualLimit.hint')" />
+          </div>
+          <div v-if="hasUnsortedRows" class="ReportRowsTable_Alert Typo_BodyAccent" role="alert">
+            {{ t('ui.tableAlerts.sortByDate.message') }}.
+            <InfoHint :text="t('ui.tableAlerts.sortByDate.hint')" />
+          </div>
+          <div v-if="hasRowsFromDifferentYears" class="ReportRowsTable_Alert Typo_BodyAccent" role="alert">
+            {{ t('ui.tableAlerts.differentYears.message') }}.
+            <InfoHint :text="t('ui.tableAlerts.differentYears.hint')" />
+          </div>
+          <ButtonBase v-if="rows.length > 0 && hasUnsortedRows" color="warning" size="xs" @click="emit('sort')">
+            {{ t('ui.reportBuilderIncomeRecordsTable.sortByDate') }}
           </ButtonBase>
         </div>
       </div>
@@ -99,11 +126,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
           </ButtonBase>
         </div>
 
-        <div
-          v-if="rows.length > 0"
-          class="ReportRowsTable_TotalRow"
-          :class="{ ReportRowsTable_TotalRow_withWarning: isTotalLimitExceeded }"
-        >
+        <div v-if="rows.length > 0" class="ReportRowsTable_TotalRow">
           <div></div>
           <div></div>
           <div></div>
@@ -112,9 +135,6 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
           </div>
           <div class="ReportRowsTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
           <div></div>
-        </div>
-        <div v-if="isTotalLimitExceeded" class="ReportRowsTable_Warning Typo_BodyAccent" role="alert">
-          {{ t('ui.reportBuilderIncomeRecordsTable.totalLimitExceeded') }} {{ displayTotalLimitRsd }}.
         </div>
       </div>
     </div>
@@ -190,10 +210,6 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
     border-top: none;
     border-radius: 0 0 6px 6px;
     background: var(--color-background-default);
-
-    &_withWarning {
-      border-radius: 0;
-    }
   }
 
   &_TotalCell {
@@ -205,14 +221,29 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
     text-align: center;
   }
 
-  &_Warning {
-    padding: 12px 14px;
-    color: var(--color-text-danger);
-    background: color-mix(in srgb, var(--color-background-danger) 10%, white);
-    border: 1px solid var(--color-border-danger);
-    border-top: none;
-    border-radius: 0 0 6px 6px;
+  &_Alerts {
+    display: flex;
+    gap: 10px;
+  }
+
+  &_Alert {
+    color: var(--color-text-warning);
     text-align: center;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 6px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--color-background-warning-hovered) 10%, transparent);
+    border: 1px dashed var(--color-text-warning);
+  }
+
+  &_Alert_Danger {
+    color: var(--color-text-danger);
+    text-align: center;
+    background: color-mix(in srgb, var(--color-background-danger-hovered) 10%, transparent);
+    border: 1px dashed var(--color-text-danger);
   }
 }
 </style>

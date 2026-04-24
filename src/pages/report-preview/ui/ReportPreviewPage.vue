@@ -5,6 +5,7 @@ import { AppHeader } from '@/widgets/app-header'
 import { ReportPreviewDocument } from '@/widgets/report-preview-document'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { ButtonBase } from '@/shared/ui/button-base'
+import { InfoHint } from '@/shared/ui/info-hint'
 import { LinkBase } from '@/shared/ui/link-base'
 import { onBeforeUnmount } from 'vue'
 import { useLocale } from '@/shared/i18n'
@@ -36,7 +37,10 @@ onBeforeUnmount(() => {
 
           <ReportScriptSwitch v-model="script" class="no-print" />
 
-          <ButtonBase size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</ButtonBase>
+          <div class="ReportPreviewPage_PrintAction">
+            <InfoHint :text="t('ui.reportPreview.printHint')" :max-width="300" />
+            <ButtonBase size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</ButtonBase>
+          </div>
         </div>
       </template>
     </AppHeader>
@@ -61,6 +65,12 @@ onBeforeUnmount(() => {
     display: flex;
     width: 100%;
     justify-content: space-between;
+  }
+
+  &_PrintAction {
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   &_Document {

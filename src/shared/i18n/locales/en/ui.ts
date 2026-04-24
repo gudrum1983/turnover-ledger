@@ -100,6 +100,7 @@ export const enUi = {
     currency: 'Currency',
     addRow: 'Add row',
     clearTable: 'Clear table',
+    sortByDate: 'Sort by date',
     emptyHint: 'The table is empty, add a row',
     total: 'Total',
     totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
@@ -127,9 +128,24 @@ export const enUi = {
     titleEdit: 'Edit row',
     submit: 'Save',
   },
+  tableAlerts: {
+    annualLimit: {
+      message: 'Limit exceeded',
+      hint: 'Income for the year exceeds 6,000,000 RSD.',
+    },
+    sortByDate: {
+      message: 'Not sorted',
+      hint: 'Sort records by date from earliest to latest.',
+    },
+    differentYears: {
+      message: 'Different years',
+      hint: 'A report should include only one year.',
+    },
+  },
   reportPreview: {
     toHome: 'Back home',
-    print: 'PRINT',
+    print: 'PRINT / PDF',
+    printHint: 'To save a PDF, choose PDF as the destination or printer in the print dialog.',
   },
   deleteRowModal: {
     title: 'Delete this record?',
@@ -147,6 +163,11 @@ export const enUi = {
     label: 'Report',
     latin: 'Latinica',
     cyrillic: 'Ћирилица',
+  },
+  noPageMessage: {
+    link: 'Easy — let’s go back',
+    title: 'Page not found',
+    subtitle: 'No worries, you just took a wrong turn.',
   },
   accessibility: {
     expandSection: 'Expand section',

@@ -45,6 +45,33 @@ export const useReportStore = defineStore(STORE_ID, () => {
   })
 
   const lastUsedCurrencyCode = computed(() => rows.value.at(-1)?.currency ?? 'EUR')
+  const hasUnsortedRows = computed(() => {
+    for (let index = 1; index < rows.value.length; index += 1) {
+      const previousDate = rows.value[index - 1]?.date ?? ''
+      const currentDate = rows.value[index]?.date ?? ''
+
+      if (previousDate > currentDate) {
+        return true
+      }
+    }
+
+    return false
+  })
+
+  const hasRowsFromDifferentYears = computed(() => {
+    const years = new Set<string>()
+
+    for (const row of rows.value) {
+      if (!row.date) continue
+      years.add(row.date.slice(0, 4))
+
+      if (years.size > 1) {
+        return true
+      }
+    }
+
+    return false
+  })
 
   function exportState(): ReportState {
     return cloneReportState({
@@ -121,6 +148,10 @@ export const useReportStore = defineStore(STORE_ID, () => {
     rows.value = []
   }
 
+  function sortRowsByDate() {
+    rows.value = [...rows.value].sort((left, right) => left.date.localeCompare(right.date))
+  }
+
   function hydrateFromLocalStorage() {
     const savedState = localStorage.getItem(LOCAL_STORAGE_KEY)
     if (savedState) {
@@ -185,6 +216,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
     rows,
     usedCurrencyCodes,
     lastUsedCurrencyCode,
+    hasUnsortedRows,
+    hasRowsFromDifferentYears,
     exportState,
     replaceState,
     setHeaderValue,
@@ -198,6 +231,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
     removeRowById,
     setRows,
     clearRows,
+    sortRowsByDate,
     hydrateFromLocalStorage,
   }
 })

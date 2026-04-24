@@ -100,6 +100,7 @@ export const srCyrUi = {
     currency: 'Валута',
     addRow: 'Додај ред',
     clearTable: 'Обриши табелу',
+    sortByDate: 'Сортирај по датуму',
     emptyHint: 'Табела је празна, додајте ред',
     total: 'Укупно',
     totalLimitExceeded: 'Упозорење: укупан износ је премашио лимит',
@@ -127,9 +128,24 @@ export const srCyrUi = {
     titleEdit: 'Измена реда',
     submit: 'Сачувај',
   },
+  tableAlerts: {
+    annualLimit: {
+      message: 'Лимит прекорачен',
+      hint: 'Приход за годину прелази 6.000.000 RSD.',
+    },
+    sortByDate: {
+      message: 'Није по датуму',
+      hint: 'Сортирајте записе по датуму — од ранијих ка каснијим.',
+    },
+    differentYears: {
+      message: 'Различите године',
+      hint: 'Један извештај треба да има само једну годину.',
+    },
+  },
   reportPreview: {
     toHome: 'На почетну',
-    print: 'ШТАМПА',
+    print: 'ШТАМПА / PDF',
+    printHint: 'Да бисте сачували PDF, у прозору за штампу изаберите PDF као одредиште или штампач.',
   },
   deleteRowModal: {
     title: 'Обрисати запис?',
@@ -147,6 +163,11 @@ export const srCyrUi = {
     label: 'Извештај',
     latin: 'Latinica',
     cyrillic: 'Ћирилица',
+  },
+  noPageMessage: {
+    link: 'Полако — идемо назад',
+    title: 'Страница није пронађена',
+    subtitle: 'Ништа страшно, само сте мало скренули.',
   },
   accessibility: {
     expandSection: 'Прошири секцију',

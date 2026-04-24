@@ -98,6 +98,7 @@ export const ruUi = {
     currency: 'Валюта',
     addRow: 'Добавить строку',
     clearTable: 'Очистить таблицу',
+    sortByDate: 'Сортировать по дате',
     emptyHint: 'Таблица пустая, добавьте строку',
     total: 'Итого',
     totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
@@ -125,9 +126,24 @@ export const ruUi = {
     titleEdit: 'Редактирование строки',
     submit: 'Сохранить',
   },
+  tableAlerts: {
+    annualLimit: {
+      message: 'Превышен лимит',
+      hint: 'Доход за год превысил 6 000 000 RSD.',
+    },
+    sortByDate: {
+      message: 'Не по дате',
+      hint: 'Отсортируйте записи по дате — от ранних к поздним.',
+    },
+    differentYears: {
+      message: 'Разные годы',
+      hint: 'В одном отчёте должен быть только один год.',
+    },
+  },
   reportPreview: {
     toHome: 'На главную',
-    print: 'ПЕЧАТЬ',
+    print: 'ПЕЧАТЬ / PDF',
+    printHint: 'Чтобы сохранить PDF, выберите PDF как место назначения или принтер в окне печати.',
   },
   deleteRowModal: {
     title: 'Удалить запись?',
@@ -145,6 +161,11 @@ export const ruUi = {
     label: 'Отчет',
     latin: 'Latinica',
     cyrillic: 'Ћирилица',
+  },
+  noPageMessage: {
+    link: 'Спокойно — возвращаемся назад',
+    title: 'Страница не найдена',
+    subtitle: 'Ничего страшного, вы просто немного свернули не туда.',
   },
   accessibility: {
     expandSection: 'Развернуть секцию',
