@@ -144,7 +144,8 @@ export const srLatUi = {
   },
   reportPreview: {
     toHome: 'Na početnu',
-    print: 'ŠTAMPA',
+    print: 'ŠTAMPA / PDF',
+    printHint: 'Da biste sačuvali PDF, u prozoru za štampu izaberite PDF kao odredište ili štampač.',
   },
   deleteRowModal: {
     title: 'Obrisati zapis?',

@@ -142,7 +142,8 @@ export const ruUi = {
   },
   reportPreview: {
     toHome: 'На главную',
-    print: 'ПЕЧАТЬ',
+    print: 'ПЕЧАТЬ / PDF',
+    printHint: 'Чтобы сохранить PDF, выберите PDF как место назначения или принтер в окне печати.',
   },
   deleteRowModal: {
     title: 'Удалить запись?',

@@ -57,9 +57,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
           <ButtonBase color="primary" size="xs" @click="emit('add')">
             {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
           </ButtonBase>
-          <ButtonBase v-if="rows.length > 0 && hasUnsortedRows" color="warning" size="xs" @click="emit('sort')">
-            {{ t('ui.reportBuilderIncomeRecordsTable.sortByDate') }}
-          </ButtonBase>
+
           <ButtonBase v-if="rows.length > 0" color="danger" size="xs" @click="emit('clear')">
             {{ t('ui.reportBuilderIncomeRecordsTable.clearTable') }}
           </ButtonBase>
@@ -81,6 +79,9 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
             {{ t('ui.tableAlerts.differentYears.message') }}.
             <InfoHint :text="t('ui.tableAlerts.differentYears.hint')" />
           </div>
+          <ButtonBase v-if="rows.length > 0 && hasUnsortedRows" color="warning" size="xs" @click="emit('sort')">
+            {{ t('ui.reportBuilderIncomeRecordsTable.sortByDate') }}
+          </ButtonBase>
         </div>
       </div>
       <div>

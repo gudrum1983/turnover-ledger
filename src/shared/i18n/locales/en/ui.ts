@@ -144,7 +144,8 @@ export const enUi = {
   },
   reportPreview: {
     toHome: 'Back home',
-    print: 'PRINT',
+    print: 'PRINT / PDF',
+    printHint: 'To save a PDF, choose PDF as the destination or printer in the print dialog.',
   },
   deleteRowModal: {
     title: 'Delete this record?',

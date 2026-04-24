@@ -144,7 +144,8 @@ export const srCyrUi = {
   },
   reportPreview: {
     toHome: 'На почетну',
-    print: 'ШТАМПА',
+    print: 'ШТАМПА / PDF',
+    printHint: 'Да бисте сачували PDF, у прозору за штампу изаберите PDF као одредиште или штампач.',
   },
   deleteRowModal: {
     title: 'Обрисати запис?',
