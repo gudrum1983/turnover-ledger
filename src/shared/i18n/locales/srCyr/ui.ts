@@ -164,6 +164,11 @@ export const srCyrUi = {
     latin: 'Latinica',
     cyrillic: 'Ћирилица',
   },
+  noPageMessage: {
+    link: 'Полако — идемо назад',
+    title: 'Страница није пронађена',
+    subtitle: 'Ништа страшно, само сте мало скренули.',
+  },
   accessibility: {
     expandSection: 'Прошири секцију',
     collapseSection: 'Скупи секцију',

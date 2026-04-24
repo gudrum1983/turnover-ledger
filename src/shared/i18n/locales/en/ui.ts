@@ -164,6 +164,11 @@ export const enUi = {
     latin: 'Latinica',
     cyrillic: 'Ћирилица',
   },
+  noPageMessage: {
+    link: 'Easy — let’s go back',
+    title: 'Page not found',
+    subtitle: 'No worries, you just took a wrong turn.',
+  },
   accessibility: {
     expandSection: 'Expand section',
     collapseSection: 'Collapse section',

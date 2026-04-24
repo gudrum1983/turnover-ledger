@@ -162,6 +162,11 @@ export const ruUi = {
     latin: 'Latinica',
     cyrillic: 'Ћирилица',
   },
+  noPageMessage: {
+    link: 'Спокойно — возвращаемся назад',
+    title: 'Страница не найдена',
+    subtitle: 'Ничего страшного, вы просто немного свернули не туда.',
+  },
   accessibility: {
     expandSection: 'Развернуть секцию',
     collapseSection: 'Свернуть секцию',

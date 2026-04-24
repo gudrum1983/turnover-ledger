@@ -164,6 +164,11 @@ export const srLatUi = {
     latin: 'Latinica',
     cyrillic: 'Ћирилица',
   },
+  noPageMessage: {
+    link: 'Polako — idemo nazad',
+    title: 'Stranica nije pronađena',
+    subtitle: 'Ništa strašno, samo ste malo skrenuli.',
+  },
   accessibility: {
     expandSection: 'Proširi sekciju',
     collapseSection: 'Skupi sekciju',
