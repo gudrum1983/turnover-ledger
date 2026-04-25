@@ -42,6 +42,9 @@ const meta = {
     isIconOnly: {
       control: 'boolean',
     },
+    isLoader: {
+      control: 'boolean',
+    },
     default: {
       control: 'text',
       description: 'Основное текстовое содержимое кнопки',
@@ -141,6 +144,24 @@ export const Disabled: Story = {
       description: {
         story:
           'Кнопка в отключенном состоянии. Используется, когда действие временно недоступно, например до заполнения обязательных полей формы.',
+      },
+    },
+  },
+}
+
+export const Loading: Story = {
+  name: 'С лоадером',
+  args: {
+    color: 'primary',
+    size: 'xs',
+    isLoader: true,
+    default: 'Рассчитать',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Состояние загрузки для асинхронного действия. Контент кнопки скрывается, но сохраняет исходную ширину, чтобы кнопка не дёргалась.',
       },
     },
   },
