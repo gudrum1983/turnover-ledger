@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 
+import { LoaderBase } from '@/shared/ui/loader-base'
+
 type Props = {
   /** Основной цвет кнопки */
   color?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
@@ -18,6 +20,8 @@ type Props = {
   isIconOnly?: boolean
   /** Выравнивание содержимого внутри кнопки */
   contentPosition?: 'left' | 'center'
+  /** Отображение иконки загрузки */
+  isLoader?: boolean
 }
 
 const {
@@ -29,6 +33,7 @@ const {
   disabled = false,
   isIconOnly = false,
   contentPosition = 'center',
+  isLoader = false,
 } = defineProps<Props>()
 
 const classes = computed(() => [
@@ -46,13 +51,18 @@ const hasLabelSlot = computed(() => Boolean(slots.default))
 </script>
 
 <template>
-  <button class="ButtonBase" :class="classes" :disabled="disabled" :type="type">
-    <span v-if="hasIconSlot" class="ButtonBase_Icon">
-      <slot name="icon" />
+  <button class="ButtonBase" :class="classes" :disabled="disabled" :type="type" :aria-busy="isLoader || undefined">
+    <span class="ButtonBase_Content" :class="{ ButtonBase_Content_hidden: isLoader }">
+      <span v-if="hasIconSlot" class="ButtonBase_Icon">
+        <slot name="icon" />
+      </span>
+      <slot v-if="!isIconOnly && hasLabelSlot" />
+      <span v-if="$slots['end-icon']" class="ButtonBase_EndIcon">
+        <slot name="end-icon" />
+      </span>
     </span>
-    <slot v-if="!isIconOnly && hasLabelSlot" />
-    <span v-if="$slots['end-icon']" class="ButtonBase_EndIcon">
-      <slot name="end-icon" />
+    <span v-if="isLoader" class="ButtonBase_Loader" aria-hidden="true">
+      <LoaderBase :size="size" />
     </span>
   </button>
 </template>
@@ -90,6 +100,7 @@ const hasLabelSlot = computed(() => Boolean(slots.default))
   border: 1px solid transparent;
   cursor: pointer;
   width: auto;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: var(--button-algin-content);
@@ -121,9 +132,27 @@ const hasLabelSlot = computed(() => Boolean(slots.default))
 }
 
 .ButtonBase_Icon,
-.ButtonBase_EndIcon {
+.ButtonBase_EndIcon,
+.ButtonBase_Content {
   display: inline-flex;
   align-items: center;
+}
+
+.ButtonBase_Content {
+  gap: inherit;
+}
+
+.ButtonBase_Content_hidden {
+  visibility: hidden;
+}
+
+.ButtonBase_Loader {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .ButtonBase_fullWidth {

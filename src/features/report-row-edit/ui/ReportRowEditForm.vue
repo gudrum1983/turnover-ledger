@@ -116,7 +116,7 @@ const formatInputMoney = (value: number | null | undefined): string | null => {
   }
 
   return new Intl.NumberFormat(moneyLocale.value, {
-    minimumFractionDigits: 0,
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     useGrouping: false,
   }).format(value)
@@ -323,7 +323,13 @@ onMounted(() => {
     </div>
 
     <div v-if="!isLocalCurrency" class="ReportRowEditForm_Toolbar">
-      <ButtonBase size="xs" color="primary" :disabled="isCalculateDisabled" @click="handleCalculate">
+      <ButtonBase
+        size="xs"
+        color="primary"
+        :disabled="isCalculateDisabled"
+        :isLoader="isCalculating"
+        @click="handleCalculate"
+      >
         {{ t('ui.reportRowForm.calculate') }}
       </ButtonBase>
       <div v-if="isCalculated" class="ReportRowEditForm_Hint">
