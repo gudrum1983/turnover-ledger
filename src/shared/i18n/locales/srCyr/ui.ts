@@ -1,4 +1,5 @@
 import type { I18nLocaleMessages } from '../../types'
+import { srCyrInfoPage } from './infoPage'
 
 export const srCyrUi = {
   appHeaderTitle: 'КПО књига (паушал)',
@@ -169,6 +170,11 @@ export const srCyrUi = {
     title: 'Страница није пронађена',
     subtitle: 'Ништа страшно, само сте мало скренули.',
   },
+  footer: {
+    localStorageNotice: 'Сви подаци извештаја остају у Вашем прегледачу',
+    about: 'О апликацији',
+  },
+  infoPage: srCyrInfoPage,
   accessibility: {
     expandSection: 'Прошири секцију',
     collapseSection: 'Скупи секцију',

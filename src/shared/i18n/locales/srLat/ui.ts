@@ -1,4 +1,5 @@
 import type { I18nLocaleMessages } from '../../types'
+import { srLatInfoPage } from './infoPage'
 
 export const srLatUi = {
   appHeaderTitle: 'KPO knjiga (paušal)',
@@ -169,6 +170,11 @@ export const srLatUi = {
     title: 'Stranica nije pronađena',
     subtitle: 'Ništa strašno, samo ste malo skrenuli.',
   },
+  footer: {
+    localStorageNotice: 'Svi podaci izveštaja ostaju u Vašem pregledaču',
+    about: 'O aplikaciji',
+  },
+  infoPage: srLatInfoPage,
   accessibility: {
     expandSection: 'Proširi sekciju',
     collapseSection: 'Skupi sekciju',

@@ -1,4 +1,5 @@
 import type { I18nLocaleMessages } from '../../types'
+import { enInfoPage } from './infoPage'
 
 export const enUi = {
   appHeaderTitle: 'KPO Book (Paušal)',
@@ -169,6 +170,11 @@ export const enUi = {
     title: 'Page not found',
     subtitle: 'No worries, you just took a wrong turn.',
   },
+  footer: {
+    localStorageNotice: 'All report data remains in your browser',
+    about: 'About the app',
+  },
+  infoPage: enInfoPage,
   accessibility: {
     expandSection: 'Expand section',
     collapseSection: 'Collapse section',
