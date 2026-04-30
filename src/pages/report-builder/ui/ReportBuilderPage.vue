@@ -6,6 +6,7 @@ import { ReportRowManage } from '@/features/report-row-manage'
 
 import { PaperBase } from '@/shared/ui/paper-base'
 import { AppHeader } from '@/widgets/app-header'
+import { AppFooter } from '@/widgets/app-footer'
 import { useLocale } from '@/shared/i18n'
 
 const { t } = useLocale()
@@ -25,11 +26,20 @@ const { t } = useLocale()
         <ReportRowManage />
       </PaperBase>
     </main>
+    <AppFooter />
   </div>
 </template>
 
 <style scoped lang="scss">
 .ReportBuilderPage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .ReportBuilderPage_Main {
+    flex: 1;
+  }
+
   .ReportBuilderPage_layout {
     display: flex;
     flex-direction: column;

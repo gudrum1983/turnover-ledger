@@ -1,12 +1,8 @@
 import type { ConversionResponse, CurrencyResponse } from '../model/types'
-
-/*https://nbs-rates.gudrum1983.workers.dev/api/v1/currencies*/
-/*https://kurs.resenje.org/api/v1/currencies*/
-
-const CURRENCIES_URL = 'https://nbs-rates.gudrum1983.workers.dev/api/v1/currencies'
+import { EXCHANGE_RATE_API_URL } from '@/shared/constants/app.ts'
 
 export async function fetchCurrencies(): Promise<CurrencyResponse> {
-  const response = await fetch(CURRENCIES_URL)
+  const response = await fetch(EXCHANGE_RATE_API_URL)
 
   if (!response.ok) {
     throw new Error(`Currencies request failed: ${response.status}`)
@@ -19,7 +15,7 @@ export async function fetchConversion(currencyCode: string, amount: number, date
   const normalizedCode = currencyCode.trim().toLowerCase()
   const normalizedAmount = Number.isFinite(amount) ? amount.toString() : '0'
   const normalizedDate = date.trim()
-  const url = `${CURRENCIES_URL}/${normalizedCode}/conversions/${normalizedAmount}/${normalizedDate}`
+  const url = `${EXCHANGE_RATE_API_URL}/${normalizedCode}/conversions/${normalizedAmount}/${normalizedDate}`
   const response = await fetch(url)
 
   if (!response.ok) {

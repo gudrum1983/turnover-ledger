@@ -10,6 +10,7 @@ import { LinkBase } from '@/shared/ui/link-base'
 import { onBeforeUnmount } from 'vue'
 import { useLocale } from '@/shared/i18n'
 import { useReportScript } from '@/entities/report'
+import { AppFooter } from '@/widgets/app-footer'
 
 const onPrint = () => {
   window.print()
@@ -48,6 +49,8 @@ onBeforeUnmount(() => {
     <section class="ReportPreviewPage_Document">
       <ReportPreviewDocument :script="script" />
     </section>
+
+    <AppFooter />
   </div>
 </template>
 

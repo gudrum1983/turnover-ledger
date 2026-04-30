@@ -3,6 +3,10 @@ export const ROUTES = {
     name: 'reportBuilder',
     path: '/',
   },
+  about: {
+    name: 'about',
+    path: '/about',
+  },
   reportPreview: {
     name: 'reportPreview',
     path: '/preview',

@@ -13,6 +13,11 @@ const routes = [
     component: () => import('@/pages/report-builder'),
   },
   {
+    path: ROUTES.about.path,
+    name: ROUTES.about.name,
+    component: () => import('@/pages/about'),
+  },
+  {
     path: ROUTES.reportPreview.path,
     name: ROUTES.reportPreview.name,
     component: () => import('@/pages/report-preview'),

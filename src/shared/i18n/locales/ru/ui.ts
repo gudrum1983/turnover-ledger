@@ -1,3 +1,5 @@
+import { ruInfoPage } from './infoPage'
+
 export const ruUi = {
   appHeaderTitle: 'Книга КПО (паушал)',
   common: {
@@ -167,6 +169,11 @@ export const ruUi = {
     title: 'Страница не найдена',
     subtitle: 'Ничего страшного, вы просто немного свернули не туда.',
   },
+  footer: {
+    localStorageNotice: 'Все данные отчёта остаются в вашем браузере',
+    about: 'О приложении',
+  },
+  infoPage: ruInfoPage,
   accessibility: {
     expandSection: 'Развернуть секцию',
     collapseSection: 'Свернуть секцию',
