@@ -7,8 +7,8 @@ const { t } = useLocale()
 </script>
 
 <template>
-  <footer class="Container AppFooter no-print Typo_Caption">
-    <div class="AppFooter_Content">
+  <footer class="AppFooter no-print Typo_Caption">
+    <div class="Container AppFooter_Content">
       <div class="AppFooter_Row">
         <span class="AppFooter_Note">{{ t('ui.footer.localStorageNotice') }}</span> ·
         <LinkBase size="sm" :to="{ name: ROUTES.about.name }">{{ t('ui.footer.about') }}</LinkBase>
@@ -24,8 +24,11 @@ const { t } = useLocale()
 
 <style scoped lang="scss">
 .AppFooter {
-  padding-block: 20px 32px;
+  margin-block-start: 20px;
+  padding-block-end: 20px;
   color: var(--color-text-caption);
+  border-top: 1px solid var(--color-border-default);
+  width: 100%;
 
   &_Content {
     display: flex;
@@ -34,7 +37,6 @@ const { t } = useLocale()
     align-items: center;
     gap: 8px 16px;
     padding-block-start: 12px;
-    border-top: 1px solid var(--color-border-default);
   }
 
   &_Row {
