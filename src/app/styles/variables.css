@@ -113,37 +113,42 @@
   --container-gutter: clamp(16px, 3vw, 32px);
 }
 
-@media (min-width: var(--bp-sm)) {
+.Container {
+  width: calc(100% - (var(--container-gutter) * 2));
+  max-width: var(--container-max);
+
+  /*  width: 100%;
+      max-width: min(100% - (var(--container-gutter) * 2), var(--container-max));*/
+  margin-inline: auto;
+}
+
+/* CSS custom properties are not resolved inside media query conditions. */
+@media (min-width: 640px) {
   :root {
     --container-max: var(--container-sm);
   }
 }
 
-@media (min-width: var(--bp-md)) {
+@media (min-width: 768px) {
   :root {
     --container-max: var(--container-md);
   }
 }
 
-@media (min-width: var(--bp-lg)) {
+@media (min-width: 1024px) {
   :root {
     --container-max: var(--container-lg);
   }
 }
 
-@media (min-width: var(--bp-xl)) {
+@media (min-width: 1280px) {
   :root {
     --container-max: var(--container-xl);
   }
 }
 
-@media (min-width: var(--bp-2xl)) {
+@media (min-width: 1536px) {
   :root {
     --container-max: var(--container-2xl);
   }
-}
-
-.Container {
-  width: min(100% - (var(--container-gutter) * 2), var(--container-max));
-  margin-inline: auto;
 }

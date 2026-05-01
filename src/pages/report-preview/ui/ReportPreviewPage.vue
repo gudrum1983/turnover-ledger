@@ -46,9 +46,11 @@ onBeforeUnmount(() => {
       </template>
     </AppHeader>
 
-    <section class="ReportPreviewPage_Document">
-      <ReportPreviewDocument :script="script" />
-    </section>
+    <main class="ReportPreviewPage_Main">
+      <section class="ReportPreviewPage_Document">
+        <ReportPreviewDocument :script="script" />
+      </section>
+    </main>
 
     <AppFooter />
   </div>
@@ -58,6 +60,7 @@ onBeforeUnmount(() => {
 .ReportPreviewPage {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   align-items: center;
 
   &_Header {
@@ -68,6 +71,13 @@ onBeforeUnmount(() => {
     display: flex;
     width: 100%;
     justify-content: space-between;
+  }
+
+  &_Main {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    justify-content: center;
   }
 
   &_PrintAction {
@@ -92,6 +102,11 @@ onBeforeUnmount(() => {
 }
 
 @media print {
+  .ReportPreviewPage_Main {
+    display: block;
+    width: 100%;
+  }
+
   .ReportPreviewPage_Document {
     width: 100%;
     min-height: fit-content;
