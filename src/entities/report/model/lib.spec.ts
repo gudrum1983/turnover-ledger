@@ -1,6 +1,15 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { cloneReportState, getTableTotals, isReportState } from './lib'
-import type { ReportState } from './types'
+import {
+  cloneReportState,
+  createReportExportFile,
+  getTableTotals,
+  isReportExportFile,
+  isReportState,
+  parseImportedReportState,
+} from './lib'
+import { REPORT_EXPORT_VERSION, type ReportState } from './types'
 
 const reportState: ReportState = {
   meta: {
@@ -54,6 +63,14 @@ const reportState: ReportState = {
   ],
 }
 
+const validReportFixture = JSON.parse(
+  readFileSync(fileURLToPath(new URL('./__fixtures__/valid-report.json', import.meta.url)), 'utf-8'),
+) as unknown
+
+const invalidReportFixture = JSON.parse(
+  readFileSync(fileURLToPath(new URL('./__fixtures__/invalid-report.json', import.meta.url)), 'utf-8'),
+) as unknown
+
 describe('report lib', () => {
   it('calculates totals across multiple rows', () => {
     expect(getTableTotals(reportState.rows)).toEqual({
@@ -81,6 +98,14 @@ describe('report lib', () => {
     ).toBe(false)
   })
 
+  it('recognizes a valid export file shape', () => {
+    expect(isReportExportFile(validReportFixture)).toBe(true)
+  })
+
+  it('rejects an invalid export file shape', () => {
+    expect(isReportExportFile(invalidReportFixture)).toBe(false)
+  })
+
   it('creates a deep copy of nested report state data', () => {
     const clonedState = cloneReportState(reportState)
     const clonedFirstRow = clonedState.rows[0]
@@ -98,5 +123,34 @@ describe('report lib', () => {
     expect(clonedFirstRow?.amounts).not.toBe(sourceFirstRow?.amounts)
     expect(clonedFirstRow?.amounts.goods).not.toBe(sourceFirstRow?.amounts.goods)
     expect(clonedFirstRow?.amounts.services).not.toBe(sourceFirstRow?.amounts.services)
+  })
+
+  it('creates an export file with current version and cloned data', () => {
+    const exportFile = createReportExportFile(reportState)
+
+    expect(exportFile.version).toBe(REPORT_EXPORT_VERSION)
+    expect(typeof exportFile.exportedAt).toBe('string')
+    expect(exportFile.data).toEqual(reportState)
+    expect(exportFile.data).not.toBe(reportState)
+  })
+
+  it('parses a raw report state and returns a cloned value', () => {
+    const parsedState = parseImportedReportState(reportState)
+
+    expect(parsedState).toEqual(reportState)
+    expect(parsedState).not.toBe(reportState)
+  })
+
+  it('parses a valid exported report fixture', () => {
+    const parsedState = parseImportedReportState(validReportFixture)
+
+    expect(parsedState).not.toBeNull()
+    expect(isReportState(parsedState)).toBe(true)
+    expect(parsedState).toEqual((validReportFixture as { data: ReportState }).data)
+    expect(parsedState).not.toBe((validReportFixture as { data: ReportState }).data)
+  })
+
+  it('returns null for an invalid imported report fixture', () => {
+    expect(parseImportedReportState(invalidReportFixture)).toBeNull()
   })
 })

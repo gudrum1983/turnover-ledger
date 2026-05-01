@@ -419,7 +419,6 @@ onMounted(() => {
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid var(--color-border-default);
-  background: var(--color-bg-secondary);
 }
 
 .ReportRowEditForm_Alert_Danger {
