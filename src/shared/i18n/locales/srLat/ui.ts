@@ -120,6 +120,8 @@ export const srLatUi = {
     calculate: 'Izračunaj',
     officialRatePrefix: 'Zvanični srednji kurs RSD (NBS)',
     recalculateHint: 'Preračunajte nakon izmena.',
+    currencyLoadError: 'Lista valuta nije učitana. Pokušajte ponovo kasnije.',
+    calculationError: 'Nije moguće dobiti kurs i završiti obračun. Proverite datum i pokušajte ponovo.',
     goodsRsd: 'Roba (RSD)',
     servicesRsd: 'Usluge (RSD)',
     totalRsd: 'Ukupno (RSD)',

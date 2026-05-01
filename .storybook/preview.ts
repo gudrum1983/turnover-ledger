@@ -1,9 +1,12 @@
 import type { Preview } from '@storybook/vue3-vite'
 import { setup } from '@storybook/vue3-vite'
+import { createPinia } from 'pinia'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import '@/app/styles/main.css'
+import { i18n } from '@/shared/i18n'
 
 setup((app) => {
+  const pinia = createPinia()
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
@@ -18,6 +21,8 @@ setup((app) => {
     ],
   })
 
+  app.use(pinia)
+  app.use(i18n)
   app.use(router)
 })
 

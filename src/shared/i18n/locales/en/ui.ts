@@ -120,6 +120,9 @@ export const enUi = {
     calculate: 'Calculate',
     officialRatePrefix: 'Official middle RSD exchange rate (NBS)',
     recalculateHint: 'Recalculate after any changes.',
+    currencyLoadError: 'Failed to load the currency list. Please try again later.',
+    calculationError:
+      'Failed to retrieve the exchange rate and complete the calculation. Check the date and try again.',
     goodsRsd: 'Goods (RSD)',
     servicesRsd: 'Services (RSD)',
     totalRsd: 'Total (RSD)',

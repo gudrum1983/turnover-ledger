@@ -119,6 +119,8 @@ export const ruUi = {
     calculate: 'Рассчитать',
     officialRatePrefix: 'Официальный средний обменный курс RSD (NBS)',
     recalculateHint: 'Пересчитайте после изменений.',
+    currencyLoadError: 'Не удалось загрузить список валют. Попробуйте позже.',
+    calculationError: 'Не удалось получить курс валют и выполнить расчёт. Проверьте дату и попробуйте позже.',
     goodsRsd: 'По товарам (RSD)',
     servicesRsd: 'По услугам (RSD)',
     totalRsd: 'Итого (RSD)',

@@ -120,6 +120,8 @@ export const srCyrUi = {
     calculate: 'Израчунај',
     officialRatePrefix: 'Званични средњи курс RSD (NBS)',
     recalculateHint: 'Прерачунајте након измена.',
+    currencyLoadError: 'Листа валута није учитана. Покушајте поново касније.',
+    calculationError: 'Није могуће добити курс и завршити обрачун. Проверите датум и покушајте поново.',
     goodsRsd: 'Роба (RSD)',
     servicesRsd: 'Услуге (RSD)',
     totalRsd: 'Укупно (RSD)',
