@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "exportedAt": "2026-05-01T12:39:24.429Z",
+  "data": {
+    "meta": {
+      "header": {
+        "pib": "4565",
+        "taxpayer": "Kockin Nikolai",
+        "companyName": "Kockin Nikolai PB",
+        "address": "Beograd, ul. Nedeljka Gvozdenovica, br.6, stan 3",
+        "taxNumber": "987654321",
+        "activityCode": "7530 - IT"
+      },
+      "footer": {
+        "preparedBy": "Kochkina Ekaterina",
+        "responsiblePerson": "Kockin Nikolai"
+      }
+    },
+    "rows": [
+      {
+        "id": "a6dbd24f-fab1-4520-855a-58cae49ea2c0",
+        "date": "2022-08-11",
+        "description": "Фактура бр.01, Клијент - Beta Box d.o.o. Beograd",
+        "currency": "EUR",
+        "exchangeRate": 117.3379,
+        "amounts": {
+          "goods": {
+            "foreignCents": 10000,
+            "rsdCents": 1173379
+          },
+          "services": {
+            "foreignCents": 0,
+            "rsdCents": 0
+          }
+        }
+      },
+      {
+        "id": "c5bb16a5-0373-43f4-92e9-92e6047f5546",
+        "date": "2022-03-10",
+        "description": "Фактура бр.03, Клијент - Beta Box d.o.o. Beograd",
+        "currency": "EUR",
+        "exchangeRate": 117.64,
+        "amounts": {
+          "goods": {
+            "foreignCents": 4400,
+            "rsdCents": 517616
+          },
+          "services": {
+            "foreignCents": 0,
+            "rsdCents": 0
+          }
+        }
+      },
+      {
+        "id": "61cfb965-a7d3-42ef-b0d1-daff287c1c57",
+        "date": "2026-03-02",
+        "description": "Фактура бр.06, Клијент - Beta Box d.o.o. Beograd",
+        "currency": "EUR",
+        "exchangeRate": 117.3888,
+        "amounts": {
+          "goods": {
+            "foreignCents": 30000,
+            "rsdCents": 3521664
+          },
+          "services": {
+            "foreignCents": 0,
+            "rsdCents": 0
+          }
+        }
+      },
+      {
+        "id": "7d48c9e4-7275-4c2e-b3ce-b61306c73cec",
+        "date": "2025-12-05",
+        "description": "Фактура бр.08, Клијент - Beta Box d.o.o. Beograd",
+        "currency": "EUR",
+        "exchangeRate": 117.3858,
+        "amounts": {
+          "goods": {
+            "foreignCents": 30000,
+            "rsdCents": 3521574
+          },
+          "services": {
+            "foreignCents": 0,
+            "rsdCents": 0
+          }
+        }
+      },
+      {
+        "id": "06fa46c5-a80e-47e6-bdca-a0fd05758afc",
+        "date": "2025-12-12",
+        "description": "Фактура бр.09, Клијент - Beta Box d.o.o. Beograd",
+        "currency": "EUR",
+        "exchangeRate": 117.3559,
+        "amounts": {
+          "goods": {
+            "foreignCents": 30000,
+            "rsdCents": 3520677
+          },
+          "services": {
+            "foreignCents": 0,
+            "rsdCents": 0
+          }
+        }
+      }
+    ]
+  }
+}

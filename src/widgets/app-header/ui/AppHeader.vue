@@ -9,8 +9,6 @@ defineSlots<{
   controls?: () => VNode | VNode[]
   actionButtons?: () => VNode | VNode[]
 }>()
-
-/*Todo - чекнуть по ошибке апдейта и изменить компоновку лейаута*/
 </script>
 
 <template>

@@ -90,6 +90,7 @@ const parseMoney = (value: string | null) => {
 const goodsAmountRsd = ref<number | null>(null)
 const servicesAmountRsd = ref<number | null>(null)
 const totalAmountRsd = ref<number | null>(null)
+const calculationError = ref<string | null>(null)
 const isCalculated = ref(false)
 const isApplyingInitialValue = ref(false)
 const isLocalCurrency = computed(() => currency.value.trim().toUpperCase() === LOCAL_CURRENCY_CODE)
@@ -127,6 +128,7 @@ const clearCalculated = () => {
   servicesAmountRsd.value = null
   totalAmountRsd.value = null
   exchangeRate.value = null
+  calculationError.value = null
   isCalculated.value = false
   emit('update:canSubmit', false)
 }
@@ -163,6 +165,7 @@ const handleCalculate = async () => {
 
   isCalculating.value = true
   exchangeRate.value = null
+  calculationError.value = null
 
   try {
     const conversionGoods =
@@ -189,6 +192,9 @@ const handleCalculate = async () => {
       isCalculated.value = true
       emit('update:canSubmit', true)
     }
+  } catch {
+    clearCalculated()
+    calculationError.value = t('ui.reportRowForm.calculationError')
   } finally {
     isCalculating.value = false
   }
@@ -337,6 +343,20 @@ onMounted(() => {
       </div>
       <div v-if="!isCalculated" class="ReportRowEditForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
     </div>
+    <div
+      v-if="currencyStore.error"
+      class="ReportRowEditForm_Alert ReportRowEditForm_Alert_Danger Typo_BodyAccent"
+      role="alert"
+    >
+      {{ t('ui.reportRowForm.currencyLoadError') }}
+    </div>
+    <div
+      v-if="calculationError"
+      class="ReportRowEditForm_Alert ReportRowEditForm_Alert_Danger Typo_BodyAccent"
+      role="alert"
+    >
+      {{ calculationError }}
+    </div>
 
     <div class="ReportRowEditForm_Calculations" v-if="!isLocalCurrency">
       <DisplayField :label="t('ui.reportRowForm.goodsRsd')" :value="formatValue(goodsAmountRsd)" />
@@ -393,5 +413,16 @@ onMounted(() => {
 .ReportRowEditForm_Hint {
   color: var(--color-text-disabled);
   font: var(--font-medium-text-xs);
+}
+
+.ReportRowEditForm_Alert {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-default);
+}
+
+.ReportRowEditForm_Alert_Danger {
+  color: var(--color-text-danger);
+  border-color: var(--color-text-danger);
 }
 </style>

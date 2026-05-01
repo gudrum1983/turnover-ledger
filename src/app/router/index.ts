@@ -22,9 +22,6 @@ const routes = [
     name: ROUTES.reportPreview.name,
     component: () => import('@/pages/report-preview'),
   },
-  /* todo - сделать заметку про различия и лейзи загрузку, найти инфу 404 нужно первой или последней
-  { path: '/', component: HomePage },
-  { path: '/preview', component: ReportPreviewPage },*/
 ]
 
 const router = createRouter({
