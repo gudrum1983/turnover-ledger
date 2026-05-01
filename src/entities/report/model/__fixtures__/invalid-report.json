@@ -1,0 +1,16 @@
+{
+  "rows": [
+    { "id": 1768763896061, "description": "01/01/01", "selling_products_revenue": 4, "selling_services_revenue": 5 },
+    { "id": 1768764336180, "description": "02/02/02", "selling_products_revenue": 4, "selling_services_revenue": 7 }
+  ],
+  "info": {
+    "pib": "PIB:",
+    "sign_name": "Sastavio",
+    "sign_inspector": "Odgovorno lice",
+    "obligee": "Obveznik:",
+    "agency": "Firma-radnja:",
+    "location": "Sedište:",
+    "tax_inspector": "Šifra poreskog obveznika:",
+    "service_id": "Šifra delatnosti:"
+  }
+}

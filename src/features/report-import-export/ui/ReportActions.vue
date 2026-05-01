@@ -27,7 +27,7 @@ const importRowsSummary = computed(() => {
 
 const formatExportFileName = () => {
   const today = new Date().toISOString().slice(0, 10)
-  return `turnover-ledger-${today}.json`
+  return `kpo-book-${today}.json`
 }
 
 function resetFileInput() {
