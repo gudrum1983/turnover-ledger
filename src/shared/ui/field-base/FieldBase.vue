@@ -1,0 +1,191 @@
+<script setup lang="ts">
+import type { MaskOptions } from 'maska'
+import { vMaska } from 'maska/vue'
+import { computed, onBeforeUnmount } from 'vue'
+import { useLocale } from '@/shared/i18n'
+import { IconClose } from '@/shared/ui/icons'
+import { InfoHint } from '@/shared/ui/info-hint'
+
+type Props = {
+  /** Имя поля для формы */
+  name: string
+  /** Текстовая подпись поля */
+  label?: string
+  /** Текст информационной подсказки рядом с label */
+  hint?: string
+  /** Плейсхолдер для input */
+  placeholder?: string
+  /** Текущее значение поля */
+  modelValue: string | null
+  /** Задержка перед emit обновления значения */
+  debounceMs?: number
+  /** Маска ввода для `maska` */
+  mask?: MaskOptions
+  /** Максимальная длина вводимого значения */
+  maxLength?: number
+  rootClass?: string
+}
+
+const {
+  label,
+  hint,
+  placeholder,
+  name,
+  modelValue,
+  debounceMs = 400,
+  mask,
+  maxLength,
+  rootClass = '',
+} = defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string | null): void
+  (e: 'blur', value: string | null): void
+}>()
+
+const { t: translate } = useLocale()
+const hasValue = computed(() => Boolean(modelValue))
+const clearButtonLabel = computed(() => translate('ui.common.clearField'))
+
+let t: number | null = null
+
+function clearTimer() {
+  if (t !== null) {
+    window.clearTimeout(t)
+    t = null
+  }
+}
+
+function scheduleEmit(e: Event) {
+  const input = e.target as HTMLInputElement
+  const next = readValue(input)
+
+  clearTimer()
+  t = window.setTimeout(() => {
+    emit('update:modelValue', next)
+    t = null
+  }, debounceMs)
+}
+
+function readValue(input: HTMLInputElement): string | null {
+  const nextValue = input.value
+
+  if (typeof maxLength === 'number' && maxLength >= 0 && nextValue.length > maxLength) {
+    const trimmed = nextValue.slice(0, maxLength)
+    input.value = trimmed
+    return trimmed
+  }
+
+  return nextValue
+}
+
+function commitNow(e: Event) {
+  const input = e.target as HTMLInputElement
+  const next = readValue(input)
+
+  clearTimer() // важно: чтобы не было второго эмита после blur
+  emit('update:modelValue', next)
+  emit('blur', next)
+}
+
+function clearValue() {
+  clearTimer()
+  emit('update:modelValue', null)
+  emit('blur', null)
+}
+
+onBeforeUnmount(clearTimer)
+</script>
+
+<template>
+  <label v-bind="$attrs" class="FieldBase Typo_Caption" :class="rootClass">
+    <div class="FieldBase_Label">
+      <span class="FieldBase_LabelText">{{ label }}</span>
+      <InfoHint v-if="hint" :text="hint" />
+    </div>
+
+    <span class="FieldBase_Control">
+      <input
+        @input="scheduleEmit"
+        @blur="commitNow"
+        :value="modelValue"
+        v-maska="mask"
+        class="FieldBase_Input"
+        :name="name"
+        :placeholder="placeholder"
+        :maxlength="maxLength"
+        autocomplete="off"
+      />
+      <button
+        v-if="hasValue"
+        class="FieldBase_Clear"
+        type="button"
+        :aria-label="clearButtonLabel"
+        @mousedown.prevent
+        @click="clearValue"
+      >
+        <IconClose />
+      </button>
+    </span>
+  </label>
+</template>
+
+<style scoped lang="scss">
+.FieldBase {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.FieldBase_Label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.FieldBase_LabelText {
+  flex: 1 1 auto;
+}
+
+.FieldBase_Control {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.FieldBase_Input {
+  width: 100%;
+  padding: 8px 36px 8px 12px;
+  background: var(--color-background-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: 4px;
+  color: var(--color-text-default);
+
+  &:hover {
+    border-color: var(--color-border-primary);
+  }
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
+}
+
+.FieldBase_Clear {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-placeholder);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-default);
+  }
+}
+</style>

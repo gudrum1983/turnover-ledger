@@ -34,3 +34,10 @@ coverage
 
 # Vitest
 __screenshots__/
+
+# Codex CLI
+/AGENTS.md
+
+*storybook.log
+storybook-static
+/.codex

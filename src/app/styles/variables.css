@@ -1,0 +1,149 @@
+/*
+[category]-[type]-[item]-[subitem]-[state]
+--color-background-primary-hover
+*/
+
+:root {
+  /* color-background */
+  --color-background-disabled: #e5e7eb;
+  --color-background-surface: #ffffff;
+  --color-background-surface-accent: #0000000a;
+  --color-background-overlay: #00000080;
+  --color-background-transparent: transparent;
+  --color-background-divider: #9ca3af;
+  --color-background-modal: #ffffff;
+
+  --color-background-default: #f3f4f6;
+  --color-background-default-hovered: #e5e7eb;
+  --color-background-default-pressed: #d1d5db;
+
+  --color-background-primary: #4338ca;
+  --color-background-primary-hovered: #3730a3;
+  --color-background-primary-pressed: #312e81;
+
+  --color-background-success: #15803d;
+  --color-background-success-hovered: #166534;
+  --color-background-success-pressed: #14532d;
+
+  --color-background-info: #1d4ed8;
+  --color-background-info-hovered: #1e40af;
+  --color-background-info-pressed: #1e3a8a;
+
+  --color-background-warning: #a16207;
+  --color-background-warning-hovered: #854d0e;
+  --color-background-warning-pressed: #713f12;
+
+  --color-background-danger: #b91c1c;
+  --color-background-danger-hovered: #991b1b;
+  --color-background-danger-pressed: #7f1d1d;
+
+  --color-background-primary-invert: #e0e7ff;
+  --color-background-default-invert: #394150;
+
+  /* color-text */
+  --color-text-base: #ffffff;
+  --color-text-default: #030712;
+  --color-text-primary: #4338ca;
+  --color-text-info: #1d4ed8;
+  --color-text-success: #15803d;
+  --color-text-warning: #a16207;
+  --color-text-danger: #b91c1c;
+  --color-text-placeholder: #6b7280;
+  --color-text-caption: #4b5563;
+  --color-text-link: #1d4ed8;
+  --color-text-link-hovered: #1e40af;
+  --color-text-link-visited: #7e22ce;
+  --color-text-loading: #374151;
+  --color-text-disabled: #9ca3af;
+
+  /* color-border */
+  --color-border-base: #ffffff;
+  --color-border-table: #030712;
+  --color-border-default: #9ca3af;
+  --color-border-primary: #4338ca;
+  --color-border-info: #1d4ed8;
+  --color-border-success: #15803d;
+  --color-border-warning: #a16207;
+  --color-border-danger: #b91c1c;
+  --color-border-ring: #9dc5f8;
+  --color-border-disabled: #d1d5db;
+  --color-border-table-cell: #e0e0e0;
+
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+
+  /* fonts */
+  --font-family: 'Montserrat', sans-serif;
+  --font-family-report: 'Open Sans', sans-serif;
+  --font-bold-text-6xl: 700 60px/60px var(--font-family);
+  --font-semibold-text-3xl: 600 30px/36px var(--font-family);
+  --font-semibold-text-2xl: 600 24px/32px var(--font-family);
+  --font-medium-text-xl: 500 20px/28px var(--font-family);
+  --font-medium-text-lg: 500 18px/28px var(--font-family);
+  --font-regular-text-base: 400 16px/24px var(--font-family);
+  --font-medium-text-base: 500 16px/24px var(--font-family);
+  --font-medium-text-sm: 500 14px/20px var(--font-family);
+  --font-regular-text-sm: 400 14px/20px var(--font-family);
+  --font-medium-text-xs: 400 12px/18px var(--font-family);
+
+  --font-report-regular-text-sm: 400 14px/20px var(--font-family-report);
+  --font-report-bold-text-sm: 700 14px/20px var(--font-family-report);
+  --font-report-semibold-text-sm: 600 14px/24px var(--font-family-report);
+  --font-report-bold-text-base: 700 16px/24px var(--font-family-report);
+
+  /* breakpoints */
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+
+  /* container */
+  --container-sm: 600px;
+  --container-md: 720px;
+  --container-lg: 960px;
+  --container-xl: 1120px;
+  --container-2xl: 1200px;
+
+  /* container */
+  --container-max: 100%;
+
+  /* боковые отступы */
+  --container-gutter: clamp(16px, 3vw, 32px);
+}
+
+@media (min-width: var(--bp-sm)) {
+  :root {
+    --container-max: var(--container-sm);
+  }
+}
+
+@media (min-width: var(--bp-md)) {
+  :root {
+    --container-max: var(--container-md);
+  }
+}
+
+@media (min-width: var(--bp-lg)) {
+  :root {
+    --container-max: var(--container-lg);
+  }
+}
+
+@media (min-width: var(--bp-xl)) {
+  :root {
+    --container-max: var(--container-xl);
+  }
+}
+
+@media (min-width: var(--bp-2xl)) {
+  :root {
+    --container-max: var(--container-2xl);
+  }
+}
+
+.Container {
+  width: min(100% - (var(--container-gutter) * 2), var(--container-max));
+  margin-inline: auto;
+}

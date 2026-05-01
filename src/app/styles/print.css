@@ -1,0 +1,26 @@
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  @page {
+    @top-right {
+      content: '';
+    }
+
+    @bottom-right {
+      content: counter(page) ' / ' counter(pages);
+    }
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  .ReportPreviewPage {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+}

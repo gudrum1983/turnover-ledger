@@ -1,0 +1,103 @@
+<script setup lang="ts">
+import { LocaleSwitcher } from '@/features/locale-switcher'
+import { ReportScriptSwitch } from '@/features/report-script-switch'
+import { AppHeader } from '@/widgets/app-header'
+import { ReportPreviewDocument } from '@/widgets/report-preview-document'
+import { ROUTES } from '@/shared/constants/routes.ts'
+import { ButtonBase } from '@/shared/ui/button-base'
+import { InfoHint } from '@/shared/ui/info-hint'
+import { LinkBase } from '@/shared/ui/link-base'
+import { onBeforeUnmount } from 'vue'
+import { useLocale } from '@/shared/i18n'
+import { useReportScript } from '@/entities/report'
+import { AppFooter } from '@/widgets/app-footer'
+
+const onPrint = () => {
+  window.print()
+}
+
+const { t } = useLocale()
+const { script } = useReportScript()
+
+const printStyleId = 'print-page-size'
+
+onBeforeUnmount(() => {
+  document.getElementById(printStyleId)?.remove()
+})
+</script>
+
+<template>
+  <div class="ReportPreviewPage">
+    <AppHeader :msg="t('ui.appHeaderTitle')" class="ReportPreviewPage_Header">
+      <template #controls>
+        <LocaleSwitcher />
+      </template>
+      <template v-slot:actionButtons>
+        <div class="ReportPreviewPage_Actions">
+          <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 {{ t('ui.reportPreview.toHome') }}</LinkBase>
+
+          <ReportScriptSwitch v-model="script" class="no-print" />
+
+          <div class="ReportPreviewPage_PrintAction">
+            <InfoHint :text="t('ui.reportPreview.printHint')" :max-width="300" />
+            <ButtonBase size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</ButtonBase>
+          </div>
+        </div>
+      </template>
+    </AppHeader>
+
+    <section class="ReportPreviewPage_Document">
+      <ReportPreviewDocument :script="script" />
+    </section>
+
+    <AppFooter />
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.ReportPreviewPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &_Header {
+    margin-block-end: 16px;
+  }
+
+  &_Actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  &_PrintAction {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &_Document {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+
+    height: fit-content;
+
+    padding: 15mm;
+    background: white;
+
+    width: 297mm;
+    min-height: 210mm;
+  }
+}
+
+@media print {
+  .ReportPreviewPage_Document {
+    width: 100%;
+    min-height: fit-content;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+</style>

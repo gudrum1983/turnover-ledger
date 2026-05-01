@@ -11,30 +11,66 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
+    "test": "vitest run --config vitest.unit.config.ts",
+    "test:watch": "vitest --config vitest.unit.config.ts",
+    "test:ui": "vitest --ui --config vitest.unit.config.ts",
+    "test:coverage": "vitest run --coverage --config vitest.unit.config.ts",
+    "test:storybook": "vitest run",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "prepare": "husky install",
+    "lint:staged": "lint-staged",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,vue}": [
+      "eslint",
+      "prettier --write"
+    ],
+    "*.{css,scss,json,md}": "prettier --write"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^12.1.0",
+    "maska": "^3.2.0",
+    "normalize.css": "^8.0.1",
     "pinia": "^3.0.4",
     "vue": "^3.5.26",
+    "vue-i18n": "^11.2.8",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.1.1",
+    "@storybook/addon-a11y": "^10.3.3",
+    "@storybook/addon-docs": "^10.3.3",
+    "@storybook/addon-onboarding": "^10.3.3",
+    "@storybook/addon-vitest": "^10.3.3",
+    "@storybook/vue3-vite": "^10.3.3",
     "@tsconfig/node24": "^24.0.3",
     "@types/node": "^24.10.4",
     "@vitejs/plugin-vue": "^6.0.3",
+    "@vitest/browser-playwright": "^4.1.2",
+    "@vitest/coverage-v8": "^4.1.2",
+    "@vitest/ui": "^4.1.2",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.39.2",
+    "eslint-plugin-storybook": "^10.3.3",
     "eslint-plugin-vue": "~10.6.2",
+    "husky": "^9.1.7",
     "jiti": "^2.6.1",
+    "lint-staged": "^16.4.0",
     "npm-run-all2": "^8.0.4",
+    "playwright": "^1.58.2",
     "prettier": "3.7.4",
+    "sass": "^1.97.2",
+    "storybook": "^10.3.3",
     "typescript": "~5.9.3",
     "vite": "^7.3.0",
     "vite-plugin-vue-devtools": "^8.0.5",
+    "vitest": "^4.1.2",
     "vue-tsc": "^3.2.2"
   }
 }
