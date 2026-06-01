@@ -133,24 +133,25 @@ onBeforeUnmount(() => {
   }
 
   &_Container {
-    max-width: min(740px, 100%);
-    width: 100%;
+    max-width: 740px;
+    width: 95%;
+    min-width: 270px;
     display: flex;
     flex-direction: column;
     gap: 24px;
 
     &_size {
       &_xs {
-        max-width: min(400px, 100%);
+        max-width: 400px;
       }
       &_sm {
-        max-width: min(600px, 100%);
+        max-width: 600px;
       }
       &_md {
-        max-width: min(740px, 100%);
+        max-width: 740px;
       }
       &_lg {
-        max-width: min(800px, 100%);
+        max-width: 800px;
       }
     }
   }
