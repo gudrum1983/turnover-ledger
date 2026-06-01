@@ -377,6 +377,7 @@ onMounted(() => {
 
 .ReportRowEditForm_Fields {
   display: flex;
+  flex-wrap: nowrap;
   width: 100%;
   gap: 16px;
 }
@@ -395,7 +396,7 @@ onMounted(() => {
   gap: 16px;
   display: grid;
   align-items: end;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .ReportRowEditForm_Calculations {
@@ -424,5 +425,19 @@ onMounted(() => {
 .ReportRowEditForm_Alert_Danger {
   color: var(--color-text-danger);
   border-color: var(--color-text-danger);
+}
+
+@media (max-width: 640px) {
+  .ReportRowEditForm_Fields {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 350px) {
+  .ReportRowEditForm_Currency {
+    display: flex;
+    flex-direction: column;
+    min-width: 94px;
+  }
 }
 </style>
