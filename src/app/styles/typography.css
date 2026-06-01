@@ -64,3 +64,9 @@
 .Text_AlginCenter {
   text-align: center;
 }
+
+.Text_SingleLine {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

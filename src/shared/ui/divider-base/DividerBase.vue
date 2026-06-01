@@ -73,7 +73,7 @@ const styleVars = computed(() => ({
     role="separator"
     :aria-orientation="isVertical ? 'vertical' : 'horizontal'"
   >
-    <span v-if="isLabelVisible" class="DividerBase_Label">{{ label }}</span>
+    <span v-if="isLabelVisible" class="DividerBase_Label Text_SingleLine">{{ label }}</span>
   </div>
 </template>
 
@@ -87,6 +87,7 @@ const styleVars = computed(() => ({
 
   width: 100%;
   height: 0;
+  overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
@@ -113,7 +114,7 @@ const styleVars = computed(() => ({
   }
 
   &_Label {
-    white-space: nowrap;
+    max-width: 100%;
   }
 
   &_labelPosition_left::before {
