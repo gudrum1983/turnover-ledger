@@ -87,7 +87,6 @@ const styleVars = computed(() => ({
 
   width: 100%;
   height: 0;
-  overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
@@ -114,7 +113,7 @@ const styleVars = computed(() => ({
   }
 
   &_Label {
-    max-width: 100%;
+    max-width: 80%;
   }
 
   &_labelPosition_left::before {

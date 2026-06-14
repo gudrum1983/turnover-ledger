@@ -124,6 +124,8 @@ const handleClick = () => {
     display: flex;
     align-items: center;
     gap: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &_Icon {
