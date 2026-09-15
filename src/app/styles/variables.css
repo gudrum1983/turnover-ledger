@@ -76,6 +76,12 @@
   /* fonts */
   --font-family: 'Montserrat', sans-serif;
   --font-family-report: 'Open Sans', sans-serif;
+
+  /* new fonts */
+  --font-family-title: var(--font-family-oswald);
+  --font-family-body: var(--font-family-inter);
+  --font-family-table: var(--font-family-open-sans);
+
   --font-bold-text-6xl: 700 60px/60px var(--font-family);
   --font-semibold-text-3xl: 600 30px/36px var(--font-family);
   --font-semibold-text-2xl: 600 24px/32px var(--font-family);
