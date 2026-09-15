@@ -15,6 +15,7 @@ type ReportTableRowProps = {
   size: 'full' | 'short'
   row: ReportRow
   locale: I18nLocale
+  isMobile: boolean
 }
 
 const props = defineProps<ReportTableRowProps>()
@@ -29,6 +30,8 @@ const emit = defineEmits<{
 const isEven = computed(() => props.index % 2 === 0)
 
 const isShort = computed(() => props.size === 'short')
+
+const onlyIconButton = computed(() => props.isMobile || isShort.value)
 
 const currencyLabel = computed(() => props.row.currency ?? '')
 const hasCurrency = computed(() => Boolean(props.row.currency))
@@ -80,51 +83,53 @@ function handleClearRow() {
 
 <template>
   <div class="ReportTableRow" :class="{ ReportTableRow_even: isEven, ReportTableRow_short: isShort }">
-    <div class="ReportTableRow_Column ReportTableRow_Column_type_number">
+    <div class="ReportTableRow_Cell ReportTableRow_Cell_type_number ReportTableRow_Cell_area_number">
       {{ index + 1 }}
     </div>
-    <div class="ReportTableRow_Column ReportTableRow_Column_type_description">
-      <div class="ReportTableRow_Description">
-        <TagBase class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
-        {{ [formatDateForUi(row.date), row.description].filter(Boolean).join(', ') }}
-      </div>
+    <div class="ReportTableRow_Cell ReportTableRow_Cell_type_currency ReportTableRow_Cell_area_currency">
+      <TagBase class="ReportTableRow_Tag" :label="currencyLabel || 'RSD'" />
     </div>
-    <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
+    <div class="ReportTableRow_Cell ReportTableRow_Cell_type_description ReportTableRow_Cell_area_description">
+      {{ [formatDateForUi(row.date), row.description].filter(Boolean).join(', ') }}
+    </div>
+    <div class="ReportTableRow_Cell ReportTableRow_Cell_type_amounts ReportTableRow_Cell_area_amountLabels">
       <div v-if="!isShort">{{ t('ui.reportBuilderIncomeRecordsRow.goodsShort') }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ t('ui.reportBuilderIncomeRecordsRow.servicesShort') }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div>{{ t('ui.reportBuilderIncomeRecordsRow.subtotalShort') }}</div>
     </div>
-    <div class="ReportTableRow_Column ReportTableRow_Column_type_income ReportTableRow_Column_font_secondary">
+    <div
+      class="ReportTableRow_Cell ReportTableRow_Cell_type_amounts ReportTableRow_Cell_area_foreignAmounts ReportTableRow_Cell_tone_secondary"
+    >
       <div v-if="!isShort">{{ displayGoodsForeign || '-' }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ displayServicesForeign || '-' }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div class="Typo_BodyAccent">{{ displayTotalForeign || '-' }}</div>
     </div>
-    <div class="ReportTableRow_Column ReportTableRow_Column_type_income">
+    <div class="ReportTableRow_Cell ReportTableRow_Cell_type_amounts ReportTableRow_Cell_area_rsdAmounts">
       <div v-if="!isShort" class="Text_AlginRight">{{ displayGoodsRsd }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div v-if="!isShort">{{ displayServicesRsd }}</div>
       <DividerBase v-if="!isShort" color="table-cell" line-style="dotted" />
       <div class="Typo_BodyAccent">{{ displayTotalRsd }}</div>
     </div>
-    <div class="ReportTableRow_Column ReportTableRow_Column_type_actions">
+    <div class="ReportTableRow_Cell ReportTableRow_Cell_type_actions ReportTableRow_Cell_area_actions">
       <ReportTableRowButton
-        :size="size"
+        :isIconOnly="onlyIconButton"
         icon="edit"
         :label="t('ui.reportBuilderIncomeRecordsRow.edit')"
         @click="emit('edit', row.id)"
       />
       <ReportTableRowButton
-        :size="size"
+        :isIconOnly="onlyIconButton"
         icon="copy"
         :label="t('ui.reportBuilderIncomeRecordsRow.copy')"
         @click="emit('copy', row.id)"
       />
       <ReportTableRowButton
-        :size="size"
+        :isIconOnly="onlyIconButton"
         icon="trash"
         :label="t('ui.reportBuilderIncomeRecordsRow.remove')"
         @click="openDialogConfirm = true"
@@ -149,7 +154,8 @@ function handleClearRow() {
 <style scoped lang="scss">
 .ReportTableRow {
   display: grid;
-  grid-template-columns: 50px auto 60px 90px 130px 150px;
+  grid-template-areas: 'number description currency amountLabels foreignAmounts rsdAmounts actions';
+  grid-template-columns: 50px auto 50px 60px 90px 130px 150px;
   background: var(--color-background-surface-accent);
 
   &_even {
@@ -157,25 +163,24 @@ function handleClearRow() {
   }
 
   &_short {
-    .ReportTableRow_Description {
+    .ReportTableRow_Cell_type_description {
+      /*      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline;
+      width: 100%;*/
       -webkit-line-clamp: 1;
-      .ReportTableRow_Tag {
-        float: right;
-        margin-left: 10px;
-      }
+      -webkit-box-orient: vertical;
+      white-space: nowrap;
+
+      /*      text-overflow: ellipsis;
+      display: inline;
+      overflow: hidden;
+      width: 100%;*/
     }
-    .ReportTableRow_Column_type_actions {
+    .ReportTableRow_Cell_type_actions {
       flex-direction: row;
     }
-  }
-
-  &_Description {
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    width: 100%;
   }
 
   &_Tag {
@@ -183,7 +188,7 @@ function handleClearRow() {
     margin-left: 10px;
   }
 
-  &_Column {
+  &_Cell {
     padding: 8px;
 
     &_type {
@@ -193,9 +198,15 @@ function handleClearRow() {
       }
 
       &_description {
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        width: 100%;
       }
 
-      &_income {
+      &_amounts {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -215,5 +226,43 @@ function handleClearRow() {
       color: var(--color-text-placeholder);
     }
   }
+}
+
+@each $name in (number, description, currency, amountLabels, foreignAmounts, rsdAmounts, actions) {
+  .ReportTableRow_Cell_area_#{$name} {
+    grid-area: $name;
+  }
+}
+
+@media (max-width: 768px) {
+  .ReportTableRow {
+    grid-template-areas:
+      'number description description description description'
+      'amountLabels foreignAmounts foreignAmounts rsdAmounts rsdAmounts'
+      'currency actions actions actions actions';
+    grid-template-columns: 50px 1fr 1fr 1fr 1fr;
+  }
+
+  .ReportTableRow_Cell_type_actions {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 640px) {
+  .ReportTableRow {
+    grid-template-areas:
+      'number description description description description'
+      'amountLabels foreignAmounts foreignAmounts rsdAmounts rsdAmounts'
+      'currency actions actions actions actions';
+    grid-template-columns: 50px 1fr 1fr 1fr 1fr;
+  }
+
+  .ReportTableRow_Cell_type_actions {
+    flex-direction: row;
+  }
+}
+
+.ReportTableRow_Cell_tone_secondary {
+  color: var(--color-text-placeholder);
 }
 </style>

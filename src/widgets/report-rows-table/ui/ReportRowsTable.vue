@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ReportTableRow, type ReportRow } from '@/entities/report-row'
 import type { I18nLocale } from '@/shared/i18n'
 import { useLocale } from '@/shared/i18n'
@@ -36,6 +36,25 @@ const { t } = useLocale()
 const isFullTable = defineModel<boolean>('isFullTable', { required: true })
 
 const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
+
+const isMobileViewport = ref(false)
+let mobileMediaQuery: MediaQueryList | null = null
+
+const isMobile = computed(() => isMobileViewport.value)
+
+function handleViewportChange(event: MediaQueryListEvent) {
+  isMobileViewport.value = event.matches
+}
+
+onMounted(() => {
+  mobileMediaQuery = window.matchMedia('(max-width: 768px)')
+  isMobileViewport.value = mobileMediaQuery.matches
+  mobileMediaQuery.addEventListener('change', handleViewportChange)
+})
+
+onBeforeUnmount(() => {
+  mobileMediaQuery?.removeEventListener('change', handleViewportChange)
+})
 </script>
 
 <template>
@@ -86,16 +105,12 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
       </div>
       <div>
         <div class="ReportRowsTable_Header">
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.rowNumber') }}</div>
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.description') }}</div>
-          <div></div>
-          <div>
-            {{ t('ui.reportBuilderIncomeRecordsTable.income') }}<br />{{
-              t('ui.reportBuilderIncomeRecordsTable.currency')
-            }}
+          <div class="ReportRowsTable_TitleNumber">{{ t('ui.reportBuilderIncomeRecordsTable.rowNumber') }}</div>
+          <div class="ReportRowsTable_TitleDescription">{{ t('ui.reportBuilderIncomeRecordsTable.description') }}</div>
+          <div class="ReportRowsTable_TitleAmountsForeign">
+            {{ t('ui.reportBuilderIncomeRecordsTable.income') }} {{ t('ui.reportBuilderIncomeRecordsTable.currency') }}
           </div>
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.income') }}<br />RSD</div>
-          <div></div>
+          <div class="ReportRowsTable_TitleAmountsLocal">{{ t('ui.reportBuilderIncomeRecordsTable.income') }} RSD</div>
         </div>
         <div class="ReportRowsTable_Rows">
           <ReportTableRow
@@ -105,6 +120,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
             :locale="locale"
             :row="row"
             :size="sizeRow"
+            :isMobile="isMobile"
             @edit="emit('edit', $event)"
             @copy="emit('copy', $event)"
             @remove="emit('remove', $event)"
@@ -128,13 +144,10 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 
         <div v-if="rows.length > 0" class="ReportRowsTable_TotalRow">
           <div></div>
-          <div></div>
-          <div></div>
           <div class="ReportRowsTable_TotalCell Typo_BodyAccent">
             {{ t('ui.reportBuilderIncomeRecordsTable.total') }}
           </div>
           <div class="ReportRowsTable_TotalCell Typo_BodyAccent">{{ displayTotalRsd }}</div>
-          <div></div>
         </div>
       </div>
     </div>
@@ -165,6 +178,7 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
 
   &_Header {
     display: grid;
+    grid-template-areas: 'titleNumber titleDescription . titleForeignAmounts titleRsdAmounts';
     grid-template-columns: 50px auto 60px 90px 130px 150px;
     width: 100%;
     border: 1px solid var(--color-border-table-cell);
@@ -212,10 +226,27 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
     background: var(--color-background-default);
   }
 
+  @media (max-width: 768px) {
+    .ReportRowsTable_Header {
+      grid-template-areas:
+        'titleNumber titleDescription titleDescription titleDescription titleDescription'
+        '. titleForeignAmounts titleForeignAmounts titleRsdAmounts titleRsdAmounts';
+      grid-template-columns: 50px 1fr 1fr 1fr 1fr;
+    }
+
+    .ReportRowsTable_TotalRow {
+      grid-template-columns: auto 130px 140px;
+    }
+
+    .ReportTableRow_Cell_type_actions {
+      flex-direction: row;
+    }
+  }
+
   &_TotalCell {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     padding: 10px;
     border-radius: 5px;
     text-align: center;
@@ -245,5 +276,20 @@ const sizeRow = computed(() => (isFullTable.value ? 'short' : 'full'))
     background: color-mix(in srgb, var(--color-background-danger-hovered) 10%, transparent);
     border: 1px dashed var(--color-text-danger);
   }
+}
+
+.ReportRowsTable_TitleAmountsForeign {
+  justify-self: flex-end;
+  grid-area: titleForeignAmounts;
+}
+.ReportRowsTable_TitleAmountsLocal {
+  justify-self: flex-end;
+  grid-area: titleRsdAmounts;
+}
+.ReportRowsTable_TitleDescription {
+  grid-area: titleDescription;
+}
+.ReportRowsTable_TitleNumber {
+  grid-area: titleNumber;
 }
 </style>

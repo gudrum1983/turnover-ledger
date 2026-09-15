@@ -5,12 +5,12 @@ import { ButtonBase } from '@/shared/ui/button-base'
 import { IconCopy, IconEdit, IconTrash } from '@/shared/ui/icons'
 
 type Props = {
-  size: 'short' | 'full'
   icon?: 'edit' | 'trash' | 'copy'
   label?: string
+  isIconOnly?: boolean
 }
 
-const { size, icon = 'edit', label = 'Изменить' } = defineProps<Props>()
+const { icon = 'edit', label = 'Изменить', isIconOnly = false } = defineProps<Props>()
 
 const configMap = {
   edit: {
@@ -35,15 +35,15 @@ const config = computed(() => configMap[icon])
     class="ReportTableRowButton"
     :color="config.color"
     size="xs"
-    :contentPosition="size !== 'short' ? 'left' : 'center'"
+    :contentPosition="isIconOnly ? 'center' : 'left'"
     fullWidth
-    :isIconOnly="size === 'short'"
-    :aria-label="size === 'short' ? label : undefined"
+    :isIconOnly="isIconOnly"
+    :aria-label="isIconOnly ? label : undefined"
   >
     <template #icon>
       <component :is="config.icon" class="ReportTableRowButton_Icon" />
     </template>
-    <template v-if="size === 'full'">
+    <template v-if="!isIconOnly">
       <p class="ReportTableRowButton_Label">{{ label }}</p>
     </template>
   </ButtonBase>
