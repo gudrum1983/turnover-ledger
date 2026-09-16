@@ -89,3 +89,19 @@
 .Typo_ReportBody {
   @include typo.report-style(body);
 }
+
+.Text_Uppercase {
+  text-transform: uppercase;
+}
+
+.Text_AlginLeft {
+  text-align: left;
+}
+
+.Text_AlginRight {
+  text-align: right;
+}
+
+.Text_AlginCenter {
+  text-align: center;
+}
