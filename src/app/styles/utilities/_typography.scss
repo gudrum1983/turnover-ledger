@@ -1,0 +1,91 @@
+@use '../tokens/typography' as typo;
+
+/* Heading — Oswald */
+
+.Typo_H1L {
+  @include typo.heading-style(h1-l);
+}
+
+.Typo_H1M {
+  @include typo.heading-style(h1-m);
+}
+
+.Typo_H2L {
+  @include typo.heading-style(h2-l);
+}
+
+.Typo_H2M {
+  @include typo.heading-style(h2-m);
+}
+
+.Typo_SubtitleL {
+  @include typo.heading-style(subtitle-l);
+}
+
+.Typo_SubtitleM {
+  @include typo.heading-style(subtitle-m);
+}
+
+.Typo_Title {
+  @include typo.heading-style(title);
+}
+
+/* UI — Inter */
+
+.Typo_BodyL {
+  @include typo.ui-style(body-l);
+}
+
+.Typo_BodyM {
+  @include typo.ui-style(body-m);
+}
+
+.Typo_ButtonL {
+  @include typo.ui-style(button-l);
+}
+
+.Typo_ButtonM {
+  @include typo.ui-style(button-m);
+}
+
+.Typo_LabelL {
+  @include typo.ui-style(label-l);
+}
+
+.Typo_LabelM {
+  @include typo.ui-style(label-m);
+}
+
+.Typo_LabelS {
+  @include typo.ui-style(label-s);
+}
+
+.Typo_BodySmallL {
+  @include typo.ui-style(body-small-l);
+}
+
+.Typo_BodySmallM {
+  @include typo.ui-style(body-small-m);
+}
+
+.Typo_BodySmallS {
+  @include typo.ui-style(body-small-s);
+}
+
+/* Report — Open Sans */
+
+.Typo_ReportTitle {
+  @include typo.report-style(title);
+}
+
+.Typo_ReportTableAccent {
+  @include typo.report-style(table-accent);
+}
+
+.Typo_ReportBodyAccent {
+  @include typo.report-style(body-accent);
+}
+
+.Typo_ReportBody {
+  @include typo.report-style(body);
+}

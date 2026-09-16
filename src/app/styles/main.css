@@ -1,11 +1,9 @@
 @import 'normalize.css';
-/*todo: проверить корректность импорта шрифтов и токенов типографики*/
-@import 'fonts.css';
-@import 'tokens/_typography.css';
 @import 'variables.css';
 @import 'typography.css';
 @import 'shadow.css';
 @import 'print.css';
+@import 'index.scss';
 
 * {
   margin: 0;

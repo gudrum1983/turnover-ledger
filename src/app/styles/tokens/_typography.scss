@@ -1,0 +1,190 @@
+@use 'sass:map';
+
+$font-family-heading: 'Oswald', sans-serif;
+$font-family-ui: 'Inter', sans-serif;
+$font-family-report: 'Open Sans', sans-serif;
+
+/* Heading — Oswald */
+
+$heading-styles: (
+  h1-l: (
+    size: 32px,
+    weight: 500,
+    line-height: 120%,
+    letter-spacing: 0.006em,
+  ),
+
+  h1-m: (
+    size: 30px,
+    weight: 500,
+    line-height: 120%,
+    letter-spacing: 0.006em,
+  ),
+
+  h2-l: (
+    size: 28px,
+    weight: 400,
+    line-height: 120%,
+    letter-spacing: 0,
+  ),
+
+  h2-m: (
+    size: 26px,
+    weight: 500,
+    line-height: 120%,
+    letter-spacing: 0,
+  ),
+
+  subtitle-l: (
+    size: 24px,
+    weight: 400,
+    line-height: 130%,
+    letter-spacing: 0,
+  ),
+
+  subtitle-m: (
+    size: 20px,
+    weight: 400,
+    line-height: 130%,
+    letter-spacing: 0,
+  ),
+
+  title: (
+    size: 18px,
+    weight: 500,
+    line-height: 130%,
+    letter-spacing: 0,
+  ),
+);
+
+/* UI — Inter */
+
+$ui-styles: (
+  body-l: (
+    size: 18px,
+    weight: 400,
+    line-height: 130%,
+    letter-spacing: 0.1px,
+  ),
+
+  body-m: (
+    size: 16px,
+    weight: 400,
+    line-height: 130%,
+    letter-spacing: 0.1px,
+  ),
+
+  button-l: (
+    size: 16px,
+    weight: 600,
+    line-height: 120%,
+    letter-spacing: 0.1px,
+  ),
+
+  button-m: (
+    size: 14px,
+    weight: 600,
+    line-height: 120%,
+    letter-spacing: 0.1px,
+  ),
+
+  label-l: (
+    size: 14px,
+    weight: 600,
+    line-height: 130%,
+    letter-spacing: 0.1px,
+  ),
+
+  label-m: (
+    size: 14px,
+    weight: 500,
+    line-height: 130%,
+    letter-spacing: 0.1px,
+  ),
+
+  label-s: (
+    size: 14px,
+    weight: 400,
+    line-height: 130%,
+    letter-spacing: 0.1px,
+  ),
+
+  body-small-l: (
+    size: 12px,
+    weight: 600,
+    line-height: 120%,
+    letter-spacing: 0.1px,
+  ),
+
+  body-small-m: (
+    size: 12px,
+    weight: 500,
+    line-height: 120%,
+    letter-spacing: 0.1px,
+  ),
+
+  body-small-s: (
+    size: 12px,
+    weight: 400,
+    line-height: 120%,
+    letter-spacing: 0.1px,
+  ),
+);
+
+/* Report — Open Sans */
+
+$report-styles: (
+  title: (
+    size: 16px,
+    weight: 700,
+    line-height: 24px,
+    letter-spacing: 0,
+  ),
+
+  table-accent: (
+    size: 14px,
+    weight: 600,
+    line-height: 24px,
+    letter-spacing: 0,
+  ),
+
+  body-accent: (
+    size: 14px,
+    weight: 700,
+    line-height: 20px,
+    letter-spacing: 0,
+  ),
+
+  body: (
+    size: 14px,
+    weight: 400,
+    line-height: 20px,
+    letter-spacing: 0,
+  ),
+);
+
+@mixin _apply-style($styles, $style, $family) {
+  $config: map.get($styles, $style);
+
+  @if $config == null {
+    @error 'Unknown typography style: #{$style}';
+  }
+
+  font-family: $family;
+  font-size: map.get($config, size);
+  font-weight: map.get($config, weight);
+  line-height: map.get($config, line-height);
+  letter-spacing: map.get($config, letter-spacing);
+}
+
+@mixin heading-style($style) {
+  @include _apply-style($heading-styles, $style, $font-family-heading);
+}
+
+@mixin ui-style($style) {
+  @include _apply-style($ui-styles, $style, $font-family-ui);
+}
+
+@mixin report-style($style) {
+  @include _apply-style($report-styles, $style, $font-family-report);
+}
