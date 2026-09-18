@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": [".storybook/**/*", "src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.mdx"],
+  "include": ["env.d.ts", ".storybook/**/*", "src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.mdx"],
   "compilerOptions": {
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.storybook.tsbuildinfo",
