@@ -10,10 +10,10 @@ type Props = ButtonProps & {
   loading?: boolean
 }
 
-const { size = 'desktop', loading = false, ...props } = defineProps<Props>()
+const { size = 'l', loading = false, ...props } = defineProps<Props>()
 const ICON_SIZES = {
-  desktop: { dimension: 22, icon: 'l', loader: 'm' },
-  mobile: { dimension: 18, icon: 'm', loader: 's' },
+  l: { dimension: 22, icon: 'l', loader: 'm' },
+  m: { dimension: 18, icon: 'm', loader: 's' },
 } as const satisfies Record<ButtonSize, { dimension: number; icon: IconSize; loader: 's' | 'm' }>
 
 const sizeConfig = computed(() => ICON_SIZES[size])

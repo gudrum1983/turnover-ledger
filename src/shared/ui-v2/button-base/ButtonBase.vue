@@ -5,14 +5,14 @@ import type { ButtonProps, ButtonSize } from './types'
 const {
   variant = 'page',
   fullWidth = false,
-  size = 'desktop',
+  size = 'l',
   type = 'button',
   disabled = false,
 } = defineProps<ButtonProps>()
 
 const BUTTON_SIZES = {
-  desktop: { typography: 'L' },
-  mobile: { typography: 'M' },
+  l: { typography: 'L' },
+  m: { typography: 'M' },
 } as const satisfies Record<ButtonSize, { typography: string }>
 
 const sizeConfig = computed(() => BUTTON_SIZES[size])

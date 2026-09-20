@@ -8,7 +8,7 @@ const meta = {
   parameters: { docs: { description: { component: 'Текстовая кнопка.' } } },
   args: {
     variant: 'page',
-    size: 'desktop',
+    size: 'l',
     type: 'button',
     disabled: false,
     default: 'Загрузить данные',
@@ -16,7 +16,7 @@ const meta = {
   },
   argTypes: {
     variant: { control: 'select', options: ['page', 'accent', 'success', 'danger', 'card'] },
-    size: { control: 'select', options: ['desktop', 'mobile'] },
+    size: { control: 'select', options: ['l', 'm'] },
     type: { control: 'select', options: ['button', 'submit', 'reset'] },
     disabled: { control: 'boolean' },
     default: { control: 'text' },
@@ -33,7 +33,8 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = { name: 'Песочница' }
-export const Mobile: Story = { name: 'Мобильная', args: { size: 'mobile' } }
+export const Medium: Story = { name: 'Размер M', args: { size: 'm' } }
+export const Large: Story = { name: 'Размер L', args: { size: 'l' } }
 export const Disabled: Story = { name: 'Неактивная', args: { disabled: true } }
 export const Page: Story = { args: { variant: 'page' } }
 export const Accent: Story = { args: { variant: 'accent' } }
