@@ -1,0 +1,19 @@
+:root {
+  /* Плавная смена цвета при наведении и уходе курсора. */
+  --transition-duration-hover: 200ms;
+  /* Быстрый отклик на нажатие. */
+  --transition-duration-active: 0ms;
+  --transition-easing-color: ease-out;
+  --transition-color: var(--transition-duration-hover) var(--transition-easing-color);
+
+  /* Прежний переход для компонентов, использующих --transition. */
+  --transition: 300ms ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-duration-hover: 0ms;
+    --transition-duration-active: 0ms;
+    --transition: 0ms;
+  }
+}
