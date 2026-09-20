@@ -1,8 +1,9 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { enUS, ru, sr, srLatn } from 'date-fns/locale'
-import { DEFAULT_LOCALE, isSupportedLocale, setI18nLocale } from '@/shared/i18n'
-import type { I18nLocale } from '@/shared/i18n'
+import { DEFAULT_LOCALE, isSupportedLocale } from '../locales'
+import { setI18nLocale } from '../i18n'
+import type { I18nLocale } from '../locales'
 
 const STORE_ID = 'locale-store'
 const LOCAL_STORAGE_KEY = 'localeState'
