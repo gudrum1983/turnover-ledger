@@ -11,13 +11,13 @@ const {
 } = defineProps<ButtonProps>()
 
 const BUTTON_SIZES = {
-  l: { typography: 'L' },
-  m: { typography: 'M' },
+  l: { typography: 'l' },
+  m: { typography: 'm' },
 } as const satisfies Record<ButtonSize, { typography: string }>
 
 const sizeConfig = computed(() => BUTTON_SIZES[size])
 const classes = computed(() => [`ButtonBase_variant_${variant}`, { ButtonBase_fullWidth: fullWidth }])
-const labelClasses = computed(() => ['Text_Uppercase', `Typo_Button${sizeConfig.value.typography}`])
+const labelClasses = computed(() => ['u-uppercase', `u-typo-button-${sizeConfig.value.typography}`])
 </script>
 
 <template>

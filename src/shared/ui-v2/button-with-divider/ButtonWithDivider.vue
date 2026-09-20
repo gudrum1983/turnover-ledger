@@ -29,14 +29,14 @@ const hasDivider = computed(() => isFull.value && hasSecondString.value)
       <IconGlobal v-if="!isFull" size="m" />
 
       <div class="ButtonWithDivider-Label">
-        <span v-if="firstValue" class="Typo_LabelL Text_Uppercase"> {{ firstValue }} </span>
+        <span v-if="firstValue" class="u-typo-label-l u-uppercase"> {{ firstValue }} </span>
       </div>
 
       <div v-if="hasDivider" class="ButtonWithDivider-Divider" />
 
       <div v-if="hasSecondString && isFull" class="ButtonWithDivider-Label">
-        <span class="Typo_LabelM"> {{ secondLabel }} : </span>
-        <span class="Typo_LabelL Text_Uppercase"> {{ secondValue }} </span>
+        <span class="u-typo-label-m"> {{ secondLabel }} : </span>
+        <span class="u-typo-label-l u-uppercase"> {{ secondValue }} </span>
       </div>
     </div>
   </button>

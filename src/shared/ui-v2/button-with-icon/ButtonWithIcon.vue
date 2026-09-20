@@ -23,8 +23,8 @@ const iconDimension = computed(() => `${sizeConfig.value.dimension}px`)
 <template>
   <ButtonBase class="ButtonWithIcon" v-bind="props" :size="size" :aria-busy="loading || undefined">
     <template #content="{ labelClasses }">
-      <span class="ButtonWithIcon_Content">
-        <span class="ButtonWithIcon_Icon" aria-hidden="true">
+      <span class="ButtonWithIcon-Content">
+        <span class="ButtonWithIcon-Icon" aria-hidden="true">
           <LoaderBase v-if="loading" :size="sizeConfig.loader" />
           <slot v-else name="icon" :size="sizeConfig.icon" />
         </span>
@@ -35,14 +35,14 @@ const iconDimension = computed(() => `${sizeConfig.value.dimension}px`)
 </template>
 
 <style scoped lang="scss">
-.ButtonWithIcon_Content {
+.ButtonWithIcon-Content {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
-.ButtonWithIcon_Icon {
+.ButtonWithIcon-Icon {
   width: v-bind(iconDimension);
   height: v-bind(iconDimension);
   display: inline-flex;

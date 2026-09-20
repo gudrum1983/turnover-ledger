@@ -2,106 +2,106 @@
 
 /* Heading — Oswald */
 
-.Typo_H1L {
+.u-typo-h1-l {
   @include typo.heading-style(h1-l);
 }
 
-.Typo_H1M {
+.u-typo-h1-m {
   @include typo.heading-style(h1-m);
 }
 
-.Typo_H2L {
+.u-typo-h2-l {
   @include typo.heading-style(h2-l);
 }
 
-.Typo_H2M {
+.u-typo-h2-m {
   @include typo.heading-style(h2-m);
 }
 
-.Typo_SubtitleL {
+.u-typo-subtitle-l {
   @include typo.heading-style(subtitle-l);
 }
 
-.Typo_SubtitleM {
+.u-typo-subtitle-m {
   @include typo.heading-style(subtitle-m);
 }
 
-.Typo_Title {
+.u-typo-title {
   @include typo.heading-style(title);
 }
 
 /* UI — Inter */
 
-.Typo_BodyL {
+.u-typo-body-l {
   @include typo.ui-style(body-l);
 }
 
-.Typo_BodyM {
+.u-typo-body-m {
   @include typo.ui-style(body-m);
 }
 
-.Typo_ButtonL {
+.u-typo-button-l {
   @include typo.ui-style(button-l);
 }
 
-.Typo_ButtonM {
+.u-typo-button-m {
   @include typo.ui-style(button-m);
 }
 
-.Typo_LabelL {
+.u-typo-label-l {
   @include typo.ui-style(label-l);
 }
 
-.Typo_LabelM {
+.u-typo-label-m {
   @include typo.ui-style(label-m);
 }
 
-.Typo_LabelS {
+.u-typo-label-s {
   @include typo.ui-style(label-s);
 }
 
-.Typo_BodySmallL {
+.u-typo-body-small-l {
   @include typo.ui-style(body-small-l);
 }
 
-.Typo_BodySmallM {
+.u-typo-body-small-m {
   @include typo.ui-style(body-small-m);
 }
 
-.Typo_BodySmallS {
+.u-typo-body-small-s {
   @include typo.ui-style(body-small-s);
 }
 
 /* Report — Open Sans */
 
-.Typo_ReportTitle {
+.u-typo-report-title {
   @include typo.report-style(title);
 }
 
-.Typo_ReportTableAccent {
+.u-typo-report-table-accent {
   @include typo.report-style(table-accent);
 }
 
-.Typo_ReportBodyAccent {
+.u-typo-report-body-accent {
   @include typo.report-style(body-accent);
 }
 
-.Typo_ReportBody {
+.u-typo-report-body {
   @include typo.report-style(body);
 }
 
-.Text_Uppercase {
+.u-uppercase {
   text-transform: uppercase;
 }
 
-.Text_AlginLeft {
+.u-text-left {
   text-align: left;
 }
 
-.Text_AlginRight {
+.u-text-right {
   text-align: right;
 }
 
-.Text_AlginCenter {
+.u-text-center {
   text-align: center;
 }

@@ -3,26 +3,34 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 const groups = [
   {
     name: 'Заголовки — Oswald',
-    classes: ['Typo_H1L', 'Typo_H1M', 'Typo_H2L', 'Typo_H2M', 'Typo_SubtitleL', 'Typo_SubtitleM', 'Typo_Title'],
+    classes: [
+      'u-typo-h1-l',
+      'u-typo-h1-m',
+      'u-typo-h2-l',
+      'u-typo-h2-m',
+      'u-typo-subtitle-l',
+      'u-typo-subtitle-m',
+      'u-typo-title',
+    ],
   },
   {
     name: 'Интерфейс — Inter',
     classes: [
-      'Typo_BodyL',
-      'Typo_BodyM',
-      'Typo_ButtonL',
-      'Typo_ButtonM',
-      'Typo_LabelL',
-      'Typo_LabelM',
-      'Typo_LabelS',
-      'Typo_BodySmallL',
-      'Typo_BodySmallM',
-      'Typo_BodySmallS',
+      'u-typo-body-l',
+      'u-typo-body-m',
+      'u-typo-button-l',
+      'u-typo-button-m',
+      'u-typo-label-l',
+      'u-typo-label-m',
+      'u-typo-label-s',
+      'u-typo-body-small-l',
+      'u-typo-body-small-m',
+      'u-typo-body-small-s',
     ],
   },
   {
     name: 'Отчёты — Open Sans',
-    classes: ['Typo_ReportTitle', 'Typo_ReportTableAccent', 'Typo_ReportBodyAccent', 'Typo_ReportBody'],
+    classes: ['u-typo-report-title', 'u-typo-report-table-accent', 'u-typo-report-body-accent', 'u-typo-report-body'],
   },
 ]
 
@@ -45,17 +53,17 @@ const meta = {
   argTypes: {
     text: { control: 'text', description: 'Текст для сравнения всех начертаний' },
     color: { control: 'color' },
-    uppercase: { control: 'boolean', description: 'Добавляет класс Text_Uppercase' },
+    uppercase: { control: 'boolean', description: 'Добавляет класс u-uppercase' },
   },
   render: (args) => ({
     setup: () => ({ args, groups }),
     template: `
       <div :style="{ color: args.color }" style="display: grid; gap: 32px;">
         <section v-for="group in groups" :key="group.name" style="display: grid; gap: 16px;">
-          <h2 class="Typo_Title">{{ group.name }}</h2>
+          <h2 class="u-typo-title">{{ group.name }}</h2>
           <div v-for="className in group.classes" :key="className" style="display: grid; gap: 8px; padding: 16px; border: 1px solid var(--neutral-200); border-radius: 8px;">
-            <code>{{ className }}{{ args.uppercase ? ' + Text_Uppercase' : '' }}</code>
-            <p :class="[className, { Text_Uppercase: args.uppercase }]" style="overflow-wrap: anywhere;">{{ args.text }}</p>
+            <code>{{ className }}{{ args.uppercase ? ' + u-uppercase' : '' }}</code>
+            <p :class="[className, { 'u-uppercase': args.uppercase }]" style="overflow-wrap: anywhere;">{{ args.text }}</p>
           </div>
         </section>
       </div>

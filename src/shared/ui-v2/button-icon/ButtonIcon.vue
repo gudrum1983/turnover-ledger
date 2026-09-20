@@ -46,8 +46,8 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
     :disabled="disabled"
     :aria-label="ariaLabel"
   >
-    <span class="ButtonIcon_Surface" aria-hidden="true">
-      <span class="ButtonIcon_Icon">
+    <span class="ButtonIcon-Surface" aria-hidden="true">
+      <span class="ButtonIcon-Icon">
         <slot :size="iconConfig.icon" />
       </span>
     </span>
@@ -89,12 +89,12 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   background: transparent;
   color: var(--btn-clr-text);
 
-  &:hover .ButtonIcon_Surface {
+  &:hover .ButtonIcon-Surface {
     background: var(--btn-clr-bg-hover);
     border-color: var(--btn-clr-border-hover);
   }
 
-  &:active .ButtonIcon_Surface {
+  &:active .ButtonIcon-Surface {
     background: var(--btn-clr-bg-active);
     border-color: var(--btn-clr-border-active);
   }
@@ -105,7 +105,7 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
     pointer-events: none;
   }
 
-  &:disabled .ButtonIcon_Surface {
+  &:disabled .ButtonIcon-Surface {
     background: var(--btn-clr-bg-disabled);
     border-color: var(--btn-clr-border-disabled);
   }
@@ -114,13 +114,13 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
     outline: none;
   }
 
-  &:focus-visible .ButtonIcon_Surface {
+  &:focus-visible .ButtonIcon-Surface {
     border-color: transparent;
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
   }
 }
 
-.ButtonIcon_Surface {
+.ButtonIcon-Surface {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,7 +132,7 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   background: var(--btn-clr-bg);
 }
 
-.ButtonIcon_Icon {
+.ButtonIcon-Icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
