@@ -69,6 +69,10 @@ const classes = computed(() => [
   border-color: var(--btn-clr-border);
   color: var(--btn-clr-text);
 
+  transition:
+    background-color var(--transition-color),
+    border-color var(--transition-color);
+
   &:hover {
     background: var(--btn-clr-bg-hover);
     border-color: var(--btn-clr-border-hover);
@@ -77,6 +81,7 @@ const classes = computed(() => [
   &:active {
     background: var(--btn-clr-bg-active);
     border-color: var(--btn-clr-border-active);
+    transition-duration: var(--transition-duration-active);
   }
 
   &:disabled {

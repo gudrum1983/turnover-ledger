@@ -97,6 +97,7 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   &:active .ButtonIcon-Surface {
     background: var(--btn-clr-bg-active);
     border-color: var(--btn-clr-border-active);
+    transition-duration: var(--transition-duration-active);
   }
 
   &:disabled {
@@ -130,6 +131,9 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   border: 1px solid var(--btn-clr-border);
   border-radius: 50%;
   background: var(--btn-clr-bg);
+  transition:
+    background-color var(--transition-color),
+    border-color var(--transition-color);
 }
 
 .ButtonIcon-Icon {
