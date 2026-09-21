@@ -1,7 +1,11 @@
 import type { StorybookConfig } from '@storybook/vue3-vite'
 
 const config: StorybookConfig = {
-  stories: ['../src/shared/ui/*.mdx', '../src/shared/ui/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    '../src/shared/ui/*.mdx',
+    '../src/shared/ui/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/shared/ui-v2/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   addons: [
     '@chromatic-com/storybook',
     '@storybook/addon-vitest',

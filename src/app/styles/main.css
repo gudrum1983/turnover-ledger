@@ -3,6 +3,7 @@
 @import 'typography.css';
 @import 'shadow.css';
 @import 'print.css';
+@import 'index.scss';
 
 * {
   margin: 0;

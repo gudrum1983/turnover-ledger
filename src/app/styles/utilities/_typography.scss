@@ -1,0 +1,107 @@
+@use '../tokens/typography' as typo;
+
+/* Heading — Oswald */
+
+.u-typo-h1-l {
+  @include typo.heading-style(h1-l);
+}
+
+.u-typo-h1-m {
+  @include typo.heading-style(h1-m);
+}
+
+.u-typo-h2-l {
+  @include typo.heading-style(h2-l);
+}
+
+.u-typo-h2-m {
+  @include typo.heading-style(h2-m);
+}
+
+.u-typo-subtitle-l {
+  @include typo.heading-style(subtitle-l);
+}
+
+.u-typo-subtitle-m {
+  @include typo.heading-style(subtitle-m);
+}
+
+.u-typo-title {
+  @include typo.heading-style(title);
+}
+
+/* UI — Inter */
+
+.u-typo-body-l {
+  @include typo.ui-style(body-l);
+}
+
+.u-typo-body-m {
+  @include typo.ui-style(body-m);
+}
+
+.u-typo-button-l {
+  @include typo.ui-style(button-l);
+}
+
+.u-typo-button-m {
+  @include typo.ui-style(button-m);
+}
+
+.u-typo-label-l {
+  @include typo.ui-style(label-l);
+}
+
+.u-typo-label-m {
+  @include typo.ui-style(label-m);
+}
+
+.u-typo-label-s {
+  @include typo.ui-style(label-s);
+}
+
+.u-typo-body-small-l {
+  @include typo.ui-style(body-small-l);
+}
+
+.u-typo-body-small-m {
+  @include typo.ui-style(body-small-m);
+}
+
+.u-typo-body-small-s {
+  @include typo.ui-style(body-small-s);
+}
+
+/* Report — Open Sans */
+
+.u-typo-report-title {
+  @include typo.report-style(title);
+}
+
+.u-typo-report-table-accent {
+  @include typo.report-style(table-accent);
+}
+
+.u-typo-report-body-accent {
+  @include typo.report-style(body-accent);
+}
+
+.u-typo-report-body {
+  @include typo.report-style(body);
+}
+
+.u-uppercase {
+  text-transform: uppercase;
+}
+
+.u-text-left {
+  text-align: left;
+}
+
+.u-text-right {
+  text-align: right;
+}
+
+.u-text-center {
+  text-align: center;
+}
