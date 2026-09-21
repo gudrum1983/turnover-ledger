@@ -94,6 +94,15 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
     border-color: var(--btn-clr-border-hover);
   }
 
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible .ButtonIcon-Surface {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
+  }
+
   &:active .ButtonIcon-Surface {
     background: var(--btn-clr-bg-active);
     border-color: var(--btn-clr-border-active);
@@ -109,15 +118,6 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   &:disabled .ButtonIcon-Surface {
     background: var(--btn-clr-bg-disabled);
     border-color: var(--btn-clr-border-disabled);
-  }
-
-  &:focus-visible {
-    outline: none;
-  }
-
-  &:focus-visible .ButtonIcon-Surface {
-    border-color: transparent;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
   }
 }
 

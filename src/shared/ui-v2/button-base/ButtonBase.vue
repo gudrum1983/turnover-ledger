@@ -78,6 +78,12 @@ const classes = computed(() => [
     border-color: var(--btn-clr-border-hover);
   }
 
+  &:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
+  }
+
   &:active {
     background: var(--btn-clr-bg-active);
     border-color: var(--btn-clr-border-active);
@@ -90,12 +96,6 @@ const classes = computed(() => [
     color: var(--btn-clr-text-disabled);
     cursor: not-allowed;
     pointer-events: none;
-  }
-
-  &:focus-visible {
-    outline: none;
-    border-color: transparent;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
   }
 }
 

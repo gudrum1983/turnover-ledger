@@ -94,6 +94,16 @@ const isLarge = computed(() => size === 'l')
     }
   }
 
+  &:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
+
+    .ButtonWithDivider-Label {
+      background-color: var(--label-clr-bg-focus);
+    }
+  }
+
   &:active {
     border-color: var(--btn-clr-border-active);
     transition-duration: var(--transition-duration-active);
@@ -109,16 +119,6 @@ const isLarge = computed(() => size === 'l')
     color: var(--btn-clr-text-disabled);
     cursor: not-allowed;
     pointer-events: none;
-  }
-
-  &:focus-visible {
-    outline: none;
-    border-color: transparent;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
-
-    .ButtonWithDivider-Label {
-      background-color: var(--label-clr-bg-focus);
-    }
   }
 
   &-Content {
