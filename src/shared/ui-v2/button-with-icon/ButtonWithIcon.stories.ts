@@ -1,6 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import type { Meta, StoryContext, StoryObj } from '@storybook/vue3-vite'
+import { markRaw } from 'vue'
 import { IconUpload } from '../icons'
 import { ButtonWithIcon } from './index'
+
+const template = `<ButtonWithIcon v-bind="props" :icon="icon">
+  {{ label }}
+</ButtonWithIcon>`
 
 const meta = {
   title: 'UI-V2-Компоненты/ButtonWithIcon',
@@ -8,13 +13,32 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     docs: {
+      source: {
+        type: 'dynamic',
+        language: 'html',
+        transform: (_code: string, { args }: StoryContext) => {
+          const attributes = [
+            `variant="${args.variant}"`,
+            `size="${args.size}"`,
+            `type="${args.type}"`,
+            ...(args.disabled ? ['disabled'] : []),
+            ...(args.fullWidth ? ['full-width'] : []),
+            ...(args.loading ? ['loading'] : []),
+          ]
+
+          return `<ButtonWithIcon :icon="IconUpload" ${attributes.join(' ')}>
+  ${args.default}
+</ButtonWithIcon>`
+        },
+      },
       description: {
         component:
-          'Кнопка с иконкой и текстом. Слот icon получает размер иконки. При loading иконка заменяется лоадером без изменения ширины. Для блокировки используйте disabled.',
+          'Кнопка с иконкой и текстом. Компонент иконки передаётся пропсом icon, её размер задаётся кнопкой. При loading иконка заменяется лоадером без изменения ширины. Для блокировки используйте disabled.',
       },
     },
   },
   args: {
+    icon: markRaw(IconUpload),
     variant: 'page',
     size: 'l',
     type: 'button',
@@ -33,11 +57,10 @@ const meta = {
     loading: { control: 'boolean' },
     icon: { control: false },
   },
-  render: ({ default: label, ...props }) => ({
-    components: { ButtonWithIcon, IconUpload },
-    setup: () => ({ props, label }),
-    template:
-      '<ButtonWithIcon v-bind="props"><template #icon="{ size }"><IconUpload :size="size" /></template>{{ label }}</ButtonWithIcon>',
+  render: ({ default: label, icon, ...props }) => ({
+    components: { ButtonWithIcon },
+    setup: () => ({ props, label, icon }),
+    template,
   }),
 } satisfies Meta<typeof ButtonWithIcon>
 

@@ -9,25 +9,23 @@ const meta = {
     docs: {
       description: {
         component:
-          'В размере L кнопка показывает первое значение и пару подпись–значение с разделителем. В размере M — иконку и первое значение. Все текстовые пропсы обязательны и передаются в обоих размерах.',
+          'В размере L кнопка показывает левую подпись и правую пару подпись–значение с разделителем. В размере M — иконку и левую подпись. Все текстовые пропсы обязательны и передаются в обоих размерах.',
       },
     },
   },
   args: {
     size: 'l',
     disabled: false,
-    firstLabel: 'Язык',
-    firstValue: 'Рус',
-    secondLabel: 'отчет',
-    secondValue: 'SRP',
+    leftLabel: 'Рус',
+    rightLabel: 'отчет',
+    rightValue: 'SRP',
   },
   argTypes: {
     size: { control: 'select', options: ['l', 'm'] },
     disabled: { control: 'boolean' },
-    firstLabel: { control: false, description: 'Обязательный проп, пока не используется в шаблоне' },
-    firstValue: { control: 'text', description: 'Первое значение, видимое в обоих размерах' },
-    secondLabel: { control: 'text', description: 'Подпись второй пары, видимой в размере L' },
-    secondValue: { control: 'text', description: 'Значение второй пары, видимой в размере L' },
+    leftLabel: { control: 'text', description: 'Левая подпись, видимая в обоих размерах' },
+    rightLabel: { control: 'text', description: 'Подпись правой пары, видимой в размере L' },
+    rightValue: { control: 'text', description: 'Значение правой пары, видимой в размере L' },
   },
 } satisfies Meta<typeof ButtonWithDivider>
 

@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import ButtonBase from '../button-base/ButtonBase.vue'
 import type { ButtonProps, ButtonSize } from '../button-base/types'
 import type { IconSize } from '../icons/sizes'
 import { LoaderBase } from '../loader-base'
 
 type Props = ButtonProps & {
+  /** Компонент иконки; размер задаётся кнопкой */
+  icon: Component
   /** Показывает индикатор загрузки вместо иконки */
   loading?: boolean
 }
 
-const { size = 'l', loading = false, ...props } = defineProps<Props>()
+const { size = 'l', loading = false, icon, ...props } = defineProps<Props>()
 const ICON_SIZES = {
   l: { dimension: 22, icon: 'l', loader: 'm' },
   m: { dimension: 18, icon: 'm', loader: 's' },
@@ -22,26 +24,15 @@ const iconDimension = computed(() => `${sizeConfig.value.dimension}px`)
 
 <template>
   <ButtonBase class="ButtonWithIcon" v-bind="props" :size="size" :aria-busy="loading || undefined">
-    <template #content="{ labelClasses }">
-      <span class="ButtonWithIcon-Content">
-        <span class="ButtonWithIcon-Icon" aria-hidden="true">
-          <LoaderBase v-if="loading" :size="sizeConfig.loader" />
-          <slot v-else name="icon" :size="sizeConfig.icon" />
-        </span>
-        <span :class="labelClasses"><slot /></span>
-      </span>
-    </template>
+    <span class="ButtonWithIcon-Icon" aria-hidden="true">
+      <LoaderBase v-if="loading" :size="sizeConfig.loader" />
+      <component :is="icon" v-else :size="sizeConfig.icon" />
+    </span>
+    <slot />
   </ButtonBase>
 </template>
 
 <style scoped lang="scss">
-.ButtonWithIcon-Content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
 .ButtonWithIcon-Icon {
   width: v-bind(iconDimension);
   height: v-bind(iconDimension);

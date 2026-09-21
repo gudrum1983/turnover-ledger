@@ -6,39 +6,36 @@ import { IconGlobal } from '@/shared/ui-v2/icons'
 const {
   size = 'l',
   disabled = false,
-  firstValue,
-  secondLabel,
-  secondValue,
+  leftLabel,
+  rightLabel,
+  rightValue,
 } = defineProps<
   Pick<ButtonProps, 'size' | 'disabled'> & {
-    firstLabel: string
-    secondLabel: string
-    firstValue: string
-    secondValue: string
+    rightLabel: string
+    leftLabel: string
+    rightValue: string
   }
 >()
 
-const hasSecondString = computed(() => secondLabel || secondValue)
-const isFull = computed(() => size === 'l')
-const hasDivider = computed(() => isFull.value && hasSecondString.value)
+const isLarge = computed(() => size === 'l')
 </script>
 
 <template>
   <button class="ButtonWithDivider" type="button" :disabled="disabled">
-    <div class="ButtonWithDivider-Content">
-      <IconGlobal v-if="!isFull" size="m" />
+    <span class="ButtonWithDivider-Content">
+      <IconGlobal v-if="!isLarge" size="m" />
 
-      <div class="ButtonWithDivider-Label">
-        <span v-if="firstValue" class="u-typo-label-l u-uppercase"> {{ firstValue }} </span>
-      </div>
+      <span class="ButtonWithDivider-Label">
+        <span class="u-typo-label-l u-uppercase"> {{ leftLabel }} </span>
+      </span>
 
-      <div v-if="hasDivider" class="ButtonWithDivider-Divider" />
+      <span v-if="isLarge" class="ButtonWithDivider-Divider" />
 
-      <div v-if="hasSecondString && isFull" class="ButtonWithDivider-Label">
-        <span class="u-typo-label-m"> {{ secondLabel }} : </span>
-        <span class="u-typo-label-l u-uppercase"> {{ secondValue }} </span>
-      </div>
-    </div>
+      <span v-if="isLarge" class="ButtonWithDivider-Label">
+        <span class="u-typo-label-m"> {{ rightLabel }} : </span>
+        <span class="u-typo-label-l u-uppercase"> {{ rightValue }} </span>
+      </span>
+    </span>
   </button>
 </template>
 
@@ -56,6 +53,9 @@ const hasDivider = computed(() => isFull.value && hasSecondString.value)
   --btn-clr-bg-disabled: var(--neutral-100);
 
   --label-clr-bg: var(--yellow-400);
+  --label-clr-bg-hover: var(--yellow-500);
+  --label-clr-bg-active: var(--yellow-600);
+  --label-clr-bg-focus: var(--yellow-400);
 
   --btn-clr-text: var(--neutral-900);
   --btn-clr-text-disabled: var(--neutral-400);
@@ -82,17 +82,25 @@ const hasDivider = computed(() => isFull.value && hasSecondString.value)
   border-color: var(--btn-clr-border);
   color: var(--btn-clr-text);
 
+  transition:
+    background-color var(--transition-color),
+    border-color var(--transition-color);
+
   &:hover {
-    background: var(--btn-clr-bg-hover);
     border-color: var(--btn-clr-border-hover);
-    --label-clr-bg: var(--yellow-500);
+
+    .ButtonWithDivider-Label {
+      background-color: var(--label-clr-bg-hover);
+    }
   }
 
   &:active {
-    background: var(--btn-clr-bg-active);
     border-color: var(--btn-clr-border-active);
-    --label-clr-bg: var(--yellow-600);
     transition-duration: var(--transition-duration-active);
+
+    .ButtonWithDivider-Label {
+      background-color: var(--label-clr-bg-active);
+    }
   }
 
   &:disabled {
@@ -107,7 +115,10 @@ const hasDivider = computed(() => isFull.value && hasSecondString.value)
     outline: none;
     border-color: transparent;
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--btn-shadow-color) var(--btn-shadow-opacity), transparent);
-    --label-clr-bg: var(--yellow-400);
+
+    .ButtonWithDivider-Label {
+      background-color: var(--label-clr-bg-focus);
+    }
   }
 
   &-Content {

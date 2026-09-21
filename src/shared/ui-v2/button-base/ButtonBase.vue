@@ -16,15 +16,17 @@ const BUTTON_SIZES = {
 } as const satisfies Record<ButtonSize, { typography: string }>
 
 const sizeConfig = computed(() => BUTTON_SIZES[size])
-const classes = computed(() => [`ButtonBase_variant_${variant}`, { ButtonBase_fullWidth: fullWidth }])
-const labelClasses = computed(() => ['u-uppercase', `u-typo-button-${sizeConfig.value.typography}`])
+const classes = computed(() => [
+  `ButtonBase_variant_${variant}`,
+  { ButtonBase_fullWidth: fullWidth },
+  'u-uppercase',
+  `u-typo-button-${sizeConfig.value.typography}`,
+])
 </script>
 
 <template>
   <button class="ButtonBase" :class="classes" :type="type" :disabled="disabled">
-    <slot name="content" :label-classes="labelClasses">
-      <span :class="labelClasses"><slot /></span>
-    </slot>
+    <slot />
   </button>
 </template>
 
