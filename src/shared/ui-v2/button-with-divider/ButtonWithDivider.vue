@@ -136,6 +136,10 @@ const isLarge = computed(() => size === 'l')
     transition:
       background-color var(--transition-color),
       color var(--transition-color);
+
+    span:last-child {
+      min-width: 34px;
+    }
   }
 
   &-Divider {
