@@ -15,7 +15,11 @@ const { t } = useLocale()
 
 <template>
   <div class="AboutPage">
-    <AppHeader :msg="t('ui.appHeaderTitle')" class="AboutPage_Header">
+    <AppHeader
+      :title="t('ui.appHeaderTitle')"
+      subtitle="Учет доходов для паушальных налогоплательщиков"
+      class="ReportBuilderPage_Header"
+    >
       <template #controls>
         <LocaleSwitcher />
       </template>

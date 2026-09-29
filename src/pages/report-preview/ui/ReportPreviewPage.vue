@@ -9,7 +9,8 @@ import { InfoHint } from '@/shared/ui/info-hint'
 import { LinkBase } from '@/shared/ui/link-base'
 import { onBeforeUnmount } from 'vue'
 import { useLocale } from '@/shared/i18n'
-import { useReportScript } from '@/entities/report'
+import { useReportScriptStore } from '@/entities/report-script'
+import { storeToRefs } from 'pinia'
 import { AppFooter } from '@/widgets/app-footer'
 
 const onPrint = () => {
@@ -17,7 +18,8 @@ const onPrint = () => {
 }
 
 const { t } = useLocale()
-const { script } = useReportScript()
+const reportScriptStore = useReportScriptStore()
+const { script } = storeToRefs(reportScriptStore)
 
 const printStyleId = 'print-page-size'
 
@@ -28,7 +30,11 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="ReportPreviewPage">
-    <AppHeader :msg="t('ui.appHeaderTitle')" class="ReportPreviewPage_Header">
+    <AppHeader
+      :title="t('ui.appHeaderTitle')"
+      subtitle="Учет доходов для паушальных налогоплательщиков"
+      class="ReportBuilderPage_Header"
+    >
       <template #controls>
         <LocaleSwitcher />
       </template>
@@ -45,7 +51,6 @@ onBeforeUnmount(() => {
         </div>
       </template>
     </AppHeader>
-
     <main class="ReportPreviewPage_Main">
       <section class="ReportPreviewPage_Document">
         <ReportPreviewDocument :script="script" />
