@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { ButtonGroup } from '@/shared/ui/button-group'
 import { useLocale } from '@/shared/i18n'
-import type { ReportScript } from '@/entities/report'
+import { REPORT_SCRIPTS, REPORT_SCRIPT_LABEL_KEY, isReportScript, type ReportScript } from '@/entities/report-script'
 
 type Props = {
   modelValue: ReportScript
@@ -16,15 +16,12 @@ const emit = defineEmits<{
 
 const { t } = useLocale()
 
-const options = computed(() => [
-  { value: 'srLat', label: t('ui.reportPreviewScriptSwitcher.latin') },
-  { value: 'srCyr', label: t('ui.reportPreviewScriptSwitcher.cyrillic') },
-])
+const options = computed(() => REPORT_SCRIPTS.map((value) => ({ value, label: t(REPORT_SCRIPT_LABEL_KEY[value]) })))
 
 const model = computed<string>({
   get: () => props.modelValue,
   set: (value) => {
-    if (value === 'srLat' || value === 'srCyr') {
+    if (isReportScript(value)) {
       emit('update:modelValue', value)
     }
   },
