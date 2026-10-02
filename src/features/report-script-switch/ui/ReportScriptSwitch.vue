@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ButtonGroup } from '@/shared/ui/button-group'
 import { useLocale } from '@/shared/i18n'
 import { REPORT_SCRIPTS, REPORT_SCRIPT_LABEL_KEY, isReportScript, type ReportScript } from '@/entities/report-script'
+import { LabelContainer } from '@/shared/ui-v2/label-container'
 
 type Props = {
   modelValue: ReportScript
@@ -30,8 +30,7 @@ const model = computed<string>({
 
 <template>
   <div class="ReportScriptSwitch">
-    <div class="Typo_Caption">{{ t('ui.reportPreviewScriptSwitcher.label') }}:</div>
-    <ButtonGroup v-model="model" :options="options" :aria-label="t('ui.reportPreviewScriptSwitcher.label')" size="xs" />
+    <LabelContainer v-model="model" :options="options" :ariaLabel="t('ui.reportPreviewScriptSwitcher.label')" />
   </div>
 </template>
 
