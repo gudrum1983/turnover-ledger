@@ -6,6 +6,11 @@
   --transition-easing-color: ease-out;
   --transition-color: var(--transition-duration-hover) var(--transition-easing-color);
 
+  /* Появление и скрытие модальных окон. */
+  --transition-duration-modal-enter: 180ms;
+  --transition-duration-modal-leave: 120ms;
+  --transition-easing-modal: ease-out;
+
   /* Прежний переход для компонентов, использующих --transition. */
   --transition: 300ms ease-in-out;
 }
@@ -14,6 +19,8 @@
   :root {
     --transition-duration-hover: 0ms;
     --transition-duration-active: 0ms;
+    --transition-duration-modal-enter: 0ms;
+    --transition-duration-modal-leave: 0ms;
     --transition: 0ms;
   }
 }

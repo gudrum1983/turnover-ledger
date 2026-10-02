@@ -3,6 +3,17 @@ import { enInfoPage } from './infoPage'
 
 export const enUi = {
   appHeaderTitle: 'KPO Book (Paušal)',
+  languageSettings: {
+    title: 'Interface and report language',
+    interfaceLabel: 'Interface language',
+    interfaceDescription:
+      'Choose the language of buttons, fields, hints and messages in the app. This setting does not affect the printed report language.',
+    reportLabel: 'Report script',
+    reportShortLabel: 'Report',
+    reportDescription:
+      'The KPO book report is generated only in Serbian. Choose Latin or Cyrillic script for the document. This setting does not change the interface language.',
+    reportHelper: 'You can change the report script here or on the preview page.',
+  },
   common: {
     clearField: 'Clear field',
   },

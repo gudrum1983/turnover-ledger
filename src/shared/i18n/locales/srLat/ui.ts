@@ -3,6 +3,17 @@ import { srLatInfoPage } from './infoPage'
 
 export const srLatUi = {
   appHeaderTitle: 'KPO knjiga (paušal)',
+  languageSettings: {
+    title: 'Jezik interfejsa i izveštaja',
+    interfaceLabel: 'Jezik interfejsa',
+    interfaceDescription:
+      'Izaberite jezik dugmadi, polja, saveta i poruka u aplikaciji. Ovo podešavanje ne utiče na jezik štampanog izveštaja.',
+    reportLabel: 'Pismo izveštaja',
+    reportShortLabel: 'Izveštaj',
+    reportDescription:
+      'KPO knjiga se izrađuje samo na srpskom jeziku. Izaberite pismo dokumenta: latinicu ili ćirilicu. Ovo podešavanje ne menja jezik interfejsa.',
+    reportHelper: 'Pismo izveštaja možete promeniti ovde ili na stranici za pregled izveštaja.',
+  },
   common: {
     clearField: 'Obrisi polje',
   },

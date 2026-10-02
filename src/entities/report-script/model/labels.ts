@@ -1,10 +1,7 @@
 import type { ReportScript } from './types'
-import type { FooterField, HeaderField, TableField, TitleField } from './fields'
+import type { FooterField, HeaderField, TableField, TitleField } from '@/entities/report/@x/report-script'
 
-type DictionaryEntry = {
-  srLat: string
-  srCyr: string
-}
+type DictionaryEntry = Record<ReportScript, string>
 
 export const REPORT_LABELS = {
   header: {

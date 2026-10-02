@@ -4,19 +4,22 @@ import { storeToRefs } from 'pinia'
 import { ReportDocumentRow } from '@/entities/report-row'
 import {
   HEADER_FIELDS,
+  getTableTotals,
+  type FooterField,
+  type HeaderField,
+  type TableField,
+  type TitleField,
+  useReportStore,
+} from '@/entities/report'
+import {
   getReportFooterLabel,
   getReportHeaderLabel,
   getReportTableLabel,
   getReportTitleLabel,
   getReportTotalLabel,
-  getTableTotals,
-  type FooterField,
-  type HeaderField,
   type ReportScript,
-  type TableField,
-  type TitleField,
-  useReportStore,
-} from '@/entities/report'
+  DEFAULT_REPORT_SCRIPT,
+} from '@/entities/report-script'
 import { formatMoney } from '@/shared/lib'
 
 type Props = {
@@ -26,7 +29,7 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), {
   landscape: true,
-  script: 'srLat',
+  script: DEFAULT_REPORT_SCRIPT,
 })
 
 const store = useReportStore()

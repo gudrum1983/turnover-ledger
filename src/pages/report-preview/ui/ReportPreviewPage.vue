@@ -1,23 +1,31 @@
 <script setup lang="ts">
 import { LocaleSwitcher } from '@/features/locale-switcher'
-import { ReportScriptSwitch } from '@/features/report-script-switch'
 import { AppHeader } from '@/widgets/app-header'
 import { ReportPreviewDocument } from '@/widgets/report-preview-document'
 import { ROUTES } from '@/shared/constants/routes.ts'
-import { ButtonBase } from '@/shared/ui/button-base'
-import { InfoHint } from '@/shared/ui/info-hint'
-import { LinkBase } from '@/shared/ui/link-base'
+import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { onBeforeUnmount } from 'vue'
 import { useLocale } from '@/shared/i18n'
-import { useReportScript } from '@/entities/report'
+import { useReportScriptStore } from '@/entities/report-script'
+import { storeToRefs } from 'pinia'
 import { AppFooter } from '@/widgets/app-footer'
+import { IconBack, IconPrinter } from '@/shared/ui-v2/icons'
+import { useRouter } from 'vue-router'
+import { ReportScriptSwitch } from '@/features/report-script-switch'
 
 const onPrint = () => {
   window.print()
 }
+//todo: тут стили перешерстить и свитчер переместить
+const router = useRouter()
+
+function closePreview() {
+  router.push({ name: ROUTES.reportBuilder.name })
+}
 
 const { t } = useLocale()
-const { script } = useReportScript()
+const reportScriptStore = useReportScriptStore()
+const { script } = storeToRefs(reportScriptStore)
 
 const printStyleId = 'print-page-size'
 
@@ -28,24 +36,29 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="ReportPreviewPage">
-    <AppHeader :msg="t('ui.appHeaderTitle')" class="ReportPreviewPage_Header">
+    <AppHeader
+      :title="t('ui.appHeaderTitle')"
+      subtitle="Учет доходов для паушальных налогоплательщиков"
+      class="ReportBuilderPage_Header"
+    >
       <template #controls>
         <LocaleSwitcher />
       </template>
       <template v-slot:actionButtons>
-        <div class="ReportPreviewPage_Actions">
-          <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 {{ t('ui.reportPreview.toHome') }}</LinkBase>
+        <div class="ReportPreviewPage-Panel">
+          <div class="ReportPreviewPage_Actions">
+            <ButtonWithIcon :icon="IconBack" variant="accent" :onclick="closePreview">
+              Закрыть предпросмотр
+            </ButtonWithIcon>
 
-          <ReportScriptSwitch v-model="script" class="no-print" />
-
-          <div class="ReportPreviewPage_PrintAction">
-            <InfoHint :text="t('ui.reportPreview.printHint')" :max-width="300" />
-            <ButtonBase size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</ButtonBase>
+            <ButtonWithIcon :icon="IconPrinter" variant="page" @click="onPrint">
+              {{ t('ui.reportPreview.print') }}
+            </ButtonWithIcon>
           </div>
+          <ReportScriptSwitch class="ReportPreviewPage-Language no-print" v-model="script" />
         </div>
       </template>
     </AppHeader>
-
     <main class="ReportPreviewPage_Main">
       <section class="ReportPreviewPage_Document">
         <ReportPreviewDocument :script="script" />
@@ -67,10 +80,23 @@ onBeforeUnmount(() => {
     margin-block-end: 16px;
   }
 
+  &-Language {
+    align-items: center;
+  }
+
   &_Actions {
     display: flex;
+    padding: 40px 0;
     width: 100%;
     justify-content: space-between;
+  }
+
+  &-Panel {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0 24px;
+    width: 100%;
+    justify-content: center;
   }
 
   &_Main {

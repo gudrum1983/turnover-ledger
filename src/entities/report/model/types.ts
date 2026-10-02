@@ -1,8 +1,6 @@
 import type { FooterField, HeaderField } from './fields'
 import type { ReportRow } from '@/entities/report-row/@x/report'
 
-export type ReportScript = 'srLat' | 'srCyr'
-
 export type ReportMeta = {
   header: Record<HeaderField, string>
   footer: Record<FooterField, string>

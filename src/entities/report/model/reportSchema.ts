@@ -7,12 +7,3 @@ export {
   TITLE_FIELDS,
 } from './fields'
 export type { FooterField, FooterMetaField, HeaderField, HeaderMetaField, TableField, TitleField } from './fields'
-export {
-  REPORT_LABELS,
-  REPORT_TOTAL_LABEL_BY_SCRIPT,
-  getReportFooterLabel,
-  getReportHeaderLabel,
-  getReportTableLabel,
-  getReportTitleLabel,
-  getReportTotalLabel,
-} from './labels'

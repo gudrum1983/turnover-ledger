@@ -3,24 +3,48 @@ import { LocaleSwitcher } from '@/features/locale-switcher'
 import { CONTACT_EMAIL, EXCHANGE_RATE_SITE_URL, NBS_SITE_URL, SRB_GUIDE_KPO_URL } from '@/shared/constants/app'
 import { ROUTES } from '@/shared/constants/routes'
 import { useLocale } from '@/shared/i18n'
-import { LinkBase } from '@/shared/ui/link-base'
+/*import { LinkBase } from '@/shared/ui/link-base'*/
 import { LinkEmail } from '@/shared/ui/link-email'
 import { LinkExternal } from '@/shared/ui/link-external'
 import { PaperBase } from '@/shared/ui/paper-base'
 import { AppFooter } from '@/widgets/app-footer'
 import { AppHeader } from '@/widgets/app-header'
+import { IconBack } from '@/shared/ui-v2/icons'
+import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
+import { useRouter } from 'vue-router'
 
 const { t } = useLocale()
+const router = useRouter()
+
+function backToApp() {
+  router.push({ name: ROUTES.reportBuilder.name })
+}
 </script>
 
 <template>
   <div class="AboutPage">
-    <AppHeader :msg="t('ui.appHeaderTitle')" class="AboutPage_Header">
+    <AppHeader
+      :title="t('ui.appHeaderTitle')"
+      subtitle="Учет доходов для паушальных налогоплательщиков"
+      class="ReportBuilderPage_Header"
+    >
       <template #controls>
         <LocaleSwitcher />
       </template>
       <template #actionButtons>
-        <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 {{ t('ui.infoPage.backToApp') }}</LinkBase>
+        <div class="AboutPage-Actions">
+          <ButtonWithIcon :icon="IconBack" variant="accent" :onclick="backToApp">
+            {{ t('ui.infoPage.backToApp') }}
+          </ButtonWithIcon>
+
+          <!--          <ReportScriptSwitch v-model="script" class="no-print" />-->
+
+          <!--          <div class="ReportPreviewPage_PrintAction">
+                      <InfoHint :text="t('ui.reportPreview.printHint')" :max-width="300" />
+                      <ButtonBase size="xs" color="success" @click="onPrint">{{ t('ui.reportPreview.print') }}</ButtonBase>
+                    </div>-->
+        </div>
+        <!--        <LinkBase :to="{ name: ROUTES.reportBuilder.name }" size="lg">🡄 {{ t('ui.infoPage.backToApp') }}</LinkBase>-->
       </template>
     </AppHeader>
 
@@ -85,6 +109,10 @@ const { t } = useLocale()
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  &-Actions {
+    padding: 40px 0;
+  }
 
   &_Header {
     margin-block-end: 16px;
