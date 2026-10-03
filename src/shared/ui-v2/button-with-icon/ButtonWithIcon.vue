@@ -10,9 +10,11 @@ type Props = ButtonProps & {
   icon: Component
   /** Показывает индикатор загрузки вместо иконки */
   loading?: boolean
+  /** Отключает кнопку */
+  disabled?: boolean
 }
 
-const { size = 'l', loading = false, icon, ...props } = defineProps<Props>()
+const { size = 'l', loading = false, icon, disabled = false, ...props } = defineProps<Props>()
 const ICON_SIZES = {
   l: { dimension: 22, icon: 'l', loader: 'm' },
   m: { dimension: 18, icon: 'm', loader: 's' },
@@ -23,7 +25,7 @@ const iconDimension = computed(() => `${sizeConfig.value.dimension}px`)
 </script>
 
 <template>
-  <ButtonBase class="ButtonWithIcon" v-bind="props" :size="size" :aria-busy="loading || undefined">
+  <ButtonBase class="ButtonWithIcon" v-bind="props" :size="size" :aria-busy="loading || undefined" :disabled="disabled">
     <span class="ButtonWithIcon-Icon" aria-hidden="true">
       <LoaderBase v-if="loading" :size="sizeConfig.loader" />
       <component :is="icon" v-else :size="sizeConfig.icon" />
