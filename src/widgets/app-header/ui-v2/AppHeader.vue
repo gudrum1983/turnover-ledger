@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { VNode } from 'vue'
+import { onMounted, onUnmounted, ref, type VNode } from 'vue'
 import LogoHeader from '@/widgets/app-header/ui-v2/LogoHeader.vue'
 import { LanguageSettings } from '@/features/language-settings'
 
@@ -17,6 +17,27 @@ type AppHeaderSlots = {
 
 defineProps<AppHeaderProps>()
 defineSlots<AppHeaderSlots>()
+
+const languageButtonSize = ref<'l' | 'm' | 's'>('s')
+let mediumViewport: MediaQueryList | undefined
+let largeViewport: MediaQueryList | undefined
+
+function updateLanguageButtonSize() {
+  languageButtonSize.value = largeViewport?.matches ? 'l' : mediumViewport?.matches ? 'm' : 's'
+}
+
+onMounted(() => {
+  mediumViewport = window.matchMedia('(min-width: 768px)')
+  largeViewport = window.matchMedia('(min-width: 1024px)')
+  mediumViewport.addEventListener('change', updateLanguageButtonSize)
+  largeViewport.addEventListener('change', updateLanguageButtonSize)
+  updateLanguageButtonSize()
+})
+
+onUnmounted(() => {
+  mediumViewport?.removeEventListener('change', updateLanguageButtonSize)
+  largeViewport?.removeEventListener('change', updateLanguageButtonSize)
+})
 </script>
 
 <template>
@@ -28,7 +49,7 @@ defineSlots<AppHeaderSlots>()
         <span style="grid-area: subtitle" class="u-typo-body-m">{{ subtitle }}</span>
 
         <div class="AppHeader-Locale">
-          <LanguageSettings />
+          <LanguageSettings :size="languageButtonSize" />
         </div>
       </div>
     </div>

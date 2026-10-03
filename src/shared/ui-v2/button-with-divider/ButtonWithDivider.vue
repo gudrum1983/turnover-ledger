@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { ButtonProps } from '../button-base/types'
 import { IconGlobal } from '@/shared/ui-v2/icons'
 
@@ -10,29 +9,28 @@ const {
   rightLabel,
   rightValue,
 } = defineProps<
-  Pick<ButtonProps, 'size' | 'disabled'> & {
+  Pick<ButtonProps, 'disabled'> & {
+    size?: 'l' | 'm' | 's'
     rightLabel: string
     leftLabel: string
     rightValue: string
   }
 >()
-
-const isLarge = computed(() => size === 'l')
 </script>
 
 <template>
   <button class="ButtonWithDivider" type="button" :disabled="disabled">
     <span class="ButtonWithDivider-Content">
-      <IconGlobal v-if="!isLarge" size="m" />
+      <IconGlobal v-if="size === 's'" size="m" />
 
       <span class="ButtonWithDivider-Label">
         <span class="u-typo-label-l u-uppercase"> {{ leftLabel }} </span>
       </span>
 
-      <span v-if="isLarge" class="ButtonWithDivider-Divider" />
+      <span v-if="size !== 's'" class="ButtonWithDivider-Divider" />
 
-      <span v-if="isLarge" class="ButtonWithDivider-Label">
-        <span class="u-typo-label-m"> {{ rightLabel }} : </span>
+      <span v-if="size !== 's'" class="ButtonWithDivider-Label">
+        <span v-if="size === 'l'" class="u-typo-label-m"> {{ rightLabel }} : </span>
         <span class="u-typo-label-l u-uppercase"> {{ rightValue }} </span>
       </span>
     </span>
