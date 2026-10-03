@@ -31,9 +31,9 @@ function backToApp() {
       <template #controls>
         <LocaleSwitcher />
       </template>
-      <template #actionButtons>
+      <template #actionButtons="{ size }">
         <div class="AboutPage-Actions">
-          <ButtonWithIcon :icon="IconBack" variant="accent" :onclick="backToApp">
+          <ButtonWithIcon :size="size" :icon="IconBack" variant="accent" :onclick="backToApp">
             {{ t('ui.infoPage.backToApp') }}
           </ButtonWithIcon>
 

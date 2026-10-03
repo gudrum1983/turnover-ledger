@@ -44,14 +44,14 @@ onBeforeUnmount(() => {
       <template #controls>
         <LocaleSwitcher />
       </template>
-      <template v-slot:actionButtons>
+      <template #actionButtons="{ size }">
         <div class="ReportPreviewPage-Panel">
           <div class="ReportPreviewPage_Actions">
-            <ButtonWithIcon :icon="IconBack" variant="accent" :onclick="closePreview">
+            <ButtonWithIcon :size="size" :icon="IconBack" variant="accent" :onclick="closePreview">
               Закрыть предпросмотр
             </ButtonWithIcon>
 
-            <ButtonWithIcon :icon="IconPrinter" variant="page" @click="onPrint">
+            <ButtonWithIcon :size="size" :icon="IconPrinter" variant="page" @click="onPrint">
               {{ t('ui.reportPreview.print') }}
             </ButtonWithIcon>
           </div>
