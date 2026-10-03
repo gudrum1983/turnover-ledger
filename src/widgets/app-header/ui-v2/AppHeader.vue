@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, type VNode } from 'vue'
+import { LogoBase } from '@/shared/ui-v2/logo-base'
 import type { ButtonSize } from '@/shared/ui-v2/button-base/types'
-import LogoHeader from '@/widgets/app-header/ui-v2/LogoHeader.vue'
 import { LanguageSettings } from '@/features/language-settings'
 
 type AppHeaderProps = {
@@ -51,7 +51,7 @@ onUnmounted(() => {
   <header class="u-container AppHeader no-print">
     <div class="AppHeader-Main">
       <div class="AppHeader-Logo">
-        <LogoHeader style="grid-area: logo" />
+        <LogoBase style="grid-area: logo" />
         <h1 style="grid-area: title" :class="sizeConfig.titleClass">
           {{ title }}
         </h1>
