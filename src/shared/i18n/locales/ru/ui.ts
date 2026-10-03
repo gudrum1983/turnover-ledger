@@ -1,7 +1,7 @@
 import { ruInfoPage } from './infoPage'
 
 export const ruUi = {
-  appHeaderTitle: 'Книга КПО (паушал)',
+  appHeaderTitle: 'Книга КПО',
   languageSettings: {
     title: 'Язык интерфейса и отчётов',
     interfaceLabel: 'Язык интерфейса',
@@ -180,7 +180,7 @@ export const ruUi = {
   noPageMessage: {
     link: 'Вернуться на главную',
     title: 'Страница потерялась...',
-    subtitle: 'Кажется, кто-то вырвал её из книги. Но вы всегда можете вернуться на главную и продолжить работу.',
+    subtitle: 'Кажется, кто-то вырвал её из книги.\nНо вы всегда можете вернуться на главную и продолжить работу.',
   },
   footer: {
     bookTitle: 'Книга КПО',

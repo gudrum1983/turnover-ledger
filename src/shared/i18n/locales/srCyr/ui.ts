@@ -2,7 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 import { srCyrInfoPage } from './infoPage'
 
 export const srCyrUi = {
-  appHeaderTitle: 'КПО књига (паушал)',
+  appHeaderTitle: 'КПО књига',
   languageSettings: {
     title: 'Језик интерфејса и извештаја',
     interfaceLabel: 'Језик интерфејса',
@@ -182,7 +182,7 @@ export const srCyrUi = {
     link: 'Назад на почетну страницу',
     title: 'Страница се изгубила...',
     subtitle:
-      'Изгледа да ју је неко истргнуо из књиге. Али увек можете да се вратите на почетну страницу и наставите са радом.',
+      'Изгледа да ју је неко истргнуо из књиге.\nАли увек можете да се вратите на почетну страницу и наставите са радом.',
   },
   footer: {
     bookTitle: 'КПО књига',

@@ -2,7 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 import { srLatInfoPage } from './infoPage'
 
 export const srLatUi = {
-  appHeaderTitle: 'KPO knjiga (paušal)',
+  appHeaderTitle: 'KPO knjiga',
   languageSettings: {
     title: 'Jezik interfejsa i izveštaja',
     interfaceLabel: 'Jezik interfejsa',
@@ -182,7 +182,7 @@ export const srLatUi = {
     link: 'Nazad na početnu stranicu',
     title: 'Stranica se izgubila...',
     subtitle:
-      'Izgleda da ju je neko istrgnuo iz knjige. Ali uvek možete da se vratite na početnu stranicu i nastavite sa radom.',
+      'Izgleda da ju je neko istrgnuo iz knjige.\nAli uvek možete da se vratite na početnu stranicu i nastavite sa radom.',
   },
   footer: {
     bookTitle: 'KPO knjiga',

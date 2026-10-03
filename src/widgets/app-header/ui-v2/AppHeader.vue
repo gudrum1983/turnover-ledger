@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { VNode } from 'vue'
+import { computed, onMounted, onUnmounted, ref, type VNode } from 'vue'
+import type { ButtonSize } from '@/shared/ui-v2/button-base/types'
 import LogoHeader from '@/widgets/app-header/ui-v2/LogoHeader.vue'
 import { LanguageSettings } from '@/features/language-settings'
 
@@ -12,11 +13,38 @@ type AppHeaderProps = {
 
 type AppHeaderSlots = {
   /** Кнопки действий страницы, отображаемые под основной частью шапки. */
-  actionButtons?: () => VNode | VNode[]
+  actionButtons?: (props: { size: ButtonSize }) => VNode | VNode[]
 }
 
 defineProps<AppHeaderProps>()
 defineSlots<AppHeaderSlots>()
+
+const headerSize = ref<'l' | 'm' | 's'>('s')
+const HEADER_SIZES = {
+  l: { titleClass: 'u-typo-h1-l', subtitleClass: 'u-typo-body-m', buttonSize: 'l' },
+  m: { titleClass: 'u-typo-h1-l', subtitleClass: 'u-typo-body-m', buttonSize: 'l' },
+  s: { titleClass: 'u-typo-h1-m', subtitleClass: 'u-typo-label-s', buttonSize: 'm' },
+} as const
+const sizeConfig = computed(() => HEADER_SIZES[headerSize.value])
+let mediumViewport: MediaQueryList | undefined
+let largeViewport: MediaQueryList | undefined
+
+function updateHeaderSize() {
+  headerSize.value = largeViewport?.matches ? 'l' : mediumViewport?.matches ? 'm' : 's'
+}
+
+onMounted(() => {
+  mediumViewport = window.matchMedia('(min-width: 768px)')
+  largeViewport = window.matchMedia('(min-width: 1024px)')
+  mediumViewport.addEventListener('change', updateHeaderSize)
+  largeViewport.addEventListener('change', updateHeaderSize)
+  updateHeaderSize()
+})
+
+onUnmounted(() => {
+  mediumViewport?.removeEventListener('change', updateHeaderSize)
+  largeViewport?.removeEventListener('change', updateHeaderSize)
+})
 </script>
 
 <template>
@@ -24,17 +52,19 @@ defineSlots<AppHeaderSlots>()
     <div class="AppHeader-Main">
       <div class="AppHeader-Logo">
         <LogoHeader style="grid-area: logo" />
-        <h1 style="grid-area: title" class="u-typo-h1-l">{{ title }}</h1>
-        <span style="grid-area: subtitle" class="u-typo-body-m">{{ subtitle }}</span>
+        <h1 style="grid-area: title" :class="sizeConfig.titleClass">
+          {{ title }}
+        </h1>
+        <span style="grid-area: subtitle" :class="sizeConfig.subtitleClass">{{ subtitle }}</span>
 
         <div class="AppHeader-Locale">
-          <LanguageSettings />
+          <LanguageSettings :size="headerSize" />
         </div>
       </div>
     </div>
 
     <div class="AppHeader-Actions">
-      <slot name="actionButtons" />
+      <slot name="actionButtons" :size="sizeConfig.buttonSize" />
     </div>
   </header>
 </template>

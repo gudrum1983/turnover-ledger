@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'В размере L кнопка показывает левую подпись и правую пару подпись–значение с разделителем. В размере M — иконку и левую подпись. Все текстовые пропсы обязательны и передаются в обоих размерах.',
+          'Три размера: L — все подписи и разделитель; M — левая подпись, разделитель и правое значение без rightLabel; S — только иконка и левая подпись. Все текстовые пропсы обязательны.',
       },
     },
   },
@@ -21,11 +21,14 @@ const meta = {
     rightValue: 'SRP',
   },
   argTypes: {
-    size: { control: 'select', options: ['l', 'm'] },
+    size: { control: 'select', options: ['l', 'm', 's'] },
     disabled: { control: 'boolean' },
-    leftLabel: { control: 'text', description: 'Левая подпись, видимая в обоих размерах' },
-    rightLabel: { control: 'text', description: 'Подпись правой пары, видимой в размере L' },
-    rightValue: { control: 'text', description: 'Значение правой пары, видимой в размере L' },
+    leftLabel: { control: 'text', description: 'Левая подпись, видимая во всех размерах' },
+    rightLabel: {
+      control: 'text',
+      description: 'Подпись правой пары, видимая только в размере L',
+    },
+    rightValue: { control: 'text', description: 'Значение правой пары, видимое в размерах L и M' },
   },
 } satisfies Meta<typeof ButtonWithDivider>
 
@@ -35,8 +38,13 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = { name: 'Песочница' }
 export const Large: Story = { name: 'Размер L', args: { size: 'l' } }
 export const Medium: Story = { name: 'Размер M', args: { size: 'm' } }
+export const Small: Story = { name: 'Размер S', args: { size: 's' } }
 export const Disabled: Story = { name: 'Неактивная', args: { disabled: true } }
 export const DisabledMedium: Story = {
   name: 'Неактивная — размер M',
   args: { size: 'm', disabled: true },
+}
+export const DisabledSmall: Story = {
+  name: 'Неактивная — размер S',
+  args: { size: 's', disabled: true },
 }

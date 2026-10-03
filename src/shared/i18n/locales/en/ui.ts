@@ -2,7 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 import { enInfoPage } from './infoPage'
 
 export const enUi = {
-  appHeaderTitle: 'KPO Book (Paušal)',
+  appHeaderTitle: 'KPO Book',
   languageSettings: {
     title: 'Interface and report language',
     interfaceLabel: 'Interface language',
@@ -183,7 +183,7 @@ export const enUi = {
     link: 'Back to home',
     title: 'This page has gone missing...',
     subtitle:
-      'It looks like someone tore it out of the book. But you can always return to the home page and continue your work.',
+      'It looks like someone tore it out of the book.\nBut you can always return to the home page and continue your work.',
   },
   footer: {
     bookTitle: 'KPO Ledger',

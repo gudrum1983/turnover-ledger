@@ -4,14 +4,13 @@ import { storeToRefs } from 'pinia'
 import { useLocale, SUPPORTED_LOCALES, LOCALE_META, isSupportedLocale } from '@/shared/i18n'
 import { useReportScriptStore, isReportScript, REPORT_SCRIPTS, REPORT_SCRIPT_LABEL_KEY } from '@/entities/report-script'
 import { ButtonWithDivider } from '@/shared/ui-v2/button-with-divider'
-import type { ButtonSize } from '@/shared/ui-v2/button-base/types'
 import { LangToggle } from '@/shared/ui-v2/lang-toggle'
 import { ModalBase } from '@/shared/ui-v2/modal-base'
 import { DividerBase } from '@/shared/ui-v2/divider-base'
 
 type LanguageSettingsProps = {
-  /** Размер кнопки открытия: l — язык интерфейса и письменность отчёта, m — иконка и язык интерфейса. */
-  size?: ButtonSize
+  /** Размер кнопки открытия: l — все подписи, m — без подписи отчёта, s — иконка и язык интерфейса. */
+  size?: 'l' | 'm' | 's'
   /** Отключает кнопку открытия настроек языка. */
   disabled?: boolean
 }
