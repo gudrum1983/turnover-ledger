@@ -1,0 +1,27 @@
+@use 'sass:math';
+
+/* Опорные ширины макета. */
+$bp-xs: 360px;
+$bp-md: 768px;
+$bp-3xl: 1920px;
+
+$gutter-xs: 16px;
+$gutter-md: 24px;
+
+/* Линейный рост отступа с 16 px при 360 px до 24 px при 768 px. */
+$gutter-slope: math.div($gutter-md - $gutter-xs, $bp-md - $bp-xs);
+$gutter-intercept: $gutter-xs - $gutter-slope * $bp-xs;
+
+:root {
+  --bp-xs: #{$bp-xs};
+  --bp-md: #{$bp-md};
+  --bp-3xl: #{$bp-3xl};
+
+  /* Ширины контейнера в опорных макетах, а не ступени ограничения. */
+  --container-xs: 328px;
+  --container-md: 720px;
+  --container-3xl: 1372px;
+
+  /* После 768 px отступ не превышает 24 px. */
+  --container-gutter: clamp(#{$gutter-xs}, calc(#{$gutter-intercept} + #{$gutter-slope * 100vw}), #{$gutter-md});
+}

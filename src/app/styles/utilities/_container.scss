@@ -1,0 +1,9 @@
+@use '../tokens/container';
+
+.u-container {
+  --container-max: var(--container-3xl);
+
+  width: calc(100% - (var(--container-gutter) * 2));
+  max-width: var(--container-max);
+  margin-inline: auto;
+}

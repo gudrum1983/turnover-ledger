@@ -20,7 +20,7 @@ defineSlots<AppHeaderSlots>()
 </script>
 
 <template>
-  <header class="Container AppHeader no-print">
+  <header class="u-container AppHeader no-print">
     <div class="AppHeader-Main">
       <div class="AppHeader-Logo">
         <LogoHeader style="grid-area: logo" />
