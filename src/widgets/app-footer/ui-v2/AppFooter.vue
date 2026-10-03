@@ -49,10 +49,8 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
   <footer class="AppFooter no-print u-typo-label-s u-container">
     <div ref="content" class="AppFooter-Content">
       <div class="AppFooter-String">
-        <span
-          >© {{ t('ui.footer.bookTitle') }} {{ year }}
-          <LinkBase :to="{ name: ROUTES.about.name }">{{ t('ui.footer.about') }}</LinkBase></span
-        >
+        <span>© {{ t('ui.footer.bookTitle') }} {{ year }} </span>
+        <LinkBase :to="{ name: ROUTES.about.name }">{{ t('ui.footer.about') }}</LinkBase>
       </div>
       <div class="AppFooter-String">
         <PointBase
@@ -60,10 +58,8 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
           :class="{ 'AppFooter-Divider_visible': showDividers[1] }"
           aria-hidden="true"
         />
-        <span>
-          {{ t('ui.footer.development') }}:
-          <LinkExternal href="https://github.com/gudrum1983">{{ t('ui.footer.developerName') }}</LinkExternal></span
-        >
+        <span> {{ t('ui.footer.development') }}: </span>
+        <LinkExternal href="https://github.com/gudrum1983">{{ t('ui.footer.developerName') }}</LinkExternal>
       </div>
       <div class="AppFooter-String">
         <PointBase
@@ -71,10 +67,8 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
           :class="{ 'AppFooter-Divider_visible': showDividers[2] }"
           aria-hidden="true"
         />
-        <span>
-          {{ t('ui.footer.design') }}:
-          <LinkExternal href="https://t.me/maxsimkamenschikov">{{ t('ui.footer.designerName') }}</LinkExternal></span
-        >
+        <span> {{ t('ui.footer.design') }}: </span>
+        <LinkExternal href="https://t.me/maxsimkamenschikov">{{ t('ui.footer.designerName') }}</LinkExternal>
       </div>
     </div>
   </footer>
@@ -113,6 +107,15 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
     flex: 0 0 auto;
     // Переносится весь пункт целиком, а не слова и ссылки внутри него.
     white-space: nowrap;
+    gap: 8px;
+
+    span {
+      margin-right: 8px;
+    }
+
+    span:first-child {
+      margin-right: 16px;
+    }
   }
 
   &-Divider {
