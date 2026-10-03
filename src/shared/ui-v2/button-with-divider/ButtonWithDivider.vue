@@ -47,7 +47,7 @@ const {
 
   --divider-clr: var(--neutral-500);
 
-  --btn-clr-bg: transparent;
+  --btn-clr-bg: var(--white);
   --btn-clr-bg-disabled: var(--neutral-100);
 
   --label-clr-bg: var(--yellow-400);
