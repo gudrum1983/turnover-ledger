@@ -179,13 +179,19 @@ export const srLatUi = {
     cyrillic: 'Ћирилица',
   },
   noPageMessage: {
-    link: 'Polako — idemo nazad',
-    title: 'Stranica nije pronađena',
-    subtitle: 'Ništa strašno, samo ste malo skrenuli.',
+    link: 'Nazad na početnu stranicu',
+    title: 'Stranica se izgubila...',
+    subtitle:
+      'Izgleda da ju je neko istrgnuo iz knjige. Ali uvek možete da se vratite na početnu stranicu i nastavite sa radom.',
   },
   footer: {
+    bookTitle: 'KPO knjiga',
+    development: 'Razvoj',
+    design: 'Dizajn',
+    developerName: 'Ekaterina Kochkina',
+    designerName: 'Maxim Kamenshchikov',
     localStorageNotice: 'Svi podaci izveštaja ostaju u Vašem pregledaču',
-    about: 'O aplikaciji',
+    about: 'O\u00A0aplikaciji',
   },
   infoPage: srLatInfoPage,
   accessibility: {
