@@ -1,1 +1,1 @@
-export { default as AppFooter } from './ui/AppFooter.vue'
+export { default as AppFooter } from './ui-v2/AppFooter.vue'
