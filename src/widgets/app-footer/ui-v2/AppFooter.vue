@@ -68,7 +68,9 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
           aria-hidden="true"
         />
         <span> {{ t('ui.footer.design') }}: </span>
-        <LinkExternal href="https://t.me/maxsimkamenschikov">{{ t('ui.footer.designerName') }}</LinkExternal>
+        <LinkExternal href="https://www.behance.net/maxkamoff">{{ t('ui.footer.designerName') }}</LinkExternal>
+
+        <!--        <LinkExternal href="https://t.me/maxsimkamenschikov">{{ t('ui.footer.designerName') }}</LinkExternal>-->
       </div>
     </div>
   </footer>
