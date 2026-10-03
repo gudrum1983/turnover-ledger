@@ -183,7 +183,7 @@ export const enUi = {
     link: 'Back to home',
     title: 'This page has gone missing...',
     subtitle:
-      'It looks like someone tore it out of the book. But you can always return to the home page and continue your work.',
+      'It looks like someone tore it out of the book.\nBut you can always return to the home page and continue your work.',
   },
   footer: {
     bookTitle: 'KPO Ledger',
