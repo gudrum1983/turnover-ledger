@@ -179,13 +179,19 @@ export const srCyrUi = {
     cyrillic: 'Ћирилица',
   },
   noPageMessage: {
-    link: 'Полако — идемо назад',
-    title: 'Страница није пронађена',
-    subtitle: 'Ништа страшно, само сте мало скренули.',
+    link: 'Назад на почетну страницу',
+    title: 'Страница се изгубила...',
+    subtitle:
+      'Изгледа да ју је неко истргнуо из књиге. Али увек можете да се вратите на почетну страницу и наставите са радом.',
   },
   footer: {
+    bookTitle: 'КПО књига',
+    development: 'Развој',
+    design: 'Дизајн',
+    developerName: 'Екатерина Кочкина',
+    designerName: 'Максим Каменщиков',
     localStorageNotice: 'Сви подаци извештаја остају у Вашем прегледачу',
-    about: 'О апликацији',
+    about: 'О\u00A0апликацији',
   },
   infoPage: srCyrInfoPage,
   accessibility: {

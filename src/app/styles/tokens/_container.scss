@@ -1,0 +1,36 @@
+@use 'sass:math';
+
+// Ширины экрана в опорных макетах. Здесь они не задают media queries.
+$bp-xs: 360px;
+$bp-md: 768px;
+$bp-3xl: 1920px;
+
+// Минимальный и максимальный отступ контейнера с каждой стороны.
+$gutter-xs: 16px;
+$gutter-md: 24px;
+
+// Между 360 и 768 px отступ плавно растёт с 16 до 24 px.
+// Формула прямой: отступ = slope * ширина экрана + intercept.
+// slope — прирост отступа на каждый пиксель ширины экрана.
+// intercept — начальное смещение, чтобы при 360 px получить ровно 16 px.
+$gutter-slope: math.div($gutter-md - $gutter-xs, $bp-md - $bp-xs);
+$gutter-intercept: $gutter-xs - $gutter-slope * $bp-xs;
+
+:root {
+  --bp-xs: #{$bp-xs};
+  --bp-md: #{$bp-md};
+  --bp-3xl: #{$bp-3xl};
+
+  // Ширины контейнера в опорных макетах:
+  // 360 - 2 * 16 = 328 px; 768 - 2 * 24 = 720 px.
+  // xs и md — справочные значения, они не переключают ширину контейнера.
+  // 3xl используется как максимальная ширина в .u-container.
+  --container-xs: 328px;
+  --container-md: 720px;
+  --container-3xl: 1372px;
+
+  // clamp(минимум, плавное значение, максимум):
+  // до 360 px — 16 px; между 360 и 768 px — плавный рост; от 768 px — 24 px.
+  // 100vw — ширина экрана; умножение на slope переводит её в величину отступа.
+  --container-gutter: clamp(#{$gutter-xs}, calc(#{$gutter-intercept} + #{$gutter-slope * 100vw}), #{$gutter-md});
+}

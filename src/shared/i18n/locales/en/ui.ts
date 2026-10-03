@@ -180,13 +180,19 @@ export const enUi = {
     cyrillic: 'Ћирилица',
   },
   noPageMessage: {
-    link: 'Easy — let’s go back',
-    title: 'Page not found',
-    subtitle: 'No worries, you just took a wrong turn.',
+    link: 'Back to home',
+    title: 'This page has gone missing...',
+    subtitle:
+      'It looks like someone tore it out of the book. But you can always return to the home page and continue your work.',
   },
   footer: {
+    bookTitle: 'KPO Ledger',
+    development: 'Development',
+    design: 'Design',
+    developerName: 'Ekaterina Kochkina',
+    designerName: 'Maxim Kamenshchikov',
     localStorageNotice: 'All report data remains in your browser',
-    about: 'About the app',
+    about: 'About\u00A0the\u00A0app',
   },
   infoPage: enInfoPage,
   accessibility: {
