@@ -2,7 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 import { srLatInfoPage } from './infoPage'
 
 export const srLatUi = {
-  appHeaderTitle: 'KPO knjiga (paušal)',
+  appHeaderTitle: 'KPO knjiga',
   languageSettings: {
     title: 'Jezik interfejsa i izveštaja',
     interfaceLabel: 'Jezik interfejsa',

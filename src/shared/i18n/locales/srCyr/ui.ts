@@ -2,7 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 import { srCyrInfoPage } from './infoPage'
 
 export const srCyrUi = {
-  appHeaderTitle: 'КПО књига (паушал)',
+  appHeaderTitle: 'КПО књига',
   languageSettings: {
     title: 'Језик интерфејса и извештаја',
     interfaceLabel: 'Језик интерфејса',

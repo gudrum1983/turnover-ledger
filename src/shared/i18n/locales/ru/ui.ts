@@ -1,7 +1,7 @@
 import { ruInfoPage } from './infoPage'
 
 export const ruUi = {
-  appHeaderTitle: 'Книга КПО (паушал)',
+  appHeaderTitle: 'Книга КПО',
   languageSettings: {
     title: 'Язык интерфейса и отчётов',
     interfaceLabel: 'Язык интерфейса',

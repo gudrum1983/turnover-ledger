@@ -2,7 +2,7 @@ import type { I18nLocaleMessages } from '../../types'
 import { enInfoPage } from './infoPage'
 
 export const enUi = {
-  appHeaderTitle: 'KPO Book (Paušal)',
+  appHeaderTitle: 'KPO Book',
   languageSettings: {
     title: 'Interface and report language',
     interfaceLabel: 'Interface language',
