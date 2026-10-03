@@ -25,6 +25,7 @@ const meta = {
     },
   },
   args: {
+    variant: 'default',
     default: 'Контент внутри PaperBlock',
   },
   render: (args) => ({
@@ -33,7 +34,7 @@ const meta = {
       return { args }
     },
     template: `
-      <PaperBase style="max-width: 420px;">
+      <PaperBase :variant="args.variant" style="max-width: 420px;">
         <p class="Typo_Body">{{ args.default }}</p>
       </PaperBase>
     `,

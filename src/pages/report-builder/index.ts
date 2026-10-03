@@ -1,2 +1,1 @@
-export { default } from './ui/ReportBuilderPage.vue'
-export { default as ReportBuilderPage } from './ui/ReportBuilderPage.vue'
+export { default } from './ui-v2/ReportBuilderPage.vue'
