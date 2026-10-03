@@ -82,6 +82,7 @@ onBeforeUnmount(() => {
 
   &-Language {
     align-items: center;
+    justify-content: center;
   }
 
   &_Actions {
@@ -124,6 +125,7 @@ onBeforeUnmount(() => {
 
     width: 297mm;
     min-height: 210mm;
+    box-shadow: 0px 4px 12px 0px #4a7b8c40;
   }
 }
 
@@ -139,6 +141,8 @@ onBeforeUnmount(() => {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    box-shadow: none;
   }
 }
 </style>

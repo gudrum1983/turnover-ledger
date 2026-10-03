@@ -19,8 +19,7 @@ h1 {
 }
 
 body {
-  font: var(--font-regular-text-base);
-  background: var(--color-background-default);
+  background: var(--bg-page);
   color: var(--color-text-default);
   min-height: 100vh;
 }

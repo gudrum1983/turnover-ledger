@@ -2,7 +2,7 @@
 
 <template>
   <svg
-    class="LogoHeader"
+    class="LogoBase"
     focusable="false"
     aria-hidden="true"
     width="40"

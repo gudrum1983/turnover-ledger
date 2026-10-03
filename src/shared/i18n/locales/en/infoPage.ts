@@ -12,7 +12,7 @@ export const enInfoPage = {
     'When creating the app, I relied on open materials about keeping the KPO book, including the guide from ',
   guideLinkText: 'srb.guide',
   introGuideAfterLink: '.',
-  backToApp: 'Back to app',
+  backToApp: 'Home',
   storageTitle: 'How data is stored',
   storageText:
     'Report data, the selected interface language, the report display mode, and the service currency cache are stored locally in the user browser using localStorage.',

@@ -12,7 +12,7 @@ export const srLatInfoPage = {
     'Prilikom izrade aplikacije oslanjala sam se na otvorene materijale o vođenju KPO knjige, uključujući i vodič sa sajta ',
   guideLinkText: 'srb.guide',
   introGuideAfterLink: '.',
-  backToApp: 'Nazad u aplikaciju',
+  backToApp: 'Na početnu',
   storageTitle: 'Kako se čuvaju podaci',
   storageText:
     'Podaci izveštaja, izabrani jezik interfejsa, režim prikaza izveštaja i pomoćni keš valuta čuvaju se lokalno u pregledaču korisnika pomoću localStorage.',
