@@ -5,6 +5,7 @@ import type { ButtonProps, ButtonSize } from './types'
 const {
   variant = 'page',
   fullWidth = false,
+  iconOnly = false,
   size = 'l',
   type = 'button',
   disabled = false,
@@ -19,6 +20,7 @@ const sizeConfig = computed(() => BUTTON_SIZES[size])
 const classes = computed(() => [
   `ButtonBase_variant_${variant}`,
   { ButtonBase_fullWidth: fullWidth },
+  { ButtonBase_iconOnly: iconOnly },
   'u-uppercase',
   `u-typo-button-${sizeConfig.value.typography}`,
 ])
@@ -97,6 +99,14 @@ const classes = computed(() => [
     cursor: not-allowed;
     pointer-events: none;
   }
+}
+
+.ButtonBase_iconOnly {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 48px;
+  max-height: 48px;
 }
 
 .ButtonBase_fullWidth {

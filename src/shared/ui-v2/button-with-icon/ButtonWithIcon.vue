@@ -25,7 +25,14 @@ const iconDimension = computed(() => `${sizeConfig.value.dimension}px`)
 </script>
 
 <template>
-  <ButtonBase class="ButtonWithIcon" v-bind="props" :size="size" :aria-busy="loading || undefined" :disabled="disabled">
+  <ButtonBase
+    class="ButtonWithIcon"
+    v-bind="props"
+    :icon-only="!$slots.default"
+    :size="size"
+    :aria-busy="loading || undefined"
+    :disabled="disabled"
+  >
     <span class="ButtonWithIcon-Icon" aria-hidden="true">
       <LoaderBase v-if="loading" :size="sizeConfig.loader" />
       <component :is="icon" v-else :size="sizeConfig.icon" />

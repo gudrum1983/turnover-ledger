@@ -5,6 +5,8 @@ export type ButtonProps = {
   variant?: 'page' | 'accent' | 'success' | 'danger' | 'card'
   /** Растягивает кнопку на всю ширину контейнера */
   fullWidth?: boolean
+  /** Одинаковые отступы 15px для кнопки без текста */
+  iconOnly?: boolean
   /** Размер типографики и иконки: l — крупный, m — средний */
   size?: ButtonSize
   /** HTML-тип кнопки */
