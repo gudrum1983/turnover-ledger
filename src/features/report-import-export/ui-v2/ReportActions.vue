@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { createReportExportFile, parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
 import { ROUTES } from '@/shared/constants/routes.ts'
@@ -16,6 +16,35 @@ const { nonImport } = defineProps<Prop>()
 const router = useRouter()
 const { t } = useLocale()
 const reportStore = useReportStore()
+
+const useShortLabels = ref(false)
+const iconsOnly = ref(false)
+const useSmallButtons = ref(false)
+let shortLabelsQuery: MediaQueryList | undefined
+let iconsOnlyQuery: MediaQueryList | undefined
+let smallButtonsQuery: MediaQueryList | undefined
+
+function updateActionLabels() {
+  useShortLabels.value = shortLabelsQuery?.matches ?? false
+  iconsOnly.value = iconsOnlyQuery?.matches ?? false
+  useSmallButtons.value = smallButtonsQuery?.matches ?? false
+}
+
+onMounted(() => {
+  shortLabelsQuery = window.matchMedia('(max-width: 768px)')
+  iconsOnlyQuery = window.matchMedia('(max-width: 550px)')
+  smallButtonsQuery = window.matchMedia('(width < 768px)')
+  shortLabelsQuery.addEventListener('change', updateActionLabels)
+  iconsOnlyQuery.addEventListener('change', updateActionLabels)
+  smallButtonsQuery.addEventListener('change', updateActionLabels)
+  updateActionLabels()
+})
+
+onUnmounted(() => {
+  shortLabelsQuery?.removeEventListener('change', updateActionLabels)
+  iconsOnlyQuery?.removeEventListener('change', updateActionLabels)
+  smallButtonsQuery?.removeEventListener('change', updateActionLabels)
+})
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const isImportErrorDialogOpen = ref(false)
@@ -103,21 +132,39 @@ function applyImport() {
 </script>
 
 <template>
-  <div class="ReportActions">
+  <div class="ReportActions" :class="{ ReportActions_iconsOnly: iconsOnly }">
     <ButtonWithIcon
       class="ReportActions-Preview"
+      :size="useSmallButtons ? 'm' : 'l'"
       :icon="IconEye"
       variant="accent"
       @click="router.push({ name: ROUTES.reportPreview.name })"
     >
       {{ t('ui.reportBuilderActions.preview') }}
     </ButtonWithIcon>
-    <ButtonWithIcon :icon="IconUpload" @click="handleExport" :disabled="nonImport">
-      {{ t('ui.reportBuilderActions.export') }}
-    </ButtonWithIcon>
-    <ButtonWithIcon :icon="IconDownload" @click="openImportDialog">
-      {{ t('ui.reportBuilderActions.import') }}</ButtonWithIcon
+    <ButtonWithIcon
+      class="ReportActions-Export"
+      :icon="IconUpload"
+      :size="useSmallButtons ? 'm' : 'l'"
+      :aria-label="t('ui.reportBuilderActions.export')"
+      @click="handleExport"
+      :disabled="nonImport"
     >
+      <template v-if="!iconsOnly" #default>
+        {{ t(useShortLabels ? 'ui.reportBuilderActions.exportShort' : 'ui.reportBuilderActions.export') }}
+      </template>
+    </ButtonWithIcon>
+    <ButtonWithIcon
+      class="ReportActions-Import"
+      :icon="IconDownload"
+      :size="useSmallButtons ? 'm' : 'l'"
+      :aria-label="t('ui.reportBuilderActions.import')"
+      @click="openImportDialog"
+    >
+      <template v-if="!iconsOnly" #default>
+        {{ t(useShortLabels ? 'ui.reportBuilderActions.importShort' : 'ui.reportBuilderActions.import') }}
+      </template>
+    </ButtonWithIcon>
     <input
       ref="fileInput"
       class="ReportActions_FileInput"
@@ -162,12 +209,33 @@ function applyImport() {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
   width: 100%;
 }
 
 .ReportActions-Preview {
   margin-right: auto;
+}
+
+.ReportActions_iconsOnly {
+  flex-wrap: nowrap;
+}
+
+.ReportActions_iconsOnly .ReportActions-Export {
+  order: 0;
+  flex-shrink: 0;
+}
+
+.ReportActions_iconsOnly .ReportActions-Preview {
+  order: 1;
+  flex: 1;
+  min-width: 0;
+  margin-right: 0;
+}
+
+.ReportActions_iconsOnly .ReportActions-Import {
+  order: 2;
+  flex-shrink: 0;
 }
 
 .ReportActions_FileInput {

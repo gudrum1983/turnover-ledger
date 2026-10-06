@@ -1,1 +1,1 @@
-export { default as ReportMetaEditForm } from './ui/ReportMetaEditForm.vue'
+export { default as ReportMetaEditForm } from './ui-v2/ReportMetaEditForm.vue'

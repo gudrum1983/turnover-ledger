@@ -2,6 +2,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { ReportRow } from '@/entities/report-row'
 import type { FooterField, HeaderField } from './fields'
+import { FOOTER_FIELDS, HEADER_FIELDS } from './fields'
 import { cloneReportState, isReportState } from './lib'
 import type { ReportState } from './types'
 
@@ -25,6 +26,18 @@ export const useReportStore = defineStore(STORE_ID, () => {
     },
   })
   const rows = ref<ReportRow[]>([])
+
+  const metaFieldsProgress = computed(() => {
+    const values = [
+      ...HEADER_FIELDS.map((key) => formData.header[key]),
+      ...FOOTER_FIELDS.map((key) => formData.footer[key]),
+    ]
+
+    return {
+      filled: values.filter((value) => value.trim().length > 0).length,
+      total: values.length,
+    }
+  })
 
   const usedCurrencyCodes = computed(() => {
     const unique = new Set<string>()
@@ -213,6 +226,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
 
   return {
     formData,
+    metaFieldsProgress,
     rows,
     usedCurrencyCodes,
     lastUsedCurrencyCode,

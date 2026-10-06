@@ -11,6 +11,14 @@
   --transition-duration-modal-leave: 120ms;
   --transition-easing-modal: ease-out;
 
+  /* Раскрытие и сворачивание блоков. */
+  --transition-duration-collapse-enter: 300ms;
+  --transition-duration-collapse-leave: 250ms;
+  --transition-easing-collapse-enter: ease-out;
+  --transition-easing-collapse-leave: ease-in;
+  --transition-collapse-enter: var(--transition-duration-collapse-enter) var(--transition-easing-collapse-enter);
+  --transition-collapse-leave: var(--transition-duration-collapse-leave) var(--transition-easing-collapse-leave);
+
   /* Прежний переход для компонентов, использующих --transition. */
   --transition: 300ms ease-in-out;
 }
@@ -21,6 +29,8 @@
     --transition-duration-active: 0ms;
     --transition-duration-modal-enter: 0ms;
     --transition-duration-modal-leave: 0ms;
+    --transition-duration-collapse-enter: 0ms;
+    --transition-duration-collapse-leave: 0ms;
     --transition: 0ms;
   }
 }

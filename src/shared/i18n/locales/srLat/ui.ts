@@ -18,9 +18,11 @@ export const srLatUi = {
     clearField: 'Obrisi polje',
   },
   reportBuilderActions: {
-    preview: 'Pregled',
+    preview: 'Pretpregled',
     export: 'Izvoz podataka',
     import: 'Uvoz podataka',
+    exportShort: 'Izvoz',
+    importShort: 'Uvoz',
   },
   importDataModal: {
     title: 'Uvesti podatke?',
@@ -71,6 +73,10 @@ export const srLatUi = {
       },
     },
     responsiblePeople: {
+      editSeparately: 'Uredi zasebno',
+      sameAsTaxpayer: 'Isto kao obveznik',
+      separateHint: 'Popunjavaju se zasebno',
+      taxpayerHint: 'Popuniće se iz polja „Obveznik“',
       preparedBy: {
         label: 'Sastavio',
         placeholder: 'Ivan Markov',

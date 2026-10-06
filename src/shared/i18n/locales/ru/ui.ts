@@ -17,9 +17,11 @@ export const ruUi = {
     clearField: 'Очистить поле',
   },
   reportBuilderActions: {
-    preview: 'Просмотр',
+    preview: 'Предпросмотр',
     export: 'Экспорт данных',
     import: 'Импорт данных',
+    exportShort: 'Экспорт',
+    importShort: 'Импорт',
   },
   importDataModal: {
     title: 'Импортировать данные?',
@@ -70,6 +72,10 @@ export const ruUi = {
       },
     },
     responsiblePeople: {
+      editSeparately: 'Редактировать отдельно',
+      sameAsTaxpayer: 'Как у налогоплательщика',
+      separateHint: 'Заполняются отдельно',
+      taxpayerHint: 'Заполнятся из поля «Налогоплательщик»',
       preparedBy: {
         label: 'Составил',
         placeholder: 'Ivan Markov',

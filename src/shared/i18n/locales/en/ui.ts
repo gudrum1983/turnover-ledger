@@ -21,6 +21,8 @@ export const enUi = {
     preview: 'Preview',
     export: 'Export data',
     import: 'Import data',
+    exportShort: 'Export',
+    importShort: 'Import',
   },
   importDataModal: {
     title: 'Import data?',
@@ -71,6 +73,10 @@ export const enUi = {
       },
     },
     responsiblePeople: {
+      editSeparately: 'Edit separately',
+      sameAsTaxpayer: 'Same as taxpayer',
+      separateHint: 'Filled in separately',
+      taxpayerHint: 'Filled automatically from the “Taxpayer” field',
       preparedBy: {
         label: 'Prepared by',
         placeholder: 'Ivan Markov',
