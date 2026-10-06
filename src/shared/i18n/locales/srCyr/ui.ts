@@ -18,9 +18,11 @@ export const srCyrUi = {
     clearField: 'Обриши поље',
   },
   reportBuilderActions: {
-    preview: 'Преглед',
+    preview: 'Претпреглед',
     export: 'Извоз података',
     import: 'Увоз података',
+    exportShort: 'Извоз',
+    importShort: 'Увоз',
   },
   importDataModal: {
     title: 'Увести податке?',
@@ -71,6 +73,10 @@ export const srCyrUi = {
       },
     },
     responsiblePeople: {
+      editSeparately: 'Уреди засебно',
+      sameAsTaxpayer: 'Исто као обвезник',
+      separateHint: 'Попуњавају се засебно',
+      taxpayerHint: 'Попуниће се из поља „Обвезник“',
       preparedBy: {
         label: 'Саставио',
         placeholder: 'Ivan Markov',
