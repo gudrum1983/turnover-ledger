@@ -17,6 +17,20 @@ export const HEADER_META_FIELDS = [
     isDigit: true,
   },
   {
+    key: 'taxNumber',
+    labelKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxNumber.label',
+    placeholderKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxNumber.placeholder',
+    hintKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxNumber.hint',
+    isDigit: true,
+  },
+  {
+    key: 'activityCode',
+    labelKey: 'ui.reportBuilderMetaFields.taxpayerInfo.activityCode.label',
+    placeholderKey: 'ui.reportBuilderMetaFields.taxpayerInfo.activityCode.placeholder',
+    hintKey: 'ui.reportBuilderMetaFields.taxpayerInfo.activityCode.hint',
+    isDigit: false,
+  },
+  {
     key: 'taxpayer',
     labelKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxpayer.label',
     placeholderKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxpayer.placeholder',
@@ -35,20 +49,6 @@ export const HEADER_META_FIELDS = [
     labelKey: 'ui.reportBuilderMetaFields.taxpayerInfo.address.label',
     placeholderKey: 'ui.reportBuilderMetaFields.taxpayerInfo.address.placeholder',
     hintKey: 'ui.reportBuilderMetaFields.taxpayerInfo.address.hint',
-    isDigit: false,
-  },
-  {
-    key: 'taxNumber',
-    labelKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxNumber.label',
-    placeholderKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxNumber.placeholder',
-    hintKey: 'ui.reportBuilderMetaFields.taxpayerInfo.taxNumber.hint',
-    isDigit: true,
-  },
-  {
-    key: 'activityCode',
-    labelKey: 'ui.reportBuilderMetaFields.taxpayerInfo.activityCode.label',
-    placeholderKey: 'ui.reportBuilderMetaFields.taxpayerInfo.activityCode.placeholder',
-    hintKey: 'ui.reportBuilderMetaFields.taxpayerInfo.activityCode.hint',
     isDigit: false,
   },
 ] as const satisfies readonly ReportMetaFieldConfig<string>[]
