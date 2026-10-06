@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
   &-Panel {
     display: flex;
     flex-direction: column;
-    padding: 8px 0 24px;
+    padding: 0 0 24px;
     width: 100%;
     justify-content: center;
   }
@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
 
     width: 297mm;
     min-height: 210mm;
-    box-shadow: 0px 4px 12px 0px #4a7b8c40;
+    box-shadow: 0 4px 12px 0 #4a7b8c40;
   }
 }
 
