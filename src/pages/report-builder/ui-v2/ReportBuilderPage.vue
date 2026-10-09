@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PageLayout } from '@/shared/ui-v2/page-layout'
 import { ReportMetaEditForm } from '@/features/report-meta-edit'
 import { LocaleSwitcher } from '@/features/locale-switcher'
 import { ReportActions } from '@/features/report-import-export'
@@ -12,39 +13,38 @@ const { t } = useLocale()
 </script>
 
 <template>
-  <div class="ReportBuilderPage">
-    <AppHeader
-      :title="t('ui.appHeaderTitle')"
-      subtitle="Учет доходов для паушальных налогоплательщиков"
-      class="ReportBuilderPage_Header"
-    >
-      <template #controls>
-        <LocaleSwitcher />
-      </template>
-    </AppHeader>
-    <main class="ReportBuilderPage_Main u-container">
-      <ReportActions nonImport />
+  <PageLayout class="ReportBuilderPage" main-class="ReportBuilderPage_Main u-container">
+    <template #header>
+      <AppHeader
+        :title="t('ui.appHeaderTitle')"
+        subtitle="Учет доходов для паушальных налогоплательщиков"
+        class="ReportBuilderPage_Header"
+      >
+        <template #controls>
+          <LocaleSwitcher />
+        </template>
+      </AppHeader>
+    </template>
 
-      <PaperBlock variant="meta" class="ReportBuilderPage-Meta">
-        <ReportMetaEditForm />
-      </PaperBlock>
+    <ReportActions nonImport />
 
-      <PaperBlock variant="default" class="ReportBuilderPage_layout">
-        <ReportRowManage />
-      </PaperBlock>
-    </main>
-    <AppFooter />
-  </div>
+    <PaperBlock variant="meta" class="ReportBuilderPage-Meta">
+      <ReportMetaEditForm />
+    </PaperBlock>
+
+    <PaperBlock variant="default" class="ReportBuilderPage_layout">
+      <ReportRowManage />
+    </PaperBlock>
+
+    <template #footer>
+      <AppFooter />
+    </template>
+  </PageLayout>
 </template>
 
 <style scoped lang="scss">
 .ReportBuilderPage {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-
-  .ReportBuilderPage_Main {
-    flex: 1;
+  :deep(.ReportBuilderPage_Main) {
     padding-block: 40px;
   }
 
