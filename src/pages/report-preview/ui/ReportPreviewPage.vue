@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PageLayout } from '@/shared/ui-v2/page-layout'
 import { LocaleSwitcher } from '@/features/locale-switcher'
 import { AppHeader } from '@/widgets/app-header'
 import { ReportPreviewDocument } from '@/widgets/report-preview-document'
@@ -35,47 +36,45 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="ReportPreviewPage">
-    <AppHeader
-      :title="t('ui.appHeaderTitle')"
-      subtitle="Учет доходов для паушальных налогоплательщиков"
-      class="ReportBuilderPage_Header"
-    >
-      <template #controls>
-        <LocaleSwitcher />
-      </template>
-      <template #actionButtons="{ size }">
-        <div class="ReportPreviewPage-Panel">
-          <div class="ReportPreviewPage_Actions">
-            <ButtonWithIcon :size="size" :icon="IconBack" variant="accent" :onclick="closePreview">
-              Закрыть предпросмотр
-            </ButtonWithIcon>
+  <PageLayout class="ReportPreviewPage" main-class="ReportPreviewPage_Main">
+    <template #header>
+      <AppHeader
+        :title="t('ui.appHeaderTitle')"
+        subtitle="Учет доходов для паушальных налогоплательщиков"
+        class="ReportBuilderPage_Header"
+      >
+        <template #controls>
+          <LocaleSwitcher />
+        </template>
+        <template #actionButtons="{ size }">
+          <div class="ReportPreviewPage-Panel">
+            <div class="ReportPreviewPage_Actions">
+              <ButtonWithIcon :size="size" :icon="IconBack" variant="accent" :onclick="closePreview">
+                Закрыть предпросмотр
+              </ButtonWithIcon>
 
-            <ButtonWithIcon :size="size" :icon="IconPrinter" variant="page" @click="onPrint">
-              {{ t('ui.reportPreview.print') }}
-            </ButtonWithIcon>
+              <ButtonWithIcon :size="size" :icon="IconPrinter" variant="page" @click="onPrint">
+                {{ t('ui.reportPreview.print') }}
+              </ButtonWithIcon>
+            </div>
+            <ReportScriptSwitch class="ReportPreviewPage-Language no-print" v-model="script" />
           </div>
-          <ReportScriptSwitch class="ReportPreviewPage-Language no-print" v-model="script" />
-        </div>
-      </template>
-    </AppHeader>
-    <main class="ReportPreviewPage_Main">
-      <section class="ReportPreviewPage_Document">
-        <ReportPreviewDocument :script="script" />
-      </section>
-    </main>
+        </template>
+      </AppHeader>
+    </template>
 
-    <AppFooter />
-  </div>
+    <section class="ReportPreviewPage_Document">
+      <ReportPreviewDocument :script="script" />
+    </section>
+
+    <template #footer>
+      <AppFooter />
+    </template>
+  </PageLayout>
 </template>
 
 <style lang="scss" scoped>
 .ReportPreviewPage {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  align-items: center;
-
   &_Header {
     margin-block-end: 16px;
   }
@@ -100,8 +99,7 @@ onBeforeUnmount(() => {
     justify-content: center;
   }
 
-  &_Main {
-    flex: 1;
+  :deep(.ReportPreviewPage_Main) {
     display: flex;
     width: 100%;
     justify-content: center;
@@ -130,7 +128,7 @@ onBeforeUnmount(() => {
 }
 
 @media print {
-  .ReportPreviewPage_Main {
+  .ReportPreviewPage :deep(.ReportPreviewPage_Main) {
     display: block;
     width: 100%;
   }

@@ -25,6 +25,5 @@ defineProps<{
 
 svg {
   flex-shrink: 0;
-  color: var(--green-400);
 }
 </style>

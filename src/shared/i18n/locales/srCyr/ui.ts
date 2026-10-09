@@ -76,7 +76,7 @@ export const srCyrUi = {
       editSeparately: 'Уреди засебно',
       sameAsTaxpayer: 'Исто као обвезник',
       separateHint: 'Попуњавају се засебно',
-      taxpayerHint: 'Попуниће се из поља „Обвезник“',
+      taxpayerHint: 'Подударају се са пољем „Обвезник“',
       preparedBy: {
         label: 'Саставио',
         placeholder: 'Ivan Markov',

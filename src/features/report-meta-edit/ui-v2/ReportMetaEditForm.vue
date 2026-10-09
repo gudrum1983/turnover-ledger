@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { FieldBase } from '@/shared/ui-v2/field-base'
 import { FieldDigit } from '@/shared/ui-v2/field-digit'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { FOOTER_META_FIELDS, HEADER_META_FIELDS, useReportStore } from '@/entities/report'
 import { useLocale } from '@/shared/i18n'
@@ -19,39 +19,33 @@ const { t } = useLocale()
 
 const isOpenHeader = ref(true)
 
-const taxpayerName = computed(() => formData.value.header.taxpayer.trim())
-const useTaxpayerForSignatories = ref(
-  formData.value.footer.preparedBy === taxpayerName.value &&
-    formData.value.footer.responsiblePerson === taxpayerName.value,
-)
-const signatoriesHint = computed(() => {
-  return t(
-    useTaxpayerForSignatories.value
-      ? 'ui.reportBuilderMetaFields.responsiblePeople.taxpayerHint'
-      : 'ui.reportBuilderMetaFields.responsiblePeople.separateHint',
-  )
+const signatoriesMatchTaxpayer = computed(() => {
+  const name = formData.value.header.taxpayer.trim()
+  return formData.value.footer.preparedBy === name && formData.value.footer.responsiblePerson === name
 })
-const signatoriesButtonLabel = computed(() =>
-  t(
-    useTaxpayerForSignatories.value
-      ? 'ui.reportBuilderMetaFields.responsiblePeople.editSeparately'
-      : 'ui.reportBuilderMetaFields.responsiblePeople.sameAsTaxpayer',
-  ),
+const signatoriesHint = computed(() =>
+  /*    t(
+      signatoriesMatchTaxpayer.value
+        ? 'ui.reportBuilderMetaFields.responsiblePeople.taxpayerHint'
+        : 'ui.reportBuilderMetaFields.responsiblePeople.separateHint',
+    ),*/
+  t('ui.reportBuilderMetaFields.responsiblePeople.taxpayerHint'),
 )
-function toggleTaxpayerForSignatories() {
-  useTaxpayerForSignatories.value = !useTaxpayerForSignatories.value
+
+const isSignatoriesHintVisible = computed(() => {
+  /*  const { preparedBy, responsiblePerson } = formData.value.footer
+
+  return Boolean(preparedBy.trim() || responsiblePerson.trim())*/
+
+  const name = formData.value.header.taxpayer.trim()
+  return formData.value.footer.preparedBy === name && formData.value.footer.responsiblePerson === name && name !== ''
+})
+
+function copyTaxpayerToSignatories() {
+  const name = formData.value.header.taxpayer.trim()
+  setFooterValue('preparedBy', name)
+  setFooterValue('responsiblePerson', name)
 }
-
-watch(
-  [useTaxpayerForSignatories, taxpayerName],
-  ([enabled, name]) => {
-    if (!enabled) return
-
-    setFooterValue('preparedBy', name)
-    setFooterValue('responsiblePerson', name)
-  },
-  { flush: 'sync' },
-)
 </script>
 
 <template>
@@ -103,8 +97,9 @@ watch(
             <div class="ReportMetaEditForm-SignatoriesHintContainer" aria-live="polite">
               <Transition name="fade" mode="out-in">
                 <SignatoriesHint
+                  v-if="isSignatoriesHintVisible"
                   :key="signatoriesHint"
-                  :automatic="useTaxpayerForSignatories"
+                  :automatic="signatoriesMatchTaxpayer"
                   :text="signatoriesHint"
                 />
               </Transition>
@@ -121,30 +116,16 @@ watch(
               :placeholder="t(field.placeholderKey)"
               :hint="t(field.hintKey) || undefined"
               :modelValue="formData.footer[field.key]"
-              :readonly="useTaxpayerForSignatories"
-              @update:modelValue="!useTaxpayerForSignatories && setFooterValue(field.key, $event ?? '')"
+              @update:modelValue="setFooterValue(field.key, $event ?? '')"
             />
             <ButtonBase
               fullWidth
               class="ReportMetaEditForm-Button"
               variant="page"
-              :aria-pressed="useTaxpayerForSignatories"
-              :aria-label="signatoriesButtonLabel"
-              @click="toggleTaxpayerForSignatories"
+              :disabled="!formData.header.taxpayer.trim() || signatoriesMatchTaxpayer"
+              @click="copyTaxpayerToSignatories"
             >
-              <span class="ReportMetaEditForm-ButtonLabel" aria-hidden="true">
-                <span class="ReportMetaEditForm-ButtonLabelSizer">{{
-                  t('ui.reportBuilderMetaFields.responsiblePeople.editSeparately')
-                }}</span>
-                <span class="ReportMetaEditForm-ButtonLabelSizer">{{
-                  t('ui.reportBuilderMetaFields.responsiblePeople.sameAsTaxpayer')
-                }}</span>
-                <Transition name="report-meta-button-label" mode="out-in">
-                  <span :key="signatoriesButtonLabel" class="ReportMetaEditForm-ButtonLabelText">
-                    {{ signatoriesButtonLabel }}
-                  </span>
-                </Transition>
-              </span>
+              {{ t('ui.reportBuilderMetaFields.responsiblePeople.sameAsTaxpayer') }}
             </ButtonBase>
           </div>
         </div>
@@ -168,7 +149,7 @@ watch(
 }
 
 .ReportMetaEditForm_Fieldset_footer {
-  grid-template-columns: 1fr 1fr 300px;
+  grid-template-columns: 1fr 1fr auto;
 }
 
 .ReportMetaEditForm-SignatoriesHeader {
@@ -186,6 +167,10 @@ watch(
   min-height: 24px;
 }
 
+.ReportMetaEditForm-Button {
+  align-self: end;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 200ms ease;
@@ -201,51 +186,6 @@ watch(
   .fade-leave-active {
     transition: none;
   }
-}
-
-.ReportMetaEditForm-Button {
-  align-self: end;
-}
-
-.ReportMetaEditForm-ButtonLabel {
-  display: grid;
-  width: 100%;
-  overflow: hidden;
-}
-
-.report-meta-button-label-enter-active,
-.report-meta-button-label-leave-active {
-  transition:
-    opacity 160ms ease,
-    transform 160ms ease;
-}
-
-.report-meta-button-label-enter-from {
-  opacity: 0;
-  transform: translateX(16px);
-}
-
-.report-meta-button-label-leave-to {
-  opacity: 0;
-  transform: translateX(-16px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .report-meta-button-label-enter-active,
-  .report-meta-button-label-leave-active {
-    transition: none;
-  }
-}
-
-.ReportMetaEditForm-ButtonLabelSizer,
-.ReportMetaEditForm-ButtonLabelText {
-  grid-area: 1 / 1;
-  align-self: center;
-}
-
-.ReportMetaEditForm-ButtonLabelSizer {
-  visibility: hidden;
-  pointer-events: none;
 }
 
 .ReportMetaEditForm-Collapse {
