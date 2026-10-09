@@ -76,7 +76,7 @@ export const enUi = {
       editSeparately: 'Edit separately',
       sameAsTaxpayer: 'Same as taxpayer',
       separateHint: 'Filled in separately',
-      taxpayerHint: 'Filled automatically from the “Taxpayer” field',
+      taxpayerHint: 'Match the “Taxpayer” field',
       preparedBy: {
         label: 'Prepared by',
         placeholder: 'Ivan Markov',

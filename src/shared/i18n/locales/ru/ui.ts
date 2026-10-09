@@ -73,9 +73,9 @@ export const ruUi = {
     },
     responsiblePeople: {
       editSeparately: 'Редактировать отдельно',
-      sameAsTaxpayer: 'Как у налогоплательщика',
-      separateHint: 'Заполняются отдельно',
-      taxpayerHint: 'Заполнятся из поля «Налогоплательщик»',
+      sameAsTaxpayer: 'ЗАПОЛНИТЬ ИЗ «НАЛОГОПЛАТЕЛЬЩИКА»',
+      separateHint: 'Указаны отдельно',
+      taxpayerHint: 'Совпадают с «Налогоплательщиком»',
       preparedBy: {
         label: 'Составил',
         placeholder: 'Ivan Markov',
