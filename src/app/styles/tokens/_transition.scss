@@ -19,6 +19,11 @@
   --transition-collapse-enter: var(--transition-duration-collapse-enter) var(--transition-easing-collapse-enter);
   --transition-collapse-leave: var(--transition-duration-collapse-leave) var(--transition-easing-collapse-leave);
 
+  /* Смена языка в настройках. */
+  --transition-duration-locale: 180ms;
+  --transition-easing-locale: ease-out;
+  --transition-locale: var(--transition-duration-locale) var(--transition-easing-locale);
+
   /* Прежний переход для компонентов, использующих --transition. */
   --transition: 300ms ease-in-out;
 }
@@ -31,6 +36,7 @@
     --transition-duration-modal-leave: 0ms;
     --transition-duration-collapse-enter: 0ms;
     --transition-duration-collapse-leave: 0ms;
+    --transition-duration-locale: 0ms;
     --transition: 0ms;
   }
 }
