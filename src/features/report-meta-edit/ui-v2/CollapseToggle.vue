@@ -50,9 +50,9 @@ const handleClick = () => {
     :class="{ CollapseToggle_isOpen: isOpen }"
   >
     <span class="CollapseToggle-Label u-typo-label-m">Cкрыть</span>
-    <div class="CollapseToggle-Tag">
+    <span class="CollapseToggle-Tag">
       <IconArrowDown class="CollapseToggle-Icon" />
-    </div>
+    </span>
   </button>
 </template>
 
