@@ -4,8 +4,11 @@ const {
   label,
   selected = false,
 } = defineProps<{
+  /** Короткая подпись языка, например ENG. */
   tag: string
+  /** Полное название языка. */
   label: string
+  /** Выбранный вариант: выделяет кнопку и отключает повторный выбор. */
   selected?: boolean
 }>()
 

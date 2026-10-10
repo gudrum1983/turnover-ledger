@@ -4,8 +4,11 @@ import { TooltipBase } from '@/shared/ui-v2/tooltip-base'
 import { toPxString } from '@/shared/lib/number'
 
 type Props = {
+  /** Текст подсказки, видимой при наведении или фокусе внутри обёртки. */
   text: string
+  /** Устаревший пропс: текущий TooltipBase не поддерживает размеры. */
   size?: 'sm' | 'md' | 'lg'
+  /** Максимальная ширина подсказки в пикселях, передаваемая в TooltipBase. */
   maxWidth?: number
 }
 

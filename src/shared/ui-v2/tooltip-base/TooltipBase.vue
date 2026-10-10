@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { toPxString } from '@/shared/lib/number'
 
 type Props = {
+  /** Максимальная ширина подсказки в пикселях. По умолчанию ширина определяется содержимым. */
   maxWidth?: number
 }
 

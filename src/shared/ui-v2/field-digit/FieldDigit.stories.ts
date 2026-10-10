@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FieldDigit } from './index'
 
 const meta = {
-  title: 'UI-Компоненты/FieldDigit',
+  title: 'UI-V2-Компоненты/FieldDigit',
   parameters: {
     docs: {
       description: {

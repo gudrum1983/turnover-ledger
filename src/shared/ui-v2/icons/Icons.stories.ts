@@ -18,8 +18,15 @@ const meta = {
   },
   args: { size: 'xl', color: '#172021' },
   argTypes: {
-    size: { control: 'select', options: Object.keys(ICON_SIZES) },
-    color: { control: 'color' },
+    size: {
+      control: 'select',
+      options: Object.keys(ICON_SIZES),
+      description: 'Размер иконок: s — 16 px, m — 18 px, l — 22 px, xl — 24 px.',
+    },
+    color: {
+      control: 'color',
+      description: 'Цвет контейнера для демонстрации currentColor; не является пропсом иконок.',
+    },
   },
   render: (args) => ({
     setup: () => ({ args, icons }),

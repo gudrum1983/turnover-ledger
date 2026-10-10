@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FieldBase } from './index'
 
 const meta = {
-  title: 'UI-Компоненты/FieldBase',
+  title: 'UI-V2-Компоненты/FieldBase',
   parameters: {
     docs: {
       description: {

@@ -5,6 +5,7 @@ import iconLoaderM from './IconLoaderM.svg?raw'
 import iconLoaderS from './IconLoaderS.svg?raw'
 
 const { size = 'm' } = defineProps<{
+  /** Размер индикатора: s — 18 px, m — 22 px. */
   size?: 's' | 'm'
 }>()
 

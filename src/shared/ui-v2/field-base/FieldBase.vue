@@ -7,8 +7,11 @@ import { IconClose, IconDangerCircle, IconQuestion } from '@/shared/ui-v2/icons'
 import { TooltipWrapper } from '@/shared/ui-v2/tooltip-wrapper'
 
 type Props = {
+  /** Визуальный вариант поля: обычный или для карточки. */
   variant?: 'default' | 'card'
+  /** Отключает ввод и взаимодействие с полем. */
   disabled?: boolean
+  /** Разрешает чтение и выделение значения без изменения. */
   readonly?: boolean
   /** Состояние ошибки валидации */
   error?: boolean
@@ -28,6 +31,7 @@ type Props = {
   mask?: MaskOptions
   /** Максимальная длина вводимого значения */
   maxLength?: number
+  /** Устаревший пропс, не применяется. Для класса корня используйте class. */
   rootClass?: string
 }
 

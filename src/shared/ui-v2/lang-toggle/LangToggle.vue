@@ -3,19 +3,22 @@ import { useId } from 'vue'
 import LangToggleButton from './LangToggleButton.vue'
 
 type LangToggleOption = {
+  /** Уникальное значение, передаваемое в v-model при выборе. */
   value: string
+  /** Короткая подпись варианта, например ENG. */
   tag: string
+  /** Полное название варианта. */
   label: string
 }
 
 type LangToggleProps = {
-  /* Значения кнопок переключения */
+  /** Варианты выбора с уникальными значениями. */
   options: readonly LangToggleOption[]
-  /* Заголовок */
+  /** Заголовок группы вариантов. */
   label: string
-  /* Описание */
+  /** Описание назначения переключателя. */
   description: string
-  /* Дополнительный текст */
+  /** Дополнительная подсказка под вариантами; скрыта при отсутствии текста. */
   helperText?: string
   /** Растягивает на всю ширину контейнера */
   fullWidth?: boolean
@@ -24,6 +27,7 @@ type LangToggleProps = {
 const { options, label, description, helperText, fullWidth = false } = defineProps<LangToggleProps>()
 
 const descriptionId = useId()
+/** Выбранное значение варианта. Без совпадения все кнопки доступны для выбора. */
 const model = defineModel<string>()
 </script>
 

@@ -13,12 +13,15 @@ type ModalBaseProps = {
   open: boolean
   /**  Заголовок модального окна */
   title: string
+  /** Анимирует смену текста заголовка. */
+  animateTitle?: boolean
   /**  Определяет наличие кнопки закрытия */
   hasCloseButton?: boolean
   /** Разрешает закрытие по клику на overlay */
   shouldCloseOnOverlay?: boolean
   /** Разрешает закрытие по клавише Escape */
   shouldCloseOnEsc?: boolean
+  /** Дополнительный CSS-класс корневого элемента модального окна. */
   rootClass?: string
 }
 
@@ -28,6 +31,7 @@ const {
   shouldCloseOnEsc = false,
   hasCloseButton = false,
   title,
+  animateTitle = false,
   rootClass = '',
 } = defineProps<ModalBaseProps>()
 
@@ -38,6 +42,10 @@ const emit = defineEmits<{
 const isClient = typeof document !== 'undefined'
 const container = ref<HTMLElement>()
 const titleId = useId()
+
+function hideLeavingTitle(element: Element) {
+  element.setAttribute('aria-hidden', 'true')
+}
 let previousFocus: HTMLElement | null = null
 
 const { t } = useLocale()
@@ -189,7 +197,18 @@ onBeforeUnmount(() => {
         <div class="ModalBase-Overlay" @click.self="handleOverlayClick">
           <div ref="container" class="ModalBase-Container" tabindex="-1">
             <div class="ModalBase-Header">
-              <span :id="titleId" class="ModalBase-Title u-typo-subtitle-l"> {{ title }} </span>
+              <span :id="titleId" class="ModalBase-Title u-typo-subtitle-l">
+                <Transition
+                  :css="animateTitle"
+                  enter-from-class="ModalBase-TitleText_enterFrom"
+                  enter-active-class="ModalBase-TitleText_enterActive"
+                  leave-active-class="ModalBase-TitleText_leaveActive"
+                  leave-to-class="ModalBase-TitleText_leaveTo"
+                  @before-leave="hideLeavingTitle"
+                >
+                  <span :key="animateTitle ? title : 'static'" class="ModalBase-TitleText">{{ title }}</span>
+                </Transition>
+              </span>
 
               <ButtonIcon
                 v-if="hasCloseButton"
@@ -264,6 +283,39 @@ onBeforeUnmount(() => {
   }
 }
 
+.ModalBase-Title {
+  position: relative;
+  min-width: 0;
+  overflow: clip;
+}
+
+.ModalBase-TitleText {
+  display: block;
+}
+
+.ModalBase-TitleText_enterActive,
+.ModalBase-TitleText_leaveActive {
+  transition:
+    opacity var(--transition-locale),
+    transform var(--transition-locale);
+}
+
+.ModalBase-TitleText_leaveActive {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.ModalBase-TitleText_enterFrom {
+  opacity: 0;
+  transform: translateX(12px);
+}
+
+.ModalBase-TitleText_leaveTo {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+
 .ModalBase_enterActive,
 .ModalBase_leaveActive {
   transition: opacity var(--transition-duration-modal-enter) var(--transition-easing-modal);
@@ -292,6 +344,11 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ModalBase-TitleText_enterFrom,
+  .ModalBase-TitleText_leaveTo {
+    transform: none;
+  }
+
   .ModalBase_enterFrom,
   .ModalBase_leaveTo {
     .ModalBase-Container {

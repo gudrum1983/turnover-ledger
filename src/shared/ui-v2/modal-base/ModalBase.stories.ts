@@ -50,6 +50,7 @@ const meta = {
           const attributes = [
             'v-model:open="open"',
             `title="${args.title}"`,
+            ...(args.animateTitle ? ['animate-title'] : []),
             ...(args.hasCloseButton ? ['has-close-button'] : []),
             ...(args.shouldCloseOnOverlay ? ['should-close-on-overlay'] : []),
             ...(args.shouldCloseOnEsc ? ['should-close-on-esc'] : []),
@@ -67,6 +68,7 @@ const meta = {
   args: {
     open: false,
     title: 'Заголовок модального окна',
+    animateTitle: false,
     hasCloseButton: true,
     shouldCloseOnOverlay: true,
     shouldCloseOnEsc: true,
@@ -75,6 +77,7 @@ const meta = {
   argTypes: {
     open: { control: 'boolean' },
     title: { control: 'text' },
+    animateTitle: { control: 'boolean' },
     hasCloseButton: { control: 'boolean' },
     shouldCloseOnOverlay: { control: 'boolean' },
     shouldCloseOnEsc: { control: 'boolean' },
@@ -108,4 +111,52 @@ export const LongContent: Story = {
   args: { title: 'Окно с прокруткой' },
   parameters: { longContent: true },
   render: createRender(longContent),
+}
+
+export const AnimatedTitle: Story = {
+  name: 'Анимация смены заголовка',
+  args: { animateTitle: true },
+  parameters: {
+    docs: {
+      source: {
+        transform: undefined,
+        code: `<ModalBase v-model:open="open" :title="title" animate-title has-close-button>
+  <ButtonBase @click="toggleTitle">Сменить заголовок</ButtonBase>
+</ModalBase>`,
+      },
+      description: {
+        story:
+          'Откройте окно и нажмите «Сменить заголовок». Переход включён только при animateTitle; настройка уменьшения анимаций учитывается автоматически.',
+      },
+    },
+  },
+  render: (args) => ({
+    components: { ModalBase, ButtonBase },
+    setup() {
+      const open = ref(args.open)
+      const title = ref(args.title)
+      watch(
+        () => args.open,
+        (value) => {
+          open.value = value
+        },
+      )
+      watch(
+        () => args.title,
+        (value) => {
+          title.value = value
+        },
+      )
+      const toggleTitle = () => {
+        title.value = title.value === args.title ? 'Language settings' : args.title
+      }
+      return { args, open, title, toggleTitle }
+    },
+    template: `<div>
+      <ButtonBase @click="open = true">Открыть модалку</ButtonBase>
+      <ModalBase v-bind="args" v-model:open="open" :title="title">
+        <ButtonBase @click="toggleTitle">Сменить заголовок</ButtonBase>
+      </ModalBase>
+    </div>`,
+  }),
 }
