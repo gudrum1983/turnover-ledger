@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Внутренняя ссылка на RouterLink. Наследует типографику родителя. Для отдельного размера передайте утилитарный класс через class.',
+          'Общий компонент ссылок и их стилей: to создаёт RouterLink, href — обычный тег a. Передавайте только один из этих пропсов. Наследует типографику родителя. Для отдельного размера передайте утилитарный класс через class.',
       },
     },
   },
@@ -18,7 +18,8 @@ const meta = {
     default: 'Открыть раздел',
   },
   argTypes: {
-    to: { control: 'text' },
+    to: { control: 'text', description: 'Маршрут Vue Router: строка или объект. Используется без href.' },
+    href: { control: 'text', description: 'Адрес обычной ссылки. Используется без to.' },
     default: { control: 'text', description: 'Текст ссылки' },
   },
   render: ({ default: text, ...props }) => ({
@@ -46,5 +47,20 @@ export const BodyLarge: Story = {
     components: { LinkBase },
     setup: () => ({ props, text }),
     template: '<p class="u-typo-body-l">Ссылка внутри текста: <LinkBase v-bind="props">{{ text }}</LinkBase>.</p>',
+  }),
+}
+
+export const Href: Story = {
+  name: 'Обычная ссылка через href',
+  args: {
+    to: undefined,
+    href: 'https://example.com',
+    default: 'Открыть сайт',
+  },
+  argTypes: { to: { control: false } },
+  render: ({ href, default: text }) => ({
+    components: { LinkBase },
+    setup: () => ({ href, text }),
+    template: '<LinkBase :href="href">{{ text }}</LinkBase>',
   }),
 }

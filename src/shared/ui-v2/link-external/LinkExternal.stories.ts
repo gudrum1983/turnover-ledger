@@ -9,13 +9,13 @@ const meta = {
     docs: {
       description: {
         component:
-          'Внешняя ссылка на обычном теге a. По умолчанию открывается в текущей вкладке. Наследует типографику родителя. Для отдельного размера передайте утилитарный класс через class.',
+          'Обёртка над LinkBase для внешних ссылок. По умолчанию открывается в новой вкладке (_blank) с rel="noopener noreferrer". Без содержимого слота показывает URL. Наследует типографику родителя. Для отдельного размера передайте утилитарный класс через class.',
       },
     },
   },
   args: {
     href: 'https://example.com',
-    target: '_self',
+    target: '_blank',
     default: 'Открыть сайт',
   },
   argTypes: {
@@ -50,6 +50,10 @@ export const BodyLarge: Story = {
     template:
       '<p class="u-typo-body-l">Ссылка внутри текста: <LinkExternal v-bind="props">{{ text }}</LinkExternal>.</p>',
   }),
+}
+export const CurrentTab: Story = {
+  name: 'В текущей вкладке',
+  args: { target: '_self' },
 }
 export const NewTab: Story = {
   name: 'В новой вкладке',

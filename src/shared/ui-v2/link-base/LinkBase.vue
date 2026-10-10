@@ -1,18 +1,28 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
 
-type Props = {
-  /** Маршрут или путь для перехода */
-  to: RouteLocationRaw
-}
+type Props =
+  | {
+      /** Маршрут или путь для перехода */
+      to: RouteLocationRaw
+      href?: never
+    }
+  | {
+      /** URL для обычной ссылки, включая mailto. */
+      href: string
+      to?: never
+    }
 
-const { to } = defineProps<Props>()
+const { to, href } = defineProps<Props>()
 </script>
 
 <template>
-  <RouterLink :to="to" class="LinkBase">
+  <RouterLink v-if="to !== undefined" :to="to" class="LinkBase">
     <slot />
   </RouterLink>
+  <a v-else :href="href" class="LinkBase">
+    <slot />
+  </a>
 </template>
 
 <style scoped lang="scss">
