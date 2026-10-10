@@ -48,7 +48,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="u-container AppHeader no-print">
+  <header class="u-container AppHeader u-no-print">
     <div class="AppHeader-Main">
       <div class="AppHeader-Logo">
         <LogoBase style="grid-area: logo" />
