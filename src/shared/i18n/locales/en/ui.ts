@@ -195,8 +195,6 @@ export const enUi = {
     bookTitle: 'KPO Ledger',
     development: 'Development',
     design: 'Design',
-    developerName: 'Ekaterina Kochkina',
-    designerName: 'Maxim Kamenshchikov',
     localStorageNotice: 'All report data remains in your browser',
     about: 'About\u00A0the\u00A0app',
   },

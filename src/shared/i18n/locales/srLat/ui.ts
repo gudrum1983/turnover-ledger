@@ -194,8 +194,6 @@ export const srLatUi = {
     bookTitle: 'KPO knjiga',
     development: 'Razvoj',
     design: 'Dizajn',
-    developerName: 'Ekaterina Kochkina',
-    designerName: 'Maxim Kamenshchikov',
     localStorageNotice: 'Svi podaci izveštaja ostaju u Vašem pregledaču',
     about: 'O\u00A0aplikaciji',
   },

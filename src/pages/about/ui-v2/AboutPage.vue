@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { PEOPLE } from '@/shared/constants/people'
 import { PageLayout } from '@/shared/ui-v2/page-layout'
 import { LocaleSwitcher } from '@/features/locale-switcher'
-import { CONTACT_EMAIL, EXCHANGE_RATE_SITE_URL, NBS_SITE_URL, SRB_GUIDE_KPO_URL } from '@/shared/constants/app'
+import { EXCHANGE_RATE_SITE_URL, NBS_SITE_URL, SRB_GUIDE_KPO_URL } from '@/shared/constants/app'
 import { ROUTES } from '@/shared/constants/routes'
 import { useLocale } from '@/shared/i18n'
 import { LinkEmail } from '@/shared/ui-v2/link-email'
@@ -79,7 +80,7 @@ function backToApp() {
             <PointBase class="AboutPage-Marker" />
             <p class="u-typo-body-l">
               {{ t('ui.infoPage.introGuideBeforeLink') }}
-              <LinkExternal :href="SRB_GUIDE_KPO_URL" size="md">{{ t('ui.infoPage.guideLinkText') }}</LinkExternal>
+              <LinkExternal :href="SRB_GUIDE_KPO_URL">{{ t('ui.infoPage.guideLinkText') }}</LinkExternal>
               {{ t('ui.infoPage.introGuideAfterLink') }}
             </p>
           </div>
@@ -117,7 +118,7 @@ function backToApp() {
             <PointBase class="AboutPage-Marker" />
             <p class="u-typo-body-l">
               {{ t('ui.infoPage.conversionTextBeforeLink') }}
-              <LinkExternal :href="EXCHANGE_RATE_SITE_URL" size="md">{{ t('ui.infoPage.apiLinkText') }}</LinkExternal>
+              <LinkExternal :href="EXCHANGE_RATE_SITE_URL">{{ t('ui.infoPage.apiLinkText') }}</LinkExternal>
               {{ t('ui.infoPage.conversionTextAfterLink') }}
             </p>
           </div>
@@ -149,7 +150,7 @@ function backToApp() {
             <PointBase class="AboutPage-Marker" />
             <p class="u-typo-body-l">
               {{ t('ui.infoPage.disclaimerRecommendationBeforeLink') }}
-              <LinkExternal :href="NBS_SITE_URL" size="md">{{ t('ui.infoPage.bankLinkText') }}</LinkExternal>
+              <LinkExternal :href="NBS_SITE_URL">{{ t('ui.infoPage.bankLinkText') }}</LinkExternal>
               {{ t('ui.infoPage.disclaimerRecommendationAfterLink') }}
             </p>
           </div>
@@ -162,7 +163,7 @@ function backToApp() {
           <div class="AboutPage-Point">
             <PointBase class="AboutPage-Marker" />
             <p class="u-typo-body-l">
-              {{ t('ui.infoPage.contactText') }} <LinkEmail :email="CONTACT_EMAIL" size="md" />
+              {{ t('ui.infoPage.contactText') }} <LinkEmail :email="PEOPLE.developer.email" />
             </p>
           </div>
         </div>

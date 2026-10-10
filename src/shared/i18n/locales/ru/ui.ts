@@ -192,8 +192,6 @@ export const ruUi = {
     bookTitle: 'Книга КПО',
     development: 'Разработка',
     design: 'Дизайн',
-    developerName: 'Екатерина Кочкина',
-    designerName: 'Максим Каменщиков',
     localStorageNotice: 'Все данные отчёта остаются в вашем браузере',
     about: 'О\u00A0приложении',
   },

@@ -194,8 +194,6 @@ export const srCyrUi = {
     bookTitle: 'КПО књига',
     development: 'Развој',
     design: 'Дизајн',
-    developerName: 'Екатерина Кочкина',
-    designerName: 'Максим Каменщиков',
     localStorageNotice: 'Сви подаци извештаја остају у Вашем прегледачу',
     about: 'О\u00A0апликацији',
   },
