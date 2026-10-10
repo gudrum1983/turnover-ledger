@@ -50,15 +50,16 @@ const handleClick = () => {
     :class="{ CollapseToggle_isOpen: isOpen }"
   >
     <span class="CollapseToggle-Label u-typo-label-m">Cкрыть</span>
-    <div class="CollapseToggle-Tag">
+    <span class="CollapseToggle-Tag">
       <IconArrowDown class="CollapseToggle-Icon" />
-    </div>
+    </span>
   </button>
 </template>
 
 <style scoped lang="scss">
 .CollapseToggle {
-  padding: 8px 0;
+  padding: 8px 8px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -103,6 +104,15 @@ const handleClick = () => {
     .CollapseToggle-Tag {
       background: var(--blue-400);
       transition-duration: var(--transition-duration-active);
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    box-shadow: 0 0 0 3px #c5cecf66;
+    .CollapseToggle-Tag {
+      background: var(--blue-200);
     }
   }
 }

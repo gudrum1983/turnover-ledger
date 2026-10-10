@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
+    "build:preview": "vue-tsc --build && vite build --base=/turnover-ledger-preview/ --outDir=build-preview",
     "preview": "vite preview",
     "build-only": "vite build",
     "test": "vitest run --config vitest.unit.config.ts",
