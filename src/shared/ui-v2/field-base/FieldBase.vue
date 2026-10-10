@@ -3,8 +3,8 @@ import type { MaskOptions } from 'maska'
 import { vMaska } from 'maska/vue'
 import { computed, onBeforeUnmount, useId } from 'vue'
 import { useLocale } from '@/shared/i18n'
-import { IconClose, IconDangerCircle } from '@/shared/ui-v2/icons'
-import FieldHint from './ui/FieldHint.vue'
+import { IconClose, IconDangerCircle, IconQuestion } from '@/shared/ui-v2/icons'
+import { TooltipWrapper } from '@/shared/ui-v2/tooltip-wrapper'
 
 type Props = {
   variant?: 'default' | 'card'
@@ -121,7 +121,11 @@ onBeforeUnmount(clearTimer)
 
     <span class="FieldBase_Control">
       <Transition name="field-icon">
-        <FieldHint class="FieldBase-Hint" v-if="hint && !disabled && !readonly" :text="hint" />
+        <TooltipWrapper v-if="hint && !disabled && !readonly" :text="hint">
+          <button class="FieldBase-Hint" type="button" :aria-label="hint">
+            <IconQuestion class="FieldBase-HintIcon" />
+          </button>
+        </TooltipWrapper>
       </Transition>
       <input
         :id="inputId"
@@ -178,6 +182,10 @@ onBeforeUnmount(clearTimer)
   --color-border-readonly: var(--neutral-400);
 
   --box-shadow-default: 0 0 0 3px #c5cecf66;
+
+  --box-shadow-icons-default: 0 0 0 3px #c5cecf66;
+  --box-shadow-icons-error: 0 0 0 3px #c05a5a66;
+  --box-shadow-icons-card: 0 0 0 3px #17202166;
 
   --color-label-default: var(--neutral-600);
   --color-label-error: var(--red-500);
@@ -247,14 +255,30 @@ onBeforeUnmount(clearTimer)
 
 .FieldBase-Hint {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
   color: var(--color-icons);
   transition: color var(--transition-color);
   cursor: help;
-
   &:hover {
     color: var(--color-icons-hover);
     cursor: help;
   }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--box-shadow-icons-default);
+  }
+}
+
+.FieldBase-HintIcon {
+  width: 24px;
+  height: 24px;
 }
 
 .FieldBase_Clear {
@@ -268,9 +292,16 @@ onBeforeUnmount(clearTimer)
   color: var(--color-icons);
   cursor: pointer;
   transition: color var(--transition-color);
+  border-radius: 50%;
 
   &:hover {
     color: var(--color-icons-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    color: var(--color-icons-hover);
+    box-shadow: var(--box-shadow-icons-default);
   }
 }
 
@@ -311,6 +342,10 @@ onBeforeUnmount(clearTimer)
   .FieldBase-Hint,
   .FieldBase_Clear {
     color: var(--color-icons-error);
+
+    &:focus-visible {
+      box-shadow: var(--box-shadow-icons-error);
+    }
   }
 }
 
@@ -350,5 +385,8 @@ onBeforeUnmount(clearTimer)
 
 .FieldBase_variant_card {
   --color-label-default: var(--neutral-900);
+  --color-icons: var(--neutral-600);
+  --color-icons-hover: var(--neutral-900);
+  --box-shadow-icons-default: var(--box-shadow-icons-card);
 }
 </style>

@@ -2,7 +2,6 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { TooltipBase } from '@/shared/ui-v2/tooltip-base'
 import { toPxString } from '@/shared/lib/number'
-import { IconQuestion } from '@/shared/ui-v2/icons'
 
 type Props = {
   text: string
@@ -68,42 +67,24 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <span class="InfoHint" @mouseenter="updateTooltipPosition" @focusin="updateTooltipPosition">
-    <button class="InfoHint_Trigger" type="button">
-      <IconQuestion class="InfoHint_Icon" />
-    </button>
+  <span class="TooltipWrapper" @mouseenter="updateTooltipPosition" @focusin="updateTooltipPosition">
+    <slot />
 
-    <TooltipBase ref="tooltipRef" class="InfoHint_Tooltip u-typo-body-small-m" :size="size" :max-width="maxWidth">
+    <TooltipBase ref="tooltipRef" class="TooltipWrapper_Tooltip u-typo-body-small-m" :size="size" :max-width="maxWidth">
       {{ text }}
     </TooltipBase>
   </span>
 </template>
 
 <style scoped lang="scss">
-.InfoHint {
+.TooltipWrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
 }
 
-.InfoHint_Trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: inherit;
-  cursor: help;
-}
-
-.InfoHint_Icon {
-  width: 24px;
-  height: 24px;
-}
-
-.InfoHint_Tooltip {
+.TooltipWrapper_Tooltip {
   position: absolute;
   z-index: 10;
   left: 50%;
@@ -119,8 +100,8 @@ onBeforeUnmount(() => {
     visibility 0s linear var(--transition-duration-hover);
 }
 
-.InfoHint:hover .InfoHint_Tooltip,
-.InfoHint:focus-within .InfoHint_Tooltip {
+.TooltipWrapper:hover .TooltipWrapper_Tooltip,
+.TooltipWrapper:focus-within .TooltipWrapper_Tooltip {
   visibility: visible;
   opacity: 1;
   transform: translateX(calc(-50% + v-bind(horizontalShiftValue))) translateY(0);
