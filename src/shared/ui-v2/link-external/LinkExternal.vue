@@ -6,7 +6,7 @@ type LinkExternalProps = {
   target?: '_self' | '_blank'
 }
 
-const { href, target = '_self' } = defineProps<LinkExternalProps>()
+const { href, target = '_blank' } = defineProps<LinkExternalProps>()
 </script>
 
 <template>
@@ -17,16 +17,22 @@ const { href, target = '_self' } = defineProps<LinkExternalProps>()
 
 <style scoped lang="scss">
 .LinkExternal {
-  --link-color: var(--blue-200);
+  --link-color: var(--blue-300);
   --link-color-hover: var(--blue-600);
-
+  border-radius: 8px;
+  padding: 2px 6px;
   cursor: pointer;
-  padding: 0;
   margin: 0;
   color: var(--link-color);
   transition: all var(--transition);
 
   &:hover {
+    color: var(--link-color-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px #c5cecf66;
     color: var(--link-color-hover);
   }
 }
