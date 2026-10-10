@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { PEOPLE } from '@/shared/constants/people'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ROUTES } from '@/shared/constants/routes'
 import { useLocale } from '@/shared/i18n'
 import { LinkExternal } from '@/shared/ui-v2/link-external'
 import { PointBase } from '@/shared/ui-v2/point-base'
 import { LinkBase } from '@/shared/ui-v2/link-base'
 
-const { t } = useLocale()
+const { t, locale } = useLocale()
+const nameScript = computed(() => (locale.value === 'ru' ? 'ru' : 'latin'))
 
 const year = new Date().getFullYear()
 // DOM-контейнер, в котором браузер раскладывает пункты футера по строкам.
@@ -46,7 +48,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
 </script>
 
 <template>
-  <footer class="AppFooter no-print u-typo-label-s u-container">
+  <footer class="AppFooter u-no-print u-typo-label-s u-container">
     <div ref="content" class="AppFooter-Content">
       <div class="AppFooter-String">
         <span>© {{ t('ui.footer.bookTitle') }} {{ year }} </span>
@@ -59,7 +61,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
           aria-hidden="true"
         />
         <span> {{ t('ui.footer.development') }}: </span>
-        <LinkExternal href="https://github.com/gudrum1983">{{ t('ui.footer.developerName') }}</LinkExternal>
+        <LinkExternal :href="PEOPLE.developer.url">{{ PEOPLE.developer.name[nameScript] }}</LinkExternal>
       </div>
       <div class="AppFooter-String">
         <PointBase
@@ -68,9 +70,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
           aria-hidden="true"
         />
         <span> {{ t('ui.footer.design') }}: </span>
-        <LinkExternal href="https://www.behance.net/maxkamoff">{{ t('ui.footer.designerName') }}</LinkExternal>
-
-        <!--        <LinkExternal href="https://t.me/maxsimkamenschikov">{{ t('ui.footer.designerName') }}</LinkExternal>-->
+        <LinkExternal :href="PEOPLE.designer.url">{{ PEOPLE.designer.name[nameScript] }}</LinkExternal>
       </div>
     </div>
   </footer>
