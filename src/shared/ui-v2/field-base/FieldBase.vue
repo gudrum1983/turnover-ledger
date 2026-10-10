@@ -272,6 +272,7 @@ onBeforeUnmount(clearTimer)
 
   &:focus-visible {
     outline: none;
+    color: var(--color-icons-hover);
     box-shadow: var(--box-shadow-icons-default);
   }
 }
