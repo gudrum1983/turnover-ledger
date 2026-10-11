@@ -4,7 +4,7 @@ export const PEOPLE = {
       ru: 'Екатерина Кочкина',
       latin: 'Ekaterina Kochkina',
     },
-    email: 'kochkinaea83@gmail.com',
+    email: 'kochkina.dev@gmail.com',
     url: 'https://github.com/gudrum1983',
   },
   designer: {
