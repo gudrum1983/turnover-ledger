@@ -17,6 +17,8 @@ const meta = {
   args: {
     variant: 'default',
     error: false,
+    errorMessage: 'Укажите ровно 4 цифры.',
+    reserveErrorSpace: false,
     name: 'description',
     label: 'Описание',
     hint: '',
@@ -31,6 +33,12 @@ const meta = {
       options: ['default', 'card'],
     },
     error: {
+      control: 'boolean',
+    },
+    errorMessage: {
+      control: 'text',
+    },
+    reserveErrorSpace: {
       control: 'boolean',
     },
     name: {
@@ -117,6 +125,14 @@ export const CardWithError: Story = {
   args: {
     variant: 'card',
     error: true,
+  },
+}
+
+export const ReservedErrorSpace: Story = {
+  name: 'С резервом под ошибку',
+  args: {
+    reserveErrorSpace: true,
+    modelValue: null,
   },
 }
 
