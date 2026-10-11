@@ -3,7 +3,14 @@ import { FieldBase } from '@/shared/ui-v2/field-base'
 import { FieldDigit } from '@/shared/ui-v2/field-digit'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { FOOTER_META_FIELDS, HEADER_META_FIELDS, useReportStore } from '@/entities/report'
+import {
+  FOOTER_META_FIELDS,
+  HEADER_META_FIELDS,
+  getHeaderFieldError,
+  getPersonNameError,
+  useReportStore,
+} from '@/entities/report'
+import type { HeaderField, FooterField } from '@/entities/report'
 import { useLocale } from '@/shared/i18n'
 import { IconInfoCircle } from '@/shared/ui-v2/icons'
 import { LinkBase } from '@/shared/ui-v2/link-base'
@@ -11,6 +18,7 @@ import { ROUTES } from '@/shared/constants/routes.ts'
 import CollapseToggle from '@/features/report-meta-edit/ui-v2/CollapseToggle.vue'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
 import SignatoriesHint from './SignatoriesHint.vue'
+import { FadeTransition } from '@/shared/ui-v2/fade-transition'
 
 const store = useReportStore()
 const { formData, metaFieldsProgress } = storeToRefs(store)
@@ -18,6 +26,35 @@ const { setHeaderValue, setFooterValue } = store
 const { t } = useLocale()
 
 const isOpenHeader = ref(true)
+const touchedFields = ref<Partial<Record<HeaderField, boolean>>>({
+  pib: Boolean(formData.value.header.pib),
+  taxNumber: Boolean(formData.value.header.taxNumber),
+  activityCode: Boolean(formData.value.header.activityCode),
+  taxpayer: Boolean(formData.value.header.taxpayer),
+})
+const touchedFooterFields = ref<Partial<Record<FooterField, boolean>>>({
+  preparedBy: Boolean(formData.value.footer.preparedBy),
+  responsiblePerson: Boolean(formData.value.footer.responsiblePerson),
+})
+
+function footerFieldError(field: FooterField) {
+  const value = formData.value.footer[field]
+  if (!touchedFooterFields.value[field] || !value.trim()) return undefined
+  const key = getPersonNameError(value)
+  return key ? t(key) : undefined
+}
+
+function fieldError(field: HeaderField) {
+  const value = formData.value.header[field]
+  if (!touchedFields.value[field] || !value.trim()) return undefined
+  const key = getHeaderFieldError(field, value)
+  return key ? t(key) : undefined
+}
+
+function fieldErrorMessage(field: HeaderField) {
+  const key = getHeaderFieldError(field, '')
+  return key ? t(key) : undefined
+}
 
 const signatoriesMatchTaxpayer = computed(() => {
   const name = formData.value.header.taxpayer.trim()
@@ -45,6 +82,8 @@ function copyTaxpayerToSignatories() {
   const name = formData.value.header.taxpayer.trim()
   setFooterValue('preparedBy', name)
   setFooterValue('responsiblePerson', name)
+  touchedFooterFields.value.preparedBy = true
+  touchedFooterFields.value.responsiblePerson = true
 }
 </script>
 
@@ -86,8 +125,12 @@ function copyTaxpayerToSignatories() {
               :placeholder="t(field.placeholderKey)"
               :hint="t(field.hintKey) || undefined"
               :modelValue="formData.header[field.key]"
+              :max-length="field.key === 'pib' || field.key === 'taxNumber' ? 13 : undefined"
+              :error="Boolean(fieldError(field.key))"
+              :error-message="fieldErrorMessage(field.key)"
               :debounce-ms="field.key === 'taxpayer' ? 0 : undefined"
               @update:modelValue="setHeaderValue(field.key, $event ?? '')"
+              @blur="touchedFields[field.key] = true"
             />
           </div>
           <div class="ReportMetaEditForm-SignatoriesHeader">
@@ -95,14 +138,14 @@ function copyTaxpayerToSignatories() {
               {{ t('ui.reportBuilderSections.responsiblePeople') }}
             </h3>
             <div class="ReportMetaEditForm-SignatoriesHintContainer" aria-live="polite">
-              <Transition name="fade" mode="out-in">
+              <FadeTransition mode="out-in">
                 <SignatoriesHint
                   v-if="isSignatoriesHintVisible"
                   :key="signatoriesHint"
                   :automatic="signatoriesMatchTaxpayer"
                   :text="signatoriesHint"
                 />
-              </Transition>
+              </FadeTransition>
             </div>
           </div>
           <div class="ReportMetaEditForm_Fieldset ReportMetaEditForm_Fieldset_footer">
@@ -116,7 +159,10 @@ function copyTaxpayerToSignatories() {
               :placeholder="t(field.placeholderKey)"
               :hint="t(field.hintKey) || undefined"
               :modelValue="formData.footer[field.key]"
+              :error="Boolean(footerFieldError(field.key))"
+              :error-message="t('ui.reportBuilderMetaFields.validation.personName')"
               @update:modelValue="setFooterValue(field.key, $event ?? '')"
+              @blur="touchedFooterFields[field.key] = true"
             />
             <ButtonBase
               fullWidth
@@ -154,38 +200,24 @@ function copyTaxpayerToSignatories() {
 
 .ReportMetaEditForm-SignatoriesHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 8px 16px;
   padding: 24px 0 16px;
   justify-content: space-between;
+
+  h3 {
+    margin-right: auto;
+  }
 }
 
 .ReportMetaEditForm-SignatoriesHintContainer {
-  margin-left: auto;
   max-width: 100%;
   min-height: 24px;
 }
 
 .ReportMetaEditForm-Button {
-  align-self: end;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 200ms ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: none;
-  }
+  margin-top: 18px;
 }
 
 .ReportMetaEditForm-Collapse {
@@ -267,7 +299,9 @@ function copyTaxpayerToSignatories() {
 @media (width <= 1024px) {
   .ReportMetaEditForm_Fieldset {
     grid-template-columns: repeat(2, 1fr);
-    button {
+
+    .ReportMetaEditForm-Button {
+      margin-top: 0;
       grid-column: span 2;
     }
   }
@@ -301,6 +335,10 @@ function copyTaxpayerToSignatories() {
     display: flex;
     gap: 24px;
     flex-direction: column;
+  }
+
+  .ReportMetaEditForm-Button {
+    margin-top: 0;
   }
 }
 
