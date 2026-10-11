@@ -1,5 +1,7 @@
 <script setup lang="ts">
 type LabelContainerProps = {
+  /** Размер текста: l — стандартный, s — компактный. */
+  size?: 'l' | 's'
   /** Выбранное значение. При отсутствии совпадения все кнопки отображаются без выбора. */
   modelValue?: string
   /** Варианты выбора с уникальными значениями. Количество вариантов не ограничено. */
@@ -15,7 +17,7 @@ type LabelContainerProps = {
   fullWidth?: boolean
 }
 
-const { options, ariaLabel, modelValue = '', fullWidth = false } = defineProps<LabelContainerProps>()
+const { options, ariaLabel, modelValue = '', fullWidth = false, size = 'l' } = defineProps<LabelContainerProps>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -35,8 +37,11 @@ function selectOption(value: string) {
       v-for="option in options"
       :key="option.value"
       type="button"
-      class="LabelContainer-Button u-typo-body-m"
-      :class="{ 'LabelContainer-Button_selected': modelValue === option.value }"
+      class="LabelContainer-Button"
+      :class="[
+        size === 's' ? 'u-typo-label-s' : 'u-typo-body-m',
+        { 'LabelContainer-Button_selected': modelValue === option.value },
+      ]"
       :aria-pressed="modelValue === option.value"
       @click="selectOption(option.value)"
     >

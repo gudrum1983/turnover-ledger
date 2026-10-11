@@ -21,6 +21,7 @@ const meta = {
     },
   },
   args: {
+    size: 'l',
     options,
     ariaLabel: 'Письменность отчёта',
     modelValue: 'latin',
@@ -29,6 +30,7 @@ const meta = {
     'onUpdate:modelValue': fn(),
   },
   argTypes: {
+    size: { control: 'select', options: ['l', 's'] },
     options: { control: 'object' },
     ariaLabel: { control: 'text' },
     modelValue: { control: 'text' },
@@ -83,6 +85,7 @@ export const Playground: Story = {
 }
 
 export const Empty: Story = { name: 'Без выбора', args: { modelValue: '' } }
+export const Compact: Story = { name: 'Компактный', args: { size: 's' } }
 export const SingleOption: Story = { name: 'Один вариант', args: { options: [options[0]!] } }
 export const ThreeOptions: Story = {
   name: 'Три варианта',
