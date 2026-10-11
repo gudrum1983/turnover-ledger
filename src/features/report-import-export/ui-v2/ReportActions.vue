@@ -9,13 +9,17 @@ import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconDownload, IconEye, IconUpload } from '@/shared/ui-v2/icons'
 
-type Prop = { nonImport?: boolean }
+type Prop = {
+  /** Дополнительно отключает экспорт отчёта. */
+  nonExport?: boolean
+}
 
-const { nonImport } = defineProps<Prop>()
+const { nonExport = false } = defineProps<Prop>()
 
 const router = useRouter()
 const { t } = useLocale()
 const reportStore = useReportStore()
+const isExportDisabled = computed(() => nonExport || reportStore.rows.length === 0)
 
 const useShortLabels = ref(false)
 const iconsOnly = ref(false)
@@ -70,6 +74,8 @@ function resetFileInput() {
 }
 
 function handleExport() {
+  if (isExportDisabled.value) return
+
   const payload = JSON.stringify(createReportExportFile(reportStore.exportState()), null, 2)
   const blob = new Blob([payload], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
@@ -148,7 +154,7 @@ function applyImport() {
       :size="useSmallButtons ? 'm' : 'l'"
       :aria-label="t('ui.reportBuilderActions.export')"
       @click="handleExport"
-      :disabled="nonImport"
+      :disabled="isExportDisabled"
     >
       <template v-if="!iconsOnly" #default>
         {{ t(useShortLabels ? 'ui.reportBuilderActions.exportShort' : 'ui.reportBuilderActions.export') }}

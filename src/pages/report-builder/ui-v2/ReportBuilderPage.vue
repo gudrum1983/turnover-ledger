@@ -26,7 +26,7 @@ const { t } = useLocale()
       </AppHeader>
     </template>
 
-    <ReportActions nonImport />
+    <ReportActions />
 
     <PaperBlock variant="meta" class="ReportBuilderPage-Meta">
       <ReportMetaEditForm />
