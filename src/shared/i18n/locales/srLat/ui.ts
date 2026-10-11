@@ -40,6 +40,12 @@ export const srLatUi = {
     incomeRecords: 'Ostvareni prihodi',
   },
   reportBuilderMetaFields: {
+    validation: {
+      personName: 'Unesite ime i prezime slovima. Dozvoljeni su crtica i apostrof.',
+      pib: 'Unesite tačno 9 ili 13 cifara.',
+      taxNumber: 'Unesite tačno 8 ili 13 cifara.',
+      activityCode: 'Polje mora sadržati 4 cifre.',
+    },
     taxpayerInfo: {
       pib: {
         label: 'PIB',

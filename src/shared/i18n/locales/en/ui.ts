@@ -40,6 +40,12 @@ export const enUi = {
     incomeRecords: 'Income Records',
   },
   reportBuilderMetaFields: {
+    validation: {
+      personName: 'Enter a first and last name using letters. Hyphens and apostrophes are allowed.',
+      pib: 'Enter exactly 9 or 13 digits.',
+      taxNumber: 'Enter exactly 8 or 13 digits.',
+      activityCode: 'The field must contain 4 digits.',
+    },
     taxpayerInfo: {
       pib: {
         label: 'PIB',
