@@ -46,18 +46,35 @@ onBeforeUnmount(() => {
         <template #controls>
           <LocaleSwitcher />
         </template>
-        <template #actionButtons="{ size }">
+        <template #actionButtons="{ size, headerSize }">
           <div class="ReportPreviewPage-Panel">
             <div class="ReportPreviewPage_Actions">
-              <ButtonWithIcon :size="size" :icon="IconBack" variant="accent" :onclick="closePreview">
-                Закрыть предпросмотр
+              <ButtonWithIcon
+                :size="headerSize === 's' ? 'l' : size"
+                :icon="IconBack"
+                variant="accent"
+                @click="closePreview"
+              >
+                {{ headerSize === 's' ? 'Назад' : 'Закрыть предпросмотр' }}
               </ButtonWithIcon>
 
-              <ButtonWithIcon :size="size" :icon="IconPrinter" variant="page" @click="onPrint">
-                {{ t('ui.reportPreview.print') }}
+              <ButtonWithIcon
+                :size="headerSize === 's' ? 'l' : size"
+                :icon="IconPrinter"
+                variant="page"
+                :aria-label="t('ui.reportPreview.print')"
+                @click="onPrint"
+              >
+                <template v-if="headerSize !== 's'" #default>
+                  {{ t('ui.reportPreview.print') }}
+                </template>
               </ButtonWithIcon>
             </div>
-            <ReportScriptSwitch class="ReportPreviewPage-Language no-print" v-model="script" />
+            <ReportScriptSwitch
+              class="ReportPreviewPage-Language no-print"
+              v-model="script"
+              :size="headerSize === 's' ? 's' : 'l'"
+            />
           </div>
         </template>
       </AppHeader>
