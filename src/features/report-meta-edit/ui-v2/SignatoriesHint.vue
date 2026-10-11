@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconCheckCircle, IconPenCircle } from '@/shared/ui-v2/icons'
+import { IconCopy, IconPenCircle } from '@/shared/ui-v2/icons'
 
 defineProps<{
   automatic: boolean
@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <span class="ReportMetaEditForm-SignatoriesHint u-typo-label-s">
-    <IconCheckCircle v-if="automatic" />
+    <IconCopy v-if="automatic" />
     <IconPenCircle v-else />
     {{ text }}
   </span>
@@ -18,7 +18,7 @@ defineProps<{
 <style scoped lang="scss">
 .ReportMetaEditForm-SignatoriesHint {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 10px;
   color: var(--neutral-700);
 }
