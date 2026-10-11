@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { PaperBlock } from './index'
 
 const meta = {
-  title: 'UI-Компоненты/PaperBlock',
+  title: 'UI-V2-Компоненты/PaperBlock',
   parameters: {
     docs: {
       description: {
@@ -14,6 +14,7 @@ const meta = {
   component: PaperBlock,
   tags: ['autodocs'],
   argTypes: {
+    variant: { control: 'select', options: ['default', 'meta', 'info'] },
     default: {
       control: 'text',
       description: 'Содержимое поверхности',
@@ -29,14 +30,14 @@ const meta = {
     default: 'Контент внутри PaperBlock',
   },
   render: (args) => ({
-    components: { PaperBase: PaperBlock },
+    components: { PaperBlock },
     setup() {
       return { args }
     },
     template: `
-      <PaperBase :variant="args.variant" style="max-width: 420px;">
-        <p class="Typo_Body">{{ args.default }}</p>
-      </PaperBase>
+      <PaperBlock :variant="args.variant" style="max-width: 420px;">
+        <p class="u-typo-body-m">{{ args.default }}</p>
+      </PaperBlock>
     `,
   }),
 } satisfies Meta<typeof PaperBlock>
@@ -54,3 +55,6 @@ export const WithContent: Story = {
     default: 'Поверхность отделяет смысловой блок от фона страницы.',
   },
 }
+
+export const MetaSurface: Story = { name: 'Градиент с рисунком', args: { variant: 'meta' } }
+export const InfoSurface: Story = { name: 'Градиент', args: { variant: 'info' } }

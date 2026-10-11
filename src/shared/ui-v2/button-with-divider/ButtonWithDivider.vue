@@ -10,9 +10,13 @@ const {
   rightValue,
 } = defineProps<
   Pick<ButtonProps, 'disabled'> & {
+    /** l — все подписи; m — без rightLabel; s — иконка и leftLabel. */
     size?: 'l' | 'm' | 's'
+    /** Подпись правой пары, видимая только в размере l. */
     rightLabel: string
+    /** Левая подпись, видимая во всех размерах. */
     leftLabel: string
+    /** Значение правой пары, видимое в размерах l и m. */
     rightValue: string
   }
 >()

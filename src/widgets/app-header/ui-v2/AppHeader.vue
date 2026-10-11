@@ -13,7 +13,7 @@ type AppHeaderProps = {
 
 type AppHeaderSlots = {
   /** Кнопки действий страницы, отображаемые под основной частью шапки. */
-  actionButtons?: (props: { size: ButtonSize }) => VNode | VNode[]
+  actionButtons?: (props: { size: ButtonSize; headerSize: 'l' | 'm' | 's' }) => VNode | VNode[]
 }
 
 defineProps<AppHeaderProps>()
@@ -48,7 +48,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="u-container AppHeader no-print">
+  <header class="u-container AppHeader u-no-print">
     <div class="AppHeader-Main">
       <div class="AppHeader-Logo">
         <LogoBase style="grid-area: logo" />
@@ -64,7 +64,7 @@ onUnmounted(() => {
     </div>
 
     <div class="AppHeader-Actions">
-      <slot name="actionButtons" :size="sizeConfig.buttonSize" />
+      <slot name="actionButtons" :size="sizeConfig.buttonSize" :header-size="headerSize" />
     </div>
   </header>
 </template>

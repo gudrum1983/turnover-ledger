@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 type Props = {
-  /** Управляет видимостью модального окна */
+  /** Фон поверхности: default — белый, meta — градиент с рисунком, info — градиент */
   variant: 'default' | 'meta' | 'info'
 }
 

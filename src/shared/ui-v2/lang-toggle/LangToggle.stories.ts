@@ -29,7 +29,11 @@ const meta = {
     fullWidth: false,
   },
   argTypes: {
-    modelValue: { control: 'select', options: ['ru', 'en', 'sr'] },
+    modelValue: {
+      control: 'select',
+      options: ['ru', 'en', 'sr'],
+      description: 'Выбранное значение варианта; используется с v-model.',
+    },
     fullWidth: { control: 'boolean' },
   },
   render: (args) => ({
@@ -87,12 +91,17 @@ export const Playground: Story = {
   },
 }
 export const Empty: Story = { name: 'Без выбора', args: { modelValue: undefined } }
-export const DisabledOption: Story = {
-  name: 'Неактивный вариант',
-  args: { options: options.map((option) => ({ ...option, disabled: option.value === 'sr' })) },
+export const SelectedOption: Story = {
+  name: 'Выбранный вариант недоступен для повторного выбора',
+  args: { modelValue: 'sr' },
 }
 export const FullWidth: Story = {
   name: 'На всю ширину',
   args: { fullWidth: true },
   parameters: { layout: 'padded' },
+}
+
+export const WithHelperText: Story = {
+  name: 'С дополнительной подсказкой',
+  args: { helperText: 'Язык интерфейса не меняет язык отчёта.' },
 }

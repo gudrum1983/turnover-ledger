@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { ICON_SIZES, type IconSize } from './sizes'
 
 const { size = 'xl' } = defineProps<{
+  /** Размер иконки: s — 16 px, m — 18 px, l — 22 px, xl — 24 px. */
   size?: IconSize
 }>()
 

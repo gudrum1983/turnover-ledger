@@ -1,18 +1,19 @@
 <script setup lang="ts">
 defineProps<{
+  /** Дополнительный CSS-класс основного содержимого страницы. */
   mainClass?: string
 }>()
 </script>
 
 <template>
   <div class="PageLayout">
-    <div class="PageLayout-Header no-print">
+    <div class="PageLayout-Header u-no-print">
       <slot name="header" />
     </div>
     <main class="PageLayout-Main" :class="mainClass">
       <slot />
     </main>
-    <div class="PageLayout-Footer no-print">
+    <div class="PageLayout-Footer u-no-print">
       <slot name="footer" />
     </div>
   </div>

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FieldBase } from './index'
 
 const meta = {
-  title: 'UI-Компоненты/FieldBase',
+  title: 'UI-V2-Компоненты/FieldBase',
   parameters: {
     docs: {
       description: {
@@ -17,6 +17,8 @@ const meta = {
   args: {
     variant: 'default',
     error: false,
+    errorMessage: 'Укажите ровно 4 цифры.',
+    reserveErrorSpace: false,
     name: 'description',
     label: 'Описание',
     hint: '',
@@ -31,6 +33,12 @@ const meta = {
       options: ['default', 'card'],
     },
     error: {
+      control: 'boolean',
+    },
+    errorMessage: {
+      control: 'text',
+    },
+    reserveErrorSpace: {
       control: 'boolean',
     },
     name: {
@@ -117,6 +125,14 @@ export const CardWithError: Story = {
   args: {
     variant: 'card',
     error: true,
+  },
+}
+
+export const ReservedErrorSpace: Story = {
+  name: 'С резервом под ошибку',
+  args: {
+    reserveErrorSpace: true,
+    modelValue: null,
   },
 }
 

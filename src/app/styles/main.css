@@ -24,6 +24,16 @@ body {
   min-height: 100vh;
 }
 
+@media screen {
+  :root {
+    overflow-x: auto;
+  }
+
+  body {
+    min-width: 360px;
+  }
+}
+
 ul:where([class]) {
   list-style: none;
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { PEOPLE } from '@/shared/constants/people'
 import { LocaleSwitcher } from '@/features/locale-switcher'
-import { CONTACT_EMAIL, EXCHANGE_RATE_SITE_URL, NBS_SITE_URL, SRB_GUIDE_KPO_URL } from '@/shared/constants/app'
+import { EXCHANGE_RATE_SITE_URL, NBS_SITE_URL, SRB_GUIDE_KPO_URL } from '@/shared/constants/app'
 import { ROUTES } from '@/shared/constants/routes'
 import { useLocale } from '@/shared/i18n'
 /*import { LinkBase } from '@/shared/ui/link-base'*/
@@ -94,7 +95,7 @@ function backToApp() {
         <section class="AboutPage_Section">
           <h3 class="Typo_Heading3">{{ t('ui.infoPage.contactTitle') }}</h3>
           <p class="AboutPage_Text">
-            {{ t('ui.infoPage.contactText') }} <LinkEmail :email="CONTACT_EMAIL" size="md" />
+            {{ t('ui.infoPage.contactText') }} <LinkEmail :email="PEOPLE.developer.email" size="md" />
           </p>
         </section>
       </PaperBase>

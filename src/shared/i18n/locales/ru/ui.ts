@@ -39,6 +39,12 @@ export const ruUi = {
     incomeRecords: 'Полученные доходы',
   },
   reportBuilderMetaFields: {
+    validation: {
+      personName: 'Укажите имя и фамилию буквами. Допустимы дефис и апостроф.',
+      pib: 'Укажите ровно 9 или 13 цифр.',
+      taxNumber: 'Укажите ровно 8 или 13 цифр.',
+      activityCode: 'Поле должно содержать 4 цифры.',
+    },
     taxpayerInfo: {
       pib: {
         label: 'ПИБ',
@@ -192,8 +198,6 @@ export const ruUi = {
     bookTitle: 'Книга КПО',
     development: 'Разработка',
     design: 'Дизайн',
-    developerName: 'Екатерина Кочкина',
-    designerName: 'Максим Каменщиков',
     localStorageNotice: 'Все данные отчёта остаются в вашем браузере',
     about: 'О\u00A0приложении',
   },

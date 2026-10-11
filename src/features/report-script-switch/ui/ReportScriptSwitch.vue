@@ -6,6 +6,8 @@ import { LabelContainer } from '@/shared/ui-v2/label-container'
 
 type Props = {
   modelValue: ReportScript
+  /** Размер текста переключателя. */
+  size?: 'l' | 's'
 }
 
 const props = defineProps<Props>()
@@ -30,7 +32,12 @@ const model = computed<string>({
 
 <template>
   <div class="ReportScriptSwitch">
-    <LabelContainer v-model="model" :options="options" :ariaLabel="t('ui.reportPreviewScriptSwitcher.label')" />
+    <LabelContainer
+      v-model="model"
+      :size="props.size"
+      :options="options"
+      :ariaLabel="t('ui.reportPreviewScriptSwitcher.label')"
+    />
   </div>
 </template>
 

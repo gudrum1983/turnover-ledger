@@ -1,4 +1,3 @@
-export const CONTACT_EMAIL = 'kochkinaea83@gmail.com'
 export const EXCHANGE_RATE_API_URL = 'https://nbs-rates.gudrum1983.workers.dev/api/v1/currencies'
 export const EXCHANGE_RATE_SITE_URL = 'https://kurs.resenje.org/'
 export const NBS_SITE_URL = 'https://www.nbs.rs/en'

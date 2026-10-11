@@ -40,6 +40,12 @@ export const srCyrUi = {
     incomeRecords: 'Остварени приходи',
   },
   reportBuilderMetaFields: {
+    validation: {
+      personName: 'Унесите име и презиме словима. Дозвољени су цртица и апостроф.',
+      pib: 'Унесите тачно 9 или 13 цифара.',
+      taxNumber: 'Унесите тачно 8 или 13 цифара.',
+      activityCode: 'Поље мора садржати 4 цифре.',
+    },
     taxpayerInfo: {
       pib: {
         label: 'ПИБ',
@@ -194,8 +200,6 @@ export const srCyrUi = {
     bookTitle: 'КПО књига',
     development: 'Развој',
     design: 'Дизајн',
-    developerName: 'Екатерина Кочкина',
-    designerName: 'Максим Каменщиков',
     localStorageNotice: 'Сви подаци извештаја остају у Вашем прегледачу',
     about: 'О\u00A0апликацији',
   },

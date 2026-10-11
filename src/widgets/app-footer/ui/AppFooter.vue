@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PEOPLE } from '@/shared/constants/people'
 import { ROUTES } from '@/shared/constants/routes'
 import { useLocale } from '@/shared/i18n'
 import { LinkBase } from '@/shared/ui/link-base'
@@ -16,7 +17,7 @@ const { t } = useLocale()
       <div class="AppFooter_Row">
         <p>{{ t('ui.appHeaderTitle') }}</p>
         ·
-        <p>© Ekaterina Kochkina, 2026</p>
+        <p>© {{ PEOPLE.developer.name.latin }}, 2026</p>
       </div>
     </div>
   </footer>

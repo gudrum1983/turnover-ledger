@@ -5,13 +5,21 @@ import { computed, onBeforeUnmount, useId } from 'vue'
 import { useLocale } from '@/shared/i18n'
 import { IconClose, IconDangerCircle, IconQuestion } from '@/shared/ui-v2/icons'
 import { TooltipWrapper } from '@/shared/ui-v2/tooltip-wrapper'
+import { FadeTransition } from '@/shared/ui-v2/fade-transition'
 
 type Props = {
+  /** Визуальный вариант поля: обычный или для карточки. */
   variant?: 'default' | 'card'
+  /** Отключает ввод и взаимодействие с полем. */
   disabled?: boolean
+  /** Разрешает чтение и выделение значения без изменения. */
   readonly?: boolean
   /** Состояние ошибки валидации */
   error?: boolean
+  /** Сообщение об ошибке под полем. */
+  errorMessage?: string
+  /** Сохраняет место под сообщение ошибки, даже когда ошибки нет. */
+  reserveErrorSpace?: boolean
   /** Имя поля для формы */
   name: string
   /** Текстовая подпись поля */
@@ -28,6 +36,7 @@ type Props = {
   mask?: MaskOptions
   /** Максимальная длина вводимого значения */
   maxLength?: number
+  /** Устаревший пропс, не применяется. Для класса корня используйте class. */
   rootClass?: string
 }
 
@@ -41,6 +50,8 @@ const {
   mask,
   variant = 'default',
   error = false,
+  errorMessage,
+  reserveErrorSpace = false,
   maxLength,
   disabled = false,
   readonly = false,
@@ -136,6 +147,7 @@ onBeforeUnmount(clearTimer)
         class="FieldBase_Input u-typo-body-m"
         :name="name"
         :aria-invalid="error ? 'true' : undefined"
+        :aria-describedby="error && errorMessage ? `${inputId}-error` : undefined"
         :placeholder="placeholder"
         :maxlength="maxLength"
         autocomplete="off"
@@ -157,15 +169,30 @@ onBeforeUnmount(clearTimer)
       </Transition>
     </span>
 
-    <div class="FieldBase-ErrorText" v-if="error">
-      <IconDangerCircle size="s" /> <span class="u-typo-body-small-m">Текст ошибки</span>
+    <div v-if="reserveErrorSpace" class="FieldBase-ErrorReserve">
+      <div class="FieldBase-ErrorText FieldBase-ErrorSizer" aria-hidden="true">
+        <IconDangerCircle size="s" /> <span class="u-typo-body-small-m">{{ errorMessage || '\u00a0' }}</span>
+      </div>
+      <FadeTransition>
+        <div v-if="error" class="FieldBase-ErrorText" :id="`${inputId}-error`" aria-live="polite">
+          <IconDangerCircle size="s" /> <span class="u-typo-body-small-m">{{ errorMessage }}</span>
+        </div>
+      </FadeTransition>
     </div>
+    <Transition v-else name="field-error">
+      <div class="FieldBase-Error" v-if="error" :id="`${inputId}-error`" aria-live="polite">
+        <div class="FieldBase-ErrorText">
+          <IconDangerCircle size="s" /> <span class="u-typo-body-small-m">{{ errorMessage }}</span>
+        </div>
+      </div>
+    </Transition>
   </label>
 </template>
 
 <style scoped lang="scss">
 .FieldBase {
   width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -324,10 +351,67 @@ onBeforeUnmount(clearTimer)
   pointer-events: none;
 }
 
+.FieldBase-ErrorReserve {
+  display: grid;
+  min-height: 20px;
+  grid-template-columns: minmax(0, 1fr);
+  color: var(--color-text-error);
+
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.FieldBase-ErrorSizer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.FieldBase-Error {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  color: var(--color-text-error);
+}
+
+.field-error-enter-active,
+.field-error-leave-active {
+  transition:
+    grid-template-rows 200ms ease,
+    opacity 200ms ease;
+}
+
+.field-error-enter-from,
+.field-error-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-error-enter-active,
+  .field-error-leave-active {
+    transition: none;
+  }
+}
+
 .FieldBase-ErrorText {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 4px;
+
+  > svg {
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex: 1;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }
 
 .FieldBase_error {
