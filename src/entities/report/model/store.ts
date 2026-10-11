@@ -5,6 +5,7 @@ import type { FooterField, HeaderField } from './fields'
 import { FOOTER_FIELDS, HEADER_FIELDS } from './fields'
 import { cloneReportState, isReportState } from './lib'
 import type { ReportState } from './types'
+import { getHeaderFieldError, getPersonNameError } from './validation'
 
 const STORE_ID = 'report-store'
 
@@ -29,8 +30,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
 
   const metaFieldsProgress = computed(() => {
     const values = [
-      ...HEADER_FIELDS.map((key) => formData.header[key]),
-      ...FOOTER_FIELDS.map((key) => formData.footer[key]),
+      ...HEADER_FIELDS.map((key) => (getHeaderFieldError(key, formData.header[key]) ? '' : formData.header[key])),
+      ...FOOTER_FIELDS.map((key) => (getPersonNameError(formData.footer[key]) ? '' : formData.footer[key])),
     ]
 
     return {
