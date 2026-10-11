@@ -243,7 +243,7 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     background: var(--backdrop);
-    padding: 16px;
+    padding: clamp(0px, calc(16vw - 64px), 16px);
   }
 
   &-Container {
