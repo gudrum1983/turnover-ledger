@@ -42,7 +42,8 @@ const { to, href } = defineProps<Props>()
 
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px #c5cecf66;
+    /*    box-shadow: 0 0 0 3px #c5cecf66;*/
+    box-shadow: 0 0 0 3px #f5c96a99;
     color: var(--link-color-hover);
   }
 }

@@ -25,7 +25,7 @@ const maxWidthValue = computed(() => (typeof maxWidth === 'number' ? toPxString(
   max-width: v-bind(maxWidthValue);
   color: var(--color-text-base);
   border-radius: 4px;
-  background-color: var(--neutral-600);
+  background-color: var(--neutral-500);
   position: relative;
   padding: 4px 8px;
   box-shadow: 0 2px 8px 0 #c5cecf80;

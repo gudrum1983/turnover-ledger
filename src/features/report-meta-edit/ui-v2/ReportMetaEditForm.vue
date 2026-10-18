@@ -15,7 +15,7 @@ import { useLocale } from '@/shared/i18n'
 import { IconInfoCircle } from '@/shared/ui-v2/icons'
 import { LinkBase } from '@/shared/ui-v2/link-base'
 import { ROUTES } from '@/shared/constants/routes.ts'
-import CollapseToggle from '@/features/report-meta-edit/ui-v2/CollapseToggle.vue'
+import CollapseToggle from './CollapseToggle.vue'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
 import SignatoriesHint from './SignatoriesHint.vue'
 import { FadeTransition } from '@/shared/ui-v2/fade-transition'
@@ -119,7 +119,6 @@ function copyTaxpayerToSignatories() {
               v-for="field in HEADER_META_FIELDS"
               :key="field.key"
               :is="field.isDigit ? FieldDigit : FieldBase"
-              variant="card"
               :name="field.key"
               :label="t(field.labelKey)"
               :placeholder="t(field.placeholderKey)"
@@ -153,7 +152,6 @@ function copyTaxpayerToSignatories() {
               v-for="field in FOOTER_META_FIELDS"
               :key="field.key"
               :is="field.isDigit ? FieldDigit : FieldBase"
-              variant="card"
               :name="field.key"
               :label="t(field.labelKey)"
               :placeholder="t(field.placeholderKey)"

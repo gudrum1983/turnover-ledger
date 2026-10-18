@@ -110,7 +110,8 @@ const handleClick = () => {
   &:focus-visible {
     outline: none;
 
-    box-shadow: 0 0 0 3px #c5cecf66;
+    /*    box-shadow: 0 0 0 3px #c5cecf66;*/
+    box-shadow: 0 0 0 3px #f5c96a99;
     .CollapseToggle-Tag {
       background: var(--blue-200);
     }
