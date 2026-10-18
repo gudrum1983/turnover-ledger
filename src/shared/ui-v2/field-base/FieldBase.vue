@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { MaskOptions } from 'maska'
 import { vMaska } from 'maska/vue'
-import { computed, onBeforeUnmount, useId } from 'vue'
+import { computed, onBeforeUnmount, ref, useId } from 'vue'
 import { useLocale } from '@/shared/i18n'
 import { IconClose, IconDangerCircle, IconQuestion } from '@/shared/ui-v2/icons'
-import { TooltipWrapper } from '@/shared/ui-v2/tooltip-wrapper'
-import { FadeTransition } from '@/shared/ui-v2/fade-transition'
+import FieldTooltip from './FieldTooltip.vue'
 
 type Props = {
   /** Визуальный вариант поля: обычный или для карточки. */
@@ -16,9 +15,9 @@ type Props = {
   readonly?: boolean
   /** Состояние ошибки валидации */
   error?: boolean
-  /** Сообщение об ошибке под полем. */
+  /** Сообщение об ошибке в тултипе. */
   errorMessage?: string
-  /** Сохраняет место под сообщение ошибки, даже когда ошибки нет. */
+  /** Устаревший пропс: ошибки отображаются в тултипе без резервирования места. */
   reserveErrorSpace?: boolean
   /** Имя поля для формы */
   name: string
@@ -51,7 +50,6 @@ const {
   variant = 'default',
   error = false,
   errorMessage,
-  reserveErrorSpace = false,
   maxLength,
   disabled = false,
   readonly = false,
@@ -64,6 +62,40 @@ const emit = defineEmits<{
 
 const { t: translate } = useLocale()
 const inputId = useId()
+const controlRef = ref<HTMLElement | null>(null)
+const inputFocused = ref(false)
+const iconFocused = ref(false)
+const iconHovered = ref(false)
+const tooltipDismissed = ref(false)
+const hasErrorMessage = computed(() => error && Boolean(errorMessage))
+const tooltipOpen = computed(
+  () =>
+    !tooltipDismissed.value &&
+    (iconFocused.value || iconHovered.value || (hasErrorMessage.value && inputFocused.value)),
+)
+function showTooltip() {
+  tooltipDismissed.value = false
+}
+
+function handleIconMouseEnter() {
+  iconHovered.value = true
+  showTooltip()
+}
+
+function handleIconFocus() {
+  iconFocused.value = true
+  showTooltip()
+}
+
+function handleInputFocus() {
+  inputFocused.value = true
+  showTooltip()
+}
+
+function handleInputBlur(event: Event) {
+  inputFocused.value = false
+  commitNow(event)
+}
 const hasValue = computed(() => Boolean(modelValue))
 const clearButtonLabel = computed(() => translate('ui.common.clearField'))
 const classList = computed(() => [
@@ -130,18 +162,33 @@ onBeforeUnmount(clearTimer)
       <span class="FieldBase-LabelText">{{ label }}</span>
     </div>
 
-    <span class="FieldBase_Control">
+    <span ref="controlRef" class="FieldBase_Control" @keydown.esc="tooltipDismissed = true">
       <Transition name="field-icon">
-        <TooltipWrapper v-if="hint && !disabled && !readonly" :text="hint">
-          <button class="FieldBase-Hint" type="button" :aria-label="hint">
-            <IconQuestion class="FieldBase-HintIcon" />
-          </button>
-        </TooltipWrapper>
+        <button
+          v-if="(hasErrorMessage || hint) && !disabled"
+          class="FieldBase-Hint"
+          @mouseenter="handleIconMouseEnter"
+          @mouseleave="iconHovered = false"
+          type="button"
+          :aria-label="hasErrorMessage ? errorMessage : hint"
+          :aria-describedby="hasErrorMessage ? `${inputId}-error` : undefined"
+          @focus="handleIconFocus"
+          @blur="iconFocused = false"
+          @click="showTooltip"
+        >
+          <span class="FieldBase-HintIconSlot">
+            <Transition name="field-icon">
+              <IconDangerCircle v-if="hasErrorMessage" key="error" class="FieldBase-HintIcon" />
+              <IconQuestion v-else key="hint" class="FieldBase-HintIcon" />
+            </Transition>
+          </span>
+        </button>
       </Transition>
       <input
         :id="inputId"
         @input="scheduleEmit"
-        @blur="commitNow"
+        @focus="handleInputFocus"
+        @blur="handleInputBlur"
         :value="modelValue"
         v-maska="mask"
         class="FieldBase_Input u-typo-body-m"
@@ -167,25 +214,17 @@ onBeforeUnmount(clearTimer)
           <IconClose />
         </button>
       </Transition>
+      <FieldTooltip
+        :open="tooltipOpen && !disabled && Boolean(hasErrorMessage || hint)"
+        :error-message="hasErrorMessage ? errorMessage : undefined"
+        :hint="hint"
+        :anchor="controlRef"
+      />
     </span>
 
-    <div v-if="reserveErrorSpace" class="FieldBase-ErrorReserve">
-      <div class="FieldBase-ErrorText FieldBase-ErrorSizer" aria-hidden="true">
-        <IconDangerCircle size="s" /> <span class="u-typo-body-small-m">{{ errorMessage || '\u00a0' }}</span>
-      </div>
-      <FadeTransition>
-        <div v-if="error" class="FieldBase-ErrorText" :id="`${inputId}-error`" aria-live="polite">
-          <IconDangerCircle size="s" /> <span class="u-typo-body-small-m">{{ errorMessage }}</span>
-        </div>
-      </FadeTransition>
-    </div>
-    <Transition v-else name="field-error">
-      <div class="FieldBase-Error" v-if="error" :id="`${inputId}-error`" aria-live="polite">
-        <div class="FieldBase-ErrorText">
-          <IconDangerCircle size="s" /> <span class="u-typo-body-small-m">{{ errorMessage }}</span>
-        </div>
-      </div>
-    </Transition>
+    <span :id="`${inputId}-error`" class="FieldBase-AccessibleError" aria-live="polite">{{
+      hasErrorMessage ? errorMessage : ''
+    }}</span>
   </label>
 </template>
 
@@ -237,6 +276,7 @@ onBeforeUnmount(clearTimer)
 }
 
 .FieldBase_Control {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -304,7 +344,14 @@ onBeforeUnmount(clearTimer)
   }
 }
 
+.FieldBase-HintIconSlot {
+  display: grid;
+  width: 24px;
+  height: 24px;
+}
+
 .FieldBase-HintIcon {
+  grid-area: 1 / 1;
   width: 24px;
   height: 24px;
 }
@@ -351,72 +398,19 @@ onBeforeUnmount(clearTimer)
   pointer-events: none;
 }
 
-.FieldBase-ErrorReserve {
-  display: grid;
-  min-height: 20px;
-  grid-template-columns: minmax(0, 1fr);
-  color: var(--color-text-error);
-
-  > * {
-    grid-area: 1 / 1;
-  }
-}
-
-.FieldBase-ErrorSizer {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.FieldBase-Error {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: 1fr;
-  color: var(--color-text-error);
-}
-
-.field-error-enter-active,
-.field-error-leave-active {
-  transition:
-    grid-template-rows 200ms ease,
-    opacity 200ms ease;
-}
-
-.field-error-enter-from,
-.field-error-leave-to {
-  grid-template-rows: 0fr;
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .field-error-enter-active,
-  .field-error-leave-active {
-    transition: none;
-  }
-}
-
-.FieldBase-ErrorText {
-  min-height: 0;
-  min-width: 0;
+.FieldBase-AccessibleError {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-
-  > svg {
-    flex-shrink: 0;
-  }
-
-  > span {
-    flex: 1;
-    min-width: 0;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .FieldBase_error {
-  .FieldBase-Label,
-  .FieldBase-ErrorText {
+  .FieldBase-Label {
     color: var(--color-text-error);
   }
 
