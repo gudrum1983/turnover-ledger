@@ -17,11 +17,13 @@ const meta = {
   tags: ['autodocs'],
   args: {
     variant: 'default',
+    disabled: false,
+    readonly: false,
     error: false,
     errorMessage: 'Укажите ровно 4 цифры.',
     name: 'description',
     label: 'Описание',
-    hint: '',
+    hint: 'Подсказка к полю: введите описание.',
     placeholder: 'Введите текст',
     modelValue: 'Текст',
     debounceMs: 0,
@@ -30,8 +32,10 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'card'],
+      options: ['default', 'success', 'error', 'warning'],
     },
+    disabled: { control: 'boolean' },
+    readonly: { control: 'boolean' },
     error: {
       control: 'boolean',
     },
@@ -117,14 +121,6 @@ export const WithError: Story = {
   },
 }
 
-export const CardWithError: Story = {
-  name: 'Card с ошибкой',
-  args: {
-    variant: 'card',
-    error: true,
-  },
-}
-
 export const ErrorWithHint: Story = {
   name: 'Ошибка с подсказкой',
   args: {
@@ -183,4 +179,30 @@ export const WithHint: Story = {
 export const ShortError: Story = {
   name: 'Короткая ошибка по центру поля',
   args: { error: true, errorMessage: 'Обязательное поле', hint: '', modelValue: null },
+}
+
+// Цветовой вариант сам по себе не включает ошибку валидации или её тултип.
+export const Success: Story = {
+  name: 'Вариант success',
+  args: { variant: 'success' },
+}
+
+export const Warning: Story = {
+  name: 'Вариант warning',
+  args: { variant: 'warning' },
+}
+
+export const ErrorVariant: Story = {
+  name: 'Вариант error без ошибки валидации',
+  args: { variant: 'error', error: false },
+}
+
+export const Disabled: Story = {
+  name: 'Отключённое поле',
+  args: { disabled: true },
+}
+
+export const Readonly: Story = {
+  name: 'Только чтение',
+  args: { readonly: true },
 }

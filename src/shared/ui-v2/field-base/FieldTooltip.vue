@@ -61,8 +61,10 @@ onBeforeUnmount(() => {
     :aria-hidden="!open"
   >
     <TooltipBase class="FieldTooltip-Body">
-      <span v-if="errorMessage" class="FieldTooltip-Error">{{ errorMessage }}</span>
-      <span v-if="hint" :class="{ 'FieldTooltip-Hint': Boolean(errorMessage) }">{{ hint }}</span>
+      <span v-if="errorMessage" class="FieldTooltip-Error u-typo-body-small-m">{{ errorMessage }}</span>
+      <span v-if="hint" class="u-typo-body-small-m" :class="{ 'FieldTooltip-Hint': Boolean(errorMessage) }">{{
+        hint
+      }}</span>
     </TooltipBase>
   </span>
 </template>
@@ -90,14 +92,17 @@ onBeforeUnmount(() => {
     bottom: -4px;
     width: 8px;
     height: 8px;
-    background: var(--neutral-600);
+    z-index: -1;
+    background: var(--neutral-500);
     border-radius: v-bind(arrowBorderRadius);
     transform: translateX(-50%) rotate(45deg);
   }
 }
 
 .FieldTooltip-Body {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   width: max-content;
   min-width: min(56px, 100%);
   max-width: 100%;
@@ -131,16 +136,16 @@ onBeforeUnmount(() => {
 
 .FieldTooltip-Error {
   display: block;
-  color: var(--red-200);
-  border-left: 2px solid var(--red-500);
-  padding-left: 8px;
+  background: var(--red-200);
+  color: var(--neutral-900);
+  border-radius: 4px;
+  border-left: 1px solid var(--red-500);
+  padding: 2px 4px;
 }
 
 .FieldTooltip-Hint {
   display: block;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid currentColor;
+  padding: 2px 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
