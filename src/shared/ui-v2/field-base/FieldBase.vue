@@ -422,6 +422,17 @@ onBeforeUnmount(clearTimer)
 
   .FieldBase_Control {
     border-color: var(--color-border-error);
+
+    &:hover {
+      /*      border-color: var(--color-border-focus);*/
+      border: 1px solid #c05a5a66;
+      box-shadow: none;
+    }
+
+    &:focus-within {
+      border-color: var(--color-border-focus);
+      box-shadow: var(--box-shadow-icons-error);
+    }
   }
 
   .FieldBase-Hint,
