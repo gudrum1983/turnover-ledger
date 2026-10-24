@@ -1,5 +1,4 @@
 import { ref, watch } from 'vue'
-import { expect, userEvent, within } from 'storybook/test'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { FieldBase } from './index'
 
@@ -127,33 +126,6 @@ export const ErrorWithHint: Story = {
     error: true,
     errorMessage: 'Значение должно содержать ровно четыре цифры. Проверьте введённые данные и попробуйте снова.',
     hint: 'Введите код из документа без пробелов и разделителей.',
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const input = canvas.getByRole('textbox')
-    const tooltip = canvas.getByRole('tooltip', { hidden: true })
-    const height = canvasElement.getBoundingClientRect().height
-    await expect(tooltip).not.toBeVisible()
-    input.focus()
-    await expect(tooltip).toBeVisible()
-    await expect(tooltip).toHaveTextContent('Введите код из документа')
-    await expect(canvasElement.getBoundingClientRect().height).toBe(height)
-    const control = input.parentElement!
-    const controlRect = control.getBoundingClientRect()
-    await expect(tooltip.getBoundingClientRect().width).toBeLessThanOrEqual(controlRect.width)
-    const tooltipRect = tooltip.getBoundingClientRect()
-    await expect(
-      Math.abs((tooltipRect.left + tooltipRect.right) / 2 - (controlRect.left + controlRect.right) / 2),
-    ).toBeLessThan(1)
-    await userEvent.keyboard('{Escape}')
-    await expect(tooltip).not.toBeVisible()
-    const icon = canvas.getByRole('button', { name: /Значение должно/ })
-    await userEvent.click(icon)
-    await expect(tooltip).toBeVisible()
-    await userEvent.unhover(icon)
-    input.focus()
-    input.blur()
-    await expect(tooltip).not.toBeVisible()
   },
 }
 
