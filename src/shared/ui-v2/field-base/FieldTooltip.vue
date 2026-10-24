@@ -10,6 +10,28 @@ const { open, errorMessage, hint, anchor } = defineProps<{
 }>()
 
 const tooltipRef = ref<HTMLElement | null>(null)
+const visible = ref(false)
+let visibilityTimer: ReturnType<typeof setTimeout> | undefined
+
+function clearVisibilityTimer() {
+  clearTimeout(visibilityTimer)
+  visibilityTimer = undefined
+}
+
+function scheduleVisibility() {
+  clearVisibilityTimer()
+  if (open === visible.value || !tooltipRef.value) return
+
+  const token = open ? '--transition-delay-tooltip-enter' : '--transition-delay-tooltip-leave'
+  const value = getComputedStyle(tooltipRef.value).getPropertyValue(token).trim()
+  const delay = parseFloat(value) * (value.endsWith('ms') ? 1 : 1000)
+  visibilityTimer = setTimeout(() => {
+    visible.value = open
+    visibilityTimer = undefined
+  }, delay)
+}
+
+watch(() => open, scheduleVisibility)
 const below = ref(true)
 const gap = computed(() => (errorMessage ? 3 : 1))
 const gapValue = computed(() => `${gap.value}px`)
@@ -36,6 +58,7 @@ watch(
 )
 
 onMounted(() => {
+  scheduleVisibility()
   resizeObserver = new ResizeObserver(() => {
     void updatePlacement()
   })
@@ -46,6 +69,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  clearVisibilityTimer()
   resizeObserver?.disconnect()
   window.removeEventListener('resize', updatePlacement)
   window.removeEventListener('scroll', updatePlacement, true)
@@ -56,9 +80,9 @@ onBeforeUnmount(() => {
   <span
     ref="tooltipRef"
     class="FieldTooltip"
-    :class="{ FieldTooltip_open: open, FieldTooltip_below: below, FieldTooltip_error: Boolean(errorMessage) }"
+    :class="{ FieldTooltip_open: visible, FieldTooltip_below: below, FieldTooltip_error: Boolean(errorMessage) }"
     role="tooltip"
-    :aria-hidden="!open"
+    :aria-hidden="!visible"
   >
     <TooltipBase class="FieldTooltip-Body">
       <span v-if="errorMessage" class="FieldTooltip-Error u-typo-body-small-m">{{ errorMessage }}</span>
@@ -93,13 +117,14 @@ onBeforeUnmount(() => {
     width: 8px;
     height: 8px;
     z-index: -1;
-    background: var(--neutral-500);
+    background: var(--neutral-600);
     border-radius: v-bind(arrowBorderRadius);
     transform: translateX(-50%) rotate(45deg);
   }
 }
 
 .FieldTooltip-Body {
+  background: var(--neutral-600);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -129,6 +154,7 @@ onBeforeUnmount(() => {
 }
 
 .FieldTooltip_open {
+  pointer-events: auto;
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
