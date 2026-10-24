@@ -6,6 +6,10 @@
   --transition-easing-color: ease-out;
   --transition-color: var(--transition-duration-hover) var(--transition-easing-color);
 
+  /* Паузы перед появлением тултипа и скрытием при уходе курсора. */
+  --transition-delay-tooltip-enter: 300ms;
+  --transition-delay-tooltip-leave: 150ms;
+
   /* Появление и скрытие модальных окон. */
   --transition-duration-modal-enter: 180ms;
   --transition-duration-modal-leave: 120ms;

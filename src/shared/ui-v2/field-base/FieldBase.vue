@@ -83,12 +83,13 @@ onBeforeUnmount(() => {
 const inputFocused = ref(false)
 const iconFocused = ref(false)
 const iconHovered = ref(false)
+const tooltipHovered = ref(false)
 const tooltipDismissed = ref(false)
 const hasErrorMessage = computed(() => error && Boolean(errorMessage))
 const tooltipOpen = computed(
   () =>
     !tooltipDismissed.value &&
-    (iconFocused.value || iconHovered.value || (hasErrorMessage.value && inputFocused.value)),
+    (iconFocused.value || iconHovered.value || tooltipHovered.value || (hasErrorMessage.value && inputFocused.value)),
 )
 function showTooltip() {
   tooltipDismissed.value = false
@@ -250,6 +251,8 @@ onBeforeUnmount(clearTimer)
         </button>
       </Transition>
       <FieldTooltip
+        @mouseenter="tooltipHovered = true"
+        @mouseleave="tooltipHovered = false"
         :open="tooltipOpen && !disabled && Boolean(hasErrorMessage || hint)"
         :error-message="hasErrorMessage ? errorMessage : undefined"
         :hint="hint"
@@ -281,13 +284,13 @@ onBeforeUnmount(clearTimer)
   --color-border-empty-focus-tab: transparent;
   --color-border-empty-disabled: var(--neutral-100);
 
-  --color-border-filled: var(--neutral-500);
+  --color-border-filled: var(--neutral-400);
   --color-border-filled-hover: var(--neutral-500);
   --color-border-filled-focus: var(--neutral-500);
   --color-border-filled-focus-tab: transparent;
   --color-border-filled-disabled: var(--neutral-100);
 
-  --color-text-placeholder: var(--neutral-600);
+  --color-text-placeholder: var(--neutral-400);
   --color-text-placeholder-disabled: var(--neutral-400);
 
   --color-text-default: var(--neutral-900);
@@ -298,7 +301,6 @@ onBeforeUnmount(clearTimer)
   --color-icons-focus: var(--neutral-700);
 
   --box-shadow-icons-focus-tab: 0px 0px 0px 3px #5a636466;
-
   --box-shadow-input-focus-tab: 0px 0px 0px 3px #f5c96a99;
 
   --color-label-default: var(--neutral-900);
@@ -480,6 +482,23 @@ onBeforeUnmount(clearTimer)
   cursor: help;
 }
 
+.FieldBase_Clear {
+  opacity: var(--clear-opacity, 0);
+  transform: scale(var(--clear-scale, 0.85));
+  pointer-events: var(--clear-pointer-events, none);
+  transition:
+    color var(--transition-color),
+    opacity var(--transition-color),
+    transform var(--transition-color);
+}
+
+.FieldBase_Control:hover,
+.FieldBase_Control:focus-within {
+  --clear-opacity: 1;
+  --clear-scale: 1;
+  --clear-pointer-events: auto;
+}
+
 .FieldBase-HintIconSlot {
   display: grid;
   width: 24px;
@@ -526,7 +545,6 @@ onBeforeUnmount(clearTimer)
   // Палитра readonly переопределяет общие переменные элементов.
   --color-background-default: var(--neutral-100);
   --color-text-default: var(--neutral-600);
-  --color-text-placeholder: var(--neutral-400);
   --box-shadow-input-focus-tab: none;
 
   // Прозрачная рамка сохраняет размеры; SVG рисует штрихи поверх неё.
