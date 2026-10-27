@@ -11,6 +11,7 @@ const STORE_ID = 'report-store'
 
 export const useReportStore = defineStore(STORE_ID, () => {
   const LOCAL_STORAGE_KEY = 'reportState'
+  const ACTIVE_YEAR_STORAGE_KEY = 'reportActiveYear'
 
   const formData = reactive({
     header: {
@@ -27,6 +28,35 @@ export const useReportStore = defineStore(STORE_ID, () => {
     },
   })
   const rows = ref<ReportRow[]>([])
+  const activeYear = ref(new Date().getFullYear())
+  const activeYearRows = computed(() =>
+    rows.value.filter(
+      (row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number(row.date.slice(0, 4)) === activeYear.value,
+    ),
+  )
+
+  function setActiveYear(year: number) {
+    activeYear.value = year
+  }
+
+  const yearSummaries = computed(() => {
+    const currentYear = new Date().getFullYear()
+    const counts = new Map<number, number>()
+    let earliestYear = currentYear
+
+    for (const row of rows.value) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(row.date)) continue
+      const year = Number(row.date.slice(0, 4))
+      if (year < 1 || year > currentYear) continue
+      counts.set(year, (counts.get(year) ?? 0) + 1)
+      earliestYear = Math.min(earliestYear, year)
+    }
+
+    return Array.from({ length: currentYear - earliestYear + 1 }, (_, index) => {
+      const year = earliestYear + index
+      return { year, count: counts.get(year) ?? 0 }
+    })
+  })
 
   const metaFieldsProgress = computed(() => {
     const values = [
@@ -167,6 +197,10 @@ export const useReportStore = defineStore(STORE_ID, () => {
   }
 
   function hydrateFromLocalStorage() {
+    const savedYear = Number(localStorage.getItem(ACTIVE_YEAR_STORAGE_KEY))
+    activeYear.value =
+      Number.isInteger(savedYear) && savedYear >= 1 && savedYear <= 9999 ? savedYear : new Date().getFullYear()
+
     const savedState = localStorage.getItem(LOCAL_STORAGE_KEY)
     if (savedState) {
       try {
@@ -216,6 +250,10 @@ export const useReportStore = defineStore(STORE_ID, () => {
     }
   }
 
+  watch(activeYear, (year) => {
+    localStorage.setItem(ACTIVE_YEAR_STORAGE_KEY, String(year))
+  })
+
   watch(
     () => [formData, rows.value] as const,
     () => {
@@ -228,6 +266,10 @@ export const useReportStore = defineStore(STORE_ID, () => {
   return {
     formData,
     metaFieldsProgress,
+    yearSummaries,
+    activeYear,
+    activeYearRows,
+    setActiveYear,
     rows,
     usedCurrencyCodes,
     lastUsedCurrencyCode,

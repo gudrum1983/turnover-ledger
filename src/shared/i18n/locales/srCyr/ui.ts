@@ -17,6 +17,17 @@ export const srCyrUi = {
   common: {
     clearField: 'Обриши поље',
   },
+  reportYearSelect: {
+    buttonLabel: 'Извештај за {year}. годину',
+    year: 'Извештај за {year}. годину',
+    noRecords: '(нема записа)',
+    records: {
+      one: '({count} запис)',
+      few: '({count} записа)',
+      many: '({count} записа)',
+      other: '({count} записа)',
+    },
+  },
   reportBuilderActions: {
     preview: 'Претпреглед',
     export: 'Извоз података',

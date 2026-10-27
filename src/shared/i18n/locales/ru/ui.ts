@@ -16,6 +16,17 @@ export const ruUi = {
   common: {
     clearField: 'Очистить поле',
   },
+  reportYearSelect: {
+    buttonLabel: 'Отчёт за {year} год',
+    year: 'Отчёт за {year} год',
+    noRecords: '(записей нет)',
+    records: {
+      one: '({count} запись)',
+      few: '({count} записи)',
+      many: '({count} записей)',
+      other: '({count} записи)',
+    },
+  },
   reportBuilderActions: {
     preview: 'Предпросмотр',
     export: 'Экспорт данных',

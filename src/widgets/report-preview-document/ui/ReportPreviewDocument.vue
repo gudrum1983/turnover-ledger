@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const store = useReportStore()
-const { formData, rows } = storeToRefs(store)
+const { formData, activeYearRows: rows } = storeToRefs(store)
 
 const classColumn = computed(() => [{ ReportPreviewDocument_Column_landscape: props.landscape }])
 const classSignature = computed(() => [{ ReportPreviewDocument_SignaturePlace_landscape: props.landscape }])

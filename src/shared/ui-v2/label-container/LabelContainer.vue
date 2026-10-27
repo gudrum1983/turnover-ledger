@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type LabelContainerProps = {
-  /** Размер текста: l — стандартный, s — компактный. */
+  /** Размер: l — полный текст, s — первые три буквы. */
   size?: 'l' | 's'
   /** Выбранное значение. При отсутствии совпадения все кнопки отображаются без выбора. */
   modelValue?: string
@@ -38,14 +38,13 @@ function selectOption(value: string) {
       :key="option.value"
       type="button"
       class="LabelContainer-Button"
-      :class="[
-        size === 's' ? 'u-typo-label-s' : 'u-typo-body-m',
-        { 'LabelContainer-Button_selected': modelValue === option.value },
-      ]"
+      :class="['u-typo-body-m', { 'LabelContainer-Button_selected': modelValue === option.value }]"
       :aria-pressed="modelValue === option.value"
+      :aria-label="size === 's' ? option.label : undefined"
+      :title="size === 's' ? option.label : undefined"
       @click="selectOption(option.value)"
     >
-      {{ option.label }}
+      {{ size === 's' ? Array.from(option.label).slice(0, 3).join('') : option.label }}
     </button>
   </div>
 </template>

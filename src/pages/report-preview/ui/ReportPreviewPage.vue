@@ -13,6 +13,7 @@ import { AppFooter } from '@/widgets/app-footer'
 import { IconBack, IconPrinter } from '@/shared/ui-v2/icons'
 import { useRouter } from 'vue-router'
 import { ReportScriptSwitch } from '@/features/report-script-switch'
+import { ReportYearSelect } from '@/features/report-year-select'
 
 const onPrint = () => {
   window.print()
@@ -48,7 +49,13 @@ onBeforeUnmount(() => {
         </template>
         <template #actionButtons="{ size, headerSize }">
           <div class="ReportPreviewPage-Panel">
-            <div class="ReportPreviewPage_Actions">
+            <div
+              class="ReportPreviewPage_Actions"
+              :class="{
+                ReportPreviewPage_Actions_tablet: headerSize === 'm',
+                ReportPreviewPage_Actions_mobile: headerSize === 's',
+              }"
+            >
               <ButtonWithIcon
                 :size="headerSize === 's' ? 'l' : size"
                 :icon="IconBack"
@@ -70,11 +77,14 @@ onBeforeUnmount(() => {
                 </template>
               </ButtonWithIcon>
             </div>
-            <ReportScriptSwitch
-              class="ReportPreviewPage-Language no-print"
-              v-model="script"
-              :size="headerSize === 's' ? 's' : 'l'"
-            />
+            <div class="ReportPreviewPage_Actions ReportPreviewPage_Actions_short">
+              <ReportScriptSwitch
+                class="ReportPreviewPage-Language no-print"
+                v-model="script"
+                :size="headerSize === 's' ? 's' : 'l'"
+              />
+              <ReportYearSelect class="no-print" :size="headerSize === 's' ? 'compact' : 'full'" />
+            </div>
           </div>
         </template>
       </AppHeader>
@@ -103,9 +113,23 @@ onBeforeUnmount(() => {
 
   &_Actions {
     display: flex;
-    padding: 40px 0;
+    padding: 40px 0 48px;
     width: 100%;
     justify-content: space-between;
+
+    &_short {
+      padding: 0;
+      max-width: 297mm;
+      align-self: center;
+    }
+
+    &_tablet {
+      padding-bottom: 40px;
+    }
+
+    &_mobile {
+      padding-bottom: 24px;
+    }
   }
 
   &-Panel {

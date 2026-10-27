@@ -17,6 +17,17 @@ export const srLatUi = {
   common: {
     clearField: 'Obrisi polje',
   },
+  reportYearSelect: {
+    buttonLabel: 'Izveštaj za {year}. godinu',
+    year: 'Izveštaj za {year}. godinu',
+    noRecords: '(nema zapisa)',
+    records: {
+      one: '({count} zapis)',
+      few: '({count} zapisa)',
+      many: '({count} zapisa)',
+      other: '({count} zapisa)',
+    },
+  },
   reportBuilderActions: {
     preview: 'Pretpregled',
     export: 'Izvoz podataka',
