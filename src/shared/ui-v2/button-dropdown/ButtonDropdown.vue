@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
-import { ListBox } from '@/shared/ui-v2/list-box'
+import { ListBox } from './list-box'
 import { DisclosureChevron } from '@/shared/ui-v2/disclosure-chevron'
 
 type Props = {

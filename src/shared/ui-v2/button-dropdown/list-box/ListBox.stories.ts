@@ -10,7 +10,7 @@ const baseOptions = [
 ]
 
 const meta = {
-  title: 'UI-Компоненты/ListBox',
+  title: 'UI-V2-Компоненты/ButtonDropdown/ListBox',
   parameters: {
     docs: {
       description: {
