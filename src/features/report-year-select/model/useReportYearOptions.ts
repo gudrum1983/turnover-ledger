@@ -22,17 +22,13 @@ export function useReportYearOptions() {
         const form = category === 'one' || category === 'few' || category === 'many' ? category : 'other'
         const description =
           count === 0 ? t('ui.reportYearSelect.noRecords') : t(`ui.reportYearSelect.records.${form}`, { count })
-        //todo: откорректировать локализацию
-        /*      const title = t('ui.reportYearSelect.year', { year })*/
-        const title = year
 
         return {
           value: String(year),
           year,
           count,
-          title,
           description,
-          label: description,
+          label: String(year),
         }
       }),
   )
