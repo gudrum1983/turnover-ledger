@@ -1,26 +1,19 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
+import type { DropdownOption } from './types'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
 import { ListBox } from './list-box'
 import { DisclosureChevron } from '@/shared/ui-v2/disclosure-chevron'
 
 type Props = {
   /** Список доступных вариантов */
-  options: Array<{
-    value: string
-    label: string
-  }>
+  options: DropdownOption[]
   /** Текущее выбранное значение */
   modelValue?: string
   /** Отключает взаимодействие с выпадающим списком */
   disabled?: boolean
   /** Класс корневого DOM-элемента */
   rootClass?: string
-}
-
-type DropdownOption = {
-  value: string
-  label: string
 }
 
 const { options, modelValue, disabled = false, rootClass = '' } = defineProps<Props>()
@@ -33,6 +26,35 @@ const emit = defineEmits<{
 const dropdownRef = ref<HTMLElement | null>(null)
 const listBoxRef = ref<InstanceType<typeof ListBox> | null>(null)
 const isOpen = ref(false)
+const listId = useId()
+const highlightedValue = ref<string>()
+const highlightedIndex = computed(() => options.findIndex((option) => option.value === highlightedValue.value))
+const highlightedId = computed(() =>
+  highlightedIndex.value < 0 ? undefined : `${listId}-option-${highlightedIndex.value}`,
+)
+
+function openMenu() {
+  if (disabled) return
+  highlightedValue.value = activeOption.value?.value ?? options[0]?.value
+  isOpen.value = true
+}
+
+async function highlight(index: number) {
+  highlightedValue.value = options[Math.max(0, Math.min(index, options.length - 1))]?.value
+  await nextTick()
+  listBoxRef.value?.scrollToSelected()
+}
+
+function commitSelection() {
+  if (highlightedValue.value !== undefined && highlightedValue.value !== modelValue) {
+    handleSelect(highlightedValue.value)
+  } else {
+    closeMenu()
+  }
+}
+
+let search = ''
+let lastSearchTime = 0
 
 const activeOption = computed<DropdownOption | undefined>(() => options.find((option) => option.value === modelValue))
 
@@ -44,7 +66,8 @@ const toggleMenu = () => {
   if (disabled) {
     return
   }
-  isOpen.value = !isOpen.value
+  if (isOpen.value) closeMenu()
+  else openMenu()
 }
 
 const closeMenu = () => {
@@ -67,22 +90,68 @@ const handleClickOutside = (event: MouseEvent) => {
 }
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (!isOpen.value) {
+  if (disabled) return
+  if (event.key === 'Tab') {
+    if (isOpen.value) commitSelection()
     return
   }
   if (event.key === 'Escape') {
-    closeMenu()
+    if (isOpen.value) {
+      event.preventDefault()
+      event.stopPropagation()
+      closeMenu()
+    }
+    return
+  }
+  if (['Enter', ' ', 'ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'].includes(event.key)) {
+    event.preventDefault()
+    if (event.key === 'Enter' || event.key === ' ') {
+      if (isOpen.value) commitSelection()
+      else openMenu()
+      return
+    }
+    const wasOpen = isOpen.value
+    if (!wasOpen) openMenu()
+    if (event.altKey && event.key === 'ArrowUp') {
+      commitSelection()
+      return
+    }
+    if (event.key === 'Home') void highlight(0)
+    else if (event.key === 'End') void highlight(options.length - 1)
+    else if (wasOpen && !event.altKey) {
+      const step = event.key === 'PageDown' ? 10 : event.key === 'PageUp' ? -10 : event.key === 'ArrowDown' ? 1 : -1
+      void highlight(highlightedIndex.value + step)
+    }
+    return
+  }
+  if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    event.preventDefault()
+    if (!isOpen.value) openMenu()
+    const now = Date.now()
+    search = now - lastSearchTime > 700 ? event.key : search + event.key
+    lastSearchTime = now
+    const query = [...search].every((char) => char === search[0]) ? search[0]! : search
+    const start = query.length === 1 ? highlightedIndex.value + 1 : highlightedIndex.value
+    for (let offset = 0; offset < options.length; offset++) {
+      const index = (Math.max(0, start) + offset) % options.length
+      const option = options[index]!
+      if (
+        option.label.toLocaleLowerCase().startsWith(query.toLocaleLowerCase()) ||
+        option.value.toLocaleLowerCase().startsWith(query.toLocaleLowerCase())
+      ) {
+        void highlight(index)
+        break
+      }
+    }
   }
 }
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
-  document.addEventListener('keydown', handleKeydown)
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
-  document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 
@@ -90,6 +159,12 @@ onBeforeUnmount(() => {
   <div ref="dropdownRef" class="ButtonDropdown" :class="rootClass">
     <ButtonBase
       variant="page"
+      role="combobox"
+      :disabled="disabled"
+      :aria-controls="isOpen ? listId : undefined"
+      :aria-activedescendant="isOpen ? highlightedId : undefined"
+      @keydown="handleKeydown"
+      @blur="closeMenu"
       :aria-expanded="isOpen"
       aria-haspopup="listbox"
       @click="toggleMenu"
@@ -110,7 +185,11 @@ onBeforeUnmount(() => {
           <ListBox
             ref="listBoxRef"
             class="ButtonDropdown_ListBox"
+            :id="listId"
+            :option-id-prefix="listId"
+            :active-value="highlightedValue"
             :options="options"
+            @mousedown.prevent
             :model-value="modelValue"
             @change="handleSelect"
           />

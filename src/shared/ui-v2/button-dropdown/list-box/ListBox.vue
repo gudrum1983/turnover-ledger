@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import type { DropdownOption } from '../types'
 import { DividerBase } from '@/shared/ui/divider-base'
 
 interface Props {
   /** Варианты значений */
-  options: Array<{
-    value: string
-    label: string
-  }>
+  options: DropdownOption[]
   /** Выбранное значение из списка */
   modelValue?: string
   /** Избранные значения для отображения вверху списка (строки из options.value) */
   favorites?: string[]
+  /** Визуальный фокус при управлении с клавиатуры. */
+  activeValue?: string
+  optionIdPrefix?: string
 }
 
 const props = defineProps<Props>()
@@ -19,7 +20,9 @@ const listRef = ref<HTMLElement | null>(null)
 
 function scrollToSelected() {
   const list = listRef.value
-  const selected = list?.querySelector<HTMLElement>('[aria-selected="true"]')
+  const selected =
+    list?.querySelector<HTMLElement>('[data-active="true"]') ??
+    list?.querySelector<HTMLElement>('[aria-selected="true"]')
   if (!list || !selected) return
 
   const listRect = list.getBoundingClientRect()
@@ -58,33 +61,48 @@ const handleSelect = (value: string) => {
 
 <template>
   <div class="ListBox" role="listbox">
-    <div ref="listRef" class="ListBox_List">
+    <div ref="listRef" class="ListBox_List" tabindex="-1">
       <button
         v-for="option in favoriteOptions"
         :key="option.value"
+        :id="optionIdPrefix ? `${optionIdPrefix}-option-${options.indexOf(option)}` : undefined"
+        :tabindex="optionIdPrefix ? -1 : undefined"
+        :data-active="activeValue === option.value"
         class="ListBox_Item u-typo-body-m"
-        :class="{ ListBox_Item_selected: option.value === modelValue }"
-        type="button"
-        role="option"
-        :aria-selected="option.value === modelValue"
-        @click="handleSelect(option.value)"
-      >
-        <span>{{ option.value }}</span
-        >{{ option.label }}
-      </button>
-      <DividerBase v-if="favoriteOptions.length > 0 && otherOptions.length > 0" :edge-offset="5" lineStyle="dashed" />
-      <button
-        v-for="option in otherOptions"
-        :key="option.value"
-        class="ListBox_Item u-typo-body-m"
-        :class="{ ListBox_Item_selected: option.value === modelValue }"
+        :class="{
+          ListBox_Item_selected: option.value === modelValue,
+          ListBox_Item_focused: activeValue === option.value,
+        }"
         type="button"
         role="option"
         :aria-selected="option.value === modelValue"
         @click="handleSelect(option.value)"
       >
         <span
-          >{{ option.value }} <span class="ListBox_ItemDescription"> {{ option.label }}</span></span
+          >{{ option.label
+          }}<span v-if="option.description" class="ListBox_ItemDescription"> {{ option.description }}</span></span
+        >
+      </button>
+      <DividerBase v-if="favoriteOptions.length > 0 && otherOptions.length > 0" :edge-offset="5" lineStyle="dashed" />
+      <button
+        v-for="option in otherOptions"
+        :key="option.value"
+        :id="optionIdPrefix ? `${optionIdPrefix}-option-${options.indexOf(option)}` : undefined"
+        :tabindex="optionIdPrefix ? -1 : undefined"
+        :data-active="activeValue === option.value"
+        class="ListBox_Item u-typo-body-m"
+        :class="{
+          ListBox_Item_selected: option.value === modelValue,
+          ListBox_Item_focused: activeValue === option.value,
+        }"
+        type="button"
+        role="option"
+        :aria-selected="option.value === modelValue"
+        @click="handleSelect(option.value)"
+      >
+        <span
+          >{{ option.label
+          }}<span v-if="option.description" class="ListBox_ItemDescription"> {{ option.description }}</span></span
         >
       </button>
     </div>
@@ -136,7 +154,8 @@ const handleSelect = (value: string) => {
       transition: all var(--transition);
     }
 
-    &:hover {
+    &:hover,
+    &_focused {
       background: var(--neutral-100);
     }
 
