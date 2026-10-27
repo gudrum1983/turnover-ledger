@@ -31,6 +31,7 @@ const emit = defineEmits<{
 }>()
 
 const dropdownRef = ref<HTMLElement | null>(null)
+const listBoxRef = ref<InstanceType<typeof ListBox> | null>(null)
 const isOpen = ref(false)
 
 const activeOption = computed<DropdownOption | undefined>(() => options.find((option) => option.value === modelValue))
@@ -103,10 +104,16 @@ onBeforeUnmount(() => {
         </div>
       </slot>
     </ButtonBase>
-    <Transition name="button-dropdown-menu">
+    <Transition name="button-dropdown-menu" @enter="listBoxRef?.scrollToSelected()">
       <div v-if="isOpen" class="ButtonDropdown_Menu">
         <div class="ButtonDropdown_MenuContent">
-          <ListBox class="ButtonDropdown_ListBox" :options="options" :model-value="modelValue" @change="handleSelect" />
+          <ListBox
+            ref="listBoxRef"
+            class="ButtonDropdown_ListBox"
+            :options="options"
+            :model-value="modelValue"
+            @change="handleSelect"
+          />
         </div>
       </div>
     </Transition>

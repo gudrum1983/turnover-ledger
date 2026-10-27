@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { DividerBase } from '@/shared/ui/divider-base'
 
 interface Props {
@@ -15,6 +15,23 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const listRef = ref<HTMLElement | null>(null)
+
+function scrollToSelected() {
+  const list = listRef.value
+  const selected = list?.querySelector<HTMLElement>('[aria-selected="true"]')
+  if (!list || !selected) return
+
+  const listRect = list.getBoundingClientRect()
+  const selectedRect = selected.getBoundingClientRect()
+  if (selectedRect.top < listRect.top) {
+    list.scrollBy({ top: selectedRect.top - listRect.top, behavior: 'instant' })
+  } else if (selectedRect.bottom > listRect.bottom) {
+    list.scrollBy({ top: selectedRect.bottom - listRect.bottom, behavior: 'instant' })
+  }
+}
+
+defineExpose({ scrollToSelected })
 
 const favoriteOptions = computed(() => {
   if (!props.favorites?.length) return []
@@ -41,7 +58,7 @@ const handleSelect = (value: string) => {
 
 <template>
   <div class="ListBox" role="listbox">
-    <div class="ListBox_List">
+    <div ref="listRef" class="ListBox_List">
       <button
         v-for="option in favoriteOptions"
         :key="option.value"
