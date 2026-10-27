@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { IconArrowDown } from '@/shared/ui-v2/icons'
+import { DisclosureChevron } from '@/shared/ui-v2/disclosure-chevron'
 
 type Props = {
   /** Состояние раскрытия секции */
@@ -42,16 +42,10 @@ const handleClick = () => {
 </script>
 
 <template>
-  <button
-    class="CollapseToggle"
-    :aria-label="buttonAriaLabel"
-    :aria-expanded="isOpen"
-    @click="handleClick"
-    :class="{ CollapseToggle_isOpen: isOpen }"
-  >
+  <button class="CollapseToggle" :aria-label="buttonAriaLabel" :aria-expanded="isOpen" @click="handleClick">
     <span class="CollapseToggle-Label u-typo-label-m">Cкрыть</span>
     <span class="CollapseToggle-Tag">
-      <IconArrowDown class="CollapseToggle-Icon" />
+      <DisclosureChevron class="CollapseToggle-Icon" :open="isOpen" />
     </span>
   </button>
 </template>
@@ -87,7 +81,6 @@ const handleClick = () => {
   &-Icon {
     width: 18px;
     height: 18px;
-    transition: transform var(--transition-color);
   }
 
   &-Divider {
@@ -115,12 +108,6 @@ const handleClick = () => {
     .CollapseToggle-Tag {
       background: var(--blue-200);
     }
-  }
-}
-
-.CollapseToggle_isOpen {
-  .CollapseToggle-Icon {
-    transform: scaleY(-1);
   }
 }
 </style>
