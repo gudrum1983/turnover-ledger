@@ -10,7 +10,7 @@ export function useLocale() {
 
   const locale = computed(() => localeStore.currentLocale)
 
-  const t = (key: I18nMessageKey): string => i18nTranslate(key)
+  const t = (key: I18nMessageKey, named: Record<string, string | number> = {}): string => i18nTranslate(key, named)
 
   const setLocale = (next: I18nLocale) => {
     localeStore.setLocale(next)

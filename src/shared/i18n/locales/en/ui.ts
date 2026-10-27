@@ -17,6 +17,17 @@ export const enUi = {
   common: {
     clearField: 'Clear field',
   },
+  reportYearSelect: {
+    buttonLabel: 'Report for {year}',
+    year: 'Report for {year}',
+    noRecords: '(no records)',
+    records: {
+      one: '({count} record)',
+      few: '({count} records)',
+      many: '({count} records)',
+      other: '({count} records)',
+    },
+  },
   reportBuilderActions: {
     preview: 'Preview',
     export: 'Export data',
