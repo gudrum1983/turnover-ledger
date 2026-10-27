@@ -66,6 +66,12 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = { name: 'Песочница' }
+export const SingleOption: Story = {
+  name: 'Одна опция',
+  args: {
+    options: baseOptions.slice(0, 1),
+  },
+}
 export const WithoutScroll: Story = {
   name: 'Без скролла',
   args: {
