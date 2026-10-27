@@ -77,7 +77,7 @@ export const Playground: Story = {
 }
 
 export const Info: Story = {
-  name: 'Info',
+  name: 'Инфо',
   args: {
     type: 'info',
     title: 'Импорт завершён',
@@ -86,7 +86,7 @@ export const Info: Story = {
 }
 
 export const Danger: Story = {
-  name: 'Danger',
+  name: 'Ошибка',
   args: {
     type: 'danger',
     title: 'Ошибка импорта',
@@ -95,7 +95,7 @@ export const Danger: Story = {
 }
 
 export const Success: Story = {
-  name: 'Success',
+  name: 'Подтверждение',
   args: {
     type: 'success',
     title: 'Данные сохранены',
