@@ -105,6 +105,57 @@ describe('report store', () => {
     expect(store.usedCurrencyCodes).toEqual(['EUR', 'RSD'])
   })
 
+  it('defaults the active year to the current year', () => {
+    expect(useReportStore().activeYear).toBe(new Date().getFullYear())
+  })
+
+  it('restores the active year independently of report data', () => {
+    localStorageMock.getItem.mockImplementation((key: string) => (key === 'reportActiveYear' ? '2025' : null))
+    const store = useReportStore()
+
+    store.hydrateFromLocalStorage()
+
+    expect(store.activeYear).toBe(2025)
+  })
+
+  it.each([null, '', 'invalid', '0', '2025.5', '10000'])('uses the current year for saved value %s', (savedYear) => {
+    localStorageMock.getItem.mockReturnValue(savedYear)
+    const store = useReportStore()
+    store.setActiveYear(2024)
+
+    store.hydrateFromLocalStorage()
+
+    expect(store.activeYear).toBe(new Date().getFullYear())
+  })
+
+  it('persists changes to the active year', async () => {
+    const store = useReportStore()
+
+    store.setActiveYear(2025)
+    await Promise.resolve()
+
+    expect(localStorageMock.setItem).toHaveBeenCalledWith('reportActiveYear', '2025')
+  })
+
+  it('selects rows for the active year and reacts to row changes', () => {
+    const store = useReportStore()
+    store.setRows([...reportState.rows])
+
+    store.setActiveYear(2025)
+    expect(store.activeYear).toBe(2025)
+    expect(store.activeYearRows.map((row) => row.id)).toEqual(['row-3'])
+
+    store.setActiveYear(2026)
+    expect(store.activeYearRows.map((row) => row.id)).toEqual(['row-1', 'row-2'])
+
+    store.removeRowById('row-1')
+    expect(store.activeYearRows.map((row) => row.id)).toEqual(['row-2'])
+
+    store.setActiveYear(2024)
+    expect(store.activeYearRows).toEqual([])
+    expect(store.rows).toHaveLength(2)
+  })
+
   it('detects unsorted rows by date', () => {
     const store = useReportStore()
 
