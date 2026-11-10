@@ -156,6 +156,51 @@ describe('report store', () => {
     expect(store.rows).toHaveLength(2)
   })
 
+  it('clears only rows of the active year', () => {
+    const store = useReportStore()
+    store.setRows([...reportState.rows])
+
+    store.setActiveYear(2026)
+    store.clearActiveYearRows()
+
+    expect(store.activeYearRows).toEqual([])
+    expect(store.rows.map((row) => row.id)).toEqual(['row-3'])
+  })
+
+  it('detects unsorted rows within the active year', () => {
+    const store = useReportStore()
+    store.setRows([...reportState.rows])
+
+    store.setActiveYear(2026)
+    expect(store.hasUnsortedActiveYearRows).toBe(true)
+
+    store.setActiveYear(2025)
+    expect(store.hasUnsortedActiveYearRows).toBe(false)
+  })
+
+  it('lists years from REPORT_FIRST_YEAR to the current year', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-10'))
+    const store = useReportStore()
+    store.setRows([...reportState.rows])
+
+    expect(store.yearSummaries.map((item) => item.year)).toEqual([2020, 2021, 2022, 2023, 2024, 2025, 2026])
+    expect(store.yearSummaries.find((item) => item.year === 2026)?.count).toBe(2)
+    expect(store.yearSummaries.find((item) => item.year === 2020)?.count).toBe(0)
+    vi.useRealTimers()
+  })
+
+  it('extends the year list back to the earliest row before REPORT_FIRST_YEAR', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-10'))
+    const store = useReportStore()
+    store.setRows([{ ...reportState.rows[0]!, id: 'old', date: '2018-05-01' }])
+
+    expect(store.yearSummaries[0]).toEqual({ year: 2018, count: 1 })
+    expect(store.yearSummaries.at(-1)?.year).toBe(2026)
+    vi.useRealTimers()
+  })
+
   it('detects unsorted rows by date', () => {
     const store = useReportStore()
 

@@ -137,8 +137,11 @@ export const srLatUi = {
     currency: 'Valuta',
     addRow: 'Dodaj zapis',
     clearTable: 'Obriši sve',
+    clearYear: 'Očisti godinu',
     sortByDate: 'Sortiraj po datumu',
     emptyHint: 'Tabela je prazna, dodajte red',
+    emptyTitle: 'Za {year}. godinu još nema zapisa',
+    emptySubtitle: 'Dodajte prvi zapis o prihodu',
     total: 'Ukupno',
     totalLimitExceeded: 'Upozorenje: ukupan iznos je premašio limit',
   },
@@ -195,10 +198,15 @@ export const srLatUi = {
   deleteAllRowsModal: {
     title: 'Obrisati sve zapise?',
     description: 'Obrisani zapisi neće moći da se vrate. Da biste sačuvali kopiju, prvo izvezite podatke.',
+    confirm: 'Obriši sve',
+    cancel: 'Otkaži',
+  },
+  deleteYearRowsModal: {
+    title: 'Očistiti {year}. godinu?',
     summary:
       'Biće obrisan {count} zapis u iznosu od {amount} RSD. | Biće obrisana {count} zapisa u iznosu od {amount} RSD. | Biće obrisano {count} zapisa u iznosu od {amount} RSD.',
-    period: 'Period: {years}.',
-    confirm: 'Obriši sve',
+    description: 'Obrisani zapisi neće moći da se vrate. Da biste sačuvali kopiju, prvo izvezite podatke.',
+    confirm: 'Očisti godinu',
     cancel: 'Otkaži',
   },
   reportPreviewScriptSwitcher: {

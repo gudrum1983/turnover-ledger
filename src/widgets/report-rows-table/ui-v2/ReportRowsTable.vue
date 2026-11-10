@@ -89,7 +89,7 @@ const options = [
             {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
           </ButtonWithIcon>
           <ButtonWithIcon :icon="IconTrash" variant="danger" @click="emit('clear')">
-            {{ t('ui.reportBuilderIncomeRecordsTable.clearTable') }}
+            {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
           </ButtonWithIcon>
         </div>
 
@@ -160,6 +160,8 @@ const options = [
 .ReportRowsTable_Footer {
   background: #8ebfd099;
   padding: 16px 16px 24px;
+  // Скругляем низ под радиус родительского PaperBlock (вне его — без скругления).
+  border-radius: 0 0 var(--radius-paper-block-inner, 0) var(--radius-paper-block-inner, 0);
 }
 
 .ReportRowsTable {

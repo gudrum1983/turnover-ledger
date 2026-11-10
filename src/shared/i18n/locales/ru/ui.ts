@@ -136,8 +136,11 @@ export const ruUi = {
     currency: 'Валюта',
     addRow: 'Добавить запись',
     clearTable: 'Очистить всё',
+    clearYear: 'Очистить год',
     sortByDate: 'Сортировать по дате',
     emptyHint: 'Таблица пустая, добавьте строку',
+    emptyTitle: 'За {year} год записей пока нет',
+    emptySubtitle: 'Добавьте первую строку дохода',
     total: 'Итого',
     totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
   },
@@ -195,10 +198,16 @@ export const ruUi = {
     title: 'Удалить все записи?',
     description:
       'Восстановить записи после удаления не получится. Чтобы сохранить копию, сначала сделайте экспорт данных.',
+    confirm: 'Удалить всё',
+    cancel: 'Отмена',
+  },
+  deleteYearRowsModal: {
+    title: 'Очистить {year} год?',
     summary:
       'Будет удалена {count} запись на сумму {amount} RSD. | Будут удалены {count} записи на сумму {amount} RSD. | Будут удалены {count} записей на сумму {amount} RSD.',
-    period: 'Период: {years}.',
-    confirm: 'Удалить всё',
+    description:
+      'Восстановить записи после удаления не получится. Чтобы сохранить копию, сначала сделайте экспорт данных.',
+    confirm: 'Очистить год',
     cancel: 'Отмена',
   },
   reportPreviewScriptSwitcher: {

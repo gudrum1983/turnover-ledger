@@ -6,8 +6,26 @@ import { FOOTER_FIELDS, HEADER_FIELDS } from './fields'
 import { cloneReportState, isReportState } from './lib'
 import type { ReportState } from './types'
 import { getHeaderFieldError, getPersonNameError } from './validation'
+import { REPORT_FIRST_YEAR } from '@/shared/constants/app'
 
 const STORE_ID = 'report-store'
+
+// Строка относится к году, если у неё корректная дата формата YYYY-MM-DD с этим годом.
+const isRowInYear = (row: ReportRow, year: number) =>
+  /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number(row.date.slice(0, 4)) === year
+
+const hasUnsortedRowsByDate = (list: ReportRow[]) => {
+  for (let index = 1; index < list.length; index += 1) {
+    const previousDate = list[index - 1]?.date ?? ''
+    const currentDate = list[index]?.date ?? ''
+
+    if (previousDate > currentDate) {
+      return true
+    }
+  }
+
+  return false
+}
 
 export const useReportStore = defineStore(STORE_ID, () => {
   const LOCAL_STORAGE_KEY = 'reportState'
@@ -29,11 +47,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
   })
   const rows = ref<ReportRow[]>([])
   const activeYear = ref(new Date().getFullYear())
-  const activeYearRows = computed(() =>
-    rows.value.filter(
-      (row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number(row.date.slice(0, 4)) === activeYear.value,
-    ),
-  )
+  const activeYearRows = computed(() => rows.value.filter((row) => isRowInYear(row, activeYear.value)))
 
   function setActiveYear(year: number) {
     activeYear.value = year
@@ -42,7 +56,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
   const yearSummaries = computed(() => {
     const currentYear = new Date().getFullYear()
     const counts = new Map<number, number>()
-    let earliestYear = currentYear
+    // Список начинается с REPORT_FIRST_YEAR, а если есть записи раньше — с самой ранней из них.
+    let earliestYear = Math.min(REPORT_FIRST_YEAR, currentYear)
 
     for (const row of rows.value) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(row.date)) continue
@@ -89,18 +104,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
   })
 
   const lastUsedCurrencyCode = computed(() => rows.value.at(-1)?.currency ?? 'EUR')
-  const hasUnsortedRows = computed(() => {
-    for (let index = 1; index < rows.value.length; index += 1) {
-      const previousDate = rows.value[index - 1]?.date ?? ''
-      const currentDate = rows.value[index]?.date ?? ''
-
-      if (previousDate > currentDate) {
-        return true
-      }
-    }
-
-    return false
-  })
+  const hasUnsortedRows = computed(() => hasUnsortedRowsByDate(rows.value))
+  const hasUnsortedActiveYearRows = computed(() => hasUnsortedRowsByDate(activeYearRows.value))
 
   const hasRowsFromDifferentYears = computed(() => {
     const years = new Set<string>()
@@ -192,6 +197,11 @@ export const useReportStore = defineStore(STORE_ID, () => {
     rows.value = []
   }
 
+  // Удаляет только строки активного года, записи других лет остаются.
+  function clearActiveYearRows() {
+    rows.value = rows.value.filter((row) => !isRowInYear(row, activeYear.value))
+  }
+
   function sortRowsByDate() {
     rows.value = [...rows.value].sort((left, right) => left.date.localeCompare(right.date))
   }
@@ -274,6 +284,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
     usedCurrencyCodes,
     lastUsedCurrencyCode,
     hasUnsortedRows,
+    hasUnsortedActiveYearRows,
     hasRowsFromDifferentYears,
     exportState,
     replaceState,
@@ -288,6 +299,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
     removeRowById,
     setRows,
     clearRows,
+    clearActiveYearRows,
     sortRowsByDate,
     hydrateFromLocalStorage,
   }

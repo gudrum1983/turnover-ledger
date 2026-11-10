@@ -26,7 +26,13 @@ const classes = computed(() => [
 
 <style scoped lang="scss">
 .PaperBlock {
-  border-radius: 32px;
+  --radius-paper-block: 32px;
+  --border-width-paper-block: 0px;
+  // Внутренний радиус для потомков, прижатых к краю блока (например, футер таблицы с фоном).
+  // Наследуется вниз по дереву, поэтому блок не нужно обрезать через overflow.
+  --radius-paper-block-inner: calc(var(--radius-paper-block) - var(--border-width-paper-block));
+
+  border-radius: var(--radius-paper-block);
   padding: 40px 30px;
   background: var(--white);
   box-shadow: 0 4px 16px 0 #0000000a;
@@ -49,9 +55,10 @@ const classes = computed(() => [
 }
 
 .PaperBlock_variant_default {
-  background: var(--white);
+  --border-width-paper-block: 1px;
 
-  border: 1px solid var(--neutral-200);
+  background: var(--white);
+  border: var(--border-width-paper-block) solid var(--neutral-200);
 }
 
 .PaperBlock_variant_meta {

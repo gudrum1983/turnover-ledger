@@ -137,8 +137,11 @@ export const enUi = {
     currency: 'Currency',
     addRow: 'Add record',
     clearTable: 'Clear all',
+    clearYear: 'Clear year',
     sortByDate: 'Sort by date',
     emptyHint: 'The table is empty, add a row',
+    emptyTitle: 'No records for {year} yet',
+    emptySubtitle: 'Add your first income record',
     total: 'Total',
     totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
   },
@@ -196,10 +199,15 @@ export const enUi = {
   deleteAllRowsModal: {
     title: 'Delete all records?',
     description: 'Once deleted, the records cannot be restored. To keep a copy, export your data first.',
+    confirm: 'Delete all',
+    cancel: 'Cancel',
+  },
+  deleteYearRowsModal: {
+    title: 'Clear {year}?',
     summary:
       '{count} record totaling {amount} RSD will be deleted. | {count} records totaling {amount} RSD will be deleted.',
-    period: 'Period: {years}.',
-    confirm: 'Delete all',
+    description: 'Once deleted, the records cannot be restored. To keep a copy, export your data first.',
+    confirm: 'Clear year',
     cancel: 'Cancel',
   },
   reportPreviewScriptSwitcher: {

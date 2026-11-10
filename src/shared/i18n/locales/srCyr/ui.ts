@@ -137,8 +137,11 @@ export const srCyrUi = {
     currency: 'Валута',
     addRow: 'Додај запис',
     clearTable: 'Обриши све',
+    clearYear: 'Очисти годину',
     sortByDate: 'Сортирај по датуму',
     emptyHint: 'Табела је празна, додајте ред',
+    emptyTitle: 'За {year}. годину још нема записа',
+    emptySubtitle: 'Додајте први запис о приходу',
     total: 'Укупно',
     totalLimitExceeded: 'Упозорење: укупан износ је премашио лимит',
   },
@@ -195,10 +198,15 @@ export const srCyrUi = {
   deleteAllRowsModal: {
     title: 'Обрисати све записе?',
     description: 'Обрисани записи неће моћи да се врате. Да бисте сачували копију, прво извезите податке.',
+    confirm: 'Обриши све',
+    cancel: 'Откажи',
+  },
+  deleteYearRowsModal: {
+    title: 'Очистити {year}. годину?',
     summary:
       'Биће обрисан {count} запис у износу од {amount} RSD. | Биће обрисана {count} записа у износу од {amount} RSD. | Биће обрисано {count} записа у износу од {amount} RSD.',
-    period: 'Период: {years}.',
-    confirm: 'Обриши све',
+    description: 'Обрисани записи неће моћи да се врате. Да бисте сачували копију, прво извезите податке.',
+    confirm: 'Очисти годину',
     cancel: 'Откажи',
   },
   reportPreviewScriptSwitcher: {
