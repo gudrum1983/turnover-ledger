@@ -4,6 +4,7 @@ export type ModalBaseSize = 'xs' | 'sm' | 'md' | 'lg'
 
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
+import { lockPageScroll } from '@/shared/lib/lockPageScroll'
 import { IconClose } from '@/shared/ui-v2/icons'
 import { ButtonIcon } from '@/shared/ui-v2/button-icon'
 import { useLocale } from '@/shared/i18n'
@@ -61,13 +62,13 @@ function trapFocus(event: KeyboardEvent) {
   const last = elements.at(-1)
   if (!first) {
     event.preventDefault()
-    container.value.focus()
+    container.value.focus({ preventScroll: true })
   } else if (event.shiftKey && (document.activeElement === first || document.activeElement === container.value)) {
     event.preventDefault()
-    last?.focus()
+    last?.focus({ preventScroll: true })
   } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === container.value)) {
     event.preventDefault()
-    first.focus()
+    first.focus({ preventScroll: true })
   }
 }
 
@@ -78,9 +79,9 @@ watch(
     if (value) {
       previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
       await nextTick()
-      if (open) container.value?.focus()
+      if (open) container.value?.focus({ preventScroll: true })
     } else {
-      previousFocus?.focus()
+      previousFocus?.focus({ preventScroll: true })
       previousFocus = null
     }
   },
@@ -101,7 +102,7 @@ const handleOverlayClick = () => {
 }
 
 let hasEscListener = false
-let originalBodyOverflow: string | null = null
+let unlockPageScroll: (() => void) | null = null
 
 const handleKeydown = (event: KeyboardEvent) => {
   if (event.key !== 'Escape' || !shouldCloseOnEsc) {
@@ -134,18 +135,10 @@ const setBodyScrollLock = (shouldLock: boolean) => {
   }
 
   if (shouldLock) {
-    if (originalBodyOverflow === null) {
-      originalBodyOverflow = document.body.style.overflow
-    }
-    document.body.style.overflow = 'hidden'
-    return
-  }
-
-  if (originalBodyOverflow !== null) {
-    document.body.style.overflow = originalBodyOverflow
-    originalBodyOverflow = null
+    unlockPageScroll ??= lockPageScroll()
   } else {
-    document.body.style.removeProperty('overflow')
+    unlockPageScroll?.()
+    unlockPageScroll = null
   }
 }
 
@@ -168,7 +161,7 @@ watch(
 onBeforeUnmount(() => {
   toggleEscListener(false)
   setBodyScrollLock(false)
-  previousFocus?.focus()
+  previousFocus?.focus({ preventScroll: true })
 })
 </script>
 

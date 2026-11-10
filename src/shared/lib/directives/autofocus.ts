@@ -23,7 +23,7 @@ function focusWithRetry(element: HTMLElement, binding: DirectiveBinding<boolean 
   const target = resolveTarget(element)
 
   if (target && isVisible(target)) {
-    target.focus()
+    target.focus({ preventScroll: true })
     return
   }
 
