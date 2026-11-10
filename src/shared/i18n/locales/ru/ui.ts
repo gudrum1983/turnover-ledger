@@ -151,6 +151,7 @@ export const ruUi = {
     edit: 'Изменить',
     copy: 'Копировать',
     remove: 'Удалить',
+    actions: 'Действия с записью',
   },
   reportRowForm: {
     currency: 'Валюта',

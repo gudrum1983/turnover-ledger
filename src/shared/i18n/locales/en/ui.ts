@@ -152,6 +152,7 @@ export const enUi = {
     edit: 'Edit',
     copy: 'Copy',
     remove: 'Delete',
+    actions: 'Record actions',
   },
   reportRowForm: {
     currency: 'Currency',

@@ -9,15 +9,21 @@ import { useLocale } from '@/shared/i18n'
 import type { I18nLocale } from '@/shared/i18n'
 import { ButtonIcon } from '@/shared/ui-v2/button-icon'
 import { IconPen, IconTrash, IconCopy } from '@/shared/ui-v2/icons'
+import { ActionMenu, type ActionMenuItem } from '@/shared/ui-v2/action-menu'
 
 type ReportTableRowProps = {
   index: number
   size: 'full' | 'short'
   row: ReportRow
   locale: I18nLocale
+  /** Значение grid-template-columns. Передаётся таблицей, чтобы совпадать с сеткой шапки.
+   * Без него используется сетка по умолчанию из стилей. */
+  columns?: string
+  /** Как показывать действия: buttons — три кнопки в ряд, menu — одна кнопка «⋯» с меню (для узкой колонки). */
+  actions?: 'buttons' | 'menu'
 }
 
-const props = defineProps<ReportTableRowProps>()
+const props = withDefaults(defineProps<ReportTableRowProps>(), { actions: 'buttons' })
 const { t } = useLocale()
 
 const emit = defineEmits<{
@@ -76,10 +82,27 @@ function handleClearRow() {
   emit('remove', props.row.id)
   closeDialogConfirm()
 }
+
+const menuItems = computed<ActionMenuItem[]>(() => [
+  { value: 'edit', label: t('ui.reportBuilderIncomeRecordsRow.edit'), icon: IconPen },
+  { value: 'copy', label: t('ui.reportBuilderIncomeRecordsRow.copy'), icon: IconCopy },
+  { value: 'remove', label: t('ui.reportBuilderIncomeRecordsRow.remove'), icon: IconTrash, danger: true },
+])
+
+function handleMenuSelect(value: string) {
+  if (value === 'edit') emit('edit', props.row.id)
+  else if (value === 'copy') emit('copy', props.row.id)
+  else if (value === 'remove') openDialogConfirm.value = true
+}
 </script>
 
 <template>
-  <div class="ReportTableRow u-typo-label-s" :class="{ ReportTableRow_short: isShort }" @click="emit('edit', row.id)">
+  <div
+    class="ReportTableRow u-typo-label-s"
+    :class="{ ReportTableRow_short: isShort }"
+    :style="{ gridTemplateColumns: columns }"
+    @click="emit('edit', row.id)"
+  >
     <div class="ReportTableRow_Column ReportTableRow_Column_type_number">
       {{ index + 1 }}
     </div>
@@ -148,32 +171,40 @@ function handleClearRow() {
       </div>
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_actions" @click.stop>
-      <ButtonIcon
-        :ariaLabel="t('ui.reportBuilderIncomeRecordsRow.edit')"
-        size="m"
-        variant="card"
-        @click="emit('edit', row.id)"
-      >
-        <IconPen size="s" />
-      </ButtonIcon>
+      <ActionMenu
+        v-if="actions === 'menu'"
+        :items="menuItems"
+        :ariaLabel="t('ui.reportBuilderIncomeRecordsRow.actions')"
+        @select="handleMenuSelect"
+      />
+      <template v-else>
+        <ButtonIcon
+          :ariaLabel="t('ui.reportBuilderIncomeRecordsRow.edit')"
+          size="m"
+          variant="card"
+          @click="emit('edit', row.id)"
+        >
+          <IconPen size="s" />
+        </ButtonIcon>
 
-      <ButtonIcon
-        :ariaLabel="t('ui.reportBuilderIncomeRecordsRow.copy')"
-        size="m"
-        variant="card"
-        @click="emit('copy', row.id)"
-      >
-        <IconCopy size="s" />
-      </ButtonIcon>
+        <ButtonIcon
+          :ariaLabel="t('ui.reportBuilderIncomeRecordsRow.copy')"
+          size="m"
+          variant="card"
+          @click="emit('copy', row.id)"
+        >
+          <IconCopy size="s" />
+        </ButtonIcon>
 
-      <ButtonIcon
-        :ariaLabel="t('ui.reportBuilderIncomeRecordsRow.remove')"
-        size="m"
-        variant="danger-card"
-        @click="openDialogConfirm = true"
-      >
-        <IconTrash size="s" />
-      </ButtonIcon>
+        <ButtonIcon
+          :ariaLabel="t('ui.reportBuilderIncomeRecordsRow.remove')"
+          size="m"
+          variant="danger-card"
+          @click="openDialogConfirm = true"
+        >
+          <IconTrash size="s" />
+        </ButtonIcon>
+      </template>
 
       <!--      <ReportTableRowButton
         :size="size"
@@ -213,6 +244,7 @@ function handleClearRow() {
 <style scoped lang="scss">
 .ReportTableRow {
   display: grid;
+  // Сетка по умолчанию; таблица может переопределить её пропом columns.
   grid-template-columns: 60px 120px auto 180px 180px 180px 144px;
   border-bottom: 1px solid #6e777840;
   transition: background-color var(--transition-color);
@@ -284,7 +316,7 @@ function handleClearRow() {
       }
 
       &_actions {
-        padding: 6px 8px;
+        padding: 4px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;

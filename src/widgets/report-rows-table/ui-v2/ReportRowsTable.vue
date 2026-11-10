@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ReportTableRow, type ReportRow } from '@/entities/report-row'
+import type { ReportRow } from '@/entities/report-row'
+import { useViewport } from '@/shared/lib'
+import ReportRowsTableDesktop from './ReportRowsTableDesktop.vue'
+import ReportRowsTableTablet from './ReportRowsTableTablet.vue'
+import ReportRowsTableMobile from './ReportRowsTableMobile.vue'
 import type { I18nLocale } from '@/shared/i18n'
 import { useLocale } from '@/shared/i18n'
 /*import { ButtonBase } from '@/shared/ui-v2/button-base'*/
@@ -33,6 +37,9 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useLocale()
+
+// На планшете и мобилке свои виды таблицы, переключатель «Краткий / Расширенный» там не показываем.
+const viewport = useViewport()
 
 const isFullTable = defineModel<boolean>('isFullTable', { required: true })
 
@@ -93,34 +100,41 @@ const options = [
           </ButtonWithIcon>
         </div>
 
-        <LabelContainer ariaLabel="Вариант таблицы" v-model="sizeRow" :options="options" size="l" />
+        <LabelContainer
+          v-if="viewport === 'desktop'"
+          ariaLabel="Вариант таблицы"
+          v-model="sizeRow"
+          :options="options"
+          size="l"
+        />
       </div>
 
       <div v-if="rows.length > 0">
-        <div class="ReportRowsTable_Header u-typo-label-s">
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.rowNumber') }}</div>
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.date') }}</div>
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.description') }}</div>
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.currency') }}</div>
-          <div>
-            {{ t('ui.reportBuilderIncomeRecordsTable.income') }}
-          </div>
-          <div>{{ t('ui.reportBuilderIncomeRecordsTable.income') }} в RSD</div>
-          <div></div>
-        </div>
-        <div class="ReportRowsTable_Rows">
-          <ReportTableRow
-            v-for="(row, index) in rows"
-            :key="row.id"
-            :index="index"
-            :locale="locale"
-            :row="row"
-            :size="sizeRow"
-            @edit="emit('edit', $event)"
-            @copy="emit('copy', $event)"
-            @remove="emit('remove', $event)"
-          />
-        </div>
+        <ReportRowsTableDesktop
+          v-if="viewport === 'desktop'"
+          :rows="rows"
+          :locale="locale"
+          :size="sizeRow"
+          @edit="emit('edit', $event)"
+          @copy="emit('copy', $event)"
+          @remove="emit('remove', $event)"
+        />
+        <ReportRowsTableTablet
+          v-else-if="viewport === 'tablet'"
+          :rows="rows"
+          :locale="locale"
+          @edit="emit('edit', $event)"
+          @copy="emit('copy', $event)"
+          @remove="emit('remove', $event)"
+        />
+        <ReportRowsTableMobile
+          v-else
+          :rows="rows"
+          :locale="locale"
+          @edit="emit('edit', $event)"
+          @copy="emit('copy', $event)"
+          @remove="emit('remove', $event)"
+        />
         <div v-if="rows.length > 0" class="ReportRowsTable_Footer">
           <div class="ReportRowsTable_TotalRow">
             <div class="ReportRowsTable_TotalIncome u-typo-subtitle-l">
@@ -185,24 +199,6 @@ const options = [
     gap: 10px;
   }
 
-  &_Header {
-    display: grid;
-    grid-template-columns: 60px 120px auto 180px 180px 180px 144px;
-    width: 100%;
-    /*  border: 1px solid var(--color-border-table-cell);*/
-    background: var(--neutral-200);
-    border-bottom: 1px solid #a7afb1;
-    min-height: 56px;
-
-    div {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      text-align: center;
-    }
-  }
-
   &_Empty {
     display: flex;
     gap: 10px;
@@ -214,11 +210,6 @@ const options = [
     border: 1px solid var(--color-border-table-cell);
     border-radius: 0 0 6px 6px;
     border-top: none;
-  }
-
-  &_Rows {
-    display: flex;
-    flex-direction: column;
   }
 
   &_TotalRow {

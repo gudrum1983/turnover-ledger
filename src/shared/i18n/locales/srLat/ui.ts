@@ -152,6 +152,7 @@ export const srLatUi = {
     edit: 'Izmeni',
     copy: 'Kopiraj',
     remove: 'Obriši',
+    actions: 'Radnje sa zapisom',
   },
   reportRowForm: {
     currency: 'Valuta',

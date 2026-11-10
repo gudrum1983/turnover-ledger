@@ -152,6 +152,7 @@ export const srCyrUi = {
     edit: 'Измени',
     copy: 'Копирај',
     remove: 'Обриши',
+    actions: 'Радње са записом',
   },
   reportRowForm: {
     currency: 'Валута',
