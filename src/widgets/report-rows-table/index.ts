@@ -1,1 +1,1 @@
-export { default as ReportRowsTable } from './ui/ReportRowsTable.vue'
+export { default as ReportRowsTable } from './ui-v2/ReportRowsTable.vue'
