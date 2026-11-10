@@ -18,6 +18,7 @@ export const ruUi = {
   },
   reportYearSelect: {
     buttonLabel: 'Отчёт за {year} год',
+    buttonMiddleLabel: 'за {year} год',
     year: 'Отчёт за {year} год',
     noRecords: '(записей нет)',
     records: {
@@ -129,11 +130,12 @@ export const ruUi = {
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: '№',
-    income: 'Доход',
-    description: 'Дата и описание',
+    income: 'Сумма',
+    date: 'Дата',
+    description: 'Описание',
     currency: 'Валюта',
-    addRow: 'Добавить строку',
-    clearTable: 'Очистить таблицу',
+    addRow: 'Добавить запись',
+    clearTable: 'Очистить всё',
     sortByDate: 'Сортировать по дате',
     emptyHint: 'Таблица пустая, добавьте строку',
     total: 'Итого',

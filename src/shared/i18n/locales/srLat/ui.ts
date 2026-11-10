@@ -19,6 +19,7 @@ export const srLatUi = {
   },
   reportYearSelect: {
     buttonLabel: 'Izveštaj za {year}. godinu',
+    buttonMiddleLabel: 'za {year}. godinu',
     year: 'Izveštaj za {year}. godinu',
     noRecords: '(nema zapisa)',
     records: {
@@ -130,11 +131,12 @@ export const srLatUi = {
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'Br.',
-    description: 'Datum i opis',
+    date: 'Datum',
+    description: 'Опис',
     income: 'Prihod',
     currency: 'Valuta',
-    addRow: 'Dodaj red',
-    clearTable: 'Obriši tabelu',
+    addRow: 'Dodaj zapis',
+    clearTable: 'Obriši sve',
     sortByDate: 'Sortiraj po datumu',
     emptyHint: 'Tabela je prazna, dodajte red',
     total: 'Ukupno',

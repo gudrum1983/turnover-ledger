@@ -19,6 +19,7 @@ export const enUi = {
   },
   reportYearSelect: {
     buttonLabel: 'Report for {year}',
+    buttonMiddleLabel: 'for {year}',
     year: 'Report for {year}',
     noRecords: '(no records)',
     records: {
@@ -130,11 +131,12 @@ export const enUi = {
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'No.',
-    description: 'Date and description',
+    date: 'Date',
+    description: 'Description',
     income: 'Income',
     currency: 'Currency',
-    addRow: 'Add row',
-    clearTable: 'Clear table',
+    addRow: 'Add record',
+    clearTable: 'Clear all',
     sortByDate: 'Sort by date',
     emptyHint: 'The table is empty, add a row',
     total: 'Total',

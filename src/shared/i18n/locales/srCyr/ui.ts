@@ -19,6 +19,7 @@ export const srCyrUi = {
   },
   reportYearSelect: {
     buttonLabel: 'Извештај за {year}. годину',
+    buttonMiddleLabel: 'за {year}. годину',
     year: 'Извештај за {year}. годину',
     noRecords: '(нема записа)',
     records: {
@@ -130,11 +131,12 @@ export const srCyrUi = {
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'Бр.',
-    description: 'Датум и опис',
+    date: 'Датум',
+    description: 'Опис',
     income: 'Приход',
     currency: 'Валута',
-    addRow: 'Додај ред',
-    clearTable: 'Обриши табелу',
+    addRow: 'Додај запис',
+    clearTable: 'Обриши све',
     sortByDate: 'Сортирај по датуму',
     emptyHint: 'Табела је празна, додајте ред',
     total: 'Укупно',
