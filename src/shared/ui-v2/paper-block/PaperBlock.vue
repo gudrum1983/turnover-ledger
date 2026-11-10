@@ -4,11 +4,18 @@ import { computed } from 'vue'
 type Props = {
   /** Фон поверхности: default — белый, meta — градиент с рисунком, info — градиент */
   variant: 'default' | 'meta' | 'info'
+  /** Убирает внутренние отступы */
+  noPadding?: boolean
+  overflow?: 'clip' | 'scroll' | 'auto'
 }
 
-const { variant = 'default' } = defineProps<Props>()
+const { variant = 'default', noPadding = false, overflow } = defineProps<Props>()
 
-const classes = computed(() => [`PaperBlock_variant_${variant}`])
+const classes = computed(() => [
+  `PaperBlock_variant_${variant}`,
+  { PaperBlock_noPadding: noPadding },
+  overflow && `PaperBlock_overflow_${overflow}`,
+])
 </script>
 
 <template>
@@ -23,6 +30,22 @@ const classes = computed(() => [`PaperBlock_variant_${variant}`])
   padding: 40px 30px;
   background: var(--white);
   box-shadow: 0 4px 16px 0 #0000000a;
+}
+
+.PaperBlock_noPadding {
+  padding: 0;
+}
+
+.PaperBlock_overflow_clip {
+  overflow: clip;
+}
+
+.PaperBlock_overflow_scroll {
+  overflow: scroll;
+}
+
+.PaperBlock_overflow_auto {
+  overflow: auto;
 }
 
 .PaperBlock_variant_default {
