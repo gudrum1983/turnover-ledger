@@ -32,7 +32,7 @@ const { t } = useLocale()
       <ReportMetaEditForm />
     </PaperBlock>
 
-    <PaperBlock variant="default" class="ReportBuilderPage_layout">
+    <PaperBlock variant="default" class="ReportBuilderPage_layout" no-padding overflow="clip">
       <ReportRowManage />
     </PaperBlock>
 
