@@ -188,13 +188,16 @@ export const srCyrUi = {
   },
   deleteRowModal: {
     title: 'Обрисати запис?',
-    description: 'Ова радња се не може опозвати.',
+    description: 'Обрисани запис неће моћи да се врати.',
     confirm: 'Обриши',
     cancel: 'Откажи',
   },
   deleteAllRowsModal: {
     title: 'Обрисати све записе?',
-    description: 'Сви подаци ће бити трајно уклоњени.',
+    description: 'Обрисани записи неће моћи да се врате. Да бисте сачували копију, прво извезите податке.',
+    summary:
+      'Биће обрисан {count} запис у износу од {amount} RSD. | Биће обрисана {count} записа у износу од {amount} RSD. | Биће обрисано {count} записа у износу од {amount} RSD.',
+    period: 'Период: {years}.',
     confirm: 'Обриши све',
     cancel: 'Откажи',
   },

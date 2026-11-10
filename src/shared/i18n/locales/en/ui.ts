@@ -189,13 +189,16 @@ export const enUi = {
   },
   deleteRowModal: {
     title: 'Delete this record?',
-    description: 'This action cannot be undone.',
+    description: 'Once deleted, the record cannot be restored.',
     confirm: 'Delete',
     cancel: 'Cancel',
   },
   deleteAllRowsModal: {
     title: 'Delete all records?',
-    description: 'All data will be permanently removed.',
+    description: 'Once deleted, the records cannot be restored. To keep a copy, export your data first.',
+    summary:
+      '{count} record totaling {amount} RSD will be deleted. | {count} records totaling {amount} RSD will be deleted.',
+    period: 'Period: {years}.',
     confirm: 'Delete all',
     cancel: 'Cancel',
   },

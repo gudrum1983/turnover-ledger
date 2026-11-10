@@ -188,13 +188,16 @@ export const srLatUi = {
   },
   deleteRowModal: {
     title: 'Obrisati zapis?',
-    description: 'Ova radnja se ne može opozvati.',
+    description: 'Obrisani zapis neće moći da se vrati.',
     confirm: 'Obriši',
     cancel: 'Otkaži',
   },
   deleteAllRowsModal: {
     title: 'Obrisati sve zapise?',
-    description: 'Svi podaci će biti trajno uklonjeni.',
+    description: 'Obrisani zapisi neće moći da se vrate. Da biste sačuvali kopiju, prvo izvezite podatke.',
+    summary:
+      'Biće obrisan {count} zapis u iznosu od {amount} RSD. | Biće obrisana {count} zapisa u iznosu od {amount} RSD. | Biće obrisano {count} zapisa u iznosu od {amount} RSD.',
+    period: 'Period: {years}.',
     confirm: 'Obriši sve',
     cancel: 'Otkaži',
   },

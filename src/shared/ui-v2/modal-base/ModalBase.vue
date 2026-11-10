@@ -349,4 +349,10 @@ onBeforeUnmount(() => {
     }
   }
 }
+
+.DialogConfirm {
+  .ModalBase-Header {
+    margin-bottom: 16px;
+  }
+}
 </style>
