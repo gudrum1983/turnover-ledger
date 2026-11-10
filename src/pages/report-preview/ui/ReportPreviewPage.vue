@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
                 v-model="script"
                 :size="headerSize === 's' ? 's' : 'l'"
               />
-              <ReportYearSelect class="no-print" :size="headerSize === 's' ? 'compact' : 'full'" />
+              <ReportYearSelect class="no-print" :size="headerSize === 's' ? 'compact' : 'full'" typography="body-m" />
             </div>
           </div>
         </template>
