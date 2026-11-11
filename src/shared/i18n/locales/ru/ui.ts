@@ -148,9 +148,9 @@ export const ruUi = {
     goodsShort: 'Тов.',
     servicesShort: 'Усл.',
     subtotalShort: 'Сум.',
-    edit: 'Изменить',
-    copy: 'Копировать',
-    remove: 'Удалить',
+    edit: 'редактировать',
+    copy: 'копировать',
+    remove: 'удалить',
     actions: 'Действия с записью',
   },
   reportRowForm: {

@@ -208,7 +208,7 @@ onBeforeUnmount(removeGlobalListeners)
             type="button"
             role="menuitem"
             tabindex="-1"
-            class="ActionMenu-Item u-typo-body-m"
+            class="ActionMenu-Item u-typo-body-small-s"
             :class="{ 'ActionMenu-Item_danger': item.danger }"
             @click="selectItem(item)"
           >
@@ -231,9 +231,8 @@ onBeforeUnmount(removeGlobalListeners)
     display: flex;
     flex-direction: column;
     gap: 2px;
-    min-width: 180px;
-    padding: 4px;
     border: 1px solid #d5dfe2;
+    padding: 4px;
     border-radius: 16px;
     background: var(--color-background-surface);
     box-shadow: 0 6px 16px 0 #00000033;
@@ -243,9 +242,9 @@ onBeforeUnmount(removeGlobalListeners)
   &-Item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     min-height: 40px;
-    padding: 0 16px;
+    padding: 12px 8px 12px 12px;
     border: none;
     border-radius: 24px;
     background: inherit;
