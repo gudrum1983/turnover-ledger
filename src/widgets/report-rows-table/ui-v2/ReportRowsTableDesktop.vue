@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { ReportTableRow, type ReportRow } from '@/entities/report-row'
 import type { I18nLocale } from '@/shared/i18n'
 import { useLocale } from '@/shared/i18n'
 import ReportRowsTableHeader from './ReportRowsTableHeader.vue'
+import { computed } from 'vue'
 
 // Десктопная таблица (≥ 1024 px): шапка-грид и строки в кратком или расширенном виде.
 const { rows, locale, size } = defineProps<{
@@ -32,7 +32,7 @@ const INCOME_COLUMN = {
 const COLUMNS = computed(() =>
   [
     '60px', // №
-    '120px', // дата
+    'clamp(90px, 10vw, 120px)', // дата
     'auto', // описание
     'clamp(90px, 10vw, 180px)', // валюта
     INCOME_COLUMN[size], // сумма
@@ -40,6 +40,9 @@ const COLUMNS = computed(() =>
     '144px', // действия
   ].join(' '),
 )
+
+/*const COLUMNS =
+  '60px clamp(90px, 10vw, 120px) auto clamp(90px, 10vw, 180px) clamp(124px, 10vw, 180px) clamp(124px, 10vw, 180px) 144px'*/
 </script>
 
 <template>

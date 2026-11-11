@@ -106,7 +106,7 @@ function handleMenuSelect(value: string) {
     <div class="ReportTableRow_Column ReportTableRow_Column_type_number">
       {{ index + 1 }}
     </div>
-    <div class="ReportTableRow_Column">
+    <div class="ReportTableRow_Column ReportTableRow_Column_type_date">
       {{ formatDateForUi(row.date) }}
     </div>
     <div class="ReportTableRow_Column ReportTableRow_Column_type_description">
@@ -250,7 +250,9 @@ function handleMenuSelect(value: string) {
   transition: background-color var(--transition-color);
   cursor: pointer;
 
-  &:hover {
+  // Подсветка как при ховере, когда по табу сфокусирована кнопка внутри строки.
+  &:hover,
+  &:has(:focus-visible) {
     background: var(--neutral-100);
   }
 
@@ -292,6 +294,13 @@ function handleMenuSelect(value: string) {
   }
 
   &_Description {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    overflow-wrap: anywhere;
   }
 
   &_Column {
@@ -309,10 +318,16 @@ function handleMenuSelect(value: string) {
 
       &_description {
         align-items: flex-start;
+        // Иначе grid-ячейка растягивается под длинный текст и обрезка не срабатывает.
+        min-width: 0;
       }
 
       &_income {
         align-items: flex-start;
+      }
+
+      &_date {
+        padding-inline: 0;
       }
 
       &_actions {

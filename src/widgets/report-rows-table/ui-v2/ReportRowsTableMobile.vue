@@ -21,8 +21,7 @@ const emit = defineEmits<{
 
 const { t } = useLocale()
 
-// TODO: задать свой состав и сетку колонок. Пока — как у десктопной строки, которую переиспользуем.
-const COLUMNS = '60px 120px auto 180px 180px 180px 144px'
+const COLUMNS = '60px 120px auto clamp(90px, 10vw, 180px) clamp(90px, 10vw, 180px) clamp(90px, 10vw, 180px) 48px'
 </script>
 
 <template>
@@ -57,12 +56,6 @@ const COLUMNS = '60px 120px auto 180px 180px 180px 144px'
 <style scoped lang="scss">
 .ReportRowsTableMobile {
   display: grid;
-  overflow-x: auto;
-
-  // Шапка и строки скроллятся вместе и растягиваются до ширины контента.
-  & > * {
-    min-width: max-content;
-  }
 
   &-Rows {
     display: flex;

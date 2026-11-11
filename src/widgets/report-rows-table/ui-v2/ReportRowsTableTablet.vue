@@ -24,15 +24,8 @@ const { t } = useLocale()
 // TODO: при необходимости поменять состав колонок — пока он как у десктопной строки, которую переиспользуем.
 // Валюта и две колонки сумм тянутся вместе с экраном: 10% ширины окна, но не меньше минимума и не больше 180px.
 // Минимум для сумм 124px вмещает любую сумму до годового лимита («5 999 999,99» + отступы ячейки ≈ 123px).
-const COLUMNS = [
-  '60px', // №
-  '90px', // дата
-  'auto', // описание
-  'clamp(90px, 10vw, 180px)', // валюта
-  'clamp(124px, 10vw, 180px)', // сумма
-  'clamp(124px, 10vw, 180px)', // сумма в RSD
-  '48px', // действия
-].join(' ')
+const COLUMNS =
+  '60px clamp(90px, 10vw, 120px) auto clamp(90px, 10vw, 180px) clamp(90px, 10vw, 180px) clamp(90px, 10vw, 180px) 48px'
 </script>
 
 <template>
@@ -67,12 +60,6 @@ const COLUMNS = [
 <style scoped lang="scss">
 .ReportRowsTableTablet {
   display: grid;
-  overflow-x: auto;
-
-  // Шапка и строки скроллятся вместе и растягиваются до ширины контента.
-  & > * {
-    min-width: max-content;
-  }
 
   &-Rows {
     display: flex;
