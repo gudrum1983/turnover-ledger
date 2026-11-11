@@ -6,10 +6,17 @@ import ReportRowsTableHeader from './ReportRowsTableHeader.vue'
 import { computed } from 'vue'
 
 // Десктопная таблица (≥ 1024 px): шапка-грид и строки в кратком или расширенном виде.
-const { rows, locale, size } = defineProps<{
+const {
+  rows,
+  locale,
+  size,
+  highlightedRowId = null,
+} = defineProps<{
   rows: ReportRow[]
   locale: I18nLocale
   size: 'short' | 'full'
+  /** id строки, которую нужно подсветить (новая или переместившаяся после смены даты) */
+  highlightedRowId?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -63,6 +70,7 @@ const COLUMNS = computed(() =>
         :index="index"
         :locale="locale"
         :row="row"
+        :highlighted="row.id === highlightedRowId"
         :columns="COLUMNS"
         :size="size"
         @edit="emit('edit', $event)"

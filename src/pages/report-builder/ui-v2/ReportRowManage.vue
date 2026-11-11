@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { type ReportRow } from '@/entities/report-row'
+import { type ReportRow, ROW_HIGHLIGHT_DURATION_MS } from '@/entities/report-row'
 import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
 import { getTableTotals, useReportStore } from '@/entities/report'
 import { formatMoney } from '@/shared/lib'
@@ -130,6 +130,23 @@ function handleSortRows() {
   store.sortRowsByDate()
 }
 
+// Подсветка новой строки или строки, у которой сменилась дата (она могла переместиться в таблице).
+const highlightedRowId = ref<string | null>(null)
+let highlightTimer: ReturnType<typeof setTimeout> | undefined
+
+async function highlightRow(id: string) {
+  clearTimeout(highlightTimer)
+  // Сбрасываем и ставим заново, чтобы анимация перезапустилась, если подсвечиваем ту же строку повторно.
+  highlightedRowId.value = null
+  await nextTick()
+  highlightedRowId.value = id
+  highlightTimer = setTimeout(() => {
+    highlightedRowId.value = null
+  }, ROW_HIGHLIGHT_DURATION_MS)
+}
+
+onBeforeUnmount(() => clearTimeout(highlightTimer))
+
 const toCents = (value: number) => Math.round(value * 100)
 
 const createRowId = () => {
@@ -163,9 +180,12 @@ function onSubmit(payload: ReportRowPayload) {
   }
 
   if (formMode.value === 'edit') {
+    const isDateChanged = store.getRowById(row.id)?.date !== row.date
     store.updateRowById(row.id, row)
+    if (isDateChanged) highlightRow(row.id)
   } else {
     store.addRow(row)
+    highlightRow(row.id)
   }
 
   closeModal()
@@ -204,6 +224,7 @@ function onSubmit(payload: ReportRowPayload) {
       :is-total-limit-exceeded="isTotalLimitExceeded"
       :has-unsorted-rows="hasUnsortedActiveYearRows"
       :has-rows-from-different-years="false"
+      :highlighted-row-id="highlightedRowId"
       @add="openCreateModal()"
       @sort="handleSortRows"
       @clear="openDialogConfirm = true"

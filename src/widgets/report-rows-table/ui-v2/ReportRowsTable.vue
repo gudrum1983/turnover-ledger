@@ -23,9 +23,11 @@ type Props = {
   isTotalLimitExceeded: boolean
   hasUnsortedRows: boolean
   hasRowsFromDifferentYears: boolean
+  /** id строки, которую нужно подсветить (новая или переместившаяся после смены даты) */
+  highlightedRowId?: string | null
 }
 
-const { rows, locale, displayTotalRsd } = defineProps<Props>()
+const { rows, locale, displayTotalRsd, highlightedRowId = null } = defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'add'): void
@@ -114,6 +116,7 @@ const options = [
           v-if="viewport === 'desktop'"
           :rows="rows"
           :locale="locale"
+          :highlighted-row-id="highlightedRowId"
           :size="sizeRow"
           @edit="emit('edit', $event)"
           @copy="emit('copy', $event)"
@@ -123,6 +126,7 @@ const options = [
           v-else-if="viewport === 'tablet'"
           :rows="rows"
           :locale="locale"
+          :highlighted-row-id="highlightedRowId"
           @edit="emit('edit', $event)"
           @copy="emit('copy', $event)"
           @remove="emit('remove', $event)"
@@ -131,6 +135,7 @@ const options = [
           v-else
           :rows="rows"
           :locale="locale"
+          :highlighted-row-id="highlightedRowId"
           @edit="emit('edit', $event)"
           @copy="emit('copy', $event)"
           @remove="emit('remove', $event)"

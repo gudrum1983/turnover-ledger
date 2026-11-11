@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { TagBase } from '@/shared/ui-v2/tag-base'
 import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import type { ReportRow } from '../model/types'
 import { getRowTotals } from '../model/lib'
+import { ROW_HIGHLIGHT_DURATION_MS } from '../model/constants'
 import { formatDateForUi, formatMoneySafe } from '@/shared/lib'
 import { useLocale } from '@/shared/i18n'
 import type { I18nLocale } from '@/shared/i18n'
@@ -21,9 +22,11 @@ type ReportTableRowProps = {
   columns?: string
   /** Как показывать действия: buttons — три кнопки в ряд, menu — одна кнопка «⋯» с меню (для узкой колонки). */
   actions?: 'buttons' | 'menu'
+  /** Подсветить строку (новая или переместившаяся после смены даты): жёлтый фон, затем затухание. */
+  highlighted?: boolean
 }
 
-const props = withDefaults(defineProps<ReportTableRowProps>(), { actions: 'buttons' })
+const props = withDefaults(defineProps<ReportTableRowProps>(), { actions: 'buttons', highlighted: false })
 const { t } = useLocale()
 
 const emit = defineEmits<{
@@ -74,6 +77,20 @@ const deleteRowDetails = computed(() => {
 
 const openDialogConfirm = ref(false)
 
+const rootRef = useTemplateRef<HTMLElement>('root')
+
+// Подсвеченная строка могла уехать за пределы экрана (добавлена в конец или сменила место по дате) — докручиваем к ней.
+watch(
+  () => props.highlighted,
+  async (isHighlighted) => {
+    if (!isHighlighted) return
+    await nextTick()
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    rootRef.value?.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' })
+  },
+  { immediate: true },
+)
+
 function closeDialogConfirm() {
   openDialogConfirm.value = false
 }
@@ -98,9 +115,10 @@ function handleMenuSelect(value: string) {
 
 <template>
   <div
+    ref="root"
     class="ReportTableRow u-typo-label-s"
-    :class="{ ReportTableRow_short: isShort }"
-    :style="{ gridTemplateColumns: columns }"
+    :class="{ ReportTableRow_short: isShort, ReportTableRow_highlighted: highlighted }"
+    :style="{ gridTemplateColumns: columns, animationDuration: `${ROW_HIGHLIGHT_DURATION_MS}ms` }"
     @click="emit('edit', row.id)"
   >
     <div class="ReportTableRow_Column ReportTableRow_Column_type_number">
@@ -260,6 +278,23 @@ function handleMenuSelect(value: string) {
     background: var(--neutral-200);
   }
 
+  // Длительность задаётся инлайном из ROW_HIGHLIGHT_DURATION_MS — по ней же таблица снимает подсветку.
+  // Фон в 5 раз шире строки: прозрачно | переход | жёлтый | переход | прозрачно, каждый участок — ширина строки.
+  // Сдвигая background-position, проводим жёлтую полосу через строку слева направо.
+  &_highlighted {
+    background-image: linear-gradient(
+      to right,
+      transparent 20%,
+      var(--yellow-400) 40%,
+      var(--yellow-400) 60%,
+      transparent 80%
+    );
+    background-size: 500% 100%;
+    background-repeat: no-repeat;
+    background-position-x: 0%;
+    animation-name: ReportTableRow-highlight;
+  }
+
   &_short {
     .ReportTableRow_Description {
     }
@@ -339,6 +374,24 @@ function handleMenuSelect(value: string) {
         gap: 4px;
       }
     }
+  }
+}
+
+// Из 3,5 с: 0,5 с полоса въезжает слева (≈14%), затем 3 с цвет постепенно уходит градиентом вправо.
+// 100% — справа от полосы (прозрачно), 50% — полоса во всю строку, 0% — слева от полосы (прозрачно).
+@keyframes ReportTableRow-highlight {
+  0% {
+    background-position-x: 100%;
+    animation-timing-function: ease-out;
+  }
+
+  14% {
+    background-position-x: 50%;
+    animation-timing-function: ease-in-out;
+  }
+
+  100% {
+    background-position-x: 0%;
   }
 }
 

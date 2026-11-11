@@ -8,9 +8,15 @@ import ReportRowsTableHeader from './ReportRowsTableHeader.vue'
 // TODO: заменить на собственную вёрстку по макету (например, карточки вместо строк). Пока переиспользуем
 // десктопную строку в кратком виде внутри горизонтального скролла, чтобы все действия (в т. ч. удаление
 // с подтверждением) работали. Компонент карточки строки, если понадобится, — в entities/report-row/ui-v2.
-const { rows, locale } = defineProps<{
+const {
+  rows,
+  locale,
+  highlightedRowId = null,
+} = defineProps<{
   rows: ReportRow[]
   locale: I18nLocale
+  /** id строки, которую нужно подсветить (новая или переместившаяся после смены даты) */
+  highlightedRowId?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -42,6 +48,7 @@ const COLUMNS = '60px 120px auto clamp(90px, 10vw, 180px) clamp(90px, 10vw, 180p
         :index="index"
         :locale="locale"
         :row="row"
+        :highlighted="row.id === highlightedRowId"
         :columns="COLUMNS"
         actions="menu"
         size="short"
