@@ -44,10 +44,6 @@ const { t } = useLocale()
 
 <style scoped lang="scss">
 .ReportBuilderPage {
-  :deep(.ReportBuilderPage_Main) {
-    padding-block: 40px;
-  }
-
   &-Meta {
     margin-block: 40px;
   }
