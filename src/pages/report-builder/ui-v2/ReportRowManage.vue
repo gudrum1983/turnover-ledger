@@ -4,13 +4,15 @@ import { storeToRefs } from 'pinia'
 import { type ReportRow, ROW_HIGHLIGHT_DURATION_MS } from '@/entities/report-row'
 import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
 import { getTableTotals, useReportStore } from '@/entities/report'
-import { formatMoney } from '@/shared/lib'
+import { formatMoney, useViewport } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
 import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
 import { ModalBase } from '@/shared/ui-v2/modal-base'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
-import { IconAddCircle } from '@/shared/ui-v2/icons'
+import { IconAddCircle, IconTrash } from '@/shared/ui-v2/icons'
+import { ButtonIcon } from '@/shared/ui-v2/button-icon'
+import { LabelContainer } from '@/shared/ui-v2/label-container'
 import { ReportYearSelect } from '@/features/report-year-select'
 import { ReportRowsTable } from '@/widgets/report-rows-table'
 
@@ -190,6 +192,27 @@ function onSubmit(payload: ReportRowPayload) {
 
   closeModal()
 }
+
+// На планшете и мобилке свои виды таблицы, переключатель «Краткий / Расширенный» там не показываем.
+const viewport = useViewport()
+
+const sizeRow = computed<'short' | 'full'>({
+  get: () => (isFullTable.value ? 'full' : 'short'),
+  set: (value) => {
+    isFullTable.value = value === 'full'
+  },
+})
+
+const options = [
+  {
+    value: 'short',
+    label: 'Краткий',
+  },
+  {
+    value: 'full',
+    label: 'Расширенный',
+  },
+]
 </script>
 
 <template>
@@ -198,7 +221,8 @@ function onSubmit(payload: ReportRowPayload) {
       <h2 class="ReportRowManage-Title u-typo-h2-l">
         {{ t('ui.reportBuilderSections.incomeRecords') }}
       </h2>
-      <ReportYearSelect size="middle" typography="button-l" placement="center" />
+
+      <ReportYearSelect size="middle" typography="button-l" placement="center" v-if="viewport !== 'mobile'" />
 
       <div v-if="rows.length < 1" class="ReportRowManage-Empty">
         <span class="u-typo-subtitle-l">{{
@@ -211,11 +235,56 @@ function onSubmit(payload: ReportRowPayload) {
           {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
         </ButtonWithIcon>
       </div>
+
+      <div class="ReportRowManage_Actions" v-if="rows.length">
+        <div class="ReportRowManage_Actions_left" v-if="viewport === 'desktop'">
+          <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
+            {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+          </ButtonWithIcon>
+          <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
+            {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
+          </ButtonWithIcon>
+        </div>
+
+        <div class="ReportRowManage_Actions_left" v-else-if="viewport === 'tablet'">
+          <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
+            {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+          </ButtonWithIcon>
+          <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
+            {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
+          </ButtonWithIcon>
+        </div>
+
+        <div class="ReportRowManage_Actions_mobile" v-else>
+          <ButtonIcon ariaLabel="Добавить строку" size="l" type="button" variant="page" @click="openCreateModal()">
+            <IconAddCircle size="m" />
+          </ButtonIcon>
+          <ReportYearSelect size="middle" typography="button-l" placement="center" />
+          <ButtonIcon
+            ariaLabel="Очистить год"
+            size="l"
+            type="button"
+            variant="danger"
+            @click="openDialogConfirm = true"
+          >
+            <IconTrash size="m" />
+          </ButtonIcon>
+        </div>
+
+        <LabelContainer
+          v-if="viewport === 'desktop'"
+          ariaLabel="Вариант таблицы"
+          v-model="sizeRow"
+          :options="options"
+          size="l"
+        />
+      </div>
     </div>
 
     <ReportRowsTable
       v-if="rows.length"
-      v-model:is-full-table="isFullTable"
+      :viewport="viewport"
+      :size-row="sizeRow"
       :rows="rows"
       :locale="localeStore.currentLocale"
       :report-title="t('ui.reportBuilderSections.incomeRecords')"
@@ -254,8 +323,8 @@ function onSubmit(payload: ReportRowPayload) {
       :title="t('ui.deleteYearRowsModal.title', { year: activeYear })"
       :message="clearYearMessage"
       :details="t('ui.deleteYearRowsModal.description')"
-      :labelActiveButton="t('ui.deleteYearRowsModal.confirm')"
-      :labelCancelButton="t('ui.deleteYearRowsModal.cancel')"
+      :labelPrimaryButton="t('ui.deleteYearRowsModal.confirm')"
+      :labelSecondaryButton="t('ui.deleteYearRowsModal.cancel')"
       type="delete"
       @confirm="handleClearTable"
     />
@@ -296,5 +365,27 @@ function onSubmit(payload: ReportRowPayload) {
     gap: 12px;
     margin-top: 24px;
   }
+}
+
+.ReportRowManage_Actions {
+  display: flex;
+  width: 100%;
+  padding-inline: 16px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.ReportRowManage_Actions_left {
+  padding-top: 40px;
+  display: flex;
+  gap: 24px;
+}
+
+.ReportRowManage_Actions_mobile {
+  display: flex;
+  padding-top: 8px;
+  width: 100%;
+  justify-content: space-between;
+  gap: 16px;
 }
 </style>

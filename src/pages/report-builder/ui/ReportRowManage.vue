@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { type ReportRow } from '@/entities/report-row'
 import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
 import { getTableTotals, useReportStore } from '@/entities/report'
-import { formatMoney } from '@/shared/lib'
+import { formatMoney, useViewport } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 import { ButtonBase } from '@/shared/ui/button-base'
 import { DialogConfirm } from '@/shared/ui/dialog-confirm'
@@ -18,6 +18,7 @@ const localeStore = useLocaleStore()
 const { t } = useLocale()
 
 const isFullTable = ref(true)
+const viewport = useViewport()
 const totalLimitRsdCents = 6_000_000 * 100
 
 const tableTotals = computed(() => getTableTotals(rows.value))
@@ -150,7 +151,8 @@ function onSubmit(payload: ReportRowPayload) {
 <template>
   <div class="ReportRowManage">
     <ReportRowsTable
-      v-model:is-full-table="isFullTable"
+      :viewport="viewport"
+      :size-row="isFullTable ? 'full' : 'short'"
       :rows="rows"
       :locale="localeStore.currentLocale"
       :report-title="t('ui.reportBuilderSections.incomeRecords')"
