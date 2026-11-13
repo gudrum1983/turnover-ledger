@@ -69,8 +69,8 @@ const displayTotalRsd = computed(() => formatMoneySafe(totalRsd.value, { showMin
 const deleteRowDetails = computed(() => {
   const summary = [formatDateForUi(props.row.date), props.row.description].filter(Boolean).join(', ')
   const totals = hasCurrency.value
-    ? `${displayTotalForeign.value || '-'} ${currencyLabel.value} (${displayTotalRsd.value} RSD)`
-    : `${displayTotalRsd.value} RSD`
+    ? `${displayTotalForeign.value || '-'}\u00A0${currencyLabel.value} (${displayTotalRsd.value}\u00A0RSD)`
+    : `${displayTotalRsd.value}\u00A0RSD`
 
   return [summary, totals].filter(Boolean).join(' - ')
 })
