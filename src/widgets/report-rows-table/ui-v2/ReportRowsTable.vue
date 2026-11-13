@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { ReportRow } from '@/entities/report-row'
-import { useViewport } from '@/shared/lib'
+import type { Viewport } from '@/shared/lib'
 import ReportRowsTableDesktop from './ReportRowsTableDesktop.vue'
 import ReportRowsTableTablet from './ReportRowsTableTablet.vue'
 import ReportRowsTableMobile from './ReportRowsTableMobile.vue'
 import type { I18nLocale } from '@/shared/i18n'
 import { useLocale } from '@/shared/i18n'
-/*import { ButtonBase } from '@/shared/ui-v2/button-base'*/
-/*import { IconAdd } from '@/shared/ui/icons'*/
-import { IconAddCircle, IconTrash } from '@/shared/ui-v2/icons'
-import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
-import { LabelContainer } from '@/shared/ui-v2/label-container'
 import { TagBase } from '@/shared/ui-v2/tag-base'
 
 type Props = {
   rows: ReportRow[]
+  /** Текущий вьюпорт: по нему выбирается вид таблицы (desktop / tablet / mobile) */
+  viewport: Viewport
+  /** Вид строк десктопной таблицы: краткий или расширенный */
+  sizeRow: 'short' | 'full'
   locale: I18nLocale
   reportTitle: string
   displayTotalRsd: string
@@ -39,67 +37,38 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useLocale()
-
-// На планшете и мобилке свои виды таблицы, переключатель «Краткий / Расширенный» там не показываем.
-const viewport = useViewport()
-
-const isFullTable = defineModel<boolean>('isFullTable', { required: true })
-
-const sizeRow = computed<'short' | 'full'>({
-  get: () => (isFullTable.value ? 'full' : 'short'),
-  set: (value) => {
-    isFullTable.value = value === 'full'
-  },
-})
-
-const options = [
-  {
-    value: 'short',
-    label: 'Краткий',
-  },
-  {
-    value: 'full',
-    label: 'Расширенный',
-  },
-]
 </script>
 
 <template>
   <div class="ReportRowsTable">
     <div class="ReportRowsTable_Fieldset">
-      <!--      <div class="ReportRowsTable_Actions">
-
-        <div class="ReportRowsTable_Alerts">
-          <div
-            v-if="isTotalLimitExceeded"
-            class="ReportRowsTable_Alert ReportRowsTable_Alert_Danger Typo_BodyAccent"
-            role="alert"
-          >
-            {{ t('ui.tableAlerts.annualLimit.message') }}.
-            <InfoHint :text="t('ui.tableAlerts.annualLimit.hint')" />
-          </div>
-          <div v-if="hasUnsortedRows" class="ReportRowsTable_Alert Typo_BodyAccent" role="alert">
-            {{ t('ui.tableAlerts.sortByDate.message') }}.
-            <InfoHint :text="t('ui.tableAlerts.sortByDate.hint')" />
-          </div>
-          <div v-if="hasRowsFromDifferentYears" class="ReportRowsTable_Alert Typo_BodyAccent" role="alert">
-            {{ t('ui.tableAlerts.differentYears.message') }}.
-            <InfoHint :text="t('ui.tableAlerts.differentYears.hint')" />
-          </div>
-          <ButtonBase v-if="rows.length > 0 && hasUnsortedRows" color="warning" size="xs" @click="emit('sort')">
-            {{ t('ui.reportBuilderIncomeRecordsTable.sortByDate') }}
-          </ButtonBase>
-        </div>
-      </div>-->
-
-      <div class="ReportRowManage_Actions" v-if="rows.length">
-        <div class="ReportRowManage_Actions_left">
+      <!--      <div class="ReportRowManage_Actions" v-if="rows.length">
+        <div class="ReportRowManage_Actions_left" v-if="viewport === 'desktop'">
           <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="emit('add')">
             {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
           </ButtonWithIcon>
           <ButtonWithIcon :icon="IconTrash" variant="danger" @click="emit('clear')">
             {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
           </ButtonWithIcon>
+        </div>
+
+        <div class="ReportRowManage_Actions_left" v-if="viewport === 'tablet'">
+          <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="emit('add')">
+            {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+          </ButtonWithIcon>
+          <ButtonWithIcon :icon="IconTrash" variant="danger" @click="emit('clear')">
+            {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
+          </ButtonWithIcon>
+        </div>
+
+        <div class="ReportRowManage_Actions_left" v-else>
+          <ButtonIcon ariaLabel="Добавить строку" size="l" type="button" variant="page" @click="emit('add')">
+            <IconAddCircle size="m" />
+          </ButtonIcon>
+
+          <ButtonIcon ariaLabel="Очистить год" size="l" type="button" variant="page" @click="emit('clear')">
+            <IconTrash size="m" />
+          </ButtonIcon>
         </div>
 
         <LabelContainer
@@ -109,7 +78,7 @@ const options = [
           :options="options"
           size="l"
         />
-      </div>
+      </div>-->
 
       <div v-if="rows.length > 0">
         <ReportRowsTableDesktop
