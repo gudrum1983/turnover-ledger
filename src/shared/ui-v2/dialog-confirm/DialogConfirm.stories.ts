@@ -21,8 +21,8 @@ const meta = {
     type: 'confirm',
     title: 'Подтвердить действие',
     message: 'Изменения будут применены к текущему отчёту.',
-    labelActiveButton: 'Подтвердить',
-    labelCancelButton: 'Отмена',
+    labelPrimaryButton: 'Подтвердить',
+    labelSecondaryButton: 'Отмена',
     autoFocusCancelButton: true,
   },
   argTypes: {
@@ -33,13 +33,13 @@ const meta = {
     },
     type: {
       control: 'select',
-      options: ['confirm', 'delete'],
+      options: ['confirm', 'delete', 'error'],
     },
     title: { control: 'text' },
     message: { control: 'text' },
     details: { control: 'text' },
-    labelActiveButton: { control: 'text' },
-    labelCancelButton: { control: 'text' },
+    labelPrimaryButton: { control: 'text' },
+    labelSecondaryButton: { control: 'text' },
     autoFocusCancelButton: { control: 'boolean' },
     content: {
       control: false,
@@ -86,7 +86,7 @@ export const Delete: Story = {
     type: 'delete',
     title: 'Удалить строку?',
     message: 'Это действие нельзя отменить.',
-    labelActiveButton: 'Удалить',
+    labelPrimaryButton: 'Удалить',
   },
 }
 
@@ -97,7 +97,7 @@ export const DeleteWithDetails: Story = {
     title: 'Удалить все записи?',
     message: 'Будут удалены 12 записей на сумму 1 234 567,00 RSD. Период: 2026.',
     details: 'Восстановить записи после удаления не получится. Чтобы сохранить копию, сначала сделайте экспорт данных.',
-    labelActiveButton: 'Удалить всё',
+    labelPrimaryButton: 'Удалить всё',
   },
 }
 

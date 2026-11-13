@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { ModalBase } from '@/shared/ui-v2/modal-base'
-import type { ModalBaseSize } from '@/shared/ui-v2/modal-base'
+import type { ModalBaseSize, ModalBaseTitleVariant } from '@/shared/ui-v2/modal-base'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
+import type { ButtonProps } from '@/shared/ui-v2/button-base'
 import { vAutofocus } from '@/shared/lib'
+
+type DialogConfirmType = 'confirm' | 'delete' | 'error'
 
 const {
   open,
@@ -11,8 +15,8 @@ const {
   message,
   details,
   type,
-  labelActiveButton = 'Action',
-  labelCancelButton = 'Cancel',
+  labelPrimaryButton = 'Action',
+  labelSecondaryButton = 'Cancel',
   autoFocusCancelButton = true,
 } = defineProps<{
   /** Управляет видимостью диалога */
@@ -20,17 +24,17 @@ const {
   /** Размер модального окна */
   size?: ModalBaseSize
   /** Визуальный тип подтверждающего действия */
-  type: 'confirm' | 'delete'
+  type: DialogConfirmType
   /** Основной текст сообщения */
   message: string
   /** Дополнительный текст под основным сообщением (второстепенный, светлый) */
   details?: string
   /** Заголовок диалога */
   title: string
-  /** Текст кнопки подтверждения */
-  labelActiveButton?: string
-  /** Текст кнопки отмены */
-  labelCancelButton?: string
+  /** Текст основной кнопки (подтверждение действия) */
+  labelPrimaryButton?: string
+  /** Текст альтернативной кнопки (отмена) */
+  labelSecondaryButton?: string
   /** Ставит автофокус на кнопку отмены при открытии */
   autoFocusCancelButton?: boolean
 }>()
@@ -40,6 +44,27 @@ const emit = defineEmits<{
   (event: 'confirm'): void
   (event: 'cancel'): void
 }>()
+
+// Модификатор корня по типу диалога: DialogConfirm_type_delete и т. д.
+const rootClasses = computed(() => ['DialogConfirm', `DialogConfirm_type_${type}`].join(' '))
+
+// Вид основной кнопки по типу диалога. У диалога ошибки основной кнопки нет — только закрытие.
+const PRIMARY_BUTTON_VARIANT: Record<DialogConfirmType, ButtonProps['variant'] | null> = {
+  confirm: 'accent',
+  delete: 'danger',
+  error: null,
+}
+
+const primaryButtonVariant = computed(() => PRIMARY_BUTTON_VARIANT[type])
+
+// Вид заголовка по типу диалога: удаление и ошибка — красным.
+const TITLE_VARIANT: Record<DialogConfirmType, ModalBaseTitleVariant> = {
+  confirm: 'default',
+  delete: 'danger',
+  error: 'danger',
+}
+
+const titleVariant = computed(() => TITLE_VARIANT[type])
 
 function closeDialog() {
   emit('update:open', false)
@@ -54,8 +79,9 @@ function handleCancel() {
 <template>
   <ModalBase
     :title="title"
+    :titleVariant="titleVariant"
     :open="open"
-    rootClass="DialogConfirm"
+    :rootClass="rootClasses"
     @update:open="closeDialog"
     shouldCloseOnOverlay
     shouldCloseOnEsc
@@ -68,14 +94,11 @@ function handleCancel() {
     <p v-if="details" class="DialogConfirm_Message_light u-typo-body-m">{{ details }}</p>
     <div class="DialogConfirm_Actions">
       <ButtonBase variant="page" v-autofocus="autoFocusCancelButton" @click="handleCancel">{{
-        labelCancelButton
+        labelSecondaryButton
       }}</ButtonBase>
 
-      <ButtonBase variant="accent" v-if="type === 'confirm'" @click="emit('confirm')">{{
-        labelActiveButton
-      }}</ButtonBase>
-      <ButtonBase variant="accent" v-if="type === 'delete'" @click="emit('confirm')">{{
-        labelActiveButton
+      <ButtonBase v-if="primaryButtonVariant" :variant="primaryButtonVariant" @click="emit('confirm')">{{
+        labelPrimaryButton
       }}</ButtonBase>
     </div>
   </ModalBase>

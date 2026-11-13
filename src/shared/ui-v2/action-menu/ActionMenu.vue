@@ -259,6 +259,10 @@ onBeforeUnmount(removeGlobalListeners)
       background: var(--neutral-100);
     }
 
+    &:active {
+      background: var(--blue-300);
+    }
+
     &:focus-visible {
       outline: none;
       box-shadow: 0 0 0 3px #f5c96a99;

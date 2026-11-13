@@ -1,5 +1,6 @@
 <script lang="ts">
 export type ModalBaseSize = 'xs' | 'sm' | 'md' | 'lg'
+export type ModalBaseTitleVariant = 'default' | 'danger'
 </script>
 
 <script setup lang="ts">
@@ -14,6 +15,8 @@ type ModalBaseProps = {
   open: boolean
   /**  Заголовок модального окна */
   title: string
+  /** Вид заголовка: danger — для опасных действий (удаление, ошибка) */
+  titleVariant?: ModalBaseTitleVariant
   /** Анимирует смену текста заголовка. */
   animateTitle?: boolean
   /**  Определяет наличие кнопки закрытия */
@@ -32,6 +35,7 @@ const {
   shouldCloseOnEsc = false,
   hasCloseButton = false,
   title,
+  titleVariant = 'default',
   animateTitle = false,
   rootClass = '',
 } = defineProps<ModalBaseProps>()
@@ -190,7 +194,11 @@ onBeforeUnmount(() => {
         <div class="ModalBase-Overlay" @click.self="handleOverlayClick">
           <div ref="container" class="ModalBase-Container" tabindex="-1">
             <div class="ModalBase-Header">
-              <span :id="titleId" class="ModalBase-Title u-typo-subtitle-l">
+              <span
+                :id="titleId"
+                class="ModalBase-Title u-typo-subtitle-l"
+                :class="`ModalBase-Title_variant_${titleVariant}`"
+              >
                 <Transition
                   :css="animateTitle"
                   enter-from-class="ModalBase-TitleText_enterFrom"
@@ -280,6 +288,10 @@ onBeforeUnmount(() => {
   position: relative;
   min-width: 0;
   overflow: clip;
+
+  &_variant_danger {
+    color: var(--red-500);
+  }
 }
 
 .ModalBase-TitleText {
