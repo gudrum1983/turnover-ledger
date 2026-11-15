@@ -18,5 +18,12 @@ export {
   isReportState,
   parseImportedReportState,
 } from './model/lib'
+export type { RollingLimitExceedance, YearLimitStatus } from './model/limits'
+export {
+  PAUSAL_ANNUAL_LIMIT_RSD_CENTS,
+  PDV_ROLLING_LIMIT_RSD_CENTS,
+  findRollingLimitExceedance,
+  getYearLimitStatus,
+} from './model/limits'
 export { useReportStore } from './model/store'
 export { getHeaderFieldError, getPersonNameError } from './model/validation'
