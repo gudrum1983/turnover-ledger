@@ -15,6 +15,15 @@ const STORE_ID = 'report-store'
 const isRowInYear = (row: ReportRow, year: number) =>
   /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number(row.date.slice(0, 4)) === year
 
+// Сортировка стабильная: записи с одной датой остаются в порядке добавления.
+const sortByDate = (list: ReportRow[]) => [...list].sort((left, right) => left.date.localeCompare(right.date))
+
+// Индекс, куда вставить запись, чтобы она встала после всех записей с той же или более ранней датой.
+const getInsertIndexByDate = (list: ReportRow[], date: string) => {
+  const index = list.findIndex((item) => item.date.localeCompare(date) > 0)
+  return index === -1 ? list.length : index
+}
+
 const hasUnsortedRowsByDate = (list: ReportRow[]) => {
   for (let index = 1; index < list.length; index += 1) {
     const previousDate = list[index - 1]?.date ?? ''
@@ -146,7 +155,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
       formData.footer[key] = snapshot.meta.footer[key]
     }
 
-    rows.value = snapshot.rows
+    rows.value = sortByDate(snapshot.rows)
   }
 
   function setHeaderValue(field: HeaderField, value: string) {
@@ -157,19 +166,30 @@ export const useReportStore = defineStore(STORE_ID, () => {
     formData.footer[field] = value
   }
 
+  // Строки всегда хранятся по дате: новая запись встаёт после записей с той же датой.
   function addRow(row: ReportRow) {
-    rows.value.push(row)
+    rows.value.splice(getInsertIndexByDate(rows.value, row.date), 0, row)
   }
 
   function updateRow(index: number, row: ReportRow) {
     if (index < 0 || index >= rows.value.length) return
-    rows.value[index] = row
+
+    // Дата не изменилась — запись остаётся на месте.
+    if (rows.value[index]!.date === row.date) {
+      rows.value[index] = row
+      return
+    }
+
+    // Дата изменилась — переставляем запись, как будто её добавили заново с новой датой.
+    rows.value.splice(index, 1)
+    addRow(row)
   }
 
   function updateRowById(id: string, row: ReportRow) {
-    const index = rows.value.findIndex((item) => item.id === id)
-    if (index === -1) return
-    rows.value[index] = row
+    updateRow(
+      rows.value.findIndex((item) => item.id === id),
+      row,
+    )
   }
 
   function getRow(index: number): ReportRow | null {
@@ -193,7 +213,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
   }
 
   function setRows(nextRows: ReportRow[]) {
-    rows.value = nextRows
+    rows.value = sortByDate(nextRows)
   }
 
   function clearRows() {
@@ -205,8 +225,9 @@ export const useReportStore = defineStore(STORE_ID, () => {
     rows.value = rows.value.filter((row) => !isRowInYear(row, activeYear.value))
   }
 
+  // Строки и так хранятся по дате; оставлено для v1 и для данных, изменённых в обход экшенов.
   function sortRowsByDate() {
-    rows.value = [...rows.value].sort((left, right) => left.date.localeCompare(right.date))
+    rows.value = sortByDate(rows.value)
   }
 
   function hydrateFromLocalStorage() {
@@ -253,7 +274,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
         }
 
         if (typeof parsed === 'object' && parsed !== null && 'rows' in parsed && Array.isArray(parsed.rows)) {
-          rows.value = parsed.rows as ReportRow[]
+          rows.value = sortByDate(parsed.rows as ReportRow[])
         }
 
         return

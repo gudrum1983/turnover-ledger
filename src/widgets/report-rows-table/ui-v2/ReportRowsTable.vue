@@ -209,8 +209,8 @@ const { t } = useLocale()
 }
 
 // Модификаторы футера по вьюпорту.
-.ReportRowsTable_Footer_desktop {
-}
+/*.ReportRowsTable_Footer_desktop {
+}*/
 
 .ReportRowsTable_Footer_tablet {
   justify-content: space-between;
