@@ -4,6 +4,7 @@ import type { ReportRow } from '@/entities/report-row/@x/report'
 import type { FooterField, HeaderField } from './fields'
 import { FOOTER_FIELDS, HEADER_FIELDS } from './fields'
 import { cloneReportState, isReportState } from './lib'
+import { getYearLimitStatus } from './limits'
 import type { ReportState } from './types'
 import { getHeaderFieldError, getPersonNameError } from './validation'
 import { REPORT_FIRST_YEAR } from '@/shared/constants/app'
@@ -48,6 +49,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
   const rows = ref<ReportRow[]>([])
   const activeYear = ref(new Date().getFullYear())
   const activeYearRows = computed(() => rows.value.filter((row) => isRowInYear(row, activeYear.value)))
+  // Лимиты считаются по всем записям: скользящее окно PDV захватывает и прошлый год.
+  const activeYearLimitStatus = computed(() => getYearLimitStatus(rows.value, activeYear.value))
 
   function setActiveYear(year: number) {
     activeYear.value = year
@@ -279,6 +282,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
     yearSummaries,
     activeYear,
     activeYearRows,
+    activeYearLimitStatus,
     setActiveYear,
     rows,
     usedCurrencyCodes,
