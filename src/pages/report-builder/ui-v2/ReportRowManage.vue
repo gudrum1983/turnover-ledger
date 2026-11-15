@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { type ReportRow, ROW_HIGHLIGHT_DURATION_MS } from '@/entities/report-row'
 import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
 import { getTableTotals, useReportStore } from '@/entities/report'
-import { formatMoney, useViewport } from '@/shared/lib'
+import { formatDateForUi, formatMoney, useViewport } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
 import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
@@ -14,11 +14,11 @@ import { IconAddCircle, IconTrash } from '@/shared/ui-v2/icons'
 import { ButtonIcon } from '@/shared/ui-v2/button-icon'
 import { LabelContainer } from '@/shared/ui-v2/label-container'
 import { ReportYearSelect } from '@/features/report-year-select'
-import { ReportRowsTable } from '@/widgets/report-rows-table'
+import { ReportRowsTable, type ReportRowsTableAlert } from '@/widgets/report-rows-table'
 
 const store = useReportStore()
 // Конструктор работает с записями выбранного года: таблица, итог, лимит и очистка.
-const { activeYearRows: rows, activeYear, hasUnsortedActiveYearRows } = storeToRefs(store)
+const { activeYearRows: rows, activeYear, activeYearLimitStatus, hasUnsortedActiveYearRows } = storeToRefs(store)
 
 const localeStore = useLocaleStore()
 const { t } = useLocale()
@@ -40,12 +40,38 @@ watch(isFullTable, (isFull) => {
     // localStorage недоступен — переключение работает без сохранения.
   }
 })
-const totalLimitRsdCents = 6_000_000 * 100
-
 const tableTotals = computed(() => getTableTotals(rows.value))
 const displayTotalRsd = computed(() => formatMoney(tableTotals.value.rsdCents, { locale: localeStore.currentLocale }))
-const displayTotalLimitRsd = computed(() => formatMoney(totalLimitRsdCents, { locale: localeStore.currentLocale }))
-const isTotalLimitExceeded = computed(() => tableTotals.value.rsdCents > totalLimitRsdCents)
+
+// Предупреждения о лимитах выбранного года: годовой лимит паушала и скользящий 12-месячный лимит PDV.
+const limitAlerts = computed<ReportRowsTableAlert[]>(() => {
+  const { isPausalLimitExceeded, pdvLimitExceedance } = activeYearLimitStatus.value
+  const locale = localeStore.currentLocale
+  const alerts: ReportRowsTableAlert[] = []
+
+  if (isPausalLimitExceeded) {
+    alerts.push({
+      id: 'pausal-limit',
+      message: t('ui.tableAlerts.pausalLimit.message'),
+      // Оборот за год не повторяем — он уже есть в «Итого» под таблицей.
+      details: t('ui.tableAlerts.pausalLimit.description'),
+    })
+  }
+
+  if (pdvLimitExceedance) {
+    alerts.push({
+      id: 'pdv-limit',
+      message: t('ui.tableAlerts.pdvLimit.message'),
+      details: t('ui.tableAlerts.pdvLimit.description'),
+      error: t('ui.tableAlerts.pdvLimit.details', {
+        date: formatDateForUi(pdvLimitExceedance.date),
+        amount: formatMoney(pdvLimitExceedance.totalRsdCents, { locale }),
+      }),
+    })
+  }
+
+  return alerts
+})
 
 const clearYearMessage = computed(() => {
   const count = rows.value.length
@@ -289,8 +315,7 @@ const options = [
       :locale="localeStore.currentLocale"
       :report-title="t('ui.reportBuilderSections.incomeRecords')"
       :display-total-rsd="displayTotalRsd"
-      :display-total-limit-rsd="displayTotalLimitRsd"
-      :is-total-limit-exceeded="isTotalLimitExceeded"
+      :limit-alerts="limitAlerts"
       :has-unsorted-rows="hasUnsortedActiveYearRows"
       :has-rows-from-different-years="false"
       :highlighted-row-id="highlightedRowId"
