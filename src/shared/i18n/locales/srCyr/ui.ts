@@ -177,12 +177,13 @@ export const srCyrUi = {
       hint: 'Приход за годину прелази 6.000.000 RSD.',
     },
     pausalLimit: {
-      message: 'Прекорачен лимит за паушал — 6 мил. RSD',
-      details: 'Приход за {year}. годину: {amount} RSD.',
+      message: 'Прекорачен лимит за паушал',
+      description: 'Лимит: 6 мил. RSD за календарску годину',
     },
     pdvLimit: {
-      message: 'Прекорачен лимит за ПДВ — 8 мил. RSD',
-      details: 'Приход за 12 месеци до {date}: {amount} RSD.',
+      message: 'Прекорачен праг за ПДВ',
+      description: 'Праг за обавезан улазак у систем ПДВ-а: 8\u00A0мил.\u00A0RSD за 12 узастопних месеци',
+      details: 'Промет на дан {date}: {amount}\u00A0RSD',
     },
     sortByDate: {
       message: 'Није по датуму',

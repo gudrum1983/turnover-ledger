@@ -178,12 +178,13 @@ export const enUi = {
       hint: 'Income for the year exceeds 6,000,000 RSD.',
     },
     pausalLimit: {
-      message: 'Lump-sum (paušal) limit exceeded — 6M RSD',
-      details: 'Income for {year}: {amount} RSD.',
+      message: 'Paušal limit exceeded',
+      description: 'Limit: 6M RSD per calendar year',
     },
     pdvLimit: {
-      message: 'VAT (PDV) limit exceeded — 8M RSD',
-      details: 'Income for the 12 months up to {date}: {amount} RSD.',
+      message: 'VAT threshold exceeded',
+      description: 'Mandatory VAT registration threshold: 8M\u00A0RSD over 12 consecutive months',
+      details: 'Turnover as of {date}: {amount}\u00A0RSD',
     },
     sortByDate: {
       message: 'Not sorted',
