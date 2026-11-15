@@ -175,6 +175,14 @@ export const ruUi = {
       message: 'Превышен лимит',
       hint: 'Доход за год превысил 6 000 000 RSD.',
     },
+    pausalLimit: {
+      message: 'Превышен лимит паушала — 6 млн RSD',
+      details: 'Доход за {year} год — {amount} RSD.',
+    },
+    pdvLimit: {
+      message: 'Превышен лимит НДС (PDV) — 8 млн RSD',
+      details: 'Доход за 12 месяцев по {date} — {amount} RSD.',
+    },
     sortByDate: {
       message: 'Не по дате',
       hint: 'Отсортируйте записи по дате — от ранних к поздним.',

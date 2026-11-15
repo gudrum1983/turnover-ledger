@@ -176,6 +176,14 @@ export const srLatUi = {
       message: 'Limit prekoračen',
       hint: 'Prihod za godinu prelazi 6.000.000 RSD.',
     },
+    pausalLimit: {
+      message: 'Prekoračen limit za paušal — 6 mil. RSD',
+      details: 'Prihod za {year}. godinu: {amount} RSD.',
+    },
+    pdvLimit: {
+      message: 'Prekoračen limit za PDV — 8 mil. RSD',
+      details: 'Prihod za 12 meseci do {date}: {amount} RSD.',
+    },
     sortByDate: {
       message: 'Nije po datumu',
       hint: 'Sortirajte zapise po datumu — od ranijih ka kasnijim.',
