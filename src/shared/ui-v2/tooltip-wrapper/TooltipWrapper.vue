@@ -6,13 +6,15 @@ import { toPxString } from '@/shared/lib/number'
 type Props = {
   /** Текст подсказки, видимой при наведении или фокусе внутри обёртки. */
   text: string
+  /** Текст ошибки: выводится над основным текстом выделенной плашкой, как в FieldTooltip. */
+  errorText?: string
   /** Устаревший пропс: текущий TooltipBase не поддерживает размеры. */
   size?: 'sm' | 'md' | 'lg'
   /** Максимальная ширина подсказки в пикселях, передаваемая в TooltipBase. */
   maxWidth?: number
 }
 
-const { text, size = 'sm', maxWidth } = defineProps<Props>()
+const { text, errorText, size = 'sm', maxWidth } = defineProps<Props>()
 
 const VIEWPORT_GAP = 18
 
@@ -78,8 +80,18 @@ onBeforeUnmount(() => {
   <span class="TooltipWrapper" @mouseenter="updateTooltipPosition" @focusin="updateTooltipPosition">
     <slot />
 
-    <TooltipBase ref="tooltipRef" class="TooltipWrapper_Tooltip u-typo-body-small-m" :size="size" :max-width="maxWidth">
-      {{ text }}
+    <TooltipBase
+      ref="tooltipRef"
+      class="TooltipWrapper_Tooltip u-typo-body-small-m"
+      :class="{ TooltipWrapper_Tooltip_error: Boolean(errorText) }"
+      :size="size"
+      :max-width="maxWidth"
+    >
+      <template v-if="errorText">
+        <span class="TooltipWrapper-Error">{{ errorText }}</span>
+        <span class="TooltipWrapper-Text">{{ text }}</span>
+      </template>
+      <template v-else>{{ text }}</template>
     </TooltipBase>
   </span>
 </template>
@@ -94,6 +106,8 @@ onBeforeUnmount(() => {
 
 .TooltipWrapper_Tooltip {
   position: absolute;
+  // Переносы строк из текста (\n) отображаются как есть.
+  white-space: pre-line;
   z-index: 10;
   left: 50%;
   top: v-bind(tooltipTopValue);
@@ -106,6 +120,27 @@ onBeforeUnmount(() => {
     opacity var(--transition-color),
     transform var(--transition-color),
     visibility 0s linear var(--transition-duration-hover);
+}
+
+// С ошибкой — ошибка и текст столбиком, как в FieldTooltip.
+.TooltipWrapper_Tooltip_error {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.TooltipWrapper-Error {
+  display: block;
+  background: var(--red-200);
+  color: var(--neutral-900);
+  border-radius: 4px;
+  border-left: 1px solid var(--red-500);
+  padding: 2px 4px;
+}
+
+.TooltipWrapper-Text {
+  display: block;
+  padding: 2px 4px;
 }
 
 // Кончик тултипа. Цвет наследуется от TooltipBase, чтобы не дублировать его здесь.
