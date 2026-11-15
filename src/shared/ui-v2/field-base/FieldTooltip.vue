@@ -124,7 +124,6 @@ onBeforeUnmount(() => {
 }
 
 .FieldTooltip-Body {
-  background: var(--neutral-600);
   display: flex;
   flex-direction: column;
   gap: 2px;

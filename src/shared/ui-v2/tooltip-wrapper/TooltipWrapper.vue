@@ -24,6 +24,11 @@ const horizontalShiftValue = computed(() => toPxString(horizontalShift.value))
 const tooltipBottomValue = computed(() => (isTooltipBelow.value ? 'auto' : 'calc(100% + 8px)'))
 const tooltipTopValue = computed(() => (isTooltipBelow.value ? 'calc(100% + 8px)' : 'auto'))
 const tooltipOffsetValue = computed(() => (isTooltipBelow.value ? '-4px' : '4px'))
+// Тултип у края экрана сдвигается, а кончик остаётся по центру триггера.
+const arrowLeftValue = computed(() => `calc(50% - ${toPxString(horizontalShift.value)})`)
+const arrowTopValue = computed(() => (isTooltipBelow.value ? '-4px' : 'auto'))
+const arrowBottomValue = computed(() => (isTooltipBelow.value ? 'auto' : '-4px'))
+const arrowBorderRadius = computed(() => (isTooltipBelow.value ? '2px 0 0 0' : '0 0 2px 0'))
 
 async function updateTooltipPosition() {
   horizontalShift.value = 0
@@ -101,6 +106,21 @@ onBeforeUnmount(() => {
     opacity var(--transition-color),
     transform var(--transition-color),
     visibility 0s linear var(--transition-duration-hover);
+}
+
+// Кончик тултипа. Цвет наследуется от TooltipBase, чтобы не дублировать его здесь.
+.TooltipWrapper_Tooltip::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: v-bind(arrowLeftValue);
+  top: v-bind(arrowTopValue);
+  bottom: v-bind(arrowBottomValue);
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  border-radius: v-bind(arrowBorderRadius);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 .TooltipWrapper:hover .TooltipWrapper_Tooltip,
