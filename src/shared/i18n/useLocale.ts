@@ -10,7 +10,9 @@ export function useLocale() {
 
   const locale = computed(() => localeStore.currentLocale)
 
-  const t = (key: I18nMessageKey, named: Record<string, string | number> = {}): string => i18nTranslate(key, named)
+  // plural — число для выбора формы в сообщениях вида 'запись | записи | записей'
+  const t = (key: I18nMessageKey, named: Record<string, string | number> = {}, plural?: number): string =>
+    plural === undefined ? i18nTranslate(key, named) : i18nTranslate(key, named, plural)
 
   const setLocale = (next: I18nLocale) => {
     localeStore.setLocale(next)

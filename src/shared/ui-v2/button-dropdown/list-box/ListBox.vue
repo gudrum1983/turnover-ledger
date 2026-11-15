@@ -100,9 +100,9 @@ const handleSelect = (value: string) => {
         :aria-selected="option.value === modelValue"
         @click="handleSelect(option.value)"
       >
-        <span
-          >{{ option.label
-          }}<span v-if="option.description" class="ListBox_ItemDescription"> {{ option.description }}</span></span
+        <span>
+          {{ option.label
+          }}<span v-if="option.description" class="ListBox_ItemDescription"> {{ ' ' + option.description }}</span></span
         >
       </button>
     </div>
@@ -112,7 +112,7 @@ const handleSelect = (value: string) => {
 <style scoped lang="scss">
 .ListBox {
   display: flex;
-  padding: 8px;
+  padding: 4px;
   border-radius: 16px;
   background: var(--color-background-surface);
   /*box-shadow: var(--shadow);*/
@@ -122,6 +122,7 @@ const handleSelect = (value: string) => {
   box-shadow: 0 6px 16px 0 #00000033;
 
   &_List {
+    padding: 4px;
     overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
@@ -154,9 +155,13 @@ const handleSelect = (value: string) => {
       transition: all var(--transition);
     }
 
-    &:hover,
+    &:hover {
+      background: var(--neutral-100);
+    }
+
     &_focused {
       background: var(--neutral-100);
+      box-shadow: 0 0 0 3px #f5c96a99;
     }
 
     &:active {
@@ -172,6 +177,15 @@ const handleSelect = (value: string) => {
       color: var(--white);
       .ListBox_ItemDescription {
         color: var(--white);
+      }
+
+      &:hover {
+        background: var(--blue-300);
+      }
+
+      &.ListBox_Item_focused {
+        background: var(--blue-300);
+        box-shadow: 0 0 0 3px #f5c96a99;
       }
     }
   }

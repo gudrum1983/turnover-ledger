@@ -11,6 +11,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "build:preview": "vue-tsc --build && vite build --base=/turnover-ledger-preview/ --outDir=build-preview && npm run build-storybook -- --output-dir build-preview/storybook",
     "preview": "vite preview",
+    "sync:preview": "bash scripts/sync-preview.sh",
     "build-only": "vite build",
     "test": "vitest run --config vitest.unit.config.ts",
     "test:watch": "vitest --config vitest.unit.config.ts",

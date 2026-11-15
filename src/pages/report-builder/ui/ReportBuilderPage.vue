@@ -2,7 +2,7 @@
 import { ReportMetaEditForm } from '@/features/report-meta-edit'
 import { LocaleSwitcher } from '@/features/locale-switcher'
 import { ReportActions } from '@/features/report-import-export'
-import { ReportRowManage } from '@/features/report-row-manage'
+import ReportRowManage from './ReportRowManage.vue'
 
 import { PaperBase } from '@/shared/ui/paper-base'
 import { AppHeader } from '@/widgets/app-header'

@@ -18,6 +18,7 @@ const meta = {
   args: { text: 'Дополнительная информация', maxWidth: 240 },
   argTypes: {
     text: { control: 'text' },
+    errorText: { control: 'text' },
     maxWidth: { control: { type: 'number', min: 0 } },
     size: { control: false },
   },
@@ -37,4 +38,12 @@ export const LongText: Story = {
 export const NearViewportEdge: Story = {
   name: 'У края экрана',
   parameters: { layout: 'padded' },
+}
+export const WithError: Story = {
+  name: 'С ошибкой',
+  args: {
+    text: 'Порог обязательной регистрации в системе НДС: 8 млн RSD за 12 месяцев подряд',
+    errorText: 'Оборот на 01.03.2025: 8 120 000,00 RSD',
+    maxWidth: 240,
+  },
 }

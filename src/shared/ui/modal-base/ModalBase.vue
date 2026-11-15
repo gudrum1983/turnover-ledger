@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, watch } from 'vue'
+import { lockPageScroll } from '@/shared/lib/lockPageScroll'
 import { PaperBase } from '@/shared/ui/paper-base'
 import type { ModalBaseProps } from './types'
 
@@ -30,7 +31,7 @@ const handleOverlayClick = () => {
 }
 
 let hasEscListener = false
-let originalBodyOverflow: string | null = null
+let unlockPageScroll: (() => void) | null = null
 
 const handleKeydown = (event: KeyboardEvent) => {
   if (event.key !== 'Escape' || !shouldCloseOnEsc) {
@@ -63,18 +64,10 @@ const setBodyScrollLock = (shouldLock: boolean) => {
   }
 
   if (shouldLock) {
-    if (originalBodyOverflow === null) {
-      originalBodyOverflow = document.body.style.overflow
-    }
-    document.body.style.overflow = 'hidden'
-    return
-  }
-
-  if (originalBodyOverflow !== null) {
-    document.body.style.overflow = originalBodyOverflow
-    originalBodyOverflow = null
+    unlockPageScroll ??= lockPageScroll()
   } else {
-    document.body.style.removeProperty('overflow')
+    unlockPageScroll?.()
+    unlockPageScroll = null
   }
 }
 

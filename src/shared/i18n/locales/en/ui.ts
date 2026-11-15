@@ -19,6 +19,7 @@ export const enUi = {
   },
   reportYearSelect: {
     buttonLabel: 'Report for {year}',
+    buttonMiddleLabel: 'for {year}',
     year: 'Report for {year}',
     noRecords: '(no records)',
     records: {
@@ -130,13 +131,17 @@ export const enUi = {
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'No.',
-    description: 'Date and description',
+    date: 'Date',
+    description: 'Description',
     income: 'Income',
     currency: 'Currency',
-    addRow: 'Add row',
-    clearTable: 'Clear table',
+    addRow: 'Add record',
+    clearTable: 'Clear all',
+    clearYear: 'Clear year',
     sortByDate: 'Sort by date',
     emptyHint: 'The table is empty, add a row',
+    emptyTitle: 'No records for {year} yet',
+    emptySubtitle: 'Add your first income record',
     total: 'Total',
     totalLimitExceeded: 'Warning: the total amount exceeded the limit of',
   },
@@ -147,6 +152,7 @@ export const enUi = {
     edit: 'Edit',
     copy: 'Copy',
     remove: 'Delete',
+    actions: 'Record actions',
   },
   reportRowForm: {
     currency: 'Currency',
@@ -171,6 +177,15 @@ export const enUi = {
       message: 'Limit exceeded',
       hint: 'Income for the year exceeds 6,000,000 RSD.',
     },
+    pausalLimit: {
+      message: 'Paušal limit exceeded',
+      description: 'Limit: 6M RSD per calendar year',
+    },
+    pdvLimit: {
+      message: 'VAT threshold exceeded',
+      description: 'Mandatory VAT registration threshold: 8M\u00A0RSD over 12 consecutive months',
+      details: 'Turnover as of {date}: {amount}\u00A0RSD',
+    },
     sortByDate: {
       message: 'Not sorted',
       hint: 'Sort records by date from earliest to latest.',
@@ -187,14 +202,22 @@ export const enUi = {
   },
   deleteRowModal: {
     title: 'Delete this record?',
-    description: 'This action cannot be undone.',
+    description: 'Once deleted, the record cannot be restored.',
     confirm: 'Delete',
     cancel: 'Cancel',
   },
   deleteAllRowsModal: {
     title: 'Delete all records?',
-    description: 'All data will be permanently removed.',
+    description: 'Once deleted, the records cannot be restored. To keep a copy, export your data first.',
     confirm: 'Delete all',
+    cancel: 'Cancel',
+  },
+  deleteYearRowsModal: {
+    title: 'Clear {year}?',
+    summary:
+      '{count} record totaling {amount} RSD will be deleted. | {count} records totaling {amount} RSD will be deleted.',
+    description: 'Once deleted, the records cannot be restored. To keep a copy, export your data first.',
+    confirm: 'Clear year',
     cancel: 'Cancel',
   },
   reportPreviewScriptSwitcher: {

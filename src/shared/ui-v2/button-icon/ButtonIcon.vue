@@ -4,7 +4,7 @@ import type { IconSize } from '../icons/sizes'
 
 type Props = {
   /** Визуальный вариант кнопки */
-  variant?: 'page' | 'accent' | 'success' | 'danger' | 'card'
+  variant?: 'page' | 'accent' | 'success' | 'danger' | 'card' | 'danger-card'
   /** Уменьшает видимую часть на 8 px, сохраняя область нажатия выбранного размера */
   touchTarget?: boolean
   /** Размер кнопки и области нажатия: m — 40 px, l — 48 px. */
@@ -13,6 +13,8 @@ type Props = {
   type?: 'button' | 'submit' | 'reset'
   /** Отключает взаимодействие с кнопкой */
   disabled?: boolean
+  /** Скрывает рамку во всех состояниях кнопки. */
+  noBorder?: boolean
   /** Доступное название кнопки для программ экранного доступа */
   ariaLabel: string
 }
@@ -23,6 +25,7 @@ const {
   size = 'l',
   type = 'button',
   disabled = false,
+  noBorder = false,
   ariaLabel,
 } = defineProps<Props>()
 
@@ -41,7 +44,7 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
 <template>
   <button
     class="ButtonIcon"
-    :class="`ButtonIcon_variant_${variant}`"
+    :class="[`ButtonIcon_variant_${variant}`, { ButtonIcon_noBorder: noBorder }]"
     :type="type"
     :disabled="disabled"
     :aria-label="ariaLabel"
@@ -118,6 +121,10 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   &:disabled .ButtonIcon-Surface {
     background: var(--btn-clr-bg-disabled);
     border-color: var(--btn-clr-border-disabled);
+  }
+
+  &.ButtonIcon_noBorder .ButtonIcon-Surface {
+    border-color: transparent;
   }
 }
 
@@ -206,9 +213,47 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   }
 
   &_card {
+    --btn-clr-text: var(--neutral-600);
+
+    --btn-clr-bg-hover: var(--neutral-200);
+    --btn-clr-bg-active: var(--neutral-300);
+    --btn-clr-bg-disabled: var(--neutral-100);
+    --btn-clr-bg-focus: var(--white);
+
+    --btn-clr-bg: transparent;
     --btn-clr-border: transparent;
     --btn-clr-border-hover: transparent;
     --btn-clr-border-active: transparent;
+
+    &:hover {
+      --btn-clr-text: var(--neutral-900);
+    }
+
+    &:focus-visible {
+      --btn-clr-text: var(--neutral-900);
+    }
+
+    &:focus-visible {
+      --btn-clr-text: var(--neutral-900);
+    }
+
+    &:active {
+      --btn-clr-text: var(--neutral-900);
+    }
+  }
+
+  &_danger-card {
+    --btn-clr-border: transparent;
+    --btn-clr-border-hover: transparent;
+    --btn-clr-border-active: transparent;
+
+    --btn-clr-bg: transparent;
+    --btn-clr-bg-hover: var(--red-200);
+    --btn-clr-bg-active: var(--red-300);
+    --btn-clr-bg-focus: var(--red-200);
+
+    --btn-clr-text: var(--red-500);
+    --btn-shadow-color: var(--red-500);
   }
 }
 </style>

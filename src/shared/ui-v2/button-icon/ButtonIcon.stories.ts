@@ -23,7 +23,7 @@ const meta = {
     ariaLabel: 'Загрузить данные',
   },
   argTypes: {
-    variant: { control: 'select', options: ['page', 'accent', 'success', 'danger', 'card'] },
+    variant: { control: 'select', options: ['page', 'accent', 'success', 'danger', 'card', 'danger-card'] },
     touchTarget: { control: 'boolean' },
     size: { control: 'select', options: ['m', 'l'] },
     type: { control: 'select', options: ['button', 'submit', 'reset'] },
@@ -47,6 +47,7 @@ export const Accent: Story = { args: { variant: 'accent' } }
 export const Success: Story = { args: { variant: 'success' } }
 export const Danger: Story = { args: { variant: 'danger' } }
 export const Card: Story = { args: { variant: 'card' } }
+export const DangerCard: Story = { args: { variant: 'danger-card' } }
 
 export const Medium: Story = { name: 'M — 40 px', args: { size: 'm' } }
 export const Large: Story = { name: 'L — 48 px', args: { size: 'l' } }

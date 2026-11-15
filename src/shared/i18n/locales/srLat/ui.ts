@@ -19,6 +19,7 @@ export const srLatUi = {
   },
   reportYearSelect: {
     buttonLabel: 'Izveštaj za {year}. godinu',
+    buttonMiddleLabel: 'za {year}. godinu',
     year: 'Izveštaj za {year}. godinu',
     noRecords: '(nema zapisa)',
     records: {
@@ -130,13 +131,17 @@ export const srLatUi = {
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: 'Br.',
-    description: 'Datum i opis',
+    date: 'Datum',
+    description: 'Опис',
     income: 'Prihod',
     currency: 'Valuta',
-    addRow: 'Dodaj red',
-    clearTable: 'Obriši tabelu',
+    addRow: 'Dodaj zapis',
+    clearTable: 'Obriši sve',
+    clearYear: 'Očisti godinu',
     sortByDate: 'Sortiraj po datumu',
     emptyHint: 'Tabela je prazna, dodajte red',
+    emptyTitle: 'Za {year}. godinu još nema zapisa',
+    emptySubtitle: 'Dodajte prvi zapis o prihodu',
     total: 'Ukupno',
     totalLimitExceeded: 'Upozorenje: ukupan iznos je premašio limit',
   },
@@ -147,6 +152,7 @@ export const srLatUi = {
     edit: 'Izmeni',
     copy: 'Kopiraj',
     remove: 'Obriši',
+    actions: 'Radnje sa zapisom',
   },
   reportRowForm: {
     currency: 'Valuta',
@@ -170,6 +176,15 @@ export const srLatUi = {
       message: 'Limit prekoračen',
       hint: 'Prihod za godinu prelazi 6.000.000 RSD.',
     },
+    pausalLimit: {
+      message: 'Prekoračen limit za paušal',
+      description: 'Limit: 6 mil. RSD za kalendarsku godinu',
+    },
+    pdvLimit: {
+      message: 'Prekoračen prag za PDV',
+      description: 'Prag za obavezan ulazak u sistem PDV-a: 8\u00A0mil.\u00A0RSD za 12 uzastopnih meseci',
+      details: 'Promet na dan {date}: {amount}\u00A0RSD',
+    },
     sortByDate: {
       message: 'Nije po datumu',
       hint: 'Sortirajte zapise po datumu — od ranijih ka kasnijim.',
@@ -186,14 +201,22 @@ export const srLatUi = {
   },
   deleteRowModal: {
     title: 'Obrisati zapis?',
-    description: 'Ova radnja se ne može opozvati.',
+    description: 'Obrisani zapis neće moći da se vrati.',
     confirm: 'Obriši',
     cancel: 'Otkaži',
   },
   deleteAllRowsModal: {
     title: 'Obrisati sve zapise?',
-    description: 'Svi podaci će biti trajno uklonjeni.',
+    description: 'Obrisani zapisi neće moći da se vrate. Da biste sačuvali kopiju, prvo izvezite podatke.',
     confirm: 'Obriši sve',
+    cancel: 'Otkaži',
+  },
+  deleteYearRowsModal: {
+    title: 'Očistiti {year}. godinu?',
+    summary:
+      'Biće obrisan {count} zapis u iznosu od {amount} RSD. | Biće obrisana {count} zapisa u iznosu od {amount} RSD. | Biće obrisano {count} zapisa u iznosu od {amount} RSD.',
+    description: 'Obrisani zapisi neće moći da se vrate. Da biste sačuvali kopiju, prvo izvezite podatke.',
+    confirm: 'Očisti godinu',
     cancel: 'Otkaži',
   },
   reportPreviewScriptSwitcher: {

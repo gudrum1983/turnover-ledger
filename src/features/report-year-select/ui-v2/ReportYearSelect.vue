@@ -2,12 +2,21 @@
 import { computed } from 'vue'
 import { Translation } from 'vue-i18n'
 import { useReportStore } from '@/entities/report'
-import { ButtonDropdown } from '@/shared/ui-v2/button-dropdown'
+import { ButtonDropdown, type DropdownTypography, type DropdownPlacement } from '@/shared/ui-v2/button-dropdown'
 import { useReportYearOptions } from '../model/useReportYearOptions'
 
-withDefaults(defineProps<{ size?: 'compact' | 'full' }>(), {
-  size: 'full',
-})
+withDefaults(
+  defineProps<{
+    size?: 'compact' | 'middle' | 'full'
+    typography?: DropdownTypography
+    placement?: DropdownPlacement
+  }>(),
+  {
+    size: 'full',
+    typography: 'body-m',
+    placement: 'right',
+  },
+)
 
 const store = useReportStore()
 const { options } = useReportYearOptions()
@@ -22,12 +31,12 @@ const model = computed({
 </script>
 
 <template>
-  <ButtonDropdown v-model="model" :options="options">
+  <ButtonDropdown v-model="model" :options="options" :typography="typography" :placement="placement">
     <template #label>
       <span v-if="size === 'compact'" class="ReportYearSelect_Year">{{ model }}</span>
       <Translation
         v-else
-        keypath="ui.reportYearSelect.buttonLabel"
+        :keypath="size === 'middle' ? 'ui.reportYearSelect.buttonMiddleLabel' : 'ui.reportYearSelect.buttonLabel'"
         scope="global"
         tag="span"
         class="ReportYearSelect_Label"

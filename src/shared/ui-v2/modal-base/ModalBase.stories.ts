@@ -50,6 +50,7 @@ const meta = {
           const attributes = [
             'v-model:open="open"',
             `title="${args.title}"`,
+            ...(args.titleVariant && args.titleVariant !== 'default' ? [`title-variant="${args.titleVariant}"`] : []),
             ...(args.animateTitle ? ['animate-title'] : []),
             ...(args.hasCloseButton ? ['has-close-button'] : []),
             ...(args.shouldCloseOnOverlay ? ['should-close-on-overlay'] : []),
@@ -68,6 +69,7 @@ const meta = {
   args: {
     open: false,
     title: 'Заголовок модального окна',
+    titleVariant: 'default',
     animateTitle: false,
     hasCloseButton: true,
     shouldCloseOnOverlay: true,
@@ -77,6 +79,7 @@ const meta = {
   argTypes: {
     open: { control: 'boolean' },
     title: { control: 'text' },
+    titleVariant: { control: 'select', options: ['default', 'danger'] },
     animateTitle: { control: 'boolean' },
     hasCloseButton: { control: 'boolean' },
     shouldCloseOnOverlay: { control: 'boolean' },
@@ -90,6 +93,10 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = { name: 'Песочница' }
+export const DangerTitle: Story = {
+  name: 'Заголовок danger',
+  args: { title: 'Удалить запись?', titleVariant: 'danger' },
+}
 export const WithoutCloseButton: Story = {
   name: 'Без крестика',
   args: { hasCloseButton: false },

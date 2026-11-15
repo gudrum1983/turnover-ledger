@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
-import type { DropdownOption } from './types'
+import type { DropdownOption, DropdownTypography, DropdownPlacement } from './types'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
 import { ListBox } from './list-box'
 import { DisclosureChevron } from '@/shared/ui-v2/disclosure-chevron'
@@ -14,9 +14,20 @@ type Props = {
   disabled?: boolean
   /** Класс корневого DOM-элемента */
   rootClass?: string
+  /** Типографика подписи кнопки */
+  typography?: DropdownTypography
+  /** Выравнивание меню относительно кнопки */
+  placement?: DropdownPlacement
 }
 
-const { options, modelValue, disabled = false, rootClass = '' } = defineProps<Props>()
+const {
+  options,
+  modelValue,
+  disabled = false,
+  rootClass = '',
+  typography = 'body-m',
+  placement = 'right',
+} = defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
@@ -26,6 +37,7 @@ const emit = defineEmits<{
 const dropdownRef = ref<HTMLElement | null>(null)
 const listBoxRef = ref<InstanceType<typeof ListBox> | null>(null)
 const isOpen = ref(false)
+const isKeyboardNavigation = ref(false)
 const listId = useId()
 const highlightedValue = ref<string>()
 const highlightedIndex = computed(() => options.findIndex((option) => option.value === highlightedValue.value))
@@ -104,6 +116,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     return
   }
   if (['Enter', ' ', 'ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'].includes(event.key)) {
+    isKeyboardNavigation.value = true
     event.preventDefault()
     if (event.key === 'Enter' || event.key === ' ') {
       if (isOpen.value) commitSelection()
@@ -125,6 +138,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     return
   }
   if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    isKeyboardNavigation.value = true
     event.preventDefault()
     if (!isOpen.value) openMenu()
     const now = Date.now()
@@ -156,7 +170,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="dropdownRef" class="ButtonDropdown" :class="rootClass">
+  <div ref="dropdownRef" class="ButtonDropdown" :class="rootClass" @pointerdown="isKeyboardNavigation = false">
     <ButtonBase
       variant="page"
       role="combobox"
@@ -172,7 +186,7 @@ onBeforeUnmount(() => {
     >
       <slot name="trigger" :active-option="activeOption" :active-label="activeLabel" :is-open="isOpen">
         <div class="ButtonDropdown_Trigger">
-          <span class="ButtonDropdown_Label u-typo-body-m">
+          <span class="ButtonDropdown_Label" :class="`u-typo-${typography}`">
             <slot name="label" :active-option="activeOption" :active-label="activeLabel">{{ activeLabel }}</slot>
           </span>
           <DisclosureChevron :open="isOpen" />
@@ -180,14 +194,14 @@ onBeforeUnmount(() => {
       </slot>
     </ButtonBase>
     <Transition name="button-dropdown-menu" @enter="listBoxRef?.scrollToSelected()">
-      <div v-if="isOpen" class="ButtonDropdown_Menu">
+      <div v-if="isOpen" class="ButtonDropdown_Menu" :class="`ButtonDropdown_Menu_${placement}`">
         <div class="ButtonDropdown_MenuContent">
           <ListBox
             ref="listBoxRef"
             class="ButtonDropdown_ListBox"
             :id="listId"
             :option-id-prefix="listId"
-            :active-value="highlightedValue"
+            :active-value="isKeyboardNavigation ? highlightedValue : undefined"
             :options="options"
             @mousedown.prevent
             :model-value="modelValue"
@@ -221,7 +235,6 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-rows: 1fr;
   position: absolute;
-  right: 0;
   top: calc(100% + 4px);
   box-sizing: border-box;
   width: 100%;
@@ -229,6 +242,19 @@ onBeforeUnmount(() => {
   z-index: 10;
   border-radius: 16px;
   box-shadow: 0 6px 16px 0 #00000033;
+}
+
+.ButtonDropdown_Menu_left {
+  left: 0;
+}
+
+.ButtonDropdown_Menu_center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ButtonDropdown_Menu_right {
+  right: 0;
 }
 
 .ButtonDropdown_MenuContent {

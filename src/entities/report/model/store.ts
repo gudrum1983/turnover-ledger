@@ -1,13 +1,41 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import type { ReportRow } from '@/entities/report-row'
+import type { ReportRow } from '@/entities/report-row/@x/report'
 import type { FooterField, HeaderField } from './fields'
 import { FOOTER_FIELDS, HEADER_FIELDS } from './fields'
 import { cloneReportState, isReportState } from './lib'
+import { getYearLimitStatus } from './limits'
 import type { ReportState } from './types'
 import { getHeaderFieldError, getPersonNameError } from './validation'
+import { REPORT_FIRST_YEAR } from '@/shared/constants/app'
 
 const STORE_ID = 'report-store'
+
+// Строка относится к году, если у неё корректная дата формата YYYY-MM-DD с этим годом.
+const isRowInYear = (row: ReportRow, year: number) =>
+  /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number(row.date.slice(0, 4)) === year
+
+// Сортировка стабильная: записи с одной датой остаются в порядке добавления.
+const sortByDate = (list: ReportRow[]) => [...list].sort((left, right) => left.date.localeCompare(right.date))
+
+// Индекс, куда вставить запись, чтобы она встала после всех записей с той же или более ранней датой.
+const getInsertIndexByDate = (list: ReportRow[], date: string) => {
+  const index = list.findIndex((item) => item.date.localeCompare(date) > 0)
+  return index === -1 ? list.length : index
+}
+
+const hasUnsortedRowsByDate = (list: ReportRow[]) => {
+  for (let index = 1; index < list.length; index += 1) {
+    const previousDate = list[index - 1]?.date ?? ''
+    const currentDate = list[index]?.date ?? ''
+
+    if (previousDate > currentDate) {
+      return true
+    }
+  }
+
+  return false
+}
 
 export const useReportStore = defineStore(STORE_ID, () => {
   const LOCAL_STORAGE_KEY = 'reportState'
@@ -29,11 +57,9 @@ export const useReportStore = defineStore(STORE_ID, () => {
   })
   const rows = ref<ReportRow[]>([])
   const activeYear = ref(new Date().getFullYear())
-  const activeYearRows = computed(() =>
-    rows.value.filter(
-      (row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number(row.date.slice(0, 4)) === activeYear.value,
-    ),
-  )
+  const activeYearRows = computed(() => rows.value.filter((row) => isRowInYear(row, activeYear.value)))
+  // Лимиты считаются по всем записям: скользящее окно PDV захватывает и прошлый год.
+  const activeYearLimitStatus = computed(() => getYearLimitStatus(rows.value, activeYear.value))
 
   function setActiveYear(year: number) {
     activeYear.value = year
@@ -42,7 +68,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
   const yearSummaries = computed(() => {
     const currentYear = new Date().getFullYear()
     const counts = new Map<number, number>()
-    let earliestYear = currentYear
+    // Список начинается с REPORT_FIRST_YEAR, а если есть записи раньше — с самой ранней из них.
+    let earliestYear = Math.min(REPORT_FIRST_YEAR, currentYear)
 
     for (const row of rows.value) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(row.date)) continue
@@ -89,18 +116,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
   })
 
   const lastUsedCurrencyCode = computed(() => rows.value.at(-1)?.currency ?? 'EUR')
-  const hasUnsortedRows = computed(() => {
-    for (let index = 1; index < rows.value.length; index += 1) {
-      const previousDate = rows.value[index - 1]?.date ?? ''
-      const currentDate = rows.value[index]?.date ?? ''
-
-      if (previousDate > currentDate) {
-        return true
-      }
-    }
-
-    return false
-  })
+  const hasUnsortedRows = computed(() => hasUnsortedRowsByDate(rows.value))
+  const hasUnsortedActiveYearRows = computed(() => hasUnsortedRowsByDate(activeYearRows.value))
 
   const hasRowsFromDifferentYears = computed(() => {
     const years = new Set<string>()
@@ -138,7 +155,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
       formData.footer[key] = snapshot.meta.footer[key]
     }
 
-    rows.value = snapshot.rows
+    rows.value = sortByDate(snapshot.rows)
   }
 
   function setHeaderValue(field: HeaderField, value: string) {
@@ -149,19 +166,30 @@ export const useReportStore = defineStore(STORE_ID, () => {
     formData.footer[field] = value
   }
 
+  // Строки всегда хранятся по дате: новая запись встаёт после записей с той же датой.
   function addRow(row: ReportRow) {
-    rows.value.push(row)
+    rows.value.splice(getInsertIndexByDate(rows.value, row.date), 0, row)
   }
 
   function updateRow(index: number, row: ReportRow) {
     if (index < 0 || index >= rows.value.length) return
-    rows.value[index] = row
+
+    // Дата не изменилась — запись остаётся на месте.
+    if (rows.value[index]!.date === row.date) {
+      rows.value[index] = row
+      return
+    }
+
+    // Дата изменилась — переставляем запись, как будто её добавили заново с новой датой.
+    rows.value.splice(index, 1)
+    addRow(row)
   }
 
   function updateRowById(id: string, row: ReportRow) {
-    const index = rows.value.findIndex((item) => item.id === id)
-    if (index === -1) return
-    rows.value[index] = row
+    updateRow(
+      rows.value.findIndex((item) => item.id === id),
+      row,
+    )
   }
 
   function getRow(index: number): ReportRow | null {
@@ -185,15 +213,21 @@ export const useReportStore = defineStore(STORE_ID, () => {
   }
 
   function setRows(nextRows: ReportRow[]) {
-    rows.value = nextRows
+    rows.value = sortByDate(nextRows)
   }
 
   function clearRows() {
     rows.value = []
   }
 
+  // Удаляет только строки активного года, записи других лет остаются.
+  function clearActiveYearRows() {
+    rows.value = rows.value.filter((row) => !isRowInYear(row, activeYear.value))
+  }
+
+  // Строки и так хранятся по дате; оставлено для v1 и для данных, изменённых в обход экшенов.
   function sortRowsByDate() {
-    rows.value = [...rows.value].sort((left, right) => left.date.localeCompare(right.date))
+    rows.value = sortByDate(rows.value)
   }
 
   function hydrateFromLocalStorage() {
@@ -240,7 +274,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
         }
 
         if (typeof parsed === 'object' && parsed !== null && 'rows' in parsed && Array.isArray(parsed.rows)) {
-          rows.value = parsed.rows as ReportRow[]
+          rows.value = sortByDate(parsed.rows as ReportRow[])
         }
 
         return
@@ -269,11 +303,13 @@ export const useReportStore = defineStore(STORE_ID, () => {
     yearSummaries,
     activeYear,
     activeYearRows,
+    activeYearLimitStatus,
     setActiveYear,
     rows,
     usedCurrencyCodes,
     lastUsedCurrencyCode,
     hasUnsortedRows,
+    hasUnsortedActiveYearRows,
     hasRowsFromDifferentYears,
     exportState,
     replaceState,
@@ -288,6 +324,7 @@ export const useReportStore = defineStore(STORE_ID, () => {
     removeRowById,
     setRows,
     clearRows,
+    clearActiveYearRows,
     sortRowsByDate,
     hydrateFromLocalStorage,
   }

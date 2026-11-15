@@ -4,11 +4,18 @@ import { computed } from 'vue'
 type Props = {
   /** Фон поверхности: default — белый, meta — градиент с рисунком, info — градиент */
   variant: 'default' | 'meta' | 'info'
+  /** Убирает внутренние отступы */
+  noPadding?: boolean
+  overflow?: 'clip' | 'scroll' | 'auto'
 }
 
-const { variant = 'default' } = defineProps<Props>()
+const { variant = 'default', noPadding = false, overflow } = defineProps<Props>()
 
-const classes = computed(() => [`PaperBlock_variant_${variant}`])
+const classes = computed(() => [
+  `PaperBlock_variant_${variant}`,
+  { PaperBlock_noPadding: noPadding },
+  overflow && `PaperBlock_overflow_${overflow}`,
+])
 </script>
 
 <template>
@@ -19,16 +26,39 @@ const classes = computed(() => [`PaperBlock_variant_${variant}`])
 
 <style scoped lang="scss">
 .PaperBlock {
-  border-radius: 32px;
+  --radius-paper-block: 32px;
+  --border-width-paper-block: 0px;
+  // Внутренний радиус для потомков, прижатых к краю блока (например, футер таблицы с фоном).
+  // Наследуется вниз по дереву, поэтому блок не нужно обрезать через overflow.
+  --radius-paper-block-inner: calc(var(--radius-paper-block) - var(--border-width-paper-block));
+
+  border-radius: var(--radius-paper-block);
   padding: 40px 30px;
   background: var(--white);
   box-shadow: 0 4px 16px 0 #0000000a;
 }
 
-.PaperBlock_variant_default {
-  background: var(--white);
+.PaperBlock_noPadding {
+  padding: 0;
+}
 
-  border: 1px solid var(--neutral-200);
+.PaperBlock_overflow_clip {
+  overflow: clip;
+}
+
+.PaperBlock_overflow_scroll {
+  overflow: scroll;
+}
+
+.PaperBlock_overflow_auto {
+  overflow: auto;
+}
+
+.PaperBlock_variant_default {
+  --border-width-paper-block: 1px;
+
+  background: var(--white);
+  border: var(--border-width-paper-block) solid var(--neutral-200);
 }
 
 .PaperBlock_variant_meta {

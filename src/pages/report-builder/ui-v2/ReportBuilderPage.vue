@@ -3,7 +3,7 @@ import { PageLayout } from '@/shared/ui-v2/page-layout'
 import { ReportMetaEditForm } from '@/features/report-meta-edit'
 import { LocaleSwitcher } from '@/features/locale-switcher'
 import { ReportActions } from '@/features/report-import-export'
-import { ReportRowManage } from '@/features/report-row-manage'
+import ReportRowManage from './ReportRowManage.vue'
 import { PaperBlock } from '@/shared/ui-v2/paper-block'
 import { AppHeader } from '@/widgets/app-header'
 import { AppFooter } from '@/widgets/app-footer'
@@ -32,7 +32,7 @@ const { t } = useLocale()
       <ReportMetaEditForm />
     </PaperBlock>
 
-    <PaperBlock variant="default" class="ReportBuilderPage_layout">
+    <PaperBlock variant="default" class="ReportBuilderPage_layout" no-padding>
       <ReportRowManage />
     </PaperBlock>
 
@@ -44,10 +44,6 @@ const { t } = useLocale()
 
 <style scoped lang="scss">
 .ReportBuilderPage {
-  :deep(.ReportBuilderPage_Main) {
-    padding-block: 40px;
-  }
-
   &-Meta {
     margin-block: 40px;
   }

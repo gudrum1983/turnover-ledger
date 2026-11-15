@@ -1,5 +1,7 @@
 export type { MoneyPart, ReportRow } from './model/types'
 export type { ReportRowTotals } from './model/lib'
 export { getRowTotals } from './model/lib'
+export { ROW_HIGHLIGHT_DURATION_MS } from './model/constants'
 export { default as ReportDocumentRow } from './ui/ReportDocumentRow.vue'
-export { default as ReportTableRow } from './ui/ReportTableRow.vue'
+export { default as ReportTableRow } from './ui-v2/ReportTableRow.vue'
+export { default as ReportTableCard } from './ui-v2/ReportTableCard.vue'

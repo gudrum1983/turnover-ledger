@@ -79,6 +79,14 @@ const reportState: ReportState = {
   ],
 }
 
+// reportState.rows по дате: row-3 (2025-12-20), row-2 (2026-03-01), row-1 (2026-04-10).
+const sortedReportState: ReportState = {
+  ...reportState,
+  rows: [reportState.rows[2]!, reportState.rows[1]!, reportState.rows[0]!],
+}
+
+const makeRow = (id: string, date: string) => ({ ...reportState.rows[0]!, id, date })
+
 function createLocalStorageMock(): LocalStorageMock {
   return {
     getItem: vi.fn(() => null),
@@ -146,7 +154,7 @@ describe('report store', () => {
     expect(store.activeYearRows.map((row) => row.id)).toEqual(['row-3'])
 
     store.setActiveYear(2026)
-    expect(store.activeYearRows.map((row) => row.id)).toEqual(['row-1', 'row-2'])
+    expect(store.activeYearRows.map((row) => row.id)).toEqual(['row-2', 'row-1'])
 
     store.removeRowById('row-1')
     expect(store.activeYearRows.map((row) => row.id)).toEqual(['row-2'])
@@ -156,10 +164,56 @@ describe('report store', () => {
     expect(store.rows).toHaveLength(2)
   })
 
+  it('clears only rows of the active year', () => {
+    const store = useReportStore()
+    store.setRows([...reportState.rows])
+
+    store.setActiveYear(2026)
+    store.clearActiveYearRows()
+
+    expect(store.activeYearRows).toEqual([])
+    expect(store.rows.map((row) => row.id)).toEqual(['row-3'])
+  })
+
+  it('detects unsorted rows within the active year', () => {
+    const store = useReportStore()
+    // Экшены всегда сортируют, поэтому неотсортированные строки кладём напрямую.
+    store.rows = [...reportState.rows]
+
+    store.setActiveYear(2026)
+    expect(store.hasUnsortedActiveYearRows).toBe(true)
+
+    store.setActiveYear(2025)
+    expect(store.hasUnsortedActiveYearRows).toBe(false)
+  })
+
+  it('lists years from REPORT_FIRST_YEAR to the current year', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-10'))
+    const store = useReportStore()
+    store.setRows([...reportState.rows])
+
+    expect(store.yearSummaries.map((item) => item.year)).toEqual([2020, 2021, 2022, 2023, 2024, 2025, 2026])
+    expect(store.yearSummaries.find((item) => item.year === 2026)?.count).toBe(2)
+    expect(store.yearSummaries.find((item) => item.year === 2020)?.count).toBe(0)
+    vi.useRealTimers()
+  })
+
+  it('extends the year list back to the earliest row before REPORT_FIRST_YEAR', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-10'))
+    const store = useReportStore()
+    store.setRows([{ ...reportState.rows[0]!, id: 'old', date: '2018-05-01' }])
+
+    expect(store.yearSummaries[0]).toEqual({ year: 2018, count: 1 })
+    expect(store.yearSummaries.at(-1)?.year).toBe(2026)
+    vi.useRealTimers()
+  })
+
   it('detects unsorted rows by date', () => {
     const store = useReportStore()
 
-    store.setRows(reportState.rows)
+    store.rows = [...reportState.rows]
 
     expect(store.hasUnsortedRows).toBe(true)
   })
@@ -175,11 +229,64 @@ describe('report store', () => {
   it('sorts rows by date ascending', () => {
     const store = useReportStore()
 
-    store.setRows(reportState.rows)
+    store.rows = [...reportState.rows]
     store.sortRowsByDate()
 
     expect(store.rows.map((row) => row.id)).toEqual(['row-3', 'row-2', 'row-1'])
     expect(store.hasUnsortedRows).toBe(false)
+  })
+
+  describe('автоматическая сортировка по дате', () => {
+    it('setRows сортирует строки, одинаковые даты остаются в исходном порядке', () => {
+      const store = useReportStore()
+
+      store.setRows([makeRow('b', '2026-02-01'), makeRow('a1', '2026-01-01'), makeRow('a2', '2026-01-01')])
+
+      expect(store.rows.map((row) => row.id)).toEqual(['a1', 'a2', 'b'])
+      expect(store.hasUnsortedRows).toBe(false)
+    })
+
+    it('addRow вставляет запись по дате после записей с той же датой', () => {
+      const store = useReportStore()
+      store.setRows([makeRow('jan', '2026-01-10'), makeRow('mar', '2026-03-10')])
+
+      store.addRow(makeRow('feb', '2026-02-10'))
+      store.addRow(makeRow('jan-2', '2026-01-10'))
+      store.addRow(makeRow('apr', '2026-04-10'))
+      store.addRow(makeRow('dec', '2025-12-31'))
+
+      expect(store.rows.map((row) => row.id)).toEqual(['dec', 'jan', 'jan-2', 'feb', 'mar', 'apr'])
+    })
+
+    it('updateRowById без смены даты оставляет запись на месте', () => {
+      const store = useReportStore()
+      store.setRows([makeRow('a', '2026-01-10'), makeRow('b', '2026-01-10'), makeRow('c', '2026-01-10')])
+
+      store.updateRowById('a', { ...makeRow('a', '2026-01-10'), description: 'changed' })
+
+      expect(store.rows.map((row) => row.id)).toEqual(['a', 'b', 'c'])
+      expect(store.rows[0]?.description).toBe('changed')
+    })
+
+    it('updateRowById со сменой даты переставляет запись в конец своей новой даты', () => {
+      const store = useReportStore()
+      store.setRows([makeRow('a', '2026-01-10'), makeRow('b', '2026-02-10'), makeRow('c', '2026-03-10')])
+
+      store.updateRowById('c', makeRow('c', '2026-01-10'))
+      expect(store.rows.map((row) => row.id)).toEqual(['a', 'c', 'b'])
+
+      store.updateRowById('a', makeRow('a', '2026-04-01'))
+      expect(store.rows.map((row) => row.id)).toEqual(['c', 'b', 'a'])
+    })
+
+    it('updateRowById игнорирует неизвестный id', () => {
+      const store = useReportStore()
+      store.setRows([makeRow('a', '2026-01-10')])
+
+      store.updateRowById('missing', makeRow('missing', '2026-01-01'))
+
+      expect(store.rows.map((row) => row.id)).toEqual(['a'])
+    })
   })
 
   it('replaces and exports state without losing data', () => {
@@ -189,12 +296,13 @@ describe('report store', () => {
 
     const exportedState = store.exportState()
 
-    expect(exportedState).toEqual(reportState)
+    // Состояние сохраняется полностью, строки — в порядке дат.
+    expect(exportedState).toEqual(sortedReportState)
     expect(exportedState).not.toBe(reportState)
     expect(exportedState.meta.header).not.toBe(reportState.meta.header)
     expect(exportedState.meta.footer).not.toBe(reportState.meta.footer)
     expect(exportedState.rows).not.toBe(reportState.rows)
-    expect(exportedState.rows[0]).not.toBe(reportState.rows[0])
+    expect(exportedState.rows[0]).not.toBe(sortedReportState.rows[0])
   })
 
   it('hydrates valid state from localStorage', () => {
@@ -203,7 +311,7 @@ describe('report store', () => {
 
     store.hydrateFromLocalStorage()
 
-    expect(store.exportState()).toEqual(reportState)
+    expect(store.exportState()).toEqual(sortedReportState)
   })
 
   it('does not throw on invalid localStorage json', () => {

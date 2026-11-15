@@ -1,2 +1,2 @@
 export { default as ButtonDropdown } from './ButtonDropdown.vue'
-export type { DropdownOption } from './types'
+export type { DropdownOption, DropdownTypography, DropdownPlacement } from './types'

@@ -18,6 +18,7 @@ export const ruUi = {
   },
   reportYearSelect: {
     buttonLabel: 'Отчёт за {year} год',
+    buttonMiddleLabel: 'за {year} год',
     year: 'Отчёт за {year} год',
     noRecords: '(записей нет)',
     records: {
@@ -129,13 +130,17 @@ export const ruUi = {
   },
   reportBuilderIncomeRecordsTable: {
     rowNumber: '№',
-    income: 'Доход',
-    description: 'Дата и описание',
+    income: 'Сумма',
+    date: 'Дата',
+    description: 'Описание',
     currency: 'Валюта',
-    addRow: 'Добавить строку',
-    clearTable: 'Очистить таблицу',
+    addRow: 'Добавить запись',
+    clearTable: 'Очистить всё',
+    clearYear: 'Очистить год',
     sortByDate: 'Сортировать по дате',
     emptyHint: 'Таблица пустая, добавьте строку',
+    emptyTitle: 'За {year} год записей пока нет',
+    emptySubtitle: 'Добавьте первую строку дохода',
     total: 'Итого',
     totalLimitExceeded: 'Предупреждение: общая сумма превысила лимит',
   },
@@ -143,9 +148,10 @@ export const ruUi = {
     goodsShort: 'Тов.',
     servicesShort: 'Усл.',
     subtotalShort: 'Сум.',
-    edit: 'Изменить',
-    copy: 'Копировать',
-    remove: 'Удалить',
+    edit: 'редактировать',
+    copy: 'копировать',
+    remove: 'удалить',
+    actions: 'Действия с записью',
   },
   reportRowForm: {
     currency: 'Валюта',
@@ -169,6 +175,15 @@ export const ruUi = {
       message: 'Превышен лимит',
       hint: 'Доход за год превысил 6 000 000 RSD.',
     },
+    pausalLimit: {
+      message: 'Лимит паушала превышен',
+      description: 'Лимит: 6 млн RSD за календарный год',
+    },
+    pdvLimit: {
+      message: 'Порог НДС превышен',
+      description: 'Порог обязательной регистрации в системе НДС: 8\u00A0млн\u00A0RSD за 12 месяцев подряд',
+      details: 'Оборот на {date}: {amount}\u00A0RSD',
+    },
     sortByDate: {
       message: 'Не по дате',
       hint: 'Отсортируйте записи по дате — от ранних к поздним.',
@@ -185,14 +200,24 @@ export const ruUi = {
   },
   deleteRowModal: {
     title: 'Удалить запись?',
-    description: 'Это действие нельзя отменить.',
+    description: 'Восстановить запись после удаления не получится.',
     confirm: 'Удалить',
     cancel: 'Отмена',
   },
   deleteAllRowsModal: {
     title: 'Удалить все записи?',
-    description: 'Все данные будут удалены без возможности восстановления.',
+    description:
+      'Восстановить записи после удаления не получится. Чтобы сохранить копию, сначала сделайте экспорт данных.',
     confirm: 'Удалить всё',
+    cancel: 'Отмена',
+  },
+  deleteYearRowsModal: {
+    title: 'Очистить {year} год?',
+    summary:
+      'Будет удалена {count} запись на сумму {amount} RSD. | Будут удалены {count} записи на сумму {amount} RSD. | Будут удалены {count} записей на сумму {amount} RSD.',
+    description:
+      'Восстановить записи после удаления не получится. Чтобы сохранить копию, сначала сделайте экспорт данных.',
+    confirm: 'Очистить год',
     cancel: 'Отмена',
   },
   reportPreviewScriptSwitcher: {
