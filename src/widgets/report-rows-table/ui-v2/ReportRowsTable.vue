@@ -7,6 +7,9 @@ import ReportRowsTableMobile from './ReportRowsTableMobile.vue'
 import type { I18nLocale } from '@/shared/i18n'
 import { useLocale } from '@/shared/i18n'
 import { TagBase } from '@/shared/ui-v2/tag-base'
+import { IconInfoCircle } from '@/shared/ui-v2/icons'
+import { TooltipWrapper } from '@/shared/ui-v2/tooltip-wrapper'
+import type { ReportRowsTableAlert } from './types'
 
 type Props = {
   rows: ReportRow[]
@@ -17,15 +20,15 @@ type Props = {
   locale: I18nLocale
   reportTitle: string
   displayTotalRsd: string
-  displayTotalLimitRsd: string
-  isTotalLimitExceeded: boolean
+  /** Предупреждения о лимитах выбранного года, выводятся над итогом */
+  limitAlerts?: ReportRowsTableAlert[]
   hasUnsortedRows: boolean
   hasRowsFromDifferentYears: boolean
   /** id строки, которую нужно подсветить (новая или переместившаяся после смены даты) */
   highlightedRowId?: string | null
 }
 
-const { rows, locale, displayTotalRsd, highlightedRowId = null } = defineProps<Props>()
+const { rows, locale, displayTotalRsd, limitAlerts = [], highlightedRowId = null } = defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'add'): void
@@ -109,7 +112,27 @@ const { t } = useLocale()
           @copy="emit('copy', $event)"
           @remove="emit('remove', $event)"
         />
-        <div v-if="rows.length > 0" class="ReportRowsTable_Footer">
+        <div
+          v-if="rows.length > 0"
+          class="ReportRowsTable_Footer"
+          :class="[`ReportRowsTable_Footer_${viewport}`, { ReportRowsTable_Footer_error: limitAlerts.length > 0 }]"
+        >
+          <ul v-if="limitAlerts.length" class="ReportRowsTable-Alerts">
+            <li v-for="alert in limitAlerts" :key="alert.id" class="ReportRowsTable-LimitAlert" role="alert">
+              <TooltipWrapper v-if="alert.details" :text="alert.details" :error-text="alert.error" :max-width="240">
+                <!-- tabindex — чтобы подсказку можно было открыть с клавиатуры -->
+                <span
+                  class="ReportRowsTable-LimitAlertIcon"
+                  tabindex="0"
+                  :aria-label="[alert.error, alert.details].filter(Boolean).join('. ')"
+                >
+                  <IconInfoCircle size="s" />
+                </span>
+              </TooltipWrapper>
+              <span class="u-typo-label-s">{{ alert.message }}</span>
+              <div class="ReportRowManage_AlertDivider" v-if="viewport === 'desktop'" />
+            </li>
+          </ul>
           <div class="ReportRowsTable_TotalRow">
             <div class="ReportRowsTable_TotalIncome u-typo-subtitle-l">
               <div class="ReportRowsTable_TotalCell Typo_BodyAccent">
@@ -139,17 +162,82 @@ const { t } = useLocale()
 }
 
 .ReportRowsTable_TotalIncome {
-  margin-left: auto;
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
+.ReportRowsTable-Alerts {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /*  align-content: center;*/
+}
+
+.ReportRowsTable-LimitAlert {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.ReportRowsTable-LimitAlertIcon {
+  display: inline-flex;
+  cursor: help;
+  border-radius: 50%;
+  color: var(--red-500);
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
 .ReportRowsTable_Footer {
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
   background: #8ebfd099;
   padding: 16px 16px 24px;
   // Скругляем низ под радиус родительского PaperBlock (вне его — без скругления).
   border-radius: 0 0 var(--radius-paper-block-inner, 0) var(--radius-paper-block-inner, 0);
+}
+
+// Футер с предупреждениями о превышении лимитов.
+.ReportRowsTable_Footer_error {
+  background: var(--red-300);
+}
+
+// Модификаторы футера по вьюпорту.
+.ReportRowsTable_Footer_desktop {
+}
+
+.ReportRowsTable_Footer_tablet {
+  justify-content: space-between;
+  .ReportRowsTable-Alerts {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.ReportRowsTable_Footer_mobile {
+  flex-direction: column-reverse;
+  .ReportRowsTable-Alerts {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ReportRowsTable_TotalRow {
+    justify-content: flex-end;
+  }
+}
+
+.ReportRowManage_AlertDivider {
+  width: 2px;
+  height: 26px;
+  opacity: 1;
+  border-radius: 2px;
+  background: var(--red-200);
+  margin-inline: 16px;
 }
 
 .ReportRowsTable {
@@ -188,7 +276,6 @@ const { t } = useLocale()
 
   &_TotalRow {
     display: flex;
-    width: 100%;
     border-top: none;
   }
 
