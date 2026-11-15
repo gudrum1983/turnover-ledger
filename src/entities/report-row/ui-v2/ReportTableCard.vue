@@ -100,9 +100,7 @@ function handleMenuSelect(value: string) {
   >
     <div class="ReportTableCard_Header">
       <div>
-        <span class="ReportTableCard_Number">
-          {{ index + 1 }}
-        </span>
+        <span class="ReportTableCard_Number"> {{ index + 1 }}. </span>
         <span>
           {{ formatDateForUi(row.date) }}
         </span>
@@ -255,6 +253,11 @@ function handleMenuSelect(value: string) {
   justify-content: space-between;
   gap: 8px;
   align-items: center;
+  color: var(--neutral-600);
+}
+
+.ReportTableCard_Number {
+  padding-right: 8px;
 }
 
 .ReportTableCard_Menu {
