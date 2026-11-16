@@ -1,2 +1,2 @@
-export { default as ReportRowEditForm } from './ui/ReportRowEditForm.vue'
-export type { ReportRowFormInitialValue, ReportRowPayload } from './ui/ReportRowEditForm.vue'
+export { default as ReportRowEditForm } from './ui-v2/ReportRowEditForm.vue'
+export type { ReportRowFormInitialValue, ReportRowPayload } from './ui-v2/ReportRowEditForm.vue'

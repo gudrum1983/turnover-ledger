@@ -21,8 +21,7 @@ type Props = {
   /** Отключает ввод и выбор даты */
   disabled?: boolean
   /** Год, которым ограничен ввод: доступны даты с 1 января по 31 декабря (но не позже сегодня).
-   * Если задан, minDate и maxDate не используются, кнопка года в календаре скрыта,
-   * а в плейсхолдере вместо ГГГГ подставляется год. */
+   * Если задан, minDate и maxDate не используются, а в плейсхолдере вместо ГГГГ подставляется год. */
   year?: number
   /** Минимальная дата, доступная для выбора (без year) */
   minDate?: Date
@@ -163,7 +162,7 @@ const classList = computed(() => ({
       prevent-min-max-navigation
       :floating="{ arrow: false }"
       :flow="{ steps: ['month', 'calendar'], partial: true }"
-      :disable-year-select="year !== undefined"
+      disable-year-select
       :placeholder="resolvedPlaceholder"
       :disabled="disabled"
       :locale="dateFnsLocale"
@@ -176,12 +175,10 @@ const classList = computed(() => ({
       auto-apply
       @update:model-value="handleUpdate"
     >
-      <!-- Кнопки месяца и года в шапке календаря: типографика v2. Месяц полностью (формат LLLL) -->
+      <!-- Кнопка месяца в шапке календаря: типографика v2. Месяц полностью (формат LLLL).
+           Кнопки года нет (disable-year-select): год переключается стрелками. -->
       <template #month="{ text }">
         <span class="u-typo-button-l u-uppercase">{{ text }}</span>
-      </template>
-      <template #year="{ text }">
-        <span class="u-typo-button-l">{{ text }}</span>
       </template>
       <!-- Типографика сетки: дни недели — label-m, числа — label-s -->
       <template #calendar-header="{ day }">
