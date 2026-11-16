@@ -10,14 +10,14 @@ const meta = {
     docs: {
       description: {
         component:
-          'Поле даты v2 на основе @vuepic/vue-datepicker: дату можно ввести вручную в формате ДД.ММ.ГГГГ или выбрать в календаре. Значение — строка YYYY-MM-DD. Во всех примерах ввод ограничен годом (проп year).',
+          'Поле даты v2 на основе @vuepic/vue-datepicker: дату выбирают в календаре, ручного ввода нет. Значение — строка YYYY-MM-DD. Во всех примерах ввод ограничен годом (проп year).',
       },
     },
   },
   args: {
     name: 'date',
     label: 'Дата',
-    placeholder: 'ДД.ММ.ГГГГ',
+    placeholder: `Выберите дату в ${new Date().getFullYear()} году`,
     modelValue: null,
     year: new Date().getFullYear(),
     required: false,

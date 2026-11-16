@@ -110,6 +110,7 @@ export const srLatUi = {
       date: {
         label: 'Datum',
         placeholder: 'DD.MM.GGGG',
+        pickPlaceholder: 'Izaberite datum u {year}. godini',
         hint: 'Datum fakture',
       },
       description: {

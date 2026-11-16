@@ -109,6 +109,7 @@ export const ruUi = {
       date: {
         label: 'Дата',
         placeholder: 'ДД.ММ.ГГГГ',
+        pickPlaceholder: 'Выберите дату в {year} году',
         hint: 'Дата счета',
       },
       description: {

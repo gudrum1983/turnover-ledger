@@ -110,6 +110,7 @@ export const srCyrUi = {
       date: {
         label: 'Датум',
         placeholder: 'ДД.ММ.ГГГГ',
+        pickPlaceholder: 'Изаберите датум у {year}. години',
         hint: 'Датум фактуре',
       },
       description: {

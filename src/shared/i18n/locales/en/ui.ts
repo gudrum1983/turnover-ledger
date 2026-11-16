@@ -110,6 +110,7 @@ export const enUi = {
       date: {
         label: 'Date',
         placeholder: 'DD.MM.YYYY',
+        pickPlaceholder: 'Select a date in {year}',
         hint: 'Invoice date',
       },
       description: {

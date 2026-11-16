@@ -285,7 +285,7 @@ onMounted(() => {
           :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.label')"
           :model-value="date"
           :date-fns-locale="localeStore.dateFnsLocale"
-          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.placeholder')"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.pickPlaceholder', { year })"
           @update:modelValue="date = $event ?? ''"
           required
         />
