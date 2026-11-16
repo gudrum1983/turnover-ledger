@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { type ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { Locale } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { type InputAttributesConfig, VueDatePicker } from '@vuepic/vue-datepicker'
@@ -55,12 +55,16 @@ const { t } = useLocale()
 
 // Как в FieldBase: тень фокуса только при навигации с клавиатуры.
 // Слушаем document: первый Tab может прийти с элемента вне поля.
+// Кроме Tab учитываем клавиши, которыми ходят по календарю: стрелки, Enter и пробел.
+const NAVIGATION_KEYS = new Set(['Tab', 'Enter', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'])
 const keyboardNavigation = ref(false)
 function handleNavigationKey(event: KeyboardEvent) {
-  if (event.key === 'Tab') keyboardNavigation.value = true
+  if (NAVIGATION_KEYS.has(event.key)) keyboardNavigation.value = true
+  pendingFocus = null
 }
 function handlePointerDown() {
   keyboardNavigation.value = false
+  pendingFocus = null
 }
 onMounted(() => {
   document.addEventListener('keydown', handleNavigationKey, true)
@@ -75,7 +79,6 @@ const inputAttrs = computed<Partial<InputAttributesConfig>>(() => ({
   name,
   required,
   autocomplete: 'off',
-  inputmode: 'numeric',
 }))
 
 // Границы выбора: по году (31 декабря, но не позже сегодня) или по minDate / maxDate.
@@ -121,6 +124,8 @@ function selectMonth(
   if (isMonthDisabled(month, monthYear)) return
   updateMonthYear(month, monthYear)
   toggle(true)
+  // После выбора месяца — фокус на 1-е число (или первый доступный день месяца).
+  holdFocus(findFirstDay)
 }
 
 // После выбора даты закрываем меню сами: если flow сбросили (например, кнопкой календаря внизу
@@ -129,6 +134,182 @@ const pickerRef = ref<InstanceType<typeof VueDatePicker> | null>(null)
 function handleUpdate(value: string | null | undefined) {
   emit('update:modelValue', value ?? null)
   if (value) pickerRef.value?.closeMenu()
+}
+
+// Пробел на поле открывает и закрывает календарь, как Enter (Enter vuepic обрабатывает сам).
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key !== ' ' || disabled) return
+  if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('dp__input')) return
+  event.preventDefault()
+  pickerRef.value?.toggleMenu()
+}
+
+// Автофокус внутри календаря. vuepic сам переставляет фокус (на контейнер сетки месяцев,
+// на кнопку возврата к календарю, на меню) уже после наших действий — поймать момент нельзя.
+// Поэтому, пока пользователь ничего не нажал, любой фокус внутри поля переводим на нужный элемент.
+// Первое нажатие клавиши или клик снимает перехват (см. handleNavigationKey / handlePointerDown).
+type FocusTarget = () => HTMLElement | null | undefined
+let pendingFocus: FocusTarget | null = null
+
+function holdFocus(findTarget: FocusTarget) {
+  pendingFocus = findTarget
+  findTarget()?.focus({ preventScroll: true })
+  // Новый вид (например, календарь после выбора месяца) отрисуется не сразу — пробуем ещё раз,
+  // через два кадра, как это делает vuepic.
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      if (pendingFocus === findTarget) findTarget()?.focus({ preventScroll: true })
+    }),
+  )
+}
+
+function handleFocusIn(event: FocusEvent) {
+  const target = pendingFocus?.()
+  if (target && event.target !== target) {
+    target.focus({ preventScroll: true })
+    return
+  }
+  if (event.target instanceof HTMLElement) applyRovingTabindex(event.target)
+}
+
+// Tab не ходит по каждому дню и месяцу: в сетке в порядке Tab только ячейка с фокусом
+// (tabindex 0, остальным -1), внутри сетки — стрелки. Vue не перезаписывает tabindex,
+// пока он не меняется в разметке, поэтому достаточно переставлять его при фокусе.
+const ROVING_GROUPS = [
+  { cell: '.dp__calendar_item', group: '.dp__calendar' },
+  { cell: '.FieldDate-MonthCell', group: '.FieldDate-MonthGrid' },
+]
+function applyRovingTabindex(element: HTMLElement) {
+  const roving = ROVING_GROUPS.find(({ cell }) => element.matches(cell))
+  const group = roving && element.closest(roving.group)
+  if (!roving || !group) return
+  group.querySelectorAll<HTMLElement>(roving.cell).forEach((cell) => {
+    cell.tabIndex = cell === element ? 0 : -1
+  })
+}
+
+// Стрелки по дням календаря: ←/→ — на день, ↑/↓ — на неделю. Если день в другом месяце,
+// переключаем календарь на него. Даты вне границ выбора не выбираются — фокус остаётся на месте.
+// Слушаем в фазе перехвата и дальше не пускаем: меню vuepic по стрелкам листает месяцы.
+const DAY_STEPS: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }
+const toCellId = (date: Date) =>
+  `dp-${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+
+// Ячейка дня текущего месяца (не соседнего, .dp__cell_offset) по дате; у vuepic data-test-id = dp-yyyy-MM-dd.
+function findDayCell(date: Date) {
+  const items = rootRef.value?.querySelectorAll<HTMLElement>(`.dp__calendar_item[data-test-id="${toCellId(date)}"]`)
+  return Array.from(items ?? []).find((item) => !item.querySelector('.dp__cell_offset'))
+}
+
+// Esc в любом месте календаря (и в сетке месяцев) закрывает его целиком и возвращает фокус в поле.
+// У vuepic Esc в сетке месяцев только возвращает к датам, причём фокус теряется.
+function closeMenuToInput(event: KeyboardEvent) {
+  event.preventDefault()
+  event.stopPropagation()
+  pickerRef.value?.closeMenu()
+  rootRef.value?.querySelector<HTMLInputElement>('.dp__input')?.focus()
+}
+
+// Кнопка возврата к календарю внизу сетки месяцев: после неё фокус на 1-е число, как после выбора месяца.
+const isBackToCalendarButton = (target: EventTarget | null) =>
+  target instanceof HTMLElement && Boolean(target.closest('.dp__overlay_action'))
+
+function handleCalendarClick(event: MouseEvent) {
+  if (isBackToCalendarButton(event.target)) holdFocus(findFirstDay)
+}
+
+function handleCalendarKeydown(event: KeyboardEvent) {
+  const item = event.target as HTMLElement
+  if (event.key === 'Escape' && item.closest?.('.dp__menu')) return closeMenuToInput(event)
+  if ((event.key === 'Enter' || event.key === ' ') && isBackToCalendarButton(item)) {
+    holdFocus(findFirstDay)
+    return
+  }
+
+  const step = DAY_STEPS[event.key]
+  if (!step || !item.matches?.('.dp__calendar_item')) return
+
+  event.preventDefault()
+  event.stopPropagation()
+
+  const match = /^dp-(\d{4})-(\d{2})-(\d{2})$/.exec(item.dataset.testId ?? '')
+  if (!match) return
+  const [, y, m, d] = match.map(Number) as [number, number, number, number]
+  const next = new Date(y, m - 1, d + step)
+
+  const { min, max } = bounds.value
+  const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  if (next < startOfDay(min) || next > startOfDay(max)) return
+
+  const cell = findDayCell(next)
+  if (cell) {
+    cell.focus()
+    return
+  }
+  pickerRef.value?.setMonthYear({ month: next.getMonth(), year: next.getFullYear() })
+  holdFocus(() => findDayCell(next))
+}
+
+// Сетка месяцев открывается первой (flow): фокус на выбранный месяц, иначе текущий, иначе первый доступный.
+const MONTH_FOCUS_TARGETS = [
+  '.FieldDate-MonthCell_active:not(:disabled)',
+  '.FieldDate-MonthCell_current:not(:disabled)',
+  '.FieldDate-MonthCell:not(:disabled)',
+]
+let lastMonthGrid: HTMLElement | null = null
+// Функциональный ref Vue вызывает и при перерисовках — реагируем только на новую сетку.
+function registerMonthGrid(element: Element | ComponentPublicInstance | null) {
+  if (!(element instanceof HTMLElement) || element === lastMonthGrid) return
+  lastMonthGrid = element
+  holdFocus(() =>
+    element.isConnected
+      ? MONTH_FOCUS_TARGETS.map((selector) => element.querySelector<HTMLElement>(selector)).find(Boolean)
+      : null,
+  )
+}
+
+// Первый доступный день показанного месяца (дни соседних месяцев — .dp__cell_offset).
+const rootRef = ref<HTMLElement | null>(null)
+function findFirstDay() {
+  const items = rootRef.value?.querySelectorAll<HTMLElement>('.dp__calendar_item') ?? []
+  return Array.from(items).find((item) => {
+    const cell = item.querySelector('.dp__cell_inner')
+    return cell && !cell.classList.contains('dp__cell_offset') && !cell.classList.contains('dp__cell_disabled')
+  })
+}
+
+// Стрелки по сетке месяцев (3 колонки): ←/→ — соседний месяц, ↑/↓ — на ряд, Home/End — первый/последний.
+// Недоступные месяцы пропускаем. Клавиши не пускаем дальше: меню vuepic по ним листает дни календаря.
+const MONTH_GRID_COLUMNS = 3
+const MONTH_GRID_STEPS: Record<string, number> = {
+  ArrowLeft: -1,
+  ArrowRight: 1,
+  ArrowUp: -MONTH_GRID_COLUMNS,
+  ArrowDown: MONTH_GRID_COLUMNS,
+}
+function handleMonthGridKeydown(event: KeyboardEvent) {
+  const grid = event.currentTarget as HTMLElement
+  const cells = Array.from(grid.querySelectorAll<HTMLButtonElement>('.FieldDate-MonthCell'))
+  const index = cells.indexOf(event.target as HTMLButtonElement)
+  if (index < 0) return
+
+  let target: HTMLButtonElement | undefined
+  if (event.key === 'Home') target = cells.find((cell) => !cell.disabled)
+  else if (event.key === 'End') target = [...cells].reverse().find((cell) => !cell.disabled)
+  else {
+    const step = MONTH_GRID_STEPS[event.key]
+    if (!step) return
+    for (let next = index + step; next >= 0 && next < cells.length; next += step) {
+      if (!cells[next]!.disabled) {
+        target = cells[next]
+        break
+      }
+    }
+  }
+
+  event.preventDefault()
+  event.stopPropagation()
+  target?.focus()
 }
 
 // Пустой календарь открываем на последнем доступном месяце, а не на текущем.
@@ -145,7 +326,15 @@ const classList = computed(() => ({
 </script>
 
 <template>
-  <label class="FieldDate" :class="classList">
+  <label
+    ref="rootRef"
+    class="FieldDate"
+    :class="classList"
+    @keydown="handleKeydown"
+    @keydown.capture="handleCalendarKeydown"
+    @click.capture="handleCalendarClick"
+    @focusin="handleFocusIn"
+  >
     <span class="FieldDate-Label u-typo-body-small-m">
       <span class="FieldDate-LabelText">{{ label }}</span>
     </span>
@@ -166,7 +355,6 @@ const classList = computed(() => ({
       :placeholder="resolvedPlaceholder"
       :disabled="disabled"
       :locale="dateFnsLocale"
-      text-input
       model-type="yyyy-MM-dd"
       format="dd.MM.yyyy"
       :formats="{ input: 'dd.MM.yyyy', month: 'LLLL' }"
@@ -190,7 +378,7 @@ const classList = computed(() => ({
       <!-- Выбор месяца: своя сетка. Кнопка возврата к календарю внизу — от vuepic, с нашей иконкой (#calendar-icon) -->
       <template #month-overlay="{ items, year: overlayYear, updateMonthYear, toggle }">
         <div class="FieldDate-MonthOverlay">
-          <div class="FieldDate-MonthGrid" role="grid">
+          <div :ref="registerMonthGrid" class="FieldDate-MonthGrid" role="grid" @keydown="handleMonthGridKeydown">
             <button
               v-for="item in items"
               :key="item.value"
@@ -271,6 +459,8 @@ const classList = computed(() => ({
 
   --box-shadow-icons-focus-tab: 0px 0px 0px 3px #5a636466;
   --box-shadow-input-focus-tab: 0px 0px 0px 3px #f5c96a99;
+  // Фокус кнопок календаря (дни, месяцы, стрелки, кнопка месяца) — как у поля.
+  --box-shadow-cell-focus-tab: 0px 0px 0px 3px #f5c96a99;
 
   --color-label-default: var(--neutral-900);
 }
@@ -471,6 +661,7 @@ const classList = computed(() => ({
   transition:
     background-color var(--transition-color),
     border-color var(--transition-color),
+    box-shadow var(--transition-color),
     color var(--transition-color);
 }
 
@@ -518,6 +709,8 @@ const classList = computed(() => ({
   grid-template-columns: repeat(3, minmax(0, 98px));
   justify-content: space-between;
   align-content: space-between;
+  // Минимальный зазор между колонками: в узком меню колонки сжимаются (minmax) и иначе слипаются.
+  column-gap: 2px;
   row-gap: 8px;
   width: 100%;
 }
@@ -545,7 +738,7 @@ const classList = computed(() => ({
   }
 
   .FieldDate_keyboardNavigation &:focus {
-    box-shadow: 0 0 0 3px #f5c96a99;
+    box-shadow: var(--box-shadow-cell-focus-tab);
   }
 
   &:disabled {
@@ -579,6 +772,51 @@ const classList = computed(() => ({
 .FieldDate :deep(.dp__cell_disabled:hover) {
   /*  background: var(--neutral-100);*/
   color: var(--neutral-200);
+}
+
+// Фокус в календаре. Фокус получают обёртки (.dp__calendar_item у дня, .dp--arrow-btn-nav у стрелки),
+// а фон и скругление — у внутренних элементов, поэтому тень рисуем на них.
+// Свой outline у vuepic и браузера убираем всегда; тень — только при навигации с клавиатуры.
+.FieldDate :deep(.dp__calendar_item:focus),
+.FieldDate :deep(.dp--arrow-btn-nav:focus),
+.FieldDate :deep(.dp__month_year_select:focus),
+.FieldDate :deep(.dp__button:focus) {
+  outline: none;
+}
+
+.FieldDate_keyboardNavigation :deep(.dp__calendar_item:focus .dp__cell_inner),
+.FieldDate_keyboardNavigation :deep(.dp--arrow-btn-nav:focus .dp__inner_nav),
+.FieldDate_keyboardNavigation :deep(.dp__month_year_select:focus) {
+  box-shadow: var(--box-shadow-cell-focus-tab);
+}
+
+// Кнопка возврата к календарю во всю ширину у нижнего края меню: внешнюю тень обрезает
+// overflow меню (видна одна грань), поэтому у неё тень внутрь.
+.FieldDate_keyboardNavigation :deep(.dp__button:focus) {
+  box-shadow: inset var(--box-shadow-cell-focus-tab);
+}
+
+// Кнопка прижата к низу меню, а у vuepic её нижние углы скруглены на --dp-border-radius (4px),
+// тогда как меню скруглено на 16px: углы тени срезались скруглением меню. Повторяем скругление
+// меню за вычетом его рамки (1px).
+.FieldDate :deep(.dp__button_bottom) {
+  border-radius: 0 0 15px 15px;
+}
+
+// Фон при фокусе с клавиатуры — как при наведении. Недоступные дни и стрелки не подсвечиваем.
+.FieldDate_keyboardNavigation :deep(.dp__calendar_item:focus .dp__cell_inner:not(.dp__cell_disabled)),
+.FieldDate_keyboardNavigation :deep(.dp--arrow-btn-nav:focus .dp__inner_nav:not(.dp__inner_nav_disabled)),
+.FieldDate_keyboardNavigation :deep(.dp__month_year_select:focus),
+.FieldDate_keyboardNavigation :deep(.dp__button:focus),
+.FieldDate_keyboardNavigation .FieldDate-MonthCell:focus:not(:disabled) {
+  background: var(--neutral-100);
+}
+
+// Выбранные день и месяц при фокусе — светлее, как при наведении.
+.FieldDate_keyboardNavigation :deep(.dp__calendar_item:focus .dp__cell_inner.dp__active_date),
+.FieldDate_keyboardNavigation .FieldDate-MonthCell_active:focus:not(:disabled) {
+  background: var(--blue-300);
+  color: var(--white);
 }
 
 .FieldDate :deep(.FieldDate-Menu) {
