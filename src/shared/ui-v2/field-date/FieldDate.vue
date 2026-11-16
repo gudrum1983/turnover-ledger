@@ -12,7 +12,7 @@ type Props = {
   name: string
   /** Подпись поля */
   label?: string
-  /** Плейсхолдер для input */
+  /** Плейсхолдер поля, например «Выберите дату». Формат ДД.ММ.ГГГГ не нужен: ручного ввода нет. */
   placeholder?: string
   /** Текущее значение даты в формате YYYY-MM-DD */
   modelValue: string | null
@@ -20,8 +20,8 @@ type Props = {
   required?: boolean
   /** Отключает ввод и выбор даты */
   disabled?: boolean
-  /** Год, которым ограничен ввод: доступны даты с 1 января по 31 декабря (но не позже сегодня).
-   * Если задан, minDate и maxDate не используются, а в плейсхолдере вместо ГГГГ подставляется год. */
+  /** Год, которым ограничен выбор: доступны даты с 1 января по 31 декабря (но не позже сегодня).
+   * Если задан, minDate и maxDate не используются. */
   year?: number
   /** Минимальная дата, доступная для выбора (без year) */
   minDate?: Date
@@ -36,7 +36,7 @@ type Props = {
 const {
   name,
   label,
-  placeholder = 'DD.MM.YYYY',
+  placeholder,
   modelValue,
   required = false,
   disabled = false,
@@ -58,12 +58,18 @@ const { t } = useLocale()
 // Кроме Tab учитываем клавиши, которыми ходят по календарю: стрелки, Enter и пробел.
 const NAVIGATION_KEYS = new Set(['Tab', 'Enter', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'])
 const keyboardNavigation = ref(false)
+// Фокус пришёл в поле по Tab (или Shift+Tab) — тогда сразу открываем календарь (см. handleFocusIn).
+// Любая другая клавиша или клик сбрасывают признак: например, после Esc фокус возвращается в поле
+// программно, и календарь открываться заново не должен.
+let lastKeyWasTab = false
 function handleNavigationKey(event: KeyboardEvent) {
   if (NAVIGATION_KEYS.has(event.key)) keyboardNavigation.value = true
+  lastKeyWasTab = event.key === 'Tab'
   pendingFocus = null
 }
 function handlePointerDown() {
   keyboardNavigation.value = false
+  lastKeyWasTab = false
   pendingFocus = null
 }
 onMounted(() => {
@@ -91,10 +97,6 @@ const bounds = computed(() => {
 })
 
 const yearRange = computed<[number, number]>(() => [bounds.value.min.getFullYear(), bounds.value.max.getFullYear()])
-// С заданным годом вместо ГГГГ / YYYY в плейсхолдере показываем сам год: «ДД.ММ.2024».
-const resolvedPlaceholder = computed(() =>
-  year === undefined ? placeholder : placeholder.replace(/[^.]+$/, String(year)),
-)
 // Дни недели в шапке календаря: первая буква заглавная, остальные строчные («Пн», «Вт»).
 const capitalize = (value: string) => value.charAt(0).toLocaleUpperCase() + value.slice(1).toLocaleLowerCase()
 
@@ -164,6 +166,17 @@ function holdFocus(findTarget: FocusTarget) {
 }
 
 function handleFocusIn(event: FocusEvent) {
+  if (
+    lastKeyWasTab &&
+    !disabled &&
+    event.target instanceof HTMLElement &&
+    event.target.classList.contains('dp__input')
+  ) {
+    lastKeyWasTab = false
+    pickerRef.value?.openMenu()
+    return
+  }
+
   const target = pendingFocus?.()
   if (target && event.target !== target) {
     target.focus({ preventScroll: true })
@@ -312,6 +325,20 @@ function handleMonthGridKeydown(event: KeyboardEvent) {
   target?.focus()
 }
 
+// Название месяца в шапке меняется с той же анимацией, что и дни: vuepic листает дни переходами
+// calendar-next / calendar-prev (их стили — в main.css vuepic), берём их же. Направление определяем
+// по событию update-month-year: оно приходит раньше, чем перерисуется название.
+const monthTransition = ref<'calendar-next' | 'calendar-prev'>('calendar-next')
+let shownMonthIndex: number | null = null
+function handleMonthYearUpdate({ month, year: shownYear }: { month: number; year: number }) {
+  if (Number.isNaN(month)) return
+  const index = shownYear * 12 + month
+  if (shownMonthIndex !== null && index !== shownMonthIndex) {
+    monthTransition.value = index > shownMonthIndex ? 'calendar-next' : 'calendar-prev'
+  }
+  shownMonthIndex = index
+}
+
 // Пустой календарь открываем на последнем доступном месяце, а не на текущем.
 const startDate = computed(() => bounds.value.max)
 const hasValue = computed(() => Boolean(modelValue))
@@ -352,7 +379,7 @@ const classList = computed(() => ({
       :floating="{ arrow: false }"
       :flow="{ steps: ['month', 'calendar'], partial: true }"
       disable-year-select
-      :placeholder="resolvedPlaceholder"
+      :placeholder="placeholder"
       :disabled="disabled"
       :locale="dateFnsLocale"
       model-type="yyyy-MM-dd"
@@ -362,11 +389,17 @@ const classList = computed(() => ({
       :time-config="{ enableTimePicker: false }"
       auto-apply
       @update:model-value="handleUpdate"
+      @update-month-year="handleMonthYearUpdate"
     >
       <!-- Кнопка месяца в шапке календаря: типографика v2. Месяц полностью (формат LLLL).
            Кнопки года нет (disable-year-select): год переключается стрелками. -->
       <template #month="{ text }">
-        <span class="u-typo-button-l u-uppercase">{{ text }}</span>
+        <!-- Старое и новое название лежат в одной ячейке сетки и анимируются одновременно, как дни -->
+        <span class="FieldDate-MonthTitle">
+          <Transition :name="monthTransition">
+            <span :key="text" class="FieldDate-MonthTitleText u-typo-button-l u-uppercase">{{ text }}</span>
+          </Transition>
+        </span>
       </template>
       <!-- Типографика сетки: дни недели — label-m, числа — label-s -->
       <template #calendar-header="{ day }">
@@ -558,8 +591,15 @@ const classList = computed(() => ({
   pointer-events: none;
 }
 
+// Иконка календаря не перехватывает мышь: она лежит поверх поля, и клик проходит прямо в input —
+// работает так же, как клик по полю. Подсветка иконки при наведении — по наведению на поле.
 .FieldDate :deep(.dp__input_icon) {
   inset-inline-start: 16px;
+  pointer-events: none;
+}
+
+.FieldDate :deep(.dp__input_wrap:hover .dp__input_icon) {
+  color: var(--color-icons-hover);
 }
 
 // Обёртка кнопки очистки от vuepic по умолчанию прижата к правому краю — ставим отступ 16px, как у FieldBase.
@@ -644,6 +684,15 @@ const classList = computed(() => ({
 .FieldDate :deep(.dp--header-wrap) {
   height: auto;
   margin-bottom: 5px;
+}
+
+// Название месяца: старое и новое на время анимации накладываются в одной ячейке.
+.FieldDate-MonthTitle {
+  display: grid;
+}
+
+.FieldDate-MonthTitleText {
+  grid-area: 1 / 1;
 }
 
 // Кнопка месяца в шапке — со скруглением 12px, как ячейки дней и месяцев.
