@@ -28,7 +28,7 @@ type Props = {
   minDate?: Date
   /** Максимальная дата, доступная для выбора (без year). По умолчанию — сегодня. */
   maxDate?: Date
-  /** Показывает разделитель под днями недели в календаре. По умолчанию — показывает. */
+  /** Показывает разделитель между шапкой с месяцем и днями недели в календаре. По умолчанию — показывает. */
   separator?: boolean
   /** Локаль для date-fns и календаря */
   dateFnsLocale?: Locale
@@ -268,7 +268,7 @@ const classList = computed(() => ({
   --color-text-default: var(--neutral-900);
   --color-text-disabled: var(--neutral-500);
 
-  --color-icons: var(--neutral-500);
+  --color-icons: var(--neutral-600);
   --color-icons-hover: var(--neutral-700);
   --color-icons-focus: var(--neutral-700);
 
@@ -452,9 +452,29 @@ const classList = computed(() => ({
   box-shadow: var(--box-shadow-input-focus-tab);
 }
 
+// Строка шапки: отступ 5px снизу под кнопкой месяца (высотой 48px) — итого 53px.
+// Высоту строки отпускаем, чтобы отступ не сжимал кнопку.
+.FieldDate :deep(.dp--header-wrap) {
+  height: auto;
+  margin-bottom: 5px;
+}
+
 // Кнопка месяца в шапке — со скруглением 12px, как ячейки дней и месяцев.
 .FieldDate :deep(.dp__month_year_select) {
   border-radius: 12px;
+}
+
+// Плавная смена фона у кнопок календаря: дни, стрелки, кнопка месяца и кнопка возврата к календарю.
+// У vuepic transition задан только на :hover (и не у всех), поэтому фон появляется плавно,
+// а пропадает рывком. Задаём transition на базовом состоянии — анимируется в обе стороны.
+.FieldDate :deep(.dp__cell_inner),
+.FieldDate :deep(.dp__inner_nav),
+.FieldDate :deep(.dp__month_year_select),
+.FieldDate :deep(.dp__button) {
+  transition:
+    background-color var(--transition-color),
+    border-color var(--transition-color),
+    color var(--transition-color);
 }
 
 // Отступ между шапкой с месяцем и днями недели.
@@ -462,16 +482,25 @@ const classList = computed(() => ({
   padding-top: 8px;
 }
 
-// Линия под днями недели — в виде DividerBase. Слота для неё у vuepic нет, поэтому форму
-// из DividerBase накладываем маской на его разделитель. При изменении DividerBase обновить path здесь.
+// Свой разделитель vuepic рисует между днями недели и числами — он не нужен.
 .FieldDate :deep(.dp__calendar_header_separator) {
+  display: none;
+}
+
+// Линия между шапкой с месяцем и днями недели — в виде DividerBase. Слота для неё у vuepic нет,
+// поэтому рисуем её псевдоэлементом обёртки шапки и накладываем маской форму из DividerBase.
+// При изменении DividerBase обновить path здесь.
+.FieldDate :deep(.dp--header-wrap)::after {
+  content: '';
   height: 3px;
+  // Отступ от шапки с месяцем.
+  margin-top: 6px;
   background: var(--divider-color, var(--neutral-300));
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 592 3' preserveAspectRatio='none'%3E%3Cpath d='M0 1.5C0 1.22329 0.462191 0.998439 1.03494 0.996504L296 0L590.965 0.996504C591.538 0.998439 592 1.22329 592 1.5C592 1.77671 591.538 2.00156 590.965 2.0035L296 3L1.03494 2.0035C0.462189 2.00156 0 1.77671 0 1.5Z'/%3E%3C/svg%3E")
     center / 100% 100% no-repeat;
 }
 
-.FieldDate_noSeparator :deep(.dp__calendar_header_separator) {
+.FieldDate_noSeparator :deep(.dp--header-wrap)::after {
   display: none;
 }
 
@@ -533,10 +562,26 @@ const classList = computed(() => ({
   border: 1px solid var(--blue-400);
 }
 
-.FieldDate-MonthCell_active,
-.FieldDate-MonthCell_active:hover:not(:disabled) {
+.FieldDate-MonthCell_active {
   background: var(--blue-400);
   color: var(--white);
+
+  &:hover:not(:disabled) {
+    background: var(--blue-300);
+  }
+}
+
+// Выбранный день при наведении — светлее, как выбранный месяц.
+.FieldDate :deep(.dp__active_date:hover) {
+  background: var(--blue-300);
+  color: var(--white);
+}
+
+// Недоступные дни (вне границ выбора): серый текст на светло-сером фоне, без реакции на наведение.
+.FieldDate :deep(.dp__cell_disabled),
+.FieldDate :deep(.dp__cell_disabled:hover) {
+  /*  background: var(--neutral-100);*/
+  color: var(--neutral-200);
 }
 
 .FieldDate :deep(.FieldDate-Menu) {
