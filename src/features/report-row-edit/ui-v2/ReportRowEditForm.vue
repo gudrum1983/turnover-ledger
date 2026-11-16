@@ -305,11 +305,20 @@ onMounted(() => {
         :maxLength="55"
         name="description"
         :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
-        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.hint')"
         :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
         :model-value="description"
         @update:modelValue="description = $event ?? ''"
       />
+
+      <!--      <FieldCounter
+        :maxLength="55"
+        name="description"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.hint')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
+        :model-value="description"
+        @update:modelValue="description = $event ?? ''"
+      />-->
     </div>
     <div class="ReportRowEditForm_AmountFields">
       <FieldMoney
@@ -378,6 +387,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-height: 600px;
 }
 
 .ReportRowEditForm_Fields {
