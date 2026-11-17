@@ -810,6 +810,11 @@ const classList = computed(() => ({
   }
 }
 
+.FieldDate :deep(.dp__active_date) {
+  background: var(--blue-400);
+  color: var(--white);
+}
+
 // Выбранный день при наведении — светлее, как выбранный месяц.
 .FieldDate :deep(.dp__active_date:hover) {
   background: var(--blue-300);
