@@ -165,7 +165,7 @@ const handleSelect = (value: string) => {
     }
 
     &:active {
-      background: var(--blue-400);
+      background: var(--blue-600);
       color: var(--white);
       .ListBox_ItemDescription {
         color: var(--white);
@@ -186,6 +186,14 @@ const handleSelect = (value: string) => {
       &.ListBox_Item_focused {
         background: var(--blue-300);
         box-shadow: 0 0 0 3px #f5c96a99;
+      }
+
+      &:active {
+        background: var(--blue-100);
+        color: var(--neutral-900);
+        .ListBox_ItemDescription {
+          color: var(--neutral-900);
+        }
       }
     }
   }
