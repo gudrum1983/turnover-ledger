@@ -16,6 +16,7 @@ export const srCyrUi = {
   },
   common: {
     clearField: 'Обриши поље',
+    nothingFound: 'Нема резултата',
   },
   reportYearSelect: {
     buttonLabel: 'Извештај за {year}. годину',

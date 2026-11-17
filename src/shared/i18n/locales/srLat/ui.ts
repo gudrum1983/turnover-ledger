@@ -16,6 +16,7 @@ export const srLatUi = {
   },
   common: {
     clearField: 'Obrisi polje',
+    nothingFound: 'Nema rezultata',
   },
   reportYearSelect: {
     buttonLabel: 'Izveštaj za {year}. godinu',

@@ -3,8 +3,8 @@ import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useReportStore } from '@/entities/report'
 import { ButtonBase } from '@/shared/ui/button-base'
-import { ButtonDropdown } from '@/shared/ui/button-dropdown'
 import { FieldCounter } from '@/shared/ui/field-counter'
+import { FieldCombobox } from '@/shared/ui-v2/field-combobox'
 import { FieldDate } from '@/shared/ui-v2/field-date'
 import { FieldMoney } from '@/shared/ui/field-money'
 import { useCurrencyStore } from '@/entities/currency'
@@ -289,15 +289,13 @@ onMounted(() => {
           @update:modelValue="date = $event ?? ''"
           required
         />
-        <ButtonDropdown
+        <FieldCombobox
           class="ReportRowEditForm_CurrencyDropdown"
+          name="currency"
           :label="t('ui.reportRowForm.currency')"
-          size="xs"
-          variant="outlined"
-          color="default"
           :options="currencyOptions"
           :favorites="favoriteCurrencyCodes"
-          :model-value="currency"
+          :model-value="currency || null"
           @update:model-value="currency = $event ?? ''"
         />
       </div>
@@ -399,11 +397,10 @@ onMounted(() => {
 
 .ReportRowEditForm_Currency {
   display: flex;
-  min-width: calc(94px + 160px + 16px);
   gap: 16px;
 
   .ReportRowEditForm_CurrencyDropdown {
-    min-width: 94px;
+    /*    flex: 0 1 140px;*/
   }
 }
 

@@ -16,6 +16,7 @@ export const enUi = {
   },
   common: {
     clearField: 'Clear field',
+    nothingFound: 'Nothing found',
   },
   reportYearSelect: {
     buttonLabel: 'Report for {year}',

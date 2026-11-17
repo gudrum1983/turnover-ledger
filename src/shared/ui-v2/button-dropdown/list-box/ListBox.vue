@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { DropdownOption } from '../types'
-import { DividerBase } from '@/shared/ui/divider-base'
+import { DividerBase } from '@/shared/ui-v2/divider-base'
 
 interface Props {
   /** Варианты значений */
@@ -83,7 +83,7 @@ const handleSelect = (value: string) => {
           }}<span v-if="option.description" class="ListBox_ItemDescription"> {{ option.description }}</span></span
         >
       </button>
-      <DividerBase v-if="favoriteOptions.length > 0 && otherOptions.length > 0" :edge-offset="5" lineStyle="dashed" />
+      <DividerBase v-if="favoriteOptions.length > 0 && otherOptions.length > 0" class="ListBox-Divider" />
       <button
         v-for="option in otherOptions"
         :key="option.value"
@@ -131,10 +131,10 @@ const handleSelect = (value: string) => {
     gap: 2px;
   }
 
-  &_Divider {
-    height: 1px;
-    background: var(--color-border-table-cell);
-    margin: 0 10px;
+  // Отступы по краям, как у edge-offset в разделителе v1.
+  &-Divider {
+    width: auto;
+    margin-inline: 5px;
   }
 
   &_Item {

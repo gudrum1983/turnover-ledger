@@ -15,6 +15,7 @@ export const ruUi = {
   },
   common: {
     clearField: 'Очистить поле',
+    nothingFound: 'Ничего не найдено',
   },
   reportYearSelect: {
     buttonLabel: 'Отчёт за {year} год',
@@ -107,7 +108,7 @@ export const ruUi = {
     },
     incomeRecordsForm: {
       date: {
-        label: 'Дата',
+        label: 'Дата счета',
         placeholder: 'ДД.ММ.ГГГГ',
         pickPlaceholder: 'Выберите дату в {year} году',
         hint: 'Дата счета',
