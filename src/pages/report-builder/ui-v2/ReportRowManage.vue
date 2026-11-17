@@ -239,6 +239,17 @@ const options = [
     label: 'Расширенный',
   },
 ]
+
+const isShowYearSelect = computed(() => {
+  const isMobaile = viewport.value === 'mobile'
+  const isntEmpty = Boolean(rows.value.length)
+
+  if (isMobaile) {
+    return !isntEmpty
+  } else {
+    return true
+  }
+})
 </script>
 
 <template>
@@ -248,7 +259,7 @@ const options = [
         {{ t('ui.reportBuilderSections.incomeRecords') }}
       </h2>
 
-      <ReportYearSelect size="middle" typography="button-l" placement="center" v-if="viewport !== 'mobile'" />
+      <ReportYearSelect size="middle" typography="button-l" placement="center" v-if="isShowYearSelect" />
 
       <div v-if="rows.length < 1" class="ReportRowManage-Empty">
         <span class="u-typo-subtitle-l">{{
