@@ -235,7 +235,7 @@ onBeforeUnmount(removeGlobalListeners)
     padding: 4px;
     border-radius: 16px;
     background: var(--color-background-surface);
-    box-shadow: 0 6px 16px 0 #00000033;
+    box-shadow: var(--shadow-dropdown);
     color: var(--color-text-default);
   }
 

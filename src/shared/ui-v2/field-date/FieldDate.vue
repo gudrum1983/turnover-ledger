@@ -879,9 +879,10 @@ const classList = computed(() => ({
   color: var(--white);
 }
 
+// Тень — общая для выпадающих меню (токен --shadow-dropdown).
 .FieldDate :deep(.FieldDate-Menu) {
   border-radius: 16px;
-  box-shadow: 0 2px 8px 0 #c5cecf80;
+  box-shadow: var(--shadow-dropdown);
   overflow: hidden;
 }
 

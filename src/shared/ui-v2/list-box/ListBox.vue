@@ -199,7 +199,7 @@ const handleSelect = (value: string) => {
   color: var(--color-text-default);
   width: 100%;
   border: 1px solid #d5dfe2;
-  box-shadow: 0 6px 16px 0 #00000033;
+  box-shadow: var(--shadow-dropdown);
 
   &_List {
     padding: 4px;

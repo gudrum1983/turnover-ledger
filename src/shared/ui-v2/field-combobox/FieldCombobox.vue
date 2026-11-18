@@ -210,10 +210,35 @@ async function highlight(index: number) {
 
 // Раскрываем и подсвечиваем первый вариант из скрытых: туда пользователь и шёл.
 function expand() {
+  const listElement = listBoxRef.value?.$el as HTMLElement | undefined
+  const fromHeight = listElement?.offsetHeight
   const shown = new Set(visibleOptions.value.map((option) => option.value))
   expanded.value = true
   const firstHidden = visibleOptions.value.findIndex((option) => !shown.has(option.value))
   void highlight(firstHidden)
+  void nextTick(() => animateListHeight(listElement, fromHeight))
+}
+
+// Плавно меняет высоту списка со старой на новую (при раскрытии «Показать все»), как при открытии меню.
+// Переход к height: auto умеют не все браузеры, поэтому новую высоту замеряем и ставим явно, а после — убираем.
+function animateListHeight(element: HTMLElement | undefined, fromHeight: number | undefined) {
+  if (!element || !fromHeight) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const toHeight = element.offsetHeight
+  if (toHeight === fromHeight) return
+
+  // transitionend всплывает и от пунктов (у них свои переходы при наведении) — ждём именно высоту списка.
+  const cleanup = (event: TransitionEvent) => {
+    if (event.target !== element || event.propertyName !== 'height') return
+    element.removeEventListener('transitionend', cleanup)
+    element.style.height = ''
+    element.style.transition = ''
+  }
+  element.style.height = `${fromHeight}px`
+  void element.offsetHeight // применяем стартовую высоту до перехода
+  element.style.transition = 'height var(--transition-collapse-enter)'
+  element.style.height = `${toHeight}px`
+  element.addEventListener('transitionend', cleanup)
 }
 
 function openMenu() {
@@ -733,7 +758,7 @@ const classList = computed(() => ({
   max-width: 320px;
   z-index: 10;
   border-radius: 16px;
-  box-shadow: 0 6px 16px 0 #00000033;
+  box-shadow: var(--shadow-dropdown);
 }
 
 .FieldCombobox-Menu_placement_left {

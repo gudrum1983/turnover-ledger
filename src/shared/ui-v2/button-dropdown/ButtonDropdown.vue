@@ -241,7 +241,7 @@ onBeforeUnmount(() => {
   min-width: 220px;
   z-index: 10;
   border-radius: 16px;
-  box-shadow: 0 6px 16px 0 #00000033;
+  box-shadow: var(--shadow-dropdown);
 }
 
 .ButtonDropdown_Menu_left {
