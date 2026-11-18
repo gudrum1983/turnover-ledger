@@ -15,6 +15,7 @@ import { ButtonIcon } from '@/shared/ui-v2/button-icon'
 import { LabelContainer } from '@/shared/ui-v2/label-container'
 import { ReportYearSelect } from '@/features/report-year-select'
 import { ReportRowsTable, type ReportRowsTableAlert } from '@/widgets/report-rows-table'
+import { DividerBase } from '@/shared/ui-v2/divider-base'
 
 const store = useReportStore()
 // Конструктор работает с записями выбранного года: таблица, итог, лимит и очистка.
@@ -348,9 +349,12 @@ const isShowYearSelect = computed(() => {
         @update:canSubmit="canSubmit = $event"
         @submit="onSubmit"
       />
+      <DividerBase class="ReportRowManage_Divider" />
       <div class="ReportRowManage-ModalActions">
-        <ButtonBase variant="page" size="m" @click="closeModal">{{ t('ui.reportRowForm.cancel') }}</ButtonBase>
-        <ButtonBase variant="accent" size="m" :disabled="!canSubmit" type="submit" form="report-row-form">
+        <ButtonBase variant="page" size="m" @click="closeModal" full-width>{{
+          t('ui.reportRowForm.cancel')
+        }}</ButtonBase>
+        <ButtonBase variant="accent" size="m" :disabled="!canSubmit" type="submit" form="report-row-form" full-width>
           {{ t('ui.reportRowForm.submit') }}
         </ButtonBase>
       </div>
@@ -425,5 +429,9 @@ const isShowYearSelect = computed(() => {
   width: 100%;
   justify-content: space-between;
   gap: 16px;
+}
+
+.ReportRowManage_Divider {
+  margin-block: 24px;
 }
 </style>

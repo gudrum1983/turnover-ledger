@@ -446,7 +446,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-height: 600px;
 }
 
 .ReportRowEditForm_Fields {
