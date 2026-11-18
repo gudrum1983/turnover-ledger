@@ -43,6 +43,8 @@ defineExpose({ scrollToSelected })
 // всё, что выходит за его края, поэтому тултип выносим в body (Teleport) и ставим position: fixed.
 const TOOLTIP_GAP = 4
 const TOOLTIP_VIEWPORT_GAP = 18
+// Сдвиг вправо, чтобы текст тултипа начинался там же, где текст пункта: отступ пункта 16px − отступ TooltipBase 8px.
+const TOOLTIP_TEXT_OFFSET = 8
 // Если над пунктом меньше места, тултип показываем под ним.
 const TOOLTIP_MIN_SPACE_ABOVE = 64
 type ItemTooltip = { text: string; left: number; top: number; below: boolean }
@@ -58,7 +60,7 @@ function showTooltip(item: Element | null | undefined) {
   const below = rect.top < TOOLTIP_MIN_SPACE_ABOVE
   tooltip.value = {
     text: text.textContent?.trim() ?? '',
-    left: Math.max(TOOLTIP_VIEWPORT_GAP, rect.left),
+    left: Math.max(TOOLTIP_VIEWPORT_GAP, rect.left + TOOLTIP_TEXT_OFFSET),
     top: below ? rect.bottom + TOOLTIP_GAP : rect.top - TOOLTIP_GAP,
     below,
   }
@@ -295,25 +297,32 @@ const handleSelect = (value: string) => {
   pointer-events: none;
   transform: translateY(-100%);
 
-  // Кончик у левого края, смотрит на пункт.
-  &::after {
-    content: '';
-    position: absolute;
-    left: 16px;
-    bottom: -4px;
-    width: 8px;
-    height: 8px;
-    z-index: -1;
-    background: var(--neutral-600);
-    border-radius: 0 0 2px 0;
-    transform: rotate(45deg);
+  // Кончик — у самого TooltipBase (как в TooltipWrapper), а не у обёртки: иначе тень TooltipBase ложится
+  // поверх кончика и он выглядит светлее. isolation — чтобы кончик с z-index: -1 рисовался после фона
+  // и тени TooltipBase, но под текстом. Цвет наследуется от TooltipBase.
+  :deep(.TooltipBase) {
+    isolation: isolate;
+
+    // Кончик у левого края, смотрит на пункт.
+    &::after {
+      content: '';
+      position: absolute;
+      left: 16px;
+      bottom: -4px;
+      width: 8px;
+      height: 8px;
+      z-index: -1;
+      background: inherit;
+      border-radius: 0 0 2px 0;
+      transform: rotate(45deg);
+    }
   }
 }
 
 .ListBox-Tooltip_below {
   transform: none;
 
-  &::after {
+  :deep(.TooltipBase)::after {
     top: -4px;
     bottom: auto;
     border-radius: 2px 0 0 0;
