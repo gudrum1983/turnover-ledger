@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { fetchConversion, fetchCurrencies, fetchRates } from '../api/currencies'
-import type { ConversionResponse, Currency, RatesResponse } from './types'
+import type { ConversionResponse, Currency, CurrencyRate, RatesResponse } from './types'
 import type { CurrencyCode } from '@/shared/types'
 import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
 
@@ -21,8 +21,8 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const updatedAt = ref<string | null>(null)
-  /** Курсы на дату: дата YYYY-MM-DD → код валюты → курс в RSD за 1 единицу. Только в памяти. */
-  const ratesByDate = ref<Record<string, Record<CurrencyCode, number>>>({})
+  /** Курсы на дату: дата YYYY-MM-DD → код валюты → курс, как в листе НБС (за parity единиц). Только в памяти. */
+  const ratesByDate = ref<Record<string, Record<CurrencyCode, CurrencyRate>>>({})
   const ratesRequests = new Map<string, Promise<void>>()
 
   function isActiveCurrencies(currency: Currency) {
@@ -158,12 +158,13 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
     }
   }
 
-  // Курс приводим к 1 единице валюты: у JPY и HUF НБС указывает его за 100.
-  function toUnitRates(response: RatesResponse): Record<CurrencyCode, number> {
-    const result: Record<CurrencyCode, number> = {}
+  // Курс храним как в листе НБС, вместе с parity: у JPY и HUF он указан за 100 единиц, у остальных — за 1.
+  // Валюты без среднего курса пропускаем.
+  function toRates(response: RatesResponse): Record<CurrencyCode, CurrencyRate> {
+    const result: Record<CurrencyCode, CurrencyRate> = {}
     for (const rate of response.rates ?? []) {
       if (typeof rate?.exchange_middle !== 'number' || !(rate.parity > 0)) continue
-      result[rate.code.trim().toUpperCase()] = rate.exchange_middle / rate.parity
+      result[rate.code.trim().toUpperCase()] = { rate: rate.exchange_middle, parity: rate.parity }
     }
     return result
   }
@@ -180,7 +181,7 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
 
     const request = fetchRates(date)
       .then((response) => {
-        ratesByDate.value = { ...ratesByDate.value, [date]: toUnitRates(response) }
+        ratesByDate.value = { ...ratesByDate.value, [date]: toRates(response) }
       })
       .catch(() => {
         // повторим при следующем выборе этой даты

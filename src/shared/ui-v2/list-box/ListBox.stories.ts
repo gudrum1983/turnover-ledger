@@ -91,6 +91,7 @@ export const WithDescription: Story = {
       { value: 'XDR', label: 'XDR', description: '= 150,1234 RSD · СДР (специальные права заимствования)' },
       { value: 'DEM', label: 'DEM', description: '= 59,9093 RSD · Немецкая марка' },
       { value: 'CHF', label: 'CHF', description: '= 125,4321 RSD · Швейцарский франк' },
+      { value: 'HUF', label: 'HUF', description: '100 = 28,1234 RSD · Венгерский форинт' },
     ],
   },
 }

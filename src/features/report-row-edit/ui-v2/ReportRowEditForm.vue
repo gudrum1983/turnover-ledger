@@ -47,9 +47,10 @@ const moneyLocale = computed(() => {
   return 'ru-RU'
 })
 
-// В списке валют после кода — курс НБС за 1 единицу и название: «EUR = 117,1734 RSD · Евро».
+// В списке валют после кода — курс как в листе НБС и название. Количество единиц пишем, только если оно не 1:
+// «EUR = 117,1734 RSD · Евро», «HUF 100 = 28,1234 RSD · Венгерский форинт».
 // Без даты (и для RSD) — только название: «EUR · Евро». Ищем по коду и названию, но не по цифрам курса.
-// В поле — коротко, чтобы не обрезалось: курс, а если курса нет — название.
+// В поле — коротко, чтобы не обрезалось: курс («EUR = 117,1734 RSD»), а если курса нет — название.
 const isFullDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
 const ratesForDate = computed(() => (isFullDate(date.value) ? currencyStore.ratesByDate[date.value] : undefined))
 const rateFormatter = computed(
@@ -78,7 +79,8 @@ const currencyOptions = computed(() => {
   return availableCurrencies.value.map((code) => {
     const name = getCurrencyName(code, intlLocale)
     const rate = code === LOCAL_CURRENCY_CODE ? undefined : ratesForDate.value?.[code]
-    const rateText = rate === undefined ? undefined : `= ${rateFormatter.value.format(rate)} RSD`
+    const parityText = rate && rate.parity !== 1 ? `${rate.parity} ` : ''
+    const rateText = rate === undefined ? undefined : `${parityText}= ${rateFormatter.value.format(rate.rate)} RSD`
     const nameText = name ? `· ${name}` : undefined
     return {
       value: code,

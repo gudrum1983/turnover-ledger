@@ -27,6 +27,12 @@ export type DailyRate = {
   exchange_sell?: number
 }
 
+/** Курс на дату, как в курсовом листе НБС: rate RSD за parity единиц валюты (EUR 1 = 117,1734; HUF 100 = 28,1234). */
+export type CurrencyRate = {
+  rate: number
+  parity: number
+}
+
 export type RatesResponse = {
   rates: DailyRate[]
 }

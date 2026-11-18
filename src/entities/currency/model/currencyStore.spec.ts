@@ -17,7 +17,7 @@ describe('currencyStore.loadRates', () => {
     fetchRatesMock.mockReset()
   })
 
-  it('сохраняет курсы за 1 единицу валюты и пропускает валюты без среднего курса', async () => {
+  it('сохраняет курсы как в листе НБС, вместе с parity, и пропускает валюты без среднего курса', async () => {
     fetchRatesMock.mockResolvedValue({
       rates: [
         { code: 'EUR', date: '2026-01-25', date_from: '2026-01-23', number: 978, parity: 1, exchange_middle: 117.2 },
@@ -29,7 +29,10 @@ describe('currencyStore.loadRates', () => {
 
     await store.loadRates('2026-01-25')
 
-    expect(store.ratesByDate['2026-01-25']).toEqual({ EUR: 117.2, JPY: 0.685 })
+    expect(store.ratesByDate['2026-01-25']).toEqual({
+      EUR: { rate: 117.2, parity: 1 },
+      JPY: { rate: 68.5, parity: 100 },
+    })
   })
 
   it('не повторяет запрос для той же даты, в том числе параллельный', async () => {
