@@ -17,6 +17,7 @@ export const srCyrUi = {
   common: {
     clearField: 'Обриши поље',
     nothingFound: 'Нема резултата',
+    showAll: 'Прикажи све',
   },
   reportYearSelect: {
     buttonLabel: 'Извештај за {year}. годину',
@@ -158,6 +159,7 @@ export const srCyrUi = {
   },
   reportRowForm: {
     currency: 'Валута',
+    allCurrencies: 'Све валуте „НБС“',
     total: 'Укупно',
     calculate: 'Израчунај',
     officialRatePrefix: 'Званични средњи курс RSD (NBS)',

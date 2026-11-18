@@ -17,6 +17,7 @@ export const enUi = {
   common: {
     clearField: 'Clear field',
     nothingFound: 'Nothing found',
+    showAll: 'Show all',
   },
   reportYearSelect: {
     buttonLabel: 'Report for {year}',
@@ -158,6 +159,7 @@ export const enUi = {
   },
   reportRowForm: {
     currency: 'Currency',
+    allCurrencies: 'All "NBS" currencies',
     total: 'Total',
     calculate: 'Calculate',
     officialRatePrefix: 'Official middle RSD exchange rate (NBS)',

@@ -17,6 +17,7 @@ export const srLatUi = {
   common: {
     clearField: 'Obrisi polje',
     nothingFound: 'Nema rezultata',
+    showAll: 'Prikaži sve',
   },
   reportYearSelect: {
     buttonLabel: 'Izveštaj za {year}. godinu',
@@ -158,6 +159,7 @@ export const srLatUi = {
   },
   reportRowForm: {
     currency: 'Valuta',
+    allCurrencies: 'Sve valute „NBS“',
     total: 'Ukupno',
     calculate: 'Izračunaj',
     officialRatePrefix: 'Zvanični srednji kurs RSD (NBS)',

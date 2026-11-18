@@ -16,6 +16,7 @@ export const ruUi = {
   common: {
     clearField: 'Очистить поле',
     nothingFound: 'Ничего не найдено',
+    showAll: 'Показать все',
   },
   reportYearSelect: {
     buttonLabel: 'Отчёт за {year} год',
@@ -157,6 +158,7 @@ export const ruUi = {
   },
   reportRowForm: {
     currency: 'Валюта',
+    allCurrencies: 'Все валюты «НБС»',
     total: 'Итого',
     calculate: 'Рассчитать',
     officialRatePrefix: 'Официальный средний обменный курс RSD (NBS)',
