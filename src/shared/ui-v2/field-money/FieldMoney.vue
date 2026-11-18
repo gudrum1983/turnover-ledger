@@ -21,6 +21,8 @@ type Props = {
   errorMessage?: string
   /** Отключает ввод */
   disabled?: boolean
+  /** Только для чтения: значение видно и выделяется, но не меняется (например, расчётные суммы) */
+  readonly?: boolean
 }
 
 const {
@@ -33,6 +35,7 @@ const {
   error = false,
   errorMessage,
   disabled = false,
+  readonly = false,
 } = defineProps<Props>()
 
 const emit = defineEmits<{
@@ -48,8 +51,11 @@ const decimalSeparator = computed(() => {
 })
 
 // Маска: целая часть любой длины, разделитель и до двух знаков после него.
+// Разделителем принимаем и «.», и «,»: на телефоне клавиатура decimal показывает разделитель системной
+// локали, а не локали интерфейса. До маски заменяем любой из них на разделитель локали.
 const moneyMask = computed(() => ({
   mask: `0${decimalSeparator.value}99`,
+  preProcess: (value: string) => value.replace(/[.,]/g, decimalSeparator.value),
   tokens: {
     '0': { pattern: /[0-9]/, multiple: true },
     '9': { pattern: /[0-9]/, optional: true },
@@ -88,9 +94,11 @@ function handleBlur(value: string | null) {
     :placeholder="placeholder"
     :model-value="modelValue"
     :mask="moneyMask"
+    inputmode="decimal"
     :error="error"
     :error-message="errorMessage"
     :disabled="disabled"
+    :readonly="readonly"
     @update:model-value="emit('update:modelValue', $event)"
     @blur="handleBlur"
   />
