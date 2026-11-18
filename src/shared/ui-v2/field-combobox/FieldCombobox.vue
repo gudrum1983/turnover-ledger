@@ -23,6 +23,17 @@ type Props = {
   error?: boolean
   /** Текст, когда ни один вариант не подошёл. По умолчанию — «Ничего не найдено». */
   emptyText?: string
+  /** Выравнивание списка относительно поля, если список шире поля. */
+  placement?: 'left' | 'right'
+  /** Показывать в поле после выбранного значения его selectedDescription или description (серым, как в списке). */
+  showDescription?: boolean
+  /**
+   * Без поискового запроса показывать только избранные (и выбранное значение), остальные — по строке
+   * «Показать все (N)» в конце списка. Поиск всегда идёт по всем вариантам.
+   */
+  collapsible?: boolean
+  /** Текст строки, раскрывающей список. По умолчанию — «Показать все». Количество скрытых добавляется в скобках. */
+  expandText?: string
 }
 
 const {
@@ -35,10 +46,16 @@ const {
   disabled = false,
   error = false,
   emptyText,
+  placement = 'left',
+  showDescription = false,
+  collapsible = false,
+  expandText,
 } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
+  /** Фокус ушёл из поля. Клик по крестику и выбор из списка фокус не уводят. */
+  (e: 'blur'): void
 }>()
 
 const { t } = useLocale()
@@ -73,8 +90,17 @@ const normalizedQuery = computed(() => normalize(query.value ?? ''))
 const activeOption = computed(() => options.find((option) => option.value === modelValue))
 const inputValue = computed(() => query.value ?? activeOption.value?.label ?? '')
 const hasValue = computed(() => Boolean(inputValue.value))
+// Подпись выбранного варианта видна, пока пользователь ничего не вводит.
+// Сам input при этом прозрачный (курсор виден), текст рисует слой поверх с тем же шрифтом.
+const shownDescription = computed(() =>
+  showDescription && query.value === null
+    ? (activeOption.value?.selectedDescription ?? activeOption.value?.description)
+    : undefined,
+)
+const descriptionId = `${inputId}-description`
 
 // Без запроса — избранные сверху. С запросом — сначала совпадения с начала строки, потом вхождения.
+// Ищем по label, value и keywords (без keywords — по description).
 const filteredOptions = computed(() => {
   const search = normalizedQuery.value
   if (!search) {
@@ -89,7 +115,7 @@ const filteredOptions = computed(() => {
   const startsWith: DropdownOption[] = []
   const includes: DropdownOption[] = []
   for (const option of options) {
-    const texts = [option.label, option.value, option.description ?? ''].map(normalize)
+    const texts = [option.label, option.value, ...(option.keywords ?? [option.description ?? ''])].map(normalize)
     if (texts.some((text) => text.startsWith(search))) startsWith.push(option)
     else if (texts.some((text) => text.includes(search))) includes.push(option)
   }
@@ -97,26 +123,59 @@ const filteredOptions = computed(() => {
 })
 const listFavorites = computed(() => (normalizedQuery.value ? undefined : favorites))
 
+// Свёрнутый список: избранные и выбранное значение (чтобы текущий выбор был виден), остальные скрыты.
+// Раскрытие действует, пока список открыт.
+const expanded = ref(false)
+const collapsedOptions = computed(() => {
+  if (!collapsible || expanded.value || normalizedQuery.value || !favorites?.length) return null
+  const favoriteSet = new Set(favorites)
+  const shown = filteredOptions.value.filter((option) => favoriteSet.has(option.value) || option.value === modelValue)
+  return shown.length > 0 && shown.length < filteredOptions.value.length ? shown : null
+})
+const visibleOptions = computed(() => collapsedOptions.value ?? filteredOptions.value)
+const hiddenCount = computed(() => filteredOptions.value.length - visibleOptions.value.length)
+const expandLabel = computed(() => `${expandText ?? t('ui.common.showAll')} (${hiddenCount.value})`)
+
 // Подсветка варианта, который выберут Enter или Tab. Видна после ввода или стрелок.
-const highlightedValue = ref<string>()
+// Строка «Показать все» подсвечивается как последний вариант, значение у неё служебное.
+const EXPAND_VALUE = Symbol('expand')
+const expandId = `${listId}-expand`
+const highlightedValue = ref<string | typeof EXPAND_VALUE>()
 const showHighlight = ref(false)
+const isExpandHighlighted = computed(() => showHighlight.value && highlightedValue.value === EXPAND_VALUE)
 const highlightedIndex = computed(() =>
-  filteredOptions.value.findIndex((option) => option.value === highlightedValue.value),
+  highlightedValue.value === EXPAND_VALUE
+    ? visibleOptions.value.length
+    : visibleOptions.value.findIndex((option) => option.value === highlightedValue.value),
 )
-const highlightedId = computed(() =>
-  showHighlight.value && highlightedIndex.value >= 0 ? `${listId}-option-${highlightedIndex.value}` : undefined,
+const highlightedId = computed(() => {
+  if (!showHighlight.value || highlightedIndex.value < 0) return undefined
+  return highlightedValue.value === EXPAND_VALUE ? expandId : `${listId}-option-${highlightedIndex.value}`
+})
+const activeOptionValue = computed(() =>
+  showHighlight.value && typeof highlightedValue.value === 'string' ? highlightedValue.value : undefined,
 )
 
 async function highlight(index: number) {
-  const list = filteredOptions.value
-  highlightedValue.value = list[Math.max(0, Math.min(index, list.length - 1))]?.value
+  const list = visibleOptions.value
+  const lastIndex = collapsedOptions.value ? list.length : list.length - 1
+  const nextIndex = Math.max(0, Math.min(index, lastIndex))
+  highlightedValue.value = nextIndex === list.length ? EXPAND_VALUE : list[nextIndex]?.value
   await nextTick()
   listBoxRef.value?.scrollToSelected()
 }
 
+// Раскрываем и подсвечиваем первый вариант из скрытых: туда пользователь и шёл.
+function expand() {
+  const shown = new Set(visibleOptions.value.map((option) => option.value))
+  expanded.value = true
+  const firstHidden = visibleOptions.value.findIndex((option) => !shown.has(option.value))
+  void highlight(firstHidden)
+}
+
 function openMenu() {
   if (disabled || isOpen.value) return
-  highlightedValue.value = modelValue ?? filteredOptions.value[0]?.value
+  highlightedValue.value = modelValue ?? visibleOptions.value[0]?.value
   isOpen.value = true
 }
 
@@ -124,6 +183,7 @@ function closeMenu() {
   isOpen.value = false
   query.value = null
   showHighlight.value = false
+  expanded.value = false
 }
 
 function toggleMenu() {
@@ -137,7 +197,8 @@ function select(value: string) {
 }
 
 function commitHighlighted() {
-  if (highlightedValue.value !== undefined && highlightedIndex.value >= 0) select(highlightedValue.value)
+  if (highlightedValue.value === EXPAND_VALUE) expand()
+  else if (highlightedValue.value !== undefined && highlightedIndex.value >= 0) select(highlightedValue.value)
   else closeMenu()
 }
 
@@ -184,7 +245,8 @@ function handleKeydown(event: KeyboardEvent) {
       closeMenu()
       return
     case 'Tab':
-      if (isOpen.value && showHighlight.value) commitHighlighted()
+      // Tab на строке «Показать все» просто уводит фокус, ничего не выбирая.
+      if (isOpen.value && showHighlight.value && highlightedValue.value !== EXPAND_VALUE) commitHighlighted()
       return
   }
 }
@@ -196,12 +258,10 @@ function handleBlur() {
       (option) =>
         normalize(option.label) === normalizedQuery.value || normalize(option.value) === normalizedQuery.value,
     )
-    if (match) {
-      select(match.value)
-      return
-    }
+    if (match) select(match.value)
   }
   closeMenu()
+  emit('blur')
 }
 
 // Клик по рамке или отступам ведёт себя как клик по input.
@@ -235,26 +295,38 @@ const classList = computed(() => ({
 
     <div class="FieldCombobox-Control" @mousedown="handleControlMouseDown">
       <input type="hidden" :name="name" :value="modelValue ?? ''" />
-      <input
-        :id="inputId"
-        ref="inputRef"
-        class="FieldCombobox-Input u-typo-body-m"
-        type="text"
-        role="combobox"
-        autocomplete="off"
-        aria-autocomplete="list"
-        :aria-expanded="isOpen"
-        :aria-controls="isOpen ? listId : undefined"
-        :aria-activedescendant="isOpen ? highlightedId : undefined"
-        :aria-invalid="error ? 'true' : undefined"
-        :value="inputValue"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        @input="handleInput"
-        @keydown="handleKeydown"
-        @blur="handleBlur"
-        @click="toggleMenu"
-      />
+      <span class="FieldCombobox-InputWrap">
+        <input
+          :id="inputId"
+          ref="inputRef"
+          class="FieldCombobox-Input u-typo-body-m"
+          type="text"
+          role="combobox"
+          autocomplete="off"
+          aria-autocomplete="list"
+          :aria-expanded="isOpen"
+          :aria-controls="isOpen ? listId : undefined"
+          :aria-activedescendant="isOpen ? highlightedId : undefined"
+          :aria-invalid="error ? 'true' : undefined"
+          :aria-describedby="shownDescription ? descriptionId : undefined"
+          :class="{ 'FieldCombobox-Input_overlaid': shownDescription }"
+          :value="inputValue"
+          :placeholder="placeholder"
+          :disabled="disabled"
+          @input="handleInput"
+          @keydown="handleKeydown"
+          @blur="handleBlur"
+          @click="toggleMenu"
+        />
+        <span v-if="shownDescription" class="FieldCombobox-Display u-typo-body-m" aria-hidden="true">
+          <span class="FieldCombobox-DisplayText"
+            >{{ activeOption?.label
+            }}<span :id="descriptionId" class="FieldCombobox-DisplayDescription">{{
+              ' ' + shownDescription
+            }}</span></span
+          >
+        </span>
+      </span>
       <Transition name="field-icon">
         <button
           v-if="hasValue && !disabled"
@@ -271,21 +343,37 @@ const classList = computed(() => ({
     </div>
 
     <Transition name="field-combobox-menu" @enter="listBoxRef?.scrollToSelected()">
-      <div v-if="isOpen" class="FieldCombobox-Menu">
+      <div v-if="isOpen" class="FieldCombobox-Menu" :class="`FieldCombobox-Menu_placement_${placement}`">
         <div class="FieldCombobox-MenuContent">
           <ListBox
-            v-if="filteredOptions.length"
+            v-if="visibleOptions.length"
             :id="listId"
             ref="listBoxRef"
             class="FieldCombobox-ListBox"
             :option-id-prefix="listId"
-            :options="filteredOptions"
+            :options="visibleOptions"
             :favorites="listFavorites"
             :model-value="modelValue ?? undefined"
-            :active-value="showHighlight ? highlightedValue : undefined"
+            :active-value="activeOptionValue"
             @mousedown.prevent
             @change="select"
-          />
+          >
+            <template v-if="collapsedOptions" #footer>
+              <button
+                :id="expandId"
+                class="FieldCombobox-Expand u-typo-body-m"
+                :class="{ 'FieldCombobox-Expand_focused': isExpandHighlighted }"
+                type="button"
+                role="option"
+                tabindex="-1"
+                aria-selected="false"
+                :data-active="isExpandHighlighted"
+                @click="expand"
+              >
+                {{ expandLabel }}
+              </button>
+            </template>
+          </ListBox>
           <div v-else class="FieldCombobox-Empty u-typo-body-m" role="status">
             {{ emptyText ?? t('ui.common.nothingFound') }}
           </div>
@@ -405,6 +493,40 @@ const classList = computed(() => ({
   }
 }
 
+.FieldCombobox-InputWrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+// Слой с выбранным значением и его подписью поверх прозрачного input.
+.FieldCombobox-Display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  pointer-events: none;
+  color: var(--color-text-default);
+}
+
+.FieldCombobox-DisplayText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.FieldCombobox-DisplayDescription {
+  color: var(--neutral-600);
+}
+
+// Специфичнее правил disabled, иначе в отключённом поле текст input проступит под слоем.
+.FieldCombobox .FieldCombobox-Input.FieldCombobox-Input_overlaid {
+  color: transparent;
+  caret-color: var(--color-text-default);
+}
+
 .FieldCombobox-Input {
   flex: 1;
   min-width: 0;
@@ -464,12 +586,22 @@ const classList = computed(() => ({
   grid-template-rows: 1fr;
   position: absolute;
   top: calc(100% + 4px);
-  left: 0;
   box-sizing: border-box;
-  width: 100%;
+  // Список может быть шире узкого поля (например, код валюты с названием и курсом).
+  width: max-content;
+  min-width: 100%;
+  max-width: 320px;
   z-index: 10;
   border-radius: 16px;
   box-shadow: 0 6px 16px 0 #00000033;
+}
+
+.FieldCombobox-Menu_placement_left {
+  left: 0;
+}
+
+.FieldCombobox-Menu_placement_right {
+  right: 0;
 }
 
 .FieldCombobox-MenuContent {
@@ -480,8 +612,36 @@ const classList = computed(() => ({
 
 .FieldCombobox-ListBox {
   box-sizing: border-box;
-  max-height: 226px;
+  // 5 пунктов, плюс разделитель, если он есть.
+  max-height: calc(226px + var(--list-box-divider-space, 0px));
   box-shadow: none;
+}
+
+.FieldCombobox-Expand {
+  flex-shrink: 0;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 24px;
+  background: inherit;
+  color: var(--neutral-600);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition);
+
+  &:hover {
+    background: var(--neutral-100);
+    color: var(--neutral-900);
+  }
+
+  // Как подсветка пунктов ListBox при навигации с клавиатуры.
+  &_focused {
+    background: var(--neutral-100);
+    color: var(--neutral-900);
+    box-shadow: 0 0 0 3px #f5c96a99;
+  }
 }
 
 .FieldCombobox-Empty {
@@ -499,6 +659,11 @@ const classList = computed(() => ({
     color: var(--color-text-disabled);
     box-shadow: none;
     cursor: not-allowed;
+  }
+
+  .FieldCombobox-Display,
+  .FieldCombobox-DisplayDescription {
+    color: var(--color-text-disabled);
   }
 
   .FieldCombobox-Input {

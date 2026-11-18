@@ -63,6 +63,11 @@ export const WithFavorites: Story = {
   args: { favorites: ['RSD', 'EUR'] },
 }
 
+export const Collapsible: Story = {
+  name: 'Свёрнуто до избранных',
+  args: { favorites: ['RSD', 'EUR', 'USD'], collapsible: true, expandText: 'Все валюты' },
+}
+
 export const WithDescription: Story = {
   name: 'С описаниями',
   args: {

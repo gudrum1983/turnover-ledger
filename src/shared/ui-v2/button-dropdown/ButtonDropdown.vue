@@ -265,7 +265,8 @@ onBeforeUnmount(() => {
 
 .ButtonDropdown_ListBox {
   box-sizing: border-box;
-  max-height: 226px;
+  // 5 пунктов, плюс разделитель, если он есть.
+  max-height: calc(226px + var(--list-box-divider-space, 0px));
   box-shadow: none;
 }
 
