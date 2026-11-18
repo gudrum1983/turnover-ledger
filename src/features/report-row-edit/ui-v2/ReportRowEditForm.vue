@@ -2,16 +2,15 @@
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useReportStore } from '@/entities/report'
-import { ButtonBase } from '@/shared/ui/button-base'
 import { FieldCounter } from '@/shared/ui-v2/field-counter'
 import { FieldCombobox } from '@/shared/ui-v2/field-combobox'
 import { FieldDate } from '@/shared/ui-v2/field-date'
 import { FieldMoney } from '@/shared/ui-v2/field-money'
 import { getCurrencyName, useCurrencyStore } from '@/entities/currency'
-import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
-import { DisplayField } from '@/shared/ui/display-field'
 import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
+import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
+import { IconCalculator } from '@/shared/ui-v2/icons'
 
 const currency = ref('')
 const date = ref('')
@@ -145,18 +144,7 @@ const isCalculateDisabled = computed(
   () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value || hasNoRateForCurrency.value,
 )
 
-const summary = computed(() => {
-  if (!date.value && !description.value) {
-    return undefined
-  }
-  return [date.value ? formatDateForUi(date.value) : '', description.value].filter(Boolean).join('. ')
-})
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
-
-const uiLocale = computed(() => localeStore.currentLocale)
-const toCents = (value: number) => Math.round(value * 100)
-const formatValue = (value: number | null) =>
-  value === null ? '—' : formatMoney(toCents(value), { showMinorZeros: true, locale: uiLocale.value })
 
 const formatInputMoney = (value: number | null | undefined): string | null => {
   if (value === null || value === undefined) {
@@ -359,6 +347,7 @@ onMounted(() => {
         :maxLength="55"
         name="description"
         :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.hint')"
         :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
         :model-value="description"
         @update:modelValue="description = $event ?? ''"
@@ -383,19 +372,26 @@ onMounted(() => {
         :locale="moneyLocale"
         @update:modelValue="servicesAmount = $event"
       />
-      <DisplayField :label="t('ui.reportRowForm.total')" :value="formatValue(totalValue)" />
+      <FieldMoney
+        name="total"
+        :label="t('ui.reportRowForm.total')"
+        :model-value="formatInputMoney(totalValue || null)"
+        :locale="moneyLocale"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+        readonly
+      />
     </div>
 
     <div v-if="!isLocalCurrency" class="ReportRowEditForm_Toolbar">
-      <ButtonBase
-        size="xs"
-        color="primary"
+      <ButtonWithIcon
+        :icon="IconCalculator"
+        variant="accent"
         :disabled="isCalculateDisabled"
         :isLoader="isCalculating"
         @click="handleCalculate"
       >
         {{ t('ui.reportRowForm.calculate') }}
-      </ButtonBase>
+      </ButtonWithIcon>
       <div v-if="isCalculated" class="ReportRowEditForm_Hint">
         {{ t('ui.reportRowForm.officialRatePrefix') }} {{ exchangeRate ?? '—' }}
       </div>
@@ -417,12 +413,31 @@ onMounted(() => {
     </div>
 
     <div class="ReportRowEditForm_Calculations" v-if="!isLocalCurrency">
-      <DisplayField :label="t('ui.reportRowForm.goodsRsd')" :value="formatValue(goodsAmountRsd)" />
-      <DisplayField :label="t('ui.reportRowForm.servicesRsd')" :value="formatValue(servicesAmountRsd)" />
-      <DisplayField :label="t('ui.reportRowForm.totalRsd')" :value="formatValue(totalAmountRsd)" />
+      <FieldMoney
+        name="goodsAmountRsd"
+        :label="t('ui.reportRowForm.goodsRsd')"
+        :model-value="formatInputMoney(goodsAmountRsd)"
+        :locale="moneyLocale"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+        readonly
+      />
+      <FieldMoney
+        name="servicesAmountRsd"
+        :label="t('ui.reportRowForm.servicesRsd')"
+        :model-value="formatInputMoney(servicesAmountRsd)"
+        :locale="moneyLocale"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+        readonly
+      />
+      <FieldMoney
+        name="totalAmountRsd"
+        :label="t('ui.reportRowForm.totalRsd')"
+        :model-value="formatInputMoney(totalAmountRsd)"
+        :locale="moneyLocale"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+        readonly
+      />
     </div>
-
-    <DisplayField :label="t('ui.reportRowForm.row')" :value="summary" />
   </form>
 </template>
 
