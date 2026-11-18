@@ -486,7 +486,7 @@ const classList = computed(() => ({
   --color-text-default: var(--neutral-900);
   --color-text-disabled: var(--neutral-500);
 
-  --color-icons: var(--neutral-600);
+  --color-icons: var(--neutral-500);
   --color-icons-hover: var(--neutral-700);
   --color-icons-focus: var(--neutral-700);
 
