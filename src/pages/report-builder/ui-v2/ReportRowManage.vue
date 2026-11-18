@@ -296,8 +296,15 @@ const isShowYearSelect = computed(() => {
         </div>
 
         <div class="ReportRowManage_Actions_mobile" v-else>
-          <ButtonIcon ariaLabel="Добавить строку" size="l" type="button" variant="page" @click="openCreateModal()">
-            <IconAddCircle size="m" />
+          <ButtonIcon
+            ariaLabel="Добавить строку"
+            size="l"
+            type="button"
+            variant="page"
+            @click="openCreateModal()"
+            v-slot="{ size }"
+          >
+            <IconAddCircle :size="size" />
           </ButtonIcon>
           <ReportYearSelect size="middle" typography="button-l" placement="center" />
           <ButtonIcon
@@ -306,8 +313,9 @@ const isShowYearSelect = computed(() => {
             type="button"
             variant="danger"
             @click="openDialogConfirm = true"
+            v-slot="{ size }"
           >
-            <IconTrash size="m" />
+            <IconTrash :size="size" />
           </ButtonIcon>
         </div>
 

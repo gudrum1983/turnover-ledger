@@ -185,8 +185,9 @@ onBeforeUnmount(removeGlobalListeners)
       :aria-controls="isOpen ? menuId : undefined"
       @click="toggleMenu"
       @keydown="handleTriggerKeydown"
+      v-slot="{ size }"
     >
-      <IconMenu size="s" />
+      <IconMenu :size="size" />
     </ButtonIcon>
 
     <Teleport to="body">

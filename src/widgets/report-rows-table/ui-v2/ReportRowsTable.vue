@@ -65,12 +65,12 @@ const { t } = useLocale()
         </div>
 
         <div class="ReportRowManage_Actions_left" v-else>
-          <ButtonIcon ariaLabel="Добавить строку" size="l" type="button" variant="page" @click="emit('add')">
-            <IconAddCircle size="m" />
+          <ButtonIcon ariaLabel="Добавить строку" size="l" type="button" variant="page" @click="emit('add')" v-slot="{ size }">
+            <IconAddCircle :size="size" />
           </ButtonIcon>
 
-          <ButtonIcon ariaLabel="Очистить год" size="l" type="button" variant="page" @click="emit('clear')">
-            <IconTrash size="m" />
+          <ButtonIcon ariaLabel="Очистить год" size="l" type="button" variant="page" @click="emit('clear')" v-slot="{ size }">
+            <IconTrash :size="size" />
           </ButtonIcon>
         </div>
 

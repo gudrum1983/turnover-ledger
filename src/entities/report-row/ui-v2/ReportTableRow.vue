@@ -202,8 +202,9 @@ function handleMenuSelect(value: string) {
           size="m"
           variant="card"
           @click="emit('edit', row.id)"
+          v-slot="{ size }"
         >
-          <IconPen size="s" />
+          <IconPen :size="size" />
         </ButtonIcon>
 
         <ButtonIcon
@@ -211,8 +212,9 @@ function handleMenuSelect(value: string) {
           size="m"
           variant="card"
           @click="emit('copy', row.id)"
+          v-slot="{ size }"
         >
-          <IconCopy size="s" />
+          <IconCopy :size="size" />
         </ButtonIcon>
 
         <ButtonIcon
@@ -220,8 +222,9 @@ function handleMenuSelect(value: string) {
           size="m"
           variant="danger-card"
           @click="openDialogConfirm = true"
+          v-slot="{ size }"
         >
-          <IconTrash size="s" />
+          <IconTrash :size="size" />
         </ButtonIcon>
       </template>
 
