@@ -12,6 +12,25 @@ export type CurrencyResponse = {
   currencies: Currency[]
 }
 
+/** Курс валюты НБС на дату (элемент ответа /rates/:date). */
+export type DailyRate = {
+  code: string
+  date: string
+  /** С какого дня действует курс: в выходные и праздники — последний рабочий день. */
+  date_from: string
+  number: number
+  /** За сколько единиц валюты указан курс (у JPY и HUF — 100). */
+  parity: number
+  /** Средний курс в RSD за parity единиц. У некоторых валют может не быть. */
+  exchange_middle?: number
+  exchange_buy?: number
+  exchange_sell?: number
+}
+
+export type RatesResponse = {
+  rates: DailyRate[]
+}
+
 export type ConversionResponse = {
   rate: {
     code: string

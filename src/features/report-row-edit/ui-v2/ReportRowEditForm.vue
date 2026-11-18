@@ -7,12 +7,12 @@ import { FieldCounter } from '@/shared/ui/field-counter'
 import { FieldCombobox } from '@/shared/ui-v2/field-combobox'
 import { FieldDate } from '@/shared/ui-v2/field-date'
 import { FieldMoney } from '@/shared/ui/field-money'
-import { useCurrencyStore } from '@/entities/currency'
+import { getCurrencyName, useCurrencyStore } from '@/entities/currency'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
-import { useLocale, useLocaleStore } from '@/shared/i18n'
+import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
 import { DisplayField } from '@/shared/ui/display-field'
+import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
 
-const LOCAL_CURRENCY_CODE = 'RSD'
 const currency = ref('')
 const date = ref('')
 const description = ref('')
@@ -40,15 +40,44 @@ const { usedCurrencyCodes, lastUsedCurrencyCode } = storeToRefs(reportStore)
 const localeStore = useLocaleStore()
 const { t } = useLocale()
 
-const currencyOptions = computed(() => {
-  return currencyStore.currencies.map((code) => ({ value: code, label: code }))
-})
 const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(usedCurrencyCodes.value))
 const moneyLocale = computed(() => {
   if (localeStore.currentLocale === 'en') return 'en-US'
   if (localeStore.currentLocale === 'srLat' || localeStore.currentLocale === 'srCyr') return 'sr-RS'
 
   return 'ru-RU'
+})
+
+// В списке валют после кода — курс НБС за 1 единицу и название: «EUR = 117,1734 RSD · Евро».
+// Без даты (и для RSD) — только название: «EUR · Евро». Ищем по коду и названию, но не по цифрам курса.
+// В поле — коротко, чтобы не обрезалось: курс, а если курса нет — название.
+const isFullDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
+const ratesForDate = computed(() => (isFullDate(date.value) ? currencyStore.ratesByDate[date.value] : undefined))
+const rateFormatter = computed(
+  () => new Intl.NumberFormat(moneyLocale.value, { minimumFractionDigits: 2, maximumFractionDigits: 4 }),
+)
+const currencyOptions = computed(() => {
+  const intlLocale = INTL_LOCALES[localeStore.currentLocale]
+  return currencyStore.currencies.map((code) => {
+    const name = getCurrencyName(code, intlLocale)
+    const rate = code === LOCAL_CURRENCY_CODE ? undefined : ratesForDate.value?.[code]
+    const rateText = rate === undefined ? undefined : `= ${rateFormatter.value.format(rate)} RSD`
+    const nameText = name ? `· ${name}` : undefined
+    return {
+      value: code,
+      label: code,
+      description: [rateText, nameText].filter(Boolean).join(' ') || undefined,
+      selectedDescription: rateText ?? nameText,
+      keywords: name ? [name] : [],
+    }
+  })
+})
+// Валюта не может остаться пустой: если поле очистили и ушли из него, ставим динар.
+function handleCurrencyBlur() {
+  if (!currency.value) currency.value = LOCAL_CURRENCY_CODE
+}
+watch(date, (value) => {
+  if (isFullDate(value)) void currencyStore.loadRates(value)
 })
 
 export type ReportRowPayload = {
@@ -271,6 +300,7 @@ watch(
 
 onMounted(() => {
   void currencyStore.loadCurrencies()
+  if (isFullDate(date.value)) void currencyStore.loadRates(date.value)
 })
 </script>
 
@@ -295,8 +325,13 @@ onMounted(() => {
           :label="t('ui.reportRowForm.currency')"
           :options="currencyOptions"
           :favorites="favoriteCurrencyCodes"
+          placement="right"
+          show-description
+          collapsible
+          :expand-text="t('ui.reportRowForm.allCurrencies')"
           :model-value="currency || null"
           @update:model-value="currency = $event ?? ''"
+          @blur="handleCurrencyBlur"
         />
       </div>
       <FieldCounter
