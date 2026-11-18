@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useReportStore } from '@/entities/report'
 import { ButtonBase } from '@/shared/ui/button-base'
-import { FieldCounter } from '@/shared/ui/field-counter'
+import { FieldCounter } from '@/shared/ui-v2/field-counter'
 import { FieldCombobox } from '@/shared/ui-v2/field-combobox'
 import { FieldDate } from '@/shared/ui-v2/field-date'
 import { FieldMoney } from '@/shared/ui/field-money'
@@ -12,7 +12,6 @@ import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
 import { DisplayField } from '@/shared/ui/display-field'
 import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
-import { FieldBase } from '@/shared/ui-v2/field-base'
 
 const currency = ref('')
 const date = ref('')
@@ -356,15 +355,6 @@ onMounted(() => {
           @blur="handleCurrencyBlur"
         />
       </div>
-
-      <FieldBase
-        name="description"
-        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
-        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
-        :model-value="description"
-        @update:modelValue="description = $event ?? ''"
-      />
-
       <FieldCounter
         :maxLength="55"
         name="description"
@@ -373,16 +363,6 @@ onMounted(() => {
         :model-value="description"
         @update:modelValue="description = $event ?? ''"
       />
-
-      <!--      <FieldCounter
-        :maxLength="55"
-        name="description"
-        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
-        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.hint')"
-        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
-        :model-value="description"
-        @update:modelValue="description = $event ?? ''"
-      />-->
     </div>
     <div class="ReportRowEditForm_AmountFields">
       <FieldMoney
