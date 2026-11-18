@@ -56,9 +56,27 @@ const ratesForDate = computed(() => (isFullDate(date.value) ? currencyStore.rate
 const rateFormatter = computed(
   () => new Intl.NumberFormat(moneyLocale.value, { minimumFractionDigits: 2, maximumFractionDigits: 4 }),
 )
+// Если курсы на дату получены, оставляем только валюты, у которых на эту дату есть курс: по остальным
+// пересчитать сумму не получится. RSD и выбранную валюту оставляем всегда (выбор не должен пропасть молча).
+// Пока даты нет, курсы грузятся, не загрузились или пришёл пустой ответ — показываем общий список.
+const availableCurrencies = computed(() => {
+  const rates = ratesForDate.value
+  if (!rates || Object.keys(rates).length === 0) return currencyStore.currencies
+  const selected = currency.value.trim().toUpperCase()
+  return currencyStore.currencies.filter(
+    (code) => code === LOCAL_CURRENCY_CODE || code === selected || rates[code] !== undefined,
+  )
+})
+// Курсы на дату получены, а у выбранной валюты курса нет — пересчитать не получится: ошибка в поле, расчёт отключён.
+const hasNoRateForCurrency = computed(() => {
+  const rates = ratesForDate.value
+  const code = currency.value.trim().toUpperCase()
+  if (!rates || Object.keys(rates).length === 0 || !code || code === LOCAL_CURRENCY_CODE) return false
+  return rates[code] === undefined
+})
 const currencyOptions = computed(() => {
   const intlLocale = INTL_LOCALES[localeStore.currentLocale]
-  return currencyStore.currencies.map((code) => {
+  return availableCurrencies.value.map((code) => {
     const name = getCurrencyName(code, intlLocale)
     const rate = code === LOCAL_CURRENCY_CODE ? undefined : ratesForDate.value?.[code]
     const rateText = rate === undefined ? undefined : `= ${rateFormatter.value.format(rate)} RSD`
@@ -124,7 +142,7 @@ const isCalculated = ref(false)
 const isApplyingInitialValue = ref(false)
 const isLocalCurrency = computed(() => currency.value.trim().toUpperCase() === LOCAL_CURRENCY_CODE)
 const isCalculateDisabled = computed(
-  () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value,
+  () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value || hasNoRateForCurrency.value,
 )
 
 const summary = computed(() => {
@@ -329,6 +347,9 @@ onMounted(() => {
           show-description
           collapsible
           :expand-text="t('ui.reportRowForm.allCurrencies')"
+          :hint="t('ui.reportRowForm.currencyHint')"
+          :error="hasNoRateForCurrency"
+          :error-message="t('ui.reportRowForm.currencyNoRateError')"
           :model-value="currency || null"
           @update:model-value="currency = $event ?? ''"
           @blur="handleCurrencyBlur"

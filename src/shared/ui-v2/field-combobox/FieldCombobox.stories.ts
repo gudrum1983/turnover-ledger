@@ -68,6 +68,22 @@ export const Collapsible: Story = {
   args: { favorites: ['RSD', 'EUR', 'USD'], collapsible: true, expandText: 'Все валюты' },
 }
 
+export const WithHint: Story = {
+  name: 'С подсказкой',
+  args: { hint: 'Без даты показан общий список валют НБС.' },
+}
+
+export const WithError: Story = {
+  name: 'С ошибкой',
+  args: {
+    modelValue: 'DEM',
+    options: [...CURRENCIES, 'DEM'].map((code) => ({ value: code, label: code })),
+    hint: 'Без даты показан общий список валют НБС.',
+    error: true,
+    errorMessage: 'У этой валюты нет курса НБС на выбранную дату.',
+  },
+}
+
 export const WithDescription: Story = {
   name: 'С описаниями',
   args: {

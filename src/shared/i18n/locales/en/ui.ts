@@ -160,6 +160,9 @@ export const enUi = {
   reportRowForm: {
     currency: 'Currency',
     allCurrencies: 'All "NBS" currencies',
+    currencyHint:
+      'Without a date, the full list of NBS currencies is shown, and a currency in it may have no rate on a specific day. Once you pick a date, only currencies with a rate on that day remain.',
+    currencyNoRateError: 'This currency has no NBS rate on the selected date. Choose another currency or date.',
     total: 'Total',
     calculate: 'Calculate',
     officialRatePrefix: 'Official middle RSD exchange rate (NBS)',

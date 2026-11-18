@@ -160,6 +160,9 @@ export const srLatUi = {
   reportRowForm: {
     currency: 'Valuta',
     allCurrencies: 'Sve valute „NBS“',
+    currencyHint:
+      'Bez datuma prikazana je opšta lista valuta NBS, koja ne garantuje da valuta ima kurs na određeni dan. Kada izaberete datum, ostaju samo valute sa kursom za taj dan.',
+    currencyNoRateError: 'Ova valuta nema kurs NBS na izabrani datum. Izaberite drugu valutu ili datum.',
     total: 'Ukupno',
     calculate: 'Izračunaj',
     officialRatePrefix: 'Zvanični srednji kurs RSD (NBS)',

@@ -2,7 +2,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
 import { useLocale } from '@/shared/i18n'
 import { ListBox, type ListBoxOption } from '@/shared/ui-v2/list-box'
-import { IconClose } from '@/shared/ui-v2/icons'
+import { IconClose, IconDangerCircle, IconQuestion } from '@/shared/ui-v2/icons'
+import { FieldTooltip } from '@/shared/ui-v2/field-base'
 
 type Props = {
   /** Имя поля для формы (значение уходит в скрытый input) */
@@ -21,6 +22,10 @@ type Props = {
   disabled?: boolean
   /** Состояние ошибки валидации */
   error?: boolean
+  /** Сообщение об ошибке в тултипе (показывается вместе с error). */
+  errorMessage?: string
+  /** Текст информационной подсказки: иконка «?» в поле и тултип */
+  hint?: string
   /** Текст, когда ни один вариант не подошёл. По умолчанию — «Ничего не найдено». */
   emptyText?: string
   /** Выравнивание списка относительно поля, если список шире поля. */
@@ -45,6 +50,8 @@ const {
   favorites,
   disabled = false,
   error = false,
+  errorMessage,
+  hint,
   emptyText,
   placement = 'left',
   showDescription = false,
@@ -82,6 +89,42 @@ onBeforeUnmount(() => {
 })
 
 const isOpen = ref(false)
+
+// Подсказка и ошибка — как в FieldBase: иконка «?» (или «!» при ошибке) и тултип у поля.
+// Тултип открывается при наведении и фокусе на иконке, а при ошибке — и при фокусе в поле; Esc его закрывает.
+// Пока открыт список, тултип не показываем: он открывается под полем, там же, где список.
+const controlRef = ref<HTMLElement | null>(null)
+const inputFocused = ref(false)
+const iconFocused = ref(false)
+const iconHovered = ref(false)
+const tooltipHovered = ref(false)
+const tooltipDismissed = ref(false)
+const hasErrorMessage = computed(() => error && Boolean(errorMessage))
+const errorId = `${inputId}-error`
+const tooltipOpen = computed(
+  () =>
+    !tooltipDismissed.value &&
+    !isOpen.value &&
+    (iconFocused.value || iconHovered.value || tooltipHovered.value || (hasErrorMessage.value && inputFocused.value)),
+)
+function showTooltip() {
+  tooltipDismissed.value = false
+}
+
+function handleIconMouseEnter() {
+  iconHovered.value = true
+  showTooltip()
+}
+
+function handleIconFocus() {
+  iconFocused.value = true
+  showTooltip()
+}
+
+function handleInputFocus() {
+  inputFocused.value = true
+  showTooltip()
+}
 // null — пользователь ничего не вводил: в поле подпись выбранного варианта, список не фильтруется.
 const query = ref<string | null>(null)
 const normalize = (value: string) => value.trim().toLocaleLowerCase()
@@ -253,6 +296,7 @@ function handleKeydown(event: KeyboardEvent) {
 
 // При уходе из поля введённый текст, точно совпавший с вариантом, выбирает его; иначе возвращается выбранное.
 function handleBlur() {
+  inputFocused.value = false
   if (query.value !== null && normalizedQuery.value) {
     const match = options.find(
       (option) =>
@@ -293,7 +337,34 @@ const classList = computed(() => ({
   <div class="FieldCombobox" :class="classList">
     <label v-if="label" :for="inputId" class="FieldCombobox-Label u-typo-body-small-m">{{ label }}</label>
 
-    <div class="FieldCombobox-Control" @mousedown="handleControlMouseDown">
+    <div
+      ref="controlRef"
+      class="FieldCombobox-Control"
+      @mousedown="handleControlMouseDown"
+      @keydown.esc="tooltipDismissed = true"
+    >
+      <Transition name="field-icon">
+        <button
+          v-if="(hasErrorMessage || hint) && !disabled"
+          class="FieldCombobox-Hint"
+          type="button"
+          :aria-label="hasErrorMessage ? errorMessage : hint"
+          :aria-describedby="hasErrorMessage ? errorId : undefined"
+          @mousedown.stop
+          @mouseenter="handleIconMouseEnter"
+          @mouseleave="iconHovered = false"
+          @focus="handleIconFocus"
+          @blur="iconFocused = false"
+          @click="showTooltip"
+        >
+          <span class="FieldCombobox-HintIconSlot">
+            <Transition name="field-icon">
+              <IconDangerCircle v-if="hasErrorMessage" key="error" class="FieldCombobox-HintIcon" />
+              <IconQuestion v-else key="hint" class="FieldCombobox-HintIcon" />
+            </Transition>
+          </span>
+        </button>
+      </Transition>
       <input type="hidden" :name="name" :value="modelValue ?? ''" />
       <span class="FieldCombobox-InputWrap">
         <input
@@ -308,13 +379,16 @@ const classList = computed(() => ({
           :aria-controls="isOpen ? listId : undefined"
           :aria-activedescendant="isOpen ? highlightedId : undefined"
           :aria-invalid="error ? 'true' : undefined"
-          :aria-describedby="shownDescription ? descriptionId : undefined"
+          :aria-describedby="
+            [shownDescription && descriptionId, hasErrorMessage && errorId].filter(Boolean).join(' ') || undefined
+          "
           :class="{ 'FieldCombobox-Input_overlaid': shownDescription }"
           :value="inputValue"
           :placeholder="placeholder"
           :disabled="disabled"
           @input="handleInput"
           @keydown="handleKeydown"
+          @focus="handleInputFocus"
           @blur="handleBlur"
           @click="toggleMenu"
         />
@@ -340,7 +414,19 @@ const classList = computed(() => ({
           <IconClose />
         </button>
       </Transition>
+      <FieldTooltip
+        :open="tooltipOpen && !disabled && Boolean(hasErrorMessage || hint)"
+        :error-message="hasErrorMessage ? errorMessage : undefined"
+        :hint="hint"
+        :anchor="controlRef"
+        @mouseenter="tooltipHovered = true"
+        @mouseleave="tooltipHovered = false"
+      />
     </div>
+
+    <span :id="errorId" class="FieldCombobox-AccessibleError" aria-live="polite">{{
+      hasErrorMessage ? errorMessage : ''
+    }}</span>
 
     <Transition name="field-combobox-menu" @enter="listBoxRef?.scrollToSelected()">
       <div v-if="isOpen" class="FieldCombobox-Menu" :class="`FieldCombobox-Menu_placement_${placement}`">
@@ -419,6 +505,7 @@ const classList = computed(() => ({
   --color-icons-focus: var(--neutral-700);
 
   --box-shadow-input-focus-tab: 0px 0px 0px 3px #f5c96a99;
+  --box-shadow-icons-focus-tab: 0px 0px 0px 3px #f5c96a99;
 
   --color-label-default: var(--neutral-900);
 }
@@ -451,6 +538,7 @@ const classList = computed(() => ({
   --color-icons-focus: var(--red-500);
 
   --box-shadow-input-focus-tab: 0 0 0 3px #c05a5a66;
+  --box-shadow-icons-focus-tab: 0 0 0 3px #c05a5a66;
 }
 
 .FieldCombobox-Label {
@@ -572,6 +660,58 @@ const classList = computed(() => ({
   &:hover {
     color: var(--color-icons-hover);
   }
+}
+
+// Иконка подсказки — как FieldBase-Hint.
+.FieldCombobox-Hint {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-icons);
+  transition: color var(--transition-color);
+  cursor: help;
+
+  &:hover {
+    color: var(--color-icons-hover);
+  }
+
+  &:focus {
+    outline: none;
+    color: var(--color-icons-focus);
+  }
+
+  .FieldCombobox_keyboardNavigation &:focus {
+    color: var(--color-icons-focus);
+    box-shadow: var(--box-shadow-icons-focus-tab);
+  }
+}
+
+.FieldCombobox-HintIconSlot {
+  display: grid;
+  width: 24px;
+  height: 24px;
+}
+
+.FieldCombobox-HintIcon {
+  grid-area: 1 / 1;
+  width: 24px;
+  height: 24px;
+}
+
+.FieldCombobox-AccessibleError {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .FieldCombobox-Control:hover,
