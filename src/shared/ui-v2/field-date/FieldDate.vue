@@ -355,7 +355,7 @@ const classList = computed(() => ({
 <template>
   <label
     ref="rootRef"
-    class="FieldDate"
+    class="FieldDate u-typo-body-m"
     :class="classList"
     @keydown="handleKeydown"
     @keydown.capture="handleCalendarKeydown"
@@ -368,7 +368,7 @@ const classList = computed(() => ({
 
     <VueDatePicker
       ref="pickerRef"
-      class="FieldDate-Picker u-typo-body-m"
+      class="FieldDate-Picker"
       :model-value="modelValue"
       :input-attrs="inputAttrs"
       :year-range="yearRange"
@@ -605,6 +605,12 @@ const classList = computed(() => ({
 // Обёртка кнопки очистки от vuepic по умолчанию прижата к правому краю — ставим отступ 16px, как у FieldBase.
 .FieldDate :deep(.dp--clear-btn) {
   inset-inline-end: 16px;
+}
+
+// Шрифт — по цепочке от корня (u-typo-body-m) к инпуту и placeholder. vuepic задаёт .dp__main свой
+// font-family (системный стек из --dp-font-family), а этот селектор специфичнее и его перебивает.
+.FieldDate :deep(.dp__main) {
+  font: inherit;
 }
 
 // Переменные vuepic объявлены на .dp__theme_light, поэтому переопределяем их там же (для календаря).
