@@ -162,8 +162,9 @@ const handleSelect = (value: string) => {
         >
       </button>
       <!-- Строка после пунктов (например, «Показать все»), внутри прокрутки. -->
+      <!-- Разделитель в списке не больше одного: если он уже есть после избранных, перед строкой его не ставим. -->
       <template v-if="$slots.footer">
-        <DividerBase class="ListBox-Divider" />
+        <DividerBase v-if="!hasFavoritesDivider" class="ListBox-Divider" />
         <slot name="footer" />
       </template>
     </div>
