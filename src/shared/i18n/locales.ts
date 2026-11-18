@@ -11,6 +11,14 @@ export const LOCALE_META: Record<I18nLocale, { label: string; shortLabel: string
   srCyr: { label: 'Српски', shortLabel: 'СРП' },
 }
 
+/** Локали для Intl (PluralRules, DisplayNames и т. п.). */
+export const INTL_LOCALES: Record<I18nLocale, string> = {
+  ru: 'ru',
+  en: 'en',
+  srLat: 'sr-Latn',
+  srCyr: 'sr-Cyrl',
+}
+
 export function isSupportedLocale(value: string): value is I18nLocale {
   return SUPPORTED_LOCALES.includes(value as I18nLocale)
 }
