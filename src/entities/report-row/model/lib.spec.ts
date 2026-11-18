@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getRowTotals } from './lib'
+import { getRowTotals, isForeignCurrencyRow } from './lib'
 import type { ReportRow } from './types'
 
 describe('report row lib', () => {
@@ -50,5 +50,17 @@ describe('report row lib', () => {
       foreignCents: 0,
       rsdCents: 3000,
     })
+  })
+
+  it.each([
+    ['EUR', true],
+    [' usd ', true],
+    ['RSD', false],
+    [' rsd ', false],
+    ['', false],
+  ])('isForeignCurrencyRow(%j) → %s', (currency, expected) => {
+    const row = { currency } as ReportRow
+
+    expect(isForeignCurrencyRow(row)).toBe(expected)
   })
 })
