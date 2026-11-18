@@ -111,7 +111,7 @@ export const ruUi = {
       date: {
         label: 'Дата счета',
         placeholder: 'ДД.ММ.ГГГГ',
-        pickPlaceholder: 'Выберите дату в {year} году',
+        pickPlaceholder: 'Выберите дату',
         hint: 'Дата счета',
       },
       description: {
@@ -175,6 +175,8 @@ export const ruUi = {
     cancel: 'Отмена',
     titleAdd: 'Добавить новую строку',
     titleEdit: 'Редактирование строки',
+    titleAddYear: 'Добавить строку за {year} год',
+    titleEditYear: 'Редактирование строки за {year} год',
     submit: 'Сохранить',
   },
   tableAlerts: {

@@ -112,7 +112,7 @@ export const srLatUi = {
       date: {
         label: 'Datum',
         placeholder: 'DD.MM.GGGG',
-        pickPlaceholder: 'Izaberite datum u {year}. godini',
+        pickPlaceholder: 'Izaberite datum',
         hint: 'Datum fakture',
       },
       description: {
@@ -176,6 +176,8 @@ export const srLatUi = {
     cancel: 'Otkaži',
     titleAdd: 'Dodaj red',
     titleEdit: 'Izmena reda',
+    titleAddYear: 'Dodaj red za {year}. godinu',
+    titleEditYear: 'Izmena reda za {year}. godinu',
     submit: 'Sačuvaj',
   },
   tableAlerts: {

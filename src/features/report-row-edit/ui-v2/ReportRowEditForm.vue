@@ -12,6 +12,7 @@ import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
 import { DisplayField } from '@/shared/ui/display-field'
 import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
+import { FieldBase } from '@/shared/ui-v2/field-base'
 
 const currency = ref('')
 const date = ref('')
@@ -333,7 +334,7 @@ onMounted(() => {
           :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.label')"
           :model-value="date"
           :date-fns-locale="localeStore.dateFnsLocale"
-          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.pickPlaceholder', { year })"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.pickPlaceholder')"
           @update:modelValue="date = $event ?? ''"
           required
         />
@@ -355,6 +356,15 @@ onMounted(() => {
           @blur="handleCurrencyBlur"
         />
       </div>
+
+      <FieldBase
+        name="description"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
+        :model-value="description"
+        @update:modelValue="description = $event ?? ''"
+      />
+
       <FieldCounter
         :maxLength="55"
         name="description"

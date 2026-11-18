@@ -89,7 +89,9 @@ const formInitialValue = ref<ReportRowFormInitialValue | null>(null)
 const openDialogConfirm = ref(false)
 
 const modalTitle = computed(() =>
-  formMode.value === 'edit' ? t('ui.reportRowForm.titleEdit') : t('ui.reportRowForm.titleAdd'),
+  formMode.value === 'edit'
+    ? t('ui.reportRowForm.titleEditYear', { year: activeYear.value })
+    : t('ui.reportRowForm.titleAddYear', { year: activeYear.value }),
 )
 
 const fromCents = (value: number | null | undefined) => (typeof value === 'number' ? value / 100 : null)

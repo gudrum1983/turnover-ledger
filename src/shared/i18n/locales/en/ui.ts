@@ -112,7 +112,7 @@ export const enUi = {
       date: {
         label: 'Date',
         placeholder: 'DD.MM.YYYY',
-        pickPlaceholder: 'Select a date in {year}',
+        pickPlaceholder: 'Select a date',
         hint: 'Invoice date',
       },
       description: {
@@ -177,6 +177,8 @@ export const enUi = {
     cancel: 'Cancel',
     titleAdd: 'Add new row',
     titleEdit: 'Edit row',
+    titleAddYear: 'Add row for {year}',
+    titleEditYear: 'Edit row for {year}',
     submit: 'Save',
   },
   tableAlerts: {

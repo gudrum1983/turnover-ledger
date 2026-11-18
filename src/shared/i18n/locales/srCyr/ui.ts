@@ -112,7 +112,7 @@ export const srCyrUi = {
       date: {
         label: 'Датум',
         placeholder: 'ДД.ММ.ГГГГ',
-        pickPlaceholder: 'Изаберите датум у {year}. години',
+        pickPlaceholder: 'Изаберите датум',
         hint: 'Датум фактуре',
       },
       description: {
@@ -176,6 +176,8 @@ export const srCyrUi = {
     cancel: 'Откажи',
     titleAdd: 'Додај ред',
     titleEdit: 'Измена реда',
+    titleAddYear: 'Додај ред за {year}. годину',
+    titleEditYear: 'Измена реда за {year}. годину',
     submit: 'Сачувај',
   },
   tableAlerts: {
