@@ -382,21 +382,6 @@ onMounted(() => {
       />
     </div>
 
-    <div v-if="!isLocalCurrency" class="ReportRowEditForm_Toolbar">
-      <ButtonWithIcon
-        :icon="IconCalculator"
-        variant="accent"
-        :disabled="isCalculateDisabled"
-        :isLoader="isCalculating"
-        @click="handleCalculate"
-      >
-        {{ t('ui.reportRowForm.calculate') }}
-      </ButtonWithIcon>
-      <div v-if="isCalculated" class="ReportRowEditForm_Hint">
-        {{ t('ui.reportRowForm.officialRatePrefix') }} {{ exchangeRate ?? '—' }}
-      </div>
-      <div v-if="!isCalculated" class="ReportRowEditForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
-    </div>
     <div
       v-if="currencyStore.error"
       class="ReportRowEditForm_Alert ReportRowEditForm_Alert_Danger Typo_BodyAccent"
@@ -404,40 +389,62 @@ onMounted(() => {
     >
       {{ t('ui.reportRowForm.currencyLoadError') }}
     </div>
-    <div
-      v-if="calculationError"
-      class="ReportRowEditForm_Alert ReportRowEditForm_Alert_Danger Typo_BodyAccent"
-      role="alert"
-    >
-      {{ calculationError }}
-    </div>
+    <!-- Расчёт в RSD нужен только для валюты: при выборе RSD блок плавно сворачивается. -->
+    <Transition name="report-row-calculation">
+      <div v-if="!isLocalCurrency" class="ReportRowEditForm-Calculation">
+        <div class="ReportRowEditForm-CalculationContent">
+          <div class="ReportRowEditForm_Toolbar">
+            <ButtonWithIcon
+              :icon="IconCalculator"
+              variant="accent"
+              :disabled="isCalculateDisabled"
+              :isLoader="isCalculating"
+              @click="handleCalculate"
+            >
+              {{ t('ui.reportRowForm.calculate') }}
+            </ButtonWithIcon>
+            <div v-if="isCalculated" class="ReportRowEditForm_Hint">
+              {{ t('ui.reportRowForm.officialRatePrefix') }} {{ exchangeRate ?? '—' }}
+            </div>
+            <div v-if="!isCalculated" class="ReportRowEditForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
+          </div>
+          <div
+            v-if="calculationError"
+            class="ReportRowEditForm_Alert ReportRowEditForm_Alert_Danger Typo_BodyAccent"
+            role="alert"
+          >
+            {{ calculationError }}
+          </div>
 
-    <div class="ReportRowEditForm_Calculations" v-if="!isLocalCurrency">
-      <FieldMoney
-        name="goodsAmountRsd"
-        :label="t('ui.reportRowForm.goodsRsd')"
-        :model-value="formatInputMoney(goodsAmountRsd)"
-        :locale="moneyLocale"
-        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
-        readonly
-      />
-      <FieldMoney
-        name="servicesAmountRsd"
-        :label="t('ui.reportRowForm.servicesRsd')"
-        :model-value="formatInputMoney(servicesAmountRsd)"
-        :locale="moneyLocale"
-        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
-        readonly
-      />
-      <FieldMoney
-        name="totalAmountRsd"
-        :label="t('ui.reportRowForm.totalRsd')"
-        :model-value="formatInputMoney(totalAmountRsd)"
-        :locale="moneyLocale"
-        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
-        readonly
-      />
-    </div>
+          <div class="ReportRowEditForm_Calculations">
+            <FieldMoney
+              name="goodsAmountRsd"
+              :label="t('ui.reportRowForm.goodsRsd')"
+              :model-value="formatInputMoney(goodsAmountRsd)"
+              :locale="moneyLocale"
+              :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+              readonly
+            />
+            <FieldMoney
+              name="servicesAmountRsd"
+              :label="t('ui.reportRowForm.servicesRsd')"
+              :model-value="formatInputMoney(servicesAmountRsd)"
+              :locale="moneyLocale"
+              :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+              readonly
+            />
+            <FieldMoney
+              name="totalAmountRsd"
+              :label="t('ui.reportRowForm.totalRsd')"
+              :model-value="formatInputMoney(totalAmountRsd)"
+              :locale="moneyLocale"
+              :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+    </Transition>
   </form>
 </template>
 
@@ -469,6 +476,46 @@ onMounted(() => {
   display: grid;
   align-items: end;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.ReportRowEditForm-Calculation {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.ReportRowEditForm-CalculationContent {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Пока идёт анимация, содержимое обрезаем; в покое — нет, чтобы не резать тень фокуса кнопки. */
+.report-row-calculation-enter-active .ReportRowEditForm-CalculationContent,
+.report-row-calculation-leave-active .ReportRowEditForm-CalculationContent {
+  overflow: hidden;
+}
+
+.report-row-calculation-enter-active {
+  transition:
+    grid-template-rows var(--transition-collapse-enter),
+    opacity var(--transition-collapse-enter),
+    margin-top var(--transition-collapse-enter);
+}
+
+.report-row-calculation-leave-active {
+  transition:
+    grid-template-rows var(--transition-collapse-leave),
+    opacity var(--transition-collapse-leave),
+    margin-top var(--transition-collapse-leave);
+}
+
+/* margin-top гасит gap формы (20px), чтобы и он схлопывался плавно, а не скачком в конце. */
+.report-row-calculation-enter-from,
+.report-row-calculation-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: -20px;
 }
 
 .ReportRowEditForm_Calculations {
