@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
 import { useLocale } from '@/shared/i18n'
-import { type DropdownOption, ListBox } from '@/shared/ui-v2/button-dropdown'
+import { ListBox, type ListBoxOption } from '@/shared/ui-v2/list-box'
 import { IconClose } from '@/shared/ui-v2/icons'
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   /** Выбранное значение (option.value) */
   modelValue: string | null
   /** Варианты значений */
-  options: DropdownOption[]
+  options: ListBoxOption[]
   /** Избранные значения вверху списка (только пока нет поискового запроса) */
   favorites?: string[]
   /** Отключает ввод и выбор */
@@ -112,8 +112,8 @@ const filteredOptions = computed(() => {
     ]
   }
 
-  const startsWith: DropdownOption[] = []
-  const includes: DropdownOption[] = []
+  const startsWith: ListBoxOption[] = []
+  const includes: ListBoxOption[] = []
   for (const option of options) {
     const texts = [option.label, option.value, ...(option.keywords ?? [option.description ?? ''])].map(normalize)
     if (texts.some((text) => text.startsWith(search))) startsWith.push(option)

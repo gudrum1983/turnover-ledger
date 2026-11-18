@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
-import type { DropdownOption, DropdownTypography, DropdownPlacement } from './types'
+import type { DropdownTypography, DropdownPlacement } from './types'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
-import { ListBox } from './list-box'
+import { ListBox, type ListBoxOption } from '@/shared/ui-v2/list-box'
 import { DisclosureChevron } from '@/shared/ui-v2/disclosure-chevron'
 
 type Props = {
   /** Список доступных вариантов */
-  options: DropdownOption[]
+  options: ListBoxOption[]
   /** Текущее выбранное значение */
   modelValue?: string
   /** Отключает взаимодействие с выпадающим списком */
@@ -68,7 +68,7 @@ function commitSelection() {
 let search = ''
 let lastSearchTime = 0
 
-const activeOption = computed<DropdownOption | undefined>(() => options.find((option) => option.value === modelValue))
+const activeOption = computed<ListBoxOption | undefined>(() => options.find((option) => option.value === modelValue))
 
 const activeLabel = computed(() => {
   return activeOption.value?.label

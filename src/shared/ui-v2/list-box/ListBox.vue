@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useSlots, watch } from 'vue'
-import type { DropdownOption } from '../types'
+import type { ListBoxOption } from './types'
 import { DividerBase } from '@/shared/ui-v2/divider-base'
 import { TooltipBase } from '@/shared/ui-v2/tooltip-base'
 
 interface Props {
   /** Варианты значений */
-  options: DropdownOption[]
+  options: ListBoxOption[]
   /** Выбранное значение из списка */
   modelValue?: string
   /** Избранные значения для отображения вверху списка (строки из options.value) */
