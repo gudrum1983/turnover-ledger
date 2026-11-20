@@ -3,6 +3,7 @@ import { computed, ref, useId, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useReportStore } from '@/entities/report'
 import { useLocale } from '@/shared/i18n'
+import { useViewport } from '@/shared/lib'
 import { ButtonBase } from '@/shared/ui-v2/button-base'
 import { DividerBase } from '@/shared/ui-v2/divider-base'
 import { IconDangerCircle } from '@/shared/ui-v2/icons'
@@ -29,6 +30,14 @@ const emit = defineEmits<{
 
 const { t } = useLocale()
 const { activeYear } = storeToRefs(useReportStore())
+
+// На мобилке кнопки остаются в одну строку, поэтому «Закрыть без сохранения» сокращаем до «Закрыть».
+const viewport = useViewport()
+const closeWithoutSavingLabel = computed(() =>
+  viewport.value === 'mobile'
+    ? t('ui.reportRowForm.closeWithoutSavingShort')
+    : t('ui.reportRowForm.closeWithoutSaving'),
+)
 
 const formId = useId()
 const formKey = ref(0)
@@ -132,7 +141,7 @@ function handleSubmit(payload: ReportRowPayload) {
         full-width
         @click="isConfirmingClose && close()"
       >
-        {{ isConfirmingClose ? t('ui.reportRowForm.closeWithoutSaving') : t('ui.reportRowForm.submit') }}
+        {{ isConfirmingClose ? closeWithoutSavingLabel : t('ui.reportRowForm.submit') }}
       </ButtonBase>
     </div>
   </ModalBase>

@@ -175,6 +175,7 @@ export const srCyrUi = {
     unsavedChangesWarning: 'Несачуване измене ће бити изгубљене',
     continueEditing: 'Настави',
     closeWithoutSaving: 'Затвори без чувања',
+    closeWithoutSavingShort: 'Затвори',
     calculationError: 'Није могуће добити курс и завршити обрачун. Проверите датум и покушајте поново.',
     goodsRsd: 'Роба (RSD)',
     servicesRsd: 'Услуге (RSD)',
@@ -183,8 +184,8 @@ export const srCyrUi = {
     cancel: 'Откажи',
     titleAdd: 'Додај ред',
     titleEdit: 'Измена реда',
-    titleAddYear: 'Додај ред за {year}. годину',
-    titleEditYear: 'Измена реда за {year}. годину',
+    titleAddYear: 'Додај ред за\u00A0{year}.\u00A0годину',
+    titleEditYear: 'Измена реда за\u00A0{year}.\u00A0годину',
     submit: 'Сачувај',
   },
   tableAlerts: {

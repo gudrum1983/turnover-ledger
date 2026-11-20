@@ -9,6 +9,7 @@ import { FieldMoney } from '@/shared/ui-v2/field-money'
 import { getCurrencyName, useCurrencyStore } from '@/entities/currency'
 import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
 import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
+import { useViewport } from '@/shared/lib'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconCalculator, IconDangerCircle, IconInfoCircle, IconRepeat } from '@/shared/ui-v2/icons'
 
@@ -37,6 +38,8 @@ const conversionRate = ref<{ code: string; rate: number; parity: number } | null
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
+// Меньше планшета форма в одну колонку, и кнопка расчёта растягивается на всю ширину.
+const viewport = useViewport()
 const reportStore = useReportStore()
 const { usedCurrencyCodes, lastUsedCurrencyCode } = storeToRefs(reportStore)
 const localeStore = useLocaleStore()
@@ -510,6 +513,7 @@ onMounted(() => {
               variant="accent"
               :disabled="isCalculateDisabled"
               :loading="isCalculating"
+              :full-width="viewport === 'mobile'"
               @click="handleCalculate"
             >
               {{ calculateButtonLabel }}
@@ -660,5 +664,23 @@ onMounted(() => {
 
 .ReportRowEditForm-HintIcon {
   flex-shrink: 0;
+}
+
+/* Меньше планшета — всё в одну колонку. 768px = tablet в useViewport и $bp-md в tokens/_container.scss
+   (CSS-переменные в media query не работают, поэтому число). */
+@media (width < 768px) {
+  .ReportRowEditForm_Currency {
+    flex-direction: column;
+  }
+
+  .ReportRowEditForm_AmountFields,
+  .ReportRowEditForm_Calculations {
+    grid-template-columns: 1fr;
+  }
+
+  .ReportRowEditForm_Toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 </style>

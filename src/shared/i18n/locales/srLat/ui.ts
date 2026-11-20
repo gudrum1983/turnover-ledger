@@ -175,6 +175,7 @@ export const srLatUi = {
     unsavedChangesWarning: 'Nesačuvane izmene će biti izgubljene',
     continueEditing: 'Nastavi',
     closeWithoutSaving: 'Zatvori bez čuvanja',
+    closeWithoutSavingShort: 'Zatvori',
     calculationError: 'Nije moguće dobiti kurs i završiti obračun. Proverite datum i pokušajte ponovo.',
     goodsRsd: 'Roba (RSD)',
     servicesRsd: 'Usluge (RSD)',
@@ -183,8 +184,8 @@ export const srLatUi = {
     cancel: 'Otkaži',
     titleAdd: 'Dodaj red',
     titleEdit: 'Izmena reda',
-    titleAddYear: 'Dodaj red za {year}. godinu',
-    titleEditYear: 'Izmena reda za {year}. godinu',
+    titleAddYear: 'Dodaj red za\u00A0{year}.\u00A0godinu',
+    titleEditYear: 'Izmena reda za\u00A0{year}.\u00A0godinu',
     submit: 'Sačuvaj',
   },
   tableAlerts: {

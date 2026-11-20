@@ -175,6 +175,7 @@ export const enUi = {
     unsavedChangesWarning: 'Unsaved changes will be lost',
     continueEditing: 'Continue',
     closeWithoutSaving: 'Close without saving',
+    closeWithoutSavingShort: 'Close',
     calculationError:
       'Failed to retrieve the exchange rate and complete the calculation. Check the date and try again.',
     goodsRsd: 'Goods (RSD)',
@@ -184,8 +185,8 @@ export const enUi = {
     cancel: 'Cancel',
     titleAdd: 'Add new row',
     titleEdit: 'Edit row',
-    titleAddYear: 'Add row for {year}',
-    titleEditYear: 'Edit row for {year}',
+    titleAddYear: 'Add row for\u00A0{year}',
+    titleEditYear: 'Edit row for\u00A0{year}',
     submit: 'Save',
   },
   tableAlerts: {

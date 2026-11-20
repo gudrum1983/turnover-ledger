@@ -174,6 +174,7 @@ export const ruUi = {
     unsavedChangesWarning: 'Несохранённые изменения будут потеряны',
     continueEditing: 'Продолжить',
     closeWithoutSaving: 'Закрыть без сохранения',
+    closeWithoutSavingShort: 'Закрыть',
     calculationError: 'Не удалось получить курс валют и выполнить расчёт. Проверьте дату и попробуйте позже.',
     goodsRsd: 'По товарам (RSD)',
     servicesRsd: 'По услугам (RSD)',
@@ -182,8 +183,8 @@ export const ruUi = {
     cancel: 'Отмена',
     titleAdd: 'Добавить новую строку',
     titleEdit: 'Редактирование строки',
-    titleAddYear: 'Добавить строку за {year} год',
-    titleEditYear: 'Редактирование строки за {year} год',
+    titleAddYear: 'Добавить строку за\u00A0{year}\u00A0год',
+    titleEditYear: 'Редактирование строки за\u00A0{year}\u00A0год',
     submit: 'Сохранить',
   },
   tableAlerts: {
