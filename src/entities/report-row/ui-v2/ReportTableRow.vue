@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { TagBase } from '@/shared/ui-v2/tag-base'
-import { DialogConfirm } from '@/shared/ui/dialog-confirm'
+import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
 import type { ReportRow } from '../model/types'
 import { getRowTotals, isForeignCurrencyRow } from '../model/lib'
 import { ROW_HIGHLIGHT_DURATION_MS } from '../model/constants'
@@ -247,7 +247,23 @@ function handleMenuSelect(value: string) {
         @click="openDialogConfirm = true"
       />-->
     </div>
+
     <DialogConfirm
+      v-model:open="openDialogConfirm"
+      @confirm="handleClearRow"
+      :title="t('ui.deleteRowModal.title')"
+      :message="deleteRowDetails"
+      :details="t('ui.deleteRowModal.description')"
+      :labelPrimaryButton="t('ui.deleteRowModal.confirm')"
+      :labelSecondaryButton="t('ui.deleteRowModal.cancel')"
+      type="delete"
+    >
+      <!--      <template v-if="deleteRowDetails" #content>
+        {{ deleteRowDetails }}
+      </template>-->
+    </DialogConfirm>
+
+    <!--    <DialogConfirm
       v-model:open="openDialogConfirm"
       @confirm="handleClearRow"
       :title="t('ui.deleteRowModal.title')"
@@ -259,7 +275,7 @@ function handleMenuSelect(value: string) {
       <template v-if="deleteRowDetails" #content>
         {{ deleteRowDetails }}
       </template>
-    </DialogConfirm>
+    </DialogConfirm>-->
   </div>
 </template>
 
