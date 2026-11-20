@@ -23,6 +23,8 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
   const updatedAt = ref<string | null>(null)
   /** Курсы на дату: дата YYYY-MM-DD → код валюты → курс, как в листе НБС (за parity единиц). Только в памяти. */
   const ratesByDate = ref<Record<string, Record<CurrencyCode, CurrencyRate>>>({})
+  /** Даты YYYY-MM-DD, курсы на которые не удалось загрузить. Сбрасывается при повторной попытке. */
+  const ratesErrorDates = ref<Record<string, true>>({})
   const ratesRequests = new Map<string, Promise<void>>()
 
   function isActiveCurrencies(currency: Currency) {
@@ -179,12 +181,15 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
     const pending = ratesRequests.get(date)
     if (pending) return pending
 
+    clearRatesError(date)
+
     const request = fetchRates(date)
       .then((response) => {
         ratesByDate.value = { ...ratesByDate.value, [date]: toRates(response) }
       })
       .catch(() => {
         // повторим при следующем выборе этой даты
+        ratesErrorDates.value = { ...ratesErrorDates.value, [date]: true }
       })
       .finally(() => {
         ratesRequests.delete(date)
@@ -192,6 +197,13 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
 
     ratesRequests.set(date, request)
     return request
+  }
+
+  function clearRatesError(date: string) {
+    if (!ratesErrorDates.value[date]) return
+    const next = { ...ratesErrorDates.value }
+    delete next[date]
+    ratesErrorDates.value = next
   }
 
   async function convertAmount(currencyCode: string, amount: number, date: string): Promise<ConversionResponse> {
@@ -209,6 +221,7 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
     error,
     updatedAt,
     ratesByDate,
+    ratesErrorDates,
     loadRates,
     hydrateFromLocalStorage,
     loadCurrencies,

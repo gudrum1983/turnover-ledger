@@ -165,9 +165,12 @@ export const enUi = {
     currencyNoRateError: 'This currency has no NBS rate on the selected date. Choose another currency or date.',
     total: 'Total',
     calculate: 'Calculate',
+    recalculate: 'Recalculate',
     officialRatePrefix: 'Official middle RSD exchange rate (NBS)',
     recalculateHint: 'Recalculate after any changes.',
     currencyLoadError: 'Failed to load the currency list. Please try again later.',
+    ratesLoadError: 'Failed to load NBS rates for the selected date. Please try again later.',
+    officialRateValue: 'NBS middle rate for the date: {rate}',
     calculationError:
       'Failed to retrieve the exchange rate and complete the calculation. Check the date and try again.',
     goodsRsd: 'Goods (RSD)',

@@ -51,9 +51,11 @@ describe('currencyStore.loadRates', () => {
 
     await expect(store.loadRates('2026-01-25')).resolves.toBeUndefined()
     expect(store.ratesByDate['2026-01-25']).toBeUndefined()
+    expect(store.ratesErrorDates['2026-01-25']).toBe(true)
 
     await store.loadRates('2026-01-25')
     expect(fetchRatesMock).toHaveBeenCalledTimes(2)
     expect(store.ratesByDate['2026-01-25']).toEqual({})
+    expect(store.ratesErrorDates['2026-01-25']).toBeUndefined()
   })
 })

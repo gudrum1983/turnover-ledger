@@ -10,7 +10,7 @@ import { getCurrencyName, useCurrencyStore } from '@/entities/currency'
 import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
 import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
-import { IconCalculator } from '@/shared/ui-v2/icons'
+import { IconCalculator, IconDangerCircle, IconInfoCircle, IconRepeat } from '@/shared/ui-v2/icons'
 
 const currency = ref('')
 const date = ref('')
@@ -31,6 +31,9 @@ export type ReportRowFormInitialValue = {
 }
 
 const exchangeRate = ref<number | null>(null)
+// Курс из ответа конвертации (за parity единиц, как в листе НБС). Нужен для сообщения после расчёта,
+// когда курсы на дату не загрузились и в поле валюты курс не виден.
+const conversionRate = ref<{ code: string; rate: number; parity: number } | null>(null)
 const isCalculating = ref(false)
 
 const currencyStore = useCurrencyStore()
@@ -74,13 +77,28 @@ const hasNoRateForCurrency = computed(() => {
   if (!rates || Object.keys(rates).length === 0 || !code || code === LOCAL_CURRENCY_CODE) return false
   return rates[code] === undefined
 })
+// Список валют не загрузился и сохранённого в localStorage тоже нет — выбрать можно только RSD.
+// Если список остался с прошлой загрузки, ошибку не показываем: валюты есть.
+const isCurrencyListUnavailable = computed(
+  () => Boolean(currencyStore.error) && !currencyStore.currencies.some((code) => code !== LOCAL_CURRENCY_CODE),
+)
+// Курсы на выбранную дату не загрузились (в списке тогда показаны все валюты без курсов).
+const hasRatesLoadError = computed(() => isFullDate(date.value) && Boolean(currencyStore.ratesErrorDates[date.value]))
+// Ошибка в поле валюты: не загрузился список валют (важнее) или у выбранной валюты нет курса на дату.
+const currencyErrorMessage = computed(() => {
+  if (isCurrencyListUnavailable.value) return t('ui.reportRowForm.currencyLoadError')
+  if (hasNoRateForCurrency.value) return t('ui.reportRowForm.currencyNoRateError')
+  return null
+})
+// «= 117,1734 RSD» или «100 = 28,1234 RSD» — количество единиц пишем, только если оно не 1.
+const formatRate = ({ rate, parity }: { rate: number; parity: number }) =>
+  `${parity !== 1 ? `${parity} ` : ''}= ${rateFormatter.value.format(rate)} RSD`
 const currencyOptions = computed(() => {
   const intlLocale = INTL_LOCALES[localeStore.currentLocale]
   return availableCurrencies.value.map((code) => {
     const name = getCurrencyName(code, intlLocale)
     const rate = code === LOCAL_CURRENCY_CODE ? undefined : ratesForDate.value?.[code]
-    const parityText = rate && rate.parity !== 1 ? `${rate.parity} ` : ''
-    const rateText = rate === undefined ? undefined : `${parityText}= ${rateFormatter.value.format(rate.rate)} RSD`
+    const rateText = rate === undefined ? undefined : formatRate(rate)
     const nameText = name ? `· ${name}` : undefined
     return {
       value: code,
@@ -140,6 +158,10 @@ const servicesAmountRsd = ref<number | null>(null)
 const totalAmountRsd = ref<number | null>(null)
 const calculationError = ref<string | null>(null)
 const isCalculated = ref(false)
+// Расчёт уже выполнялся (или строка открыта с готовым расчётом). Если после этого изменили дату, валюту
+// или суммы, результат сброшен — показываем «Пересчитать» и предупреждение вместо первичного «Рассчитать».
+const hasBeenCalculated = ref(false)
+const needsRecalculation = computed(() => hasBeenCalculated.value && !isCalculated.value)
 const isApplyingInitialValue = ref(false)
 const isLocalCurrency = computed(() => currency.value.trim().toUpperCase() === LOCAL_CURRENCY_CODE)
 const isCalculateDisabled = computed(
@@ -165,6 +187,7 @@ const clearCalculated = () => {
   servicesAmountRsd.value = null
   totalAmountRsd.value = null
   exchangeRate.value = null
+  conversionRate.value = null
   calculationError.value = null
   isCalculated.value = false
   emit('update:canSubmit', false)
@@ -202,7 +225,11 @@ const handleCalculate = async () => {
 
   isCalculating.value = true
   exchangeRate.value = null
+  conversionRate.value = null
   calculationError.value = null
+  // Курсы на дату не загрузились — пробуем ещё раз вместе с расчётом: при успехе предупреждение пропадёт,
+  // а список валют снова отфильтруется по дате.
+  if (hasRatesLoadError.value) void currencyStore.loadRates(date.value)
 
   try {
     const conversionGoods =
@@ -219,11 +246,17 @@ const handleCalculate = async () => {
     const exchangeRateGoods = conversionGoods?.rate.exchange_middle
     const exchangeRateServices = conversionServices?.rate.exchange_middle
     const resolvedExchangeRate = exchangeRateGoods ?? exchangeRateServices
+    const resolvedRate = (conversionGoods ?? conversionServices)?.rate
 
     goodsAmountRsd.value = goodsConverted
     servicesAmountRsd.value = servicesConverted
     totalAmountRsd.value = totalConverted
     exchangeRate.value = resolvedExchangeRate ?? 0
+    conversionRate.value =
+      resolvedRate && resolvedExchangeRate !== undefined
+        ? { code: resolvedRate.code, rate: resolvedExchangeRate, parity: resolvedRate.parity }
+        : null
+    hasBeenCalculated.value = true
 
     if (!isCalculated.value) {
       isCalculated.value = true
@@ -273,6 +306,7 @@ const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
 
   const hasPrecalculatedValues =
     initialValue?.goodsAmountRsd !== undefined && initialValue?.servicesAmountRsd !== undefined
+  hasBeenCalculated.value = hasPrecalculatedValues
 
   if (hasPrecalculatedValues) {
     goodsAmountRsd.value = initialValue?.goodsAmountRsd ?? null
@@ -292,6 +326,26 @@ const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
     isApplyingInitialValue.value = false
   })
 }
+
+// Одно сообщение рядом с кнопкой расчёта. Порядок важности:
+// 1. ошибки (danger): не загрузился список валют (дублируется в поле валюты), не удался расчёт;
+// 2. просьба пересчитать (warning);
+// 3. курсы на дату не загрузились (warning): считать это не мешает. Если расчёт при этом прошёл,
+//    вместо предупреждения показываем курс из ответа конвертации (info) — в поле валюты его не видно.
+// При первом заполнении и после обычного успешного расчёта сообщения нет: результат виден в полях RSD.
+type ToolbarMessage = { type: 'danger' | 'warning' | 'info'; text: string }
+
+const toolbarMessage = computed<ToolbarMessage | null>(() => {
+  if (isCurrencyListUnavailable.value) return { type: 'danger', text: t('ui.reportRowForm.currencyLoadError') }
+  if (calculationError.value) return { type: 'danger', text: calculationError.value }
+  if (needsRecalculation.value) return { type: 'warning', text: t('ui.reportRowForm.recalculateHint') }
+  if (!hasRatesLoadError.value) return null
+  if (isCalculated.value && conversionRate.value) {
+    const rate = `${conversionRate.value.code} ${formatRate(conversionRate.value)}`
+    return { type: 'info', text: t('ui.reportRowForm.officialRateValue', { rate }) }
+  }
+  return { type: 'warning', text: t('ui.reportRowForm.ratesLoadError') }
+})
 
 const store = useReportStore()
 
@@ -338,8 +392,8 @@ onMounted(() => {
           collapsible
           :expand-text="t('ui.reportRowForm.allCurrencies')"
           :hint="t('ui.reportRowForm.currencyHint')"
-          :error="hasNoRateForCurrency"
-          :error-message="t('ui.reportRowForm.currencyNoRateError')"
+          :error="currencyErrorMessage !== null"
+          :error-message="currencyErrorMessage ?? undefined"
           :model-value="currency || null"
           @update:model-value="currency = $event ?? ''"
           @blur="handleCurrencyBlur"
@@ -384,38 +438,29 @@ onMounted(() => {
       />
     </div>
 
-    <div
-      v-if="currencyStore.error"
-      class="ReportRowEditForm_Alert ReportRowEditForm_Alert_Danger Typo_BodyAccent"
-      role="alert"
-    >
-      {{ t('ui.reportRowForm.currencyLoadError') }}
-    </div>
     <!-- Расчёт в RSD нужен только для валюты: при выборе RSD блок плавно сворачивается. -->
     <Transition name="report-row-calculation">
       <div v-if="!isLocalCurrency" class="ReportRowEditForm-Calculation">
         <div class="ReportRowEditForm-CalculationContent">
           <div class="ReportRowEditForm_Toolbar">
             <ButtonWithIcon
-              :icon="IconCalculator"
+              :icon="needsRecalculation ? IconRepeat : IconCalculator"
               variant="accent"
               :disabled="isCalculateDisabled"
-              :isLoader="isCalculating"
+              :loading="isCalculating"
               @click="handleCalculate"
             >
-              {{ t('ui.reportRowForm.calculate') }}
+              {{ needsRecalculation ? t('ui.reportRowForm.recalculate') : t('ui.reportRowForm.calculate') }}
             </ButtonWithIcon>
-            <div v-if="isCalculated" class="ReportRowEditForm_Hint">
-              {{ t('ui.reportRowForm.officialRatePrefix') }} {{ exchangeRate ?? '—' }}
+            <div
+              v-if="toolbarMessage"
+              :class="['ReportRowEditForm_Hint', `ReportRowEditForm_Hint_${toolbarMessage.type}`]"
+              :role="toolbarMessage.type === 'danger' ? 'alert' : undefined"
+            >
+              <IconInfoCircle v-if="toolbarMessage.type === 'info'" size="s" class="ReportRowEditForm-HintIcon" />
+              <IconDangerCircle v-else size="s" class="ReportRowEditForm-HintIcon" />
+              {{ toolbarMessage.text }}
             </div>
-            <div v-if="!isCalculated" class="ReportRowEditForm_Hint">{{ t('ui.reportRowForm.recalculateHint') }}</div>
-          </div>
-          <div
-            v-if="calculationError"
-            class="ReportRowEditForm_Alert ReportRowEditForm_Alert_Danger Typo_BodyAccent"
-            role="alert"
-          >
-            {{ calculationError }}
           </div>
 
           <div class="ReportRowEditForm_Calculations">
@@ -533,18 +578,26 @@ onMounted(() => {
 }
 
 .ReportRowEditForm_Hint {
-  color: var(--color-text-disabled);
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
   font: var(--font-medium-text-xs);
 }
 
-.ReportRowEditForm_Alert {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--color-border-default);
+.ReportRowEditForm_Hint_info {
+  color: var(--neutral-600);
 }
 
-.ReportRowEditForm_Alert_Danger {
-  color: var(--color-text-danger);
-  border-color: var(--color-text-danger);
+.ReportRowEditForm_Hint_warning {
+  color: var(--color-text-warning);
+}
+
+/* Тот же красный, что у ошибок в полях ui-v2 (FieldBase). */
+.ReportRowEditForm_Hint_danger {
+  color: var(--red-500);
+}
+
+.ReportRowEditForm-HintIcon {
+  flex-shrink: 0;
 }
 </style>
