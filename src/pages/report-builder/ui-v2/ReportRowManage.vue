@@ -14,7 +14,6 @@ import { useLocale, useLocaleStore } from '@/shared/i18n'
 import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconAddCircle, IconTrash } from '@/shared/ui-v2/icons'
-import { ButtonIcon } from '@/shared/ui-v2/button-icon'
 import { LabelContainer } from '@/shared/ui-v2/label-container'
 import { ReportYearSelect } from '@/features/report-year-select'
 import { ReportRowsTable, type ReportRowsTableAlert } from '@/widgets/report-rows-table'
@@ -280,27 +279,19 @@ const isShowYearSelect = computed(() => {
         </div>
 
         <div class="ReportRowManage_Actions_mobile" v-else>
-          <ButtonIcon
-            ariaLabel="Добавить строку"
-            size="l"
-            type="button"
+          <ButtonWithIcon
+            :icon="IconAddCircle"
             variant="page"
+            :aria-label="t('ui.reportBuilderIncomeRecordsTable.addRow')"
             @click="openCreateModal()"
-            v-slot="{ size }"
-          >
-            <IconAddCircle :size="size" />
-          </ButtonIcon>
+          />
           <ReportYearSelect size="middle" typography="button-l" placement="center" />
-          <ButtonIcon
-            ariaLabel="Очистить год"
-            size="l"
-            type="button"
+          <ButtonWithIcon
+            :icon="IconTrash"
             variant="danger"
+            :aria-label="t('ui.reportBuilderIncomeRecordsTable.clearYear')"
             @click="openDialogConfirm = true"
-            v-slot="{ size }"
-          >
-            <IconTrash :size="size" />
-          </ButtonIcon>
+          />
         </div>
 
         <LabelContainer
