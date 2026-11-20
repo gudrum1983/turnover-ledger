@@ -139,6 +139,7 @@ const props = withDefaults(defineProps<ReportRowEditFormProps>(), {
 
 const emit = defineEmits<{
   (event: 'update:canSubmit', value: boolean): void
+  (event: 'update:isDirty', value: boolean): void
   (event: 'submit', payload: ReportRowPayload): void
 }>()
 
@@ -162,6 +163,16 @@ const isCalculated = ref(false)
 // или суммы, результат сброшен — показываем «Пересчитать» и предупреждение вместо первичного «Рассчитать».
 const hasBeenCalculated = ref(false)
 const needsRecalculation = computed(() => hasBeenCalculated.value && !isCalculated.value)
+// Текст и иконка кнопки: после ошибки конвертации — «Повторить», после изменений — «Пересчитать».
+// Ошибка сбрасывается при изменении даты, валюты или сумм, и кнопка возвращается к «Рассчитать»/«Пересчитать».
+const calculateButtonLabel = computed(() => {
+  if (calculationError.value) return t('ui.reportRowForm.retry')
+  if (needsRecalculation.value) return t('ui.reportRowForm.recalculate')
+  return t('ui.reportRowForm.calculate')
+})
+const calculateButtonIcon = computed(() =>
+  calculationError.value || needsRecalculation.value ? IconRepeat : IconCalculator,
+)
 const isApplyingInitialValue = ref(false)
 const isLocalCurrency = computed(() => currency.value.trim().toUpperCase() === LOCAL_CURRENCY_CODE)
 const isCalculateDisabled = computed(
@@ -296,6 +307,26 @@ const handleSubmit = (event: Event) => {
   })
 }
 
+// Значения полей, с которыми форма открылась. Суммы сравниваем числами: «100» и «100,00» — одно и то же.
+type FormSnapshot = { date: string; currency: string; description: string; goods: number; services: number }
+
+const takeSnapshot = (): FormSnapshot => ({
+  date: date.value,
+  currency: currency.value.trim().toUpperCase(),
+  description: description.value,
+  goods: parseMoney(goodsAmount.value),
+  services: parseMoney(servicesAmount.value),
+})
+const initialSnapshot = ref<FormSnapshot | null>(null)
+// Есть несохранённые изменения: поле отличается от значения при открытии (и при создании, и при редактировании).
+const isDirty = computed(() => {
+  const initial = initialSnapshot.value
+  if (!initial) return false
+  const current = takeSnapshot()
+  return (Object.keys(initial) as (keyof FormSnapshot)[]).some((key) => initial[key] !== current[key])
+})
+watch(isDirty, (value) => emit('update:isDirty', value), { immediate: true })
+
 const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
   isApplyingInitialValue.value = true
   date.value = initialValue?.date ?? ''
@@ -321,6 +352,8 @@ const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
   } else {
     clearCalculated()
   }
+
+  initialSnapshot.value = takeSnapshot()
 
   void nextTick(() => {
     isApplyingInitialValue.value = false
@@ -408,8 +441,37 @@ onMounted(() => {
         :model-value="description"
         @update:modelValue="description = $event ?? ''"
       />
+
+      <div class="ReportRowEditForm_AmountFields">
+        <FieldMoney
+          name="goodsAmount"
+          :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.label')"
+          :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.hint')"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+          :model-value="goodsAmount"
+          :locale="moneyLocale"
+          @update:modelValue="goodsAmount = $event"
+        />
+        <FieldMoney
+          name="servicesAmount"
+          :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.label')"
+          :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.hint')"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.placeholder')"
+          :model-value="servicesAmount"
+          :locale="moneyLocale"
+          @update:modelValue="servicesAmount = $event"
+        />
+        <FieldMoney
+          name="total"
+          :label="t('ui.reportRowForm.total')"
+          :model-value="formatInputMoney(totalValue || null)"
+          :locale="moneyLocale"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+          readonly
+        />
+      </div>
     </div>
-    <div class="ReportRowEditForm_AmountFields">
+    <!--    <div class="ReportRowEditForm_AmountFields">
       <FieldMoney
         name="goodsAmount"
         :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.label')"
@@ -436,7 +498,7 @@ onMounted(() => {
         :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
         readonly
       />
-    </div>
+    </div>-->
 
     <!-- Расчёт в RSD нужен только для валюты: при выборе RSD блок плавно сворачивается. -->
     <Transition name="report-row-calculation">
@@ -444,17 +506,17 @@ onMounted(() => {
         <div class="ReportRowEditForm-CalculationContent">
           <div class="ReportRowEditForm_Toolbar">
             <ButtonWithIcon
-              :icon="needsRecalculation ? IconRepeat : IconCalculator"
+              :icon="calculateButtonIcon"
               variant="accent"
               :disabled="isCalculateDisabled"
               :loading="isCalculating"
               @click="handleCalculate"
             >
-              {{ needsRecalculation ? t('ui.reportRowForm.recalculate') : t('ui.reportRowForm.calculate') }}
+              {{ calculateButtonLabel }}
             </ButtonWithIcon>
             <div
               v-if="toolbarMessage"
-              :class="['ReportRowEditForm_Hint', `ReportRowEditForm_Hint_${toolbarMessage.type}`]"
+              :class="['ReportRowEditForm_Hint u-typo-body-m', `ReportRowEditForm_Hint_${toolbarMessage.type}`]"
               :role="toolbarMessage.type === 'danger' ? 'alert' : undefined"
             >
               <IconInfoCircle v-if="toolbarMessage.type === 'info'" size="s" class="ReportRowEditForm-HintIcon" />
@@ -499,14 +561,13 @@ onMounted(() => {
 .ReportRowEditForm {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .ReportRowEditForm_Fields {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 16px;
+  gap: 24px;
 }
 
 .ReportRowEditForm_Currency {
@@ -534,7 +595,6 @@ onMounted(() => {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 /* Пока идёт анимация, содержимое обрезаем; в покое — нет, чтобы не резать тень фокуса кнопки. */
@@ -575,6 +635,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding-block: 32px;
 }
 
 .ReportRowEditForm_Hint {
@@ -589,7 +650,7 @@ onMounted(() => {
 }
 
 .ReportRowEditForm_Hint_warning {
-  color: var(--color-text-warning);
+  color: var(--orange-400);
 }
 
 /* Тот же красный, что у ошибок в полях ui-v2 (FieldBase). */

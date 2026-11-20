@@ -2,20 +2,22 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type ReportRow, ROW_HIGHLIGHT_DURATION_MS } from '@/entities/report-row'
-import { type ReportRowFormInitialValue, type ReportRowPayload, ReportRowEditForm } from '@/features/report-row-edit'
+import {
+  type ReportRowEditModalMode,
+  type ReportRowFormInitialValue,
+  type ReportRowPayload,
+  ReportRowEditModal,
+} from '@/features/report-row-edit'
 import { getTableTotals, useReportStore } from '@/entities/report'
 import { formatDateForUi, formatMoney, useViewport } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
-import { ButtonBase } from '@/shared/ui-v2/button-base'
 import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
-import { ModalBase } from '@/shared/ui-v2/modal-base'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconAddCircle, IconTrash } from '@/shared/ui-v2/icons'
 import { ButtonIcon } from '@/shared/ui-v2/button-icon'
 import { LabelContainer } from '@/shared/ui-v2/label-container'
 import { ReportYearSelect } from '@/features/report-year-select'
 import { ReportRowsTable, type ReportRowsTableAlert } from '@/widgets/report-rows-table'
-import { DividerBase } from '@/shared/ui-v2/divider-base'
 
 const store = useReportStore()
 // Конструктор работает с записями выбранного года: таблица, итог, лимит и очистка.
@@ -79,21 +81,11 @@ const clearYearMessage = computed(() => {
   return t('ui.deleteYearRowsModal.summary', { count, amount: displayTotalRsd.value }, count)
 })
 
-type FormMode = 'create' | 'edit'
-
 const open = ref(false)
-const canSubmit = ref(false)
-const formKey = ref(0)
-const formMode = ref<FormMode>('create')
+const formMode = ref<ReportRowEditModalMode>('create')
 const editingRowId = ref<string | null>(null)
 const formInitialValue = ref<ReportRowFormInitialValue | null>(null)
 const openDialogConfirm = ref(false)
-
-const modalTitle = computed(() =>
-  formMode.value === 'edit'
-    ? t('ui.reportRowForm.titleEditYear', { year: activeYear.value })
-    : t('ui.reportRowForm.titleAddYear', { year: activeYear.value }),
-)
 
 const fromCents = (value: number | null | undefined) => (typeof value === 'number' ? value / 100 : null)
 
@@ -113,8 +105,6 @@ function openCreateModal(initialValue: ReportRowFormInitialValue | null = null) 
   formMode.value = 'create'
   editingRowId.value = null
   formInitialValue.value = initialValue
-  canSubmit.value = false
-  formKey.value += 1
   open.value = true
 }
 
@@ -125,8 +115,6 @@ function openEditModal(rowId: string) {
   formMode.value = 'edit'
   editingRowId.value = row.id
   formInitialValue.value = mapRowToInitialValue(row)
-  canSubmit.value = false
-  formKey.value += 1
   open.value = true
 }
 
@@ -142,10 +130,6 @@ function handleRemove(id: string) {
 
 function closeModal() {
   open.value = false
-  canSubmit.value = false
-  formMode.value = 'create'
-  editingRowId.value = null
-  formInitialValue.value = null
 }
 
 function closeDialogConfirm() {
@@ -349,24 +333,7 @@ const isShowYearSelect = computed(() => {
       @remove="handleRemove"
     />
 
-    <ModalBase v-model:open="open" :title="modalTitle" shouldCloseOnEsc hasCloseButton>
-      <ReportRowEditForm
-        :key="formKey"
-        id="report-row-form"
-        :initial-value="formInitialValue"
-        @update:canSubmit="canSubmit = $event"
-        @submit="onSubmit"
-      />
-      <DividerBase class="ReportRowManage_Divider" />
-      <div class="ReportRowManage-ModalActions">
-        <ButtonBase variant="page" size="m" @click="closeModal" full-width>{{
-          t('ui.reportRowForm.cancel')
-        }}</ButtonBase>
-        <ButtonBase variant="accent" size="m" :disabled="!canSubmit" type="submit" form="report-row-form" full-width>
-          {{ t('ui.reportRowForm.submit') }}
-        </ButtonBase>
-      </div>
-    </ModalBase>
+    <ReportRowEditModal v-model:open="open" :mode="formMode" :initial-value="formInitialValue" @submit="onSubmit" />
 
     <DialogConfirm
       v-model:open="openDialogConfirm"
@@ -408,13 +375,6 @@ const isShowYearSelect = computed(() => {
     padding-block: 4px 24px;
     color: var(--neutral-600);
   }
-
-  &-ModalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 24px;
-  }
 }
 
 .ReportRowManage_Actions {
@@ -437,9 +397,5 @@ const isShowYearSelect = computed(() => {
   width: 100%;
   justify-content: space-between;
   gap: 16px;
-}
-
-.ReportRowManage_Divider {
-  margin-block: 24px;
 }
 </style>
