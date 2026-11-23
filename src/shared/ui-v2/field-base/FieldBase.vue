@@ -35,6 +35,8 @@ type Props = {
   mask?: MaskOptions
   /** Максимальная длина вводимого значения */
   maxLength?: number
+  /** Тип экранной клавиатуры на телефоне: numeric — цифры, decimal — цифры с разделителем дробной части */
+  inputmode?: 'text' | 'numeric' | 'decimal'
   /** Устаревший пропс, не применяется. Для класса корня используйте class. */
   rootClass?: string
 }
@@ -51,6 +53,7 @@ const {
   error = false,
   errorMessage,
   maxLength,
+  inputmode,
   disabled = false,
   readonly = false,
 } = defineProps<Props>()
@@ -233,6 +236,7 @@ onBeforeUnmount(clearTimer)
         :aria-describedby="error && errorMessage ? `${inputId}-error` : undefined"
         :placeholder="placeholder"
         :maxlength="maxLength"
+        :inputmode="inputmode"
         autocomplete="off"
         :disabled="disabled"
         :readonly="readonly"

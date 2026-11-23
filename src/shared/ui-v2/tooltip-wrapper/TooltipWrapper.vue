@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
     >
       <template v-if="errorText">
         <span class="TooltipWrapper-Error">{{ errorText }}</span>
-        <span class="TooltipWrapper-Text">{{ text }}</span>
+        <span v-if="text" class="TooltipWrapper-Text">{{ text }}</span>
       </template>
       <template v-else>{{ text }}</template>
     </TooltipBase>

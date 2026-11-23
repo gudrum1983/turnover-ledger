@@ -1,0 +1,686 @@
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { useReportStore } from '@/entities/report'
+import { FieldCounter } from '@/shared/ui-v2/field-counter'
+import { FieldCombobox } from '@/shared/ui-v2/field-combobox'
+import { FieldDate } from '@/shared/ui-v2/field-date'
+import { FieldMoney } from '@/shared/ui-v2/field-money'
+import { getCurrencyName, useCurrencyStore } from '@/entities/currency'
+import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
+import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
+import { useViewport } from '@/shared/lib'
+import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
+import { IconCalculator, IconDangerCircle, IconInfoCircle, IconRepeat } from '@/shared/ui-v2/icons'
+
+const currency = ref('')
+const date = ref('')
+const description = ref('')
+const goodsAmount = ref<string | null>(null)
+const servicesAmount = ref<string | null>(null)
+
+export type ReportRowFormInitialValue = {
+  date?: string
+  currency?: string
+  description?: string
+  goodsAmount?: number | null
+  servicesAmount?: number | null
+  goodsAmountRsd?: number | null
+  servicesAmountRsd?: number | null
+  totalAmountRsd?: number | null
+  exchangeRate?: number | null
+}
+
+const exchangeRate = ref<number | null>(null)
+// Курс из ответа конвертации (за parity единиц, как в листе НБС). Нужен для сообщения после расчёта,
+// когда курсы на дату не загрузились и в поле валюты курс не виден.
+const conversionRate = ref<{ code: string; rate: number; parity: number } | null>(null)
+const isCalculating = ref(false)
+
+const currencyStore = useCurrencyStore()
+// Меньше планшета форма в одну колонку, и кнопка расчёта растягивается на всю ширину.
+const viewport = useViewport()
+const reportStore = useReportStore()
+const { usedCurrencyCodes, lastUsedCurrencyCode } = storeToRefs(reportStore)
+const localeStore = useLocaleStore()
+const { t } = useLocale()
+
+const favoriteCurrencyCodes = computed(() => currencyStore.favoriteCurrencyCodes(usedCurrencyCodes.value))
+const moneyLocale = computed(() => {
+  if (localeStore.currentLocale === 'en') return 'en-US'
+  if (localeStore.currentLocale === 'srLat' || localeStore.currentLocale === 'srCyr') return 'sr-RS'
+
+  return 'ru-RU'
+})
+
+// В списке валют после кода — курс как в листе НБС и название. Количество единиц пишем, только если оно не 1:
+// «EUR = 117,1734 RSD · Евро», «HUF 100 = 28,1234 RSD · Венгерский форинт».
+// Без даты (и для RSD) — только название: «EUR · Евро». Ищем по коду и названию, но не по цифрам курса.
+// В поле — коротко, чтобы не обрезалось: курс («EUR = 117,1734 RSD»), а если курса нет — название.
+const isFullDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
+const ratesForDate = computed(() => (isFullDate(date.value) ? currencyStore.ratesByDate[date.value] : undefined))
+const rateFormatter = computed(
+  () => new Intl.NumberFormat(moneyLocale.value, { minimumFractionDigits: 2, maximumFractionDigits: 4 }),
+)
+// Если курсы на дату получены, оставляем только валюты, у которых на эту дату есть курс: по остальным
+// пересчитать сумму не получится. RSD и выбранную валюту оставляем всегда (выбор не должен пропасть молча).
+// Пока даты нет, курсы грузятся, не загрузились или пришёл пустой ответ — показываем общий список.
+const availableCurrencies = computed(() => {
+  const rates = ratesForDate.value
+  if (!rates || Object.keys(rates).length === 0) return currencyStore.currencies
+  const selected = currency.value.trim().toUpperCase()
+  return currencyStore.currencies.filter(
+    (code) => code === LOCAL_CURRENCY_CODE || code === selected || rates[code] !== undefined,
+  )
+})
+// Курсы на дату получены, а у выбранной валюты курса нет — пересчитать не получится: ошибка в поле, расчёт отключён.
+const hasNoRateForCurrency = computed(() => {
+  const rates = ratesForDate.value
+  const code = currency.value.trim().toUpperCase()
+  if (!rates || Object.keys(rates).length === 0 || !code || code === LOCAL_CURRENCY_CODE) return false
+  return rates[code] === undefined
+})
+// Список валют не загрузился и сохранённого в localStorage тоже нет — выбрать можно только RSD.
+// Если список остался с прошлой загрузки, ошибку не показываем: валюты есть.
+const isCurrencyListUnavailable = computed(
+  () => Boolean(currencyStore.error) && !currencyStore.currencies.some((code) => code !== LOCAL_CURRENCY_CODE),
+)
+// Курсы на выбранную дату не загрузились (в списке тогда показаны все валюты без курсов).
+const hasRatesLoadError = computed(() => isFullDate(date.value) && Boolean(currencyStore.ratesErrorDates[date.value]))
+// Ошибка в поле валюты: не загрузился список валют (важнее) или у выбранной валюты нет курса на дату.
+const currencyErrorMessage = computed(() => {
+  if (isCurrencyListUnavailable.value) return t('ui.reportRowForm.currencyLoadError')
+  if (hasNoRateForCurrency.value) return t('ui.reportRowForm.currencyNoRateError')
+  return null
+})
+// «= 117,1734 RSD» или «100 = 28,1234 RSD» — количество единиц пишем, только если оно не 1.
+const formatRate = ({ rate, parity }: { rate: number; parity: number }) =>
+  `${parity !== 1 ? `${parity} ` : ''}= ${rateFormatter.value.format(rate)} RSD`
+const currencyOptions = computed(() => {
+  const intlLocale = INTL_LOCALES[localeStore.currentLocale]
+  return availableCurrencies.value.map((code) => {
+    const name = getCurrencyName(code, intlLocale)
+    const rate = code === LOCAL_CURRENCY_CODE ? undefined : ratesForDate.value?.[code]
+    const rateText = rate === undefined ? undefined : formatRate(rate)
+    const nameText = name ? `· ${name}` : undefined
+    return {
+      value: code,
+      label: code,
+      description: [rateText, nameText].filter(Boolean).join(' ') || undefined,
+      selectedDescription: rateText ?? nameText,
+      keywords: name ? [name] : [],
+    }
+  })
+})
+// Валюта не может остаться пустой: если поле очистили и ушли из него, ставим динар.
+function handleCurrencyBlur() {
+  if (!currency.value) currency.value = LOCAL_CURRENCY_CODE
+}
+watch(date, (value) => {
+  if (isFullDate(value)) void currencyStore.loadRates(value)
+})
+
+export type ReportRowPayload = {
+  date: string
+  currency: string
+  description: string
+  goodsAmount: number
+  servicesAmount: number
+  exchangeRate: number | null
+  goodsAmountRsd: number | null
+  servicesAmountRsd: number | null
+  totalAmountRsd: number | null
+}
+
+type ReportRowEditFormProps = {
+  initialValue?: ReportRowFormInitialValue | null
+}
+
+const props = withDefaults(defineProps<ReportRowEditFormProps>(), {
+  initialValue: null,
+})
+
+const emit = defineEmits<{
+  (event: 'update:canSubmit', value: boolean): void
+  (event: 'update:isDirty', value: boolean): void
+  (event: 'submit', payload: ReportRowPayload): void
+}>()
+
+const parseMoney = (value: string | null) => {
+  if (!value) {
+    return 0
+  }
+
+  const normalized = value.replace(/\s/g, '').replace(',', '.')
+  const result = Number.parseFloat(normalized)
+
+  return Number.isFinite(result) ? result : 0
+}
+
+const goodsAmountRsd = ref<number | null>(null)
+const servicesAmountRsd = ref<number | null>(null)
+const totalAmountRsd = ref<number | null>(null)
+const calculationError = ref<string | null>(null)
+const isCalculated = ref(false)
+// Расчёт уже выполнялся (или строка открыта с готовым расчётом). Если после этого изменили дату, валюту
+// или суммы, результат сброшен — показываем «Пересчитать» и предупреждение вместо первичного «Рассчитать».
+const hasBeenCalculated = ref(false)
+const needsRecalculation = computed(() => hasBeenCalculated.value && !isCalculated.value)
+// Текст и иконка кнопки: после ошибки конвертации — «Повторить», после изменений — «Пересчитать».
+// Ошибка сбрасывается при изменении даты, валюты или сумм, и кнопка возвращается к «Рассчитать»/«Пересчитать».
+const calculateButtonLabel = computed(() => {
+  if (calculationError.value) return t('ui.reportRowForm.retry')
+  if (needsRecalculation.value) return t('ui.reportRowForm.recalculate')
+  return t('ui.reportRowForm.calculate')
+})
+const calculateButtonIcon = computed(() =>
+  calculationError.value || needsRecalculation.value ? IconRepeat : IconCalculator,
+)
+const isApplyingInitialValue = ref(false)
+const isLocalCurrency = computed(() => currency.value.trim().toUpperCase() === LOCAL_CURRENCY_CODE)
+const isCalculateDisabled = computed(
+  () => !currency.value || !date.value || totalValue.value <= 0 || isCalculating.value || hasNoRateForCurrency.value,
+)
+
+const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
+
+const formatInputMoney = (value: number | null | undefined): string | null => {
+  if (value === null || value === undefined) {
+    return null
+  }
+
+  return new Intl.NumberFormat(moneyLocale.value, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: false,
+  }).format(value)
+}
+
+const clearCalculated = () => {
+  goodsAmountRsd.value = null
+  servicesAmountRsd.value = null
+  totalAmountRsd.value = null
+  exchangeRate.value = null
+  conversionRate.value = null
+  calculationError.value = null
+  isCalculated.value = false
+  emit('update:canSubmit', false)
+}
+
+const resetCalculated = () => {
+  if (isApplyingInitialValue.value) {
+    return
+  }
+
+  if (isLocalCurrency.value && date.value && totalValue.value > 0) {
+    const goodsValue = parseMoney(goodsAmount.value)
+    const servicesValue = parseMoney(servicesAmount.value)
+
+    goodsAmountRsd.value = goodsValue
+    servicesAmountRsd.value = servicesValue
+    totalAmountRsd.value = goodsValue + servicesValue
+    exchangeRate.value = 1
+    isCalculated.value = true
+    emit('update:canSubmit', true)
+    return
+  }
+
+  clearCalculated()
+}
+
+const handleCalculate = async () => {
+  if (isCalculateDisabled.value) return
+
+  const goodsValue = parseMoney(goodsAmount.value)
+  const servicesValue = parseMoney(servicesAmount.value)
+  const totalAmount = goodsValue + servicesValue
+
+  if (totalAmount <= 0) return
+
+  isCalculating.value = true
+  exchangeRate.value = null
+  conversionRate.value = null
+  calculationError.value = null
+  // Курсы на дату не загрузились — пробуем ещё раз вместе с расчётом: при успехе предупреждение пропадёт,
+  // а список валют снова отфильтруется по дате.
+  if (hasRatesLoadError.value) void currencyStore.loadRates(date.value)
+
+  try {
+    const conversionGoods =
+      goodsValue > 0 ? await currencyStore.convertAmount(currency.value, goodsValue, date.value) : null
+
+    const conversionServices =
+      servicesValue > 0 ? await currencyStore.convertAmount(currency.value, servicesValue, date.value) : null
+
+    const goodsConverted = conversionGoods ? conversionGoods.buy_middle : 0
+    const servicesConverted = conversionServices ? conversionServices.buy_middle : 0
+
+    const totalConverted = goodsConverted + servicesConverted
+
+    const exchangeRateGoods = conversionGoods?.rate.exchange_middle
+    const exchangeRateServices = conversionServices?.rate.exchange_middle
+    const resolvedExchangeRate = exchangeRateGoods ?? exchangeRateServices
+    const resolvedRate = (conversionGoods ?? conversionServices)?.rate
+
+    goodsAmountRsd.value = goodsConverted
+    servicesAmountRsd.value = servicesConverted
+    totalAmountRsd.value = totalConverted
+    exchangeRate.value = resolvedExchangeRate ?? 0
+    conversionRate.value =
+      resolvedRate && resolvedExchangeRate !== undefined
+        ? { code: resolvedRate.code, rate: resolvedExchangeRate, parity: resolvedRate.parity }
+        : null
+    hasBeenCalculated.value = true
+
+    if (!isCalculated.value) {
+      isCalculated.value = true
+      emit('update:canSubmit', true)
+    }
+  } catch {
+    clearCalculated()
+    calculationError.value = t('ui.reportRowForm.calculationError')
+  } finally {
+    isCalculating.value = false
+  }
+}
+
+const handleSubmit = (event: Event) => {
+  event.preventDefault()
+
+  if (!isCalculated.value) {
+    emit('update:canSubmit', false)
+    return
+  }
+
+  if (goodsAmountRsd.value === null || servicesAmountRsd.value === null) {
+    emit('update:canSubmit', false)
+    return
+  }
+
+  emit('submit', {
+    date: date.value,
+    currency: currency.value,
+    description: description.value,
+    goodsAmount: parseMoney(goodsAmount.value),
+    servicesAmount: parseMoney(servicesAmount.value),
+    exchangeRate: exchangeRate.value,
+    goodsAmountRsd: goodsAmountRsd.value,
+    servicesAmountRsd: servicesAmountRsd.value,
+    totalAmountRsd: totalAmountRsd.value,
+  })
+}
+
+// Значения полей, с которыми форма открылась. Суммы сравниваем числами: «100» и «100,00» — одно и то же.
+type FormSnapshot = { date: string; currency: string; description: string; goods: number; services: number }
+
+const takeSnapshot = (): FormSnapshot => ({
+  date: date.value,
+  currency: currency.value.trim().toUpperCase(),
+  description: description.value,
+  goods: parseMoney(goodsAmount.value),
+  services: parseMoney(servicesAmount.value),
+})
+const initialSnapshot = ref<FormSnapshot | null>(null)
+// Есть несохранённые изменения: поле отличается от значения при открытии (и при создании, и при редактировании).
+const isDirty = computed(() => {
+  const initial = initialSnapshot.value
+  if (!initial) return false
+  const current = takeSnapshot()
+  return (Object.keys(initial) as (keyof FormSnapshot)[]).some((key) => initial[key] !== current[key])
+})
+watch(isDirty, (value) => emit('update:isDirty', value), { immediate: true })
+
+const applyInitialValue = (initialValue: ReportRowFormInitialValue | null) => {
+  isApplyingInitialValue.value = true
+  date.value = initialValue?.date ?? ''
+  currency.value = initialValue?.currency ?? lastUsedCurrencyCode.value
+  description.value = initialValue?.description ?? ''
+  goodsAmount.value = formatInputMoney(initialValue?.goodsAmount)
+  servicesAmount.value = formatInputMoney(initialValue?.servicesAmount)
+
+  const hasPrecalculatedValues =
+    initialValue?.goodsAmountRsd !== undefined && initialValue?.servicesAmountRsd !== undefined
+  hasBeenCalculated.value = hasPrecalculatedValues
+
+  if (hasPrecalculatedValues) {
+    goodsAmountRsd.value = initialValue?.goodsAmountRsd ?? null
+    servicesAmountRsd.value = initialValue?.servicesAmountRsd ?? null
+    totalAmountRsd.value =
+      initialValue?.totalAmountRsd ?? (initialValue?.goodsAmountRsd ?? 0) + (initialValue?.servicesAmountRsd ?? 0)
+    exchangeRate.value = initialValue?.exchangeRate ?? null
+    isCalculated.value = true
+    emit('update:canSubmit', true)
+  } else if (isLocalCurrency.value && date.value && totalValue.value > 0) {
+    resetCalculated()
+  } else {
+    clearCalculated()
+  }
+
+  initialSnapshot.value = takeSnapshot()
+
+  void nextTick(() => {
+    isApplyingInitialValue.value = false
+  })
+}
+
+// Одно сообщение рядом с кнопкой расчёта. Порядок важности:
+// 1. ошибки (danger): не загрузился список валют (дублируется в поле валюты), не удался расчёт;
+// 2. просьба пересчитать (warning);
+// 3. курсы на дату не загрузились (warning): считать это не мешает. Если расчёт при этом прошёл,
+//    вместо предупреждения показываем курс из ответа конвертации (info) — в поле валюты его не видно.
+// При первом заполнении и после обычного успешного расчёта сообщения нет: результат виден в полях RSD.
+type ToolbarMessage = { type: 'danger' | 'warning' | 'info'; text: string }
+
+const toolbarMessage = computed<ToolbarMessage | null>(() => {
+  if (isCurrencyListUnavailable.value) return { type: 'danger', text: t('ui.reportRowForm.currencyLoadError') }
+  if (calculationError.value) return { type: 'danger', text: calculationError.value }
+  if (needsRecalculation.value) return { type: 'warning', text: t('ui.reportRowForm.recalculateHint') }
+  if (!hasRatesLoadError.value) return null
+  if (isCalculated.value && conversionRate.value) {
+    const rate = `${conversionRate.value.code} ${formatRate(conversionRate.value)}`
+    return { type: 'info', text: t('ui.reportRowForm.officialRateValue', { rate }) }
+  }
+  return { type: 'warning', text: t('ui.reportRowForm.ratesLoadError') }
+})
+
+const store = useReportStore()
+
+const year = computed(() => Number(store.activeYear))
+
+watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
+watch(
+  [() => props.initialValue, lastUsedCurrencyCode],
+  ([nextInitialValue]) => {
+    applyInitialValue(nextInitialValue)
+  },
+  { immediate: true },
+)
+
+onMounted(() => {
+  void currencyStore.loadCurrencies()
+  if (isFullDate(date.value)) void currencyStore.loadRates(date.value)
+})
+</script>
+
+<template>
+  <form class="ReportRowEditForm" @submit="handleSubmit" v-autofocus>
+    <div class="ReportRowEditForm_Fields">
+      <div class="ReportRowEditForm_Currency">
+        <FieldDate
+          name="dateCurrency"
+          :year="year"
+          :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.hint')"
+          :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.label')"
+          :model-value="date"
+          :date-fns-locale="localeStore.dateFnsLocale"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.date.pickPlaceholder')"
+          @update:modelValue="date = $event ?? ''"
+          required
+        />
+        <FieldCombobox
+          class="ReportRowEditForm_CurrencyDropdown"
+          name="currency"
+          :label="t('ui.reportRowForm.currency')"
+          :options="currencyOptions"
+          :favorites="favoriteCurrencyCodes"
+          placement="right"
+          show-description
+          collapsible
+          :expand-text="t('ui.reportRowForm.allCurrencies')"
+          :hint="t('ui.reportRowForm.currencyHint')"
+          :error="currencyErrorMessage !== null"
+          :error-message="currencyErrorMessage ?? undefined"
+          :model-value="currency || null"
+          @update:model-value="currency = $event ?? ''"
+          @blur="handleCurrencyBlur"
+        />
+      </div>
+      <FieldCounter
+        :maxLength="55"
+        name="description"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.hint')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.description.placeholder')"
+        :model-value="description"
+        @update:modelValue="description = $event ?? ''"
+      />
+
+      <div class="ReportRowEditForm_AmountFields">
+        <FieldMoney
+          name="goodsAmount"
+          :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.label')"
+          :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.hint')"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+          :model-value="goodsAmount"
+          :locale="moneyLocale"
+          @update:modelValue="goodsAmount = $event"
+        />
+        <FieldMoney
+          name="servicesAmount"
+          :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.label')"
+          :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.hint')"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.placeholder')"
+          :model-value="servicesAmount"
+          :locale="moneyLocale"
+          @update:modelValue="servicesAmount = $event"
+        />
+        <FieldMoney
+          name="total"
+          :label="t('ui.reportRowForm.total')"
+          :model-value="formatInputMoney(totalValue || null)"
+          :locale="moneyLocale"
+          :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+          readonly
+        />
+      </div>
+    </div>
+    <!--    <div class="ReportRowEditForm_AmountFields">
+      <FieldMoney
+        name="goodsAmount"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.hint')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+        :model-value="goodsAmount"
+        :locale="moneyLocale"
+        @update:modelValue="goodsAmount = $event"
+      />
+      <FieldMoney
+        name="servicesAmount"
+        :label="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.label')"
+        :hint="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.hint')"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.servicesAmount.placeholder')"
+        :model-value="servicesAmount"
+        :locale="moneyLocale"
+        @update:modelValue="servicesAmount = $event"
+      />
+      <FieldMoney
+        name="total"
+        :label="t('ui.reportRowForm.total')"
+        :model-value="formatInputMoney(totalValue || null)"
+        :locale="moneyLocale"
+        :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+        readonly
+      />
+    </div>-->
+
+    <!-- Расчёт в RSD нужен только для валюты: при выборе RSD блок плавно сворачивается. -->
+    <Transition name="report-row-calculation">
+      <div v-if="!isLocalCurrency" class="ReportRowEditForm-Calculation">
+        <div class="ReportRowEditForm-CalculationContent">
+          <div class="ReportRowEditForm_Toolbar">
+            <ButtonWithIcon
+              :icon="calculateButtonIcon"
+              variant="accent"
+              :disabled="isCalculateDisabled"
+              :loading="isCalculating"
+              :full-width="viewport === 'mobile'"
+              @click="handleCalculate"
+            >
+              {{ calculateButtonLabel }}
+            </ButtonWithIcon>
+            <div
+              v-if="toolbarMessage"
+              :class="['ReportRowEditForm_Hint u-typo-body-m', `ReportRowEditForm_Hint_${toolbarMessage.type}`]"
+              :role="toolbarMessage.type === 'danger' ? 'alert' : undefined"
+            >
+              <IconInfoCircle v-if="toolbarMessage.type === 'info'" size="s" class="ReportRowEditForm-HintIcon" />
+              <IconDangerCircle v-else size="s" class="ReportRowEditForm-HintIcon" />
+              {{ toolbarMessage.text }}
+            </div>
+          </div>
+
+          <div class="ReportRowEditForm_Calculations">
+            <FieldMoney
+              name="goodsAmountRsd"
+              :label="t('ui.reportRowForm.goodsRsd')"
+              :model-value="formatInputMoney(goodsAmountRsd)"
+              :locale="moneyLocale"
+              :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+              readonly
+            />
+            <FieldMoney
+              name="servicesAmountRsd"
+              :label="t('ui.reportRowForm.servicesRsd')"
+              :model-value="formatInputMoney(servicesAmountRsd)"
+              :locale="moneyLocale"
+              :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+              readonly
+            />
+            <FieldMoney
+              name="totalAmountRsd"
+              :label="t('ui.reportRowForm.totalRsd')"
+              :model-value="formatInputMoney(totalAmountRsd)"
+              :locale="moneyLocale"
+              :placeholder="t('ui.reportBuilderMetaFields.incomeRecordsForm.goodsAmount.placeholder')"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </form>
+</template>
+
+<style scoped>
+.ReportRowEditForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.ReportRowEditForm_Fields {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 24px;
+}
+
+.ReportRowEditForm_Currency {
+  display: flex;
+  gap: 16px;
+
+  .ReportRowEditForm_CurrencyDropdown {
+    /*    flex: 0 1 140px;*/
+  }
+}
+
+.ReportRowEditForm_AmountFields {
+  gap: 16px;
+  display: grid;
+  align-items: end;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.ReportRowEditForm-Calculation {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.ReportRowEditForm-CalculationContent {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Пока идёт анимация, содержимое обрезаем; в покое — нет, чтобы не резать тень фокуса кнопки. */
+.report-row-calculation-enter-active .ReportRowEditForm-CalculationContent,
+.report-row-calculation-leave-active .ReportRowEditForm-CalculationContent {
+  overflow: hidden;
+}
+
+.report-row-calculation-enter-active {
+  transition:
+    grid-template-rows var(--transition-collapse-enter),
+    opacity var(--transition-collapse-enter),
+    margin-top var(--transition-collapse-enter);
+}
+
+.report-row-calculation-leave-active {
+  transition:
+    grid-template-rows var(--transition-collapse-leave),
+    opacity var(--transition-collapse-leave),
+    margin-top var(--transition-collapse-leave);
+}
+
+/* margin-top гасит gap формы (20px), чтобы и он схлопывался плавно, а не скачком в конце. */
+.report-row-calculation-enter-from,
+.report-row-calculation-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: -20px;
+}
+
+.ReportRowEditForm_Calculations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.ReportRowEditForm_Toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 32px;
+}
+
+.ReportRowEditForm_Hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font: var(--font-medium-text-xs);
+}
+
+.ReportRowEditForm_Hint_info {
+  color: var(--neutral-600);
+}
+
+.ReportRowEditForm_Hint_warning {
+  color: var(--orange-400);
+}
+
+/* Тот же красный, что у ошибок в полях ui-v2 (FieldBase). */
+.ReportRowEditForm_Hint_danger {
+  color: var(--red-500);
+}
+
+.ReportRowEditForm-HintIcon {
+  flex-shrink: 0;
+}
+
+/* Меньше планшета — всё в одну колонку. 768px = tablet в useViewport и $bp-md в tokens/_container.scss
+   (CSS-переменные в media query не работают, поэтому число). */
+@media (width < 768px) {
+  .ReportRowEditForm_Currency {
+    flex-direction: column;
+  }
+
+  .ReportRowEditForm_AmountFields,
+  .ReportRowEditForm_Calculations {
+    grid-template-columns: 1fr;
+  }
+
+  .ReportRowEditForm_Toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>

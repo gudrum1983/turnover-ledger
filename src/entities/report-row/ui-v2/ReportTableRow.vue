@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { TagBase } from '@/shared/ui-v2/tag-base'
-import { DialogConfirm } from '@/shared/ui/dialog-confirm'
+import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
 import type { ReportRow } from '../model/types'
-import { getRowTotals } from '../model/lib'
+import { getRowTotals, isForeignCurrencyRow } from '../model/lib'
 import { ROW_HIGHLIGHT_DURATION_MS } from '../model/constants'
 import { formatDateForUi, formatMoneySafe } from '@/shared/lib'
 import { useLocale } from '@/shared/i18n'
@@ -40,7 +40,8 @@ const emit = defineEmits<{
 const isShort = computed(() => props.size === 'short')
 
 const currencyLabel = computed(() => props.row.currency ?? '')
-const hasCurrency = computed(() => Boolean(props.row.currency))
+// У строк в RSD суммы в валюте не показываем — в этих графах прочерк.
+const hasCurrency = computed(() => isForeignCurrencyRow(props.row))
 
 const goodsForeign = computed(() => props.row.amounts.goods.foreignCents ?? 0)
 const servicesForeign = computed(() => props.row.amounts.services.foreignCents ?? 0)
@@ -201,8 +202,9 @@ function handleMenuSelect(value: string) {
           size="m"
           variant="card"
           @click="emit('edit', row.id)"
+          v-slot="{ size }"
         >
-          <IconPen size="s" />
+          <IconPen :size="size" />
         </ButtonIcon>
 
         <ButtonIcon
@@ -210,8 +212,9 @@ function handleMenuSelect(value: string) {
           size="m"
           variant="card"
           @click="emit('copy', row.id)"
+          v-slot="{ size }"
         >
-          <IconCopy size="s" />
+          <IconCopy :size="size" />
         </ButtonIcon>
 
         <ButtonIcon
@@ -219,8 +222,9 @@ function handleMenuSelect(value: string) {
           size="m"
           variant="danger-card"
           @click="openDialogConfirm = true"
+          v-slot="{ size }"
         >
-          <IconTrash size="s" />
+          <IconTrash :size="size" />
         </ButtonIcon>
       </template>
 
@@ -243,7 +247,23 @@ function handleMenuSelect(value: string) {
         @click="openDialogConfirm = true"
       />-->
     </div>
+
     <DialogConfirm
+      v-model:open="openDialogConfirm"
+      @confirm="handleClearRow"
+      :title="t('ui.deleteRowModal.title')"
+      :message="deleteRowDetails"
+      :details="t('ui.deleteRowModal.description')"
+      :labelPrimaryButton="t('ui.deleteRowModal.confirm')"
+      :labelSecondaryButton="t('ui.deleteRowModal.cancel')"
+      type="delete"
+    >
+      <!--      <template v-if="deleteRowDetails" #content>
+        {{ deleteRowDetails }}
+      </template>-->
+    </DialogConfirm>
+
+    <!--    <DialogConfirm
       v-model:open="openDialogConfirm"
       @confirm="handleClearRow"
       :title="t('ui.deleteRowModal.title')"
@@ -255,7 +275,7 @@ function handleMenuSelect(value: string) {
       <template v-if="deleteRowDetails" #content>
         {{ deleteRowDetails }}
       </template>
-    </DialogConfirm>
+    </DialogConfirm>-->
   </div>
 </template>
 

@@ -97,6 +97,8 @@ export const useReportStore = defineStore(STORE_ID, () => {
     }
   })
 
+  // Валюты для избранного: из строк активного года, а пока в нём нет ни одной записи — из предыдущего.
+  // Так в начале года избранное не пустое, а валюты, которыми давно не пользовались, не копятся из года в год.
   const usedCurrencyCodes = computed(() => {
     const unique = new Set<string>()
     const ordered: string[] = []
@@ -108,8 +110,10 @@ export const useReportStore = defineStore(STORE_ID, () => {
       ordered.push(normalized)
     }
 
+    const sourceYear = activeYearRows.value.length > 0 ? activeYear.value : activeYear.value - 1
+
     for (const row of rows.value) {
-      if (typeof row.currency === 'string') addCode(row.currency)
+      if (isRowInYear(row, sourceYear) && typeof row.currency === 'string') addCode(row.currency)
     }
 
     return ordered

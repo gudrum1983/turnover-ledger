@@ -11,8 +11,8 @@ import { useCurrencyStore } from '@/entities/currency'
 import { formatDateForUi, formatMoney } from '@/shared/lib'
 import { useLocale, useLocaleStore } from '@/shared/i18n'
 import { DisplayField } from '@/shared/ui/display-field'
+import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
 
-const LOCAL_CURRENCY_CODE = 'RSD'
 const currency = ref('')
 const date = ref('')
 const description = ref('')

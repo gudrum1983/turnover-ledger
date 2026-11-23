@@ -1,13 +1,13 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { fetchConversion, fetchCurrencies } from '../api/currencies'
-import type { ConversionResponse, Currency } from './types'
+import { fetchConversion, fetchCurrencies, fetchRates } from '../api/currencies'
+import type { ConversionResponse, Currency, CurrencyRate, RatesResponse } from './types'
 import type { CurrencyCode } from '@/shared/types'
+import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
 
 const STORE_ID = 'currencies-store'
 const LOCAL_STORAGE_KEY = 'currenciesState'
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000
-const LOCAL_CURRENCY_CODE = 'RSD' as const
 const BASE_FAVORITE_CODES = ['USD', 'EUR', 'RSD'] as const
 const UNTIL_DATE = new Date('2020-01-01')
 
@@ -21,6 +21,11 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const updatedAt = ref<string | null>(null)
+  /** Курсы на дату: дата YYYY-MM-DD → код валюты → курс, как в листе НБС (за parity единиц). Только в памяти. */
+  const ratesByDate = ref<Record<string, Record<CurrencyCode, CurrencyRate>>>({})
+  /** Даты YYYY-MM-DD, курсы на которые не удалось загрузить. Сбрасывается при повторной попытке. */
+  const ratesErrorDates = ref<Record<string, true>>({})
+  const ratesRequests = new Map<string, Promise<void>>()
 
   function isActiveCurrencies(currency: Currency) {
     if (!currency.country?.trim()) return false
@@ -155,6 +160,52 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
     }
   }
 
+  // Курс храним как в листе НБС, вместе с parity: у JPY и HUF он указан за 100 единиц, у остальных — за 1.
+  // Валюты без среднего курса пропускаем.
+  function toRates(response: RatesResponse): Record<CurrencyCode, CurrencyRate> {
+    const result: Record<CurrencyCode, CurrencyRate> = {}
+    for (const rate of response.rates ?? []) {
+      if (typeof rate?.exchange_middle !== 'number' || !(rate.parity > 0)) continue
+      result[rate.code.trim().toUpperCase()] = { rate: rate.exchange_middle, parity: rate.parity }
+    }
+    return result
+  }
+
+  /**
+   * Загружает курсы всех валют на дату. Повторный вызов для той же даты новый запрос не делает.
+   * Ошибка не пробрасывается: курсы в списке валют — подсказка, без них форма работает.
+   */
+  function loadRates(date: string): Promise<void> {
+    if (ratesByDate.value[date]) return Promise.resolve()
+
+    const pending = ratesRequests.get(date)
+    if (pending) return pending
+
+    clearRatesError(date)
+
+    const request = fetchRates(date)
+      .then((response) => {
+        ratesByDate.value = { ...ratesByDate.value, [date]: toRates(response) }
+      })
+      .catch(() => {
+        // повторим при следующем выборе этой даты
+        ratesErrorDates.value = { ...ratesErrorDates.value, [date]: true }
+      })
+      .finally(() => {
+        ratesRequests.delete(date)
+      })
+
+    ratesRequests.set(date, request)
+    return request
+  }
+
+  function clearRatesError(date: string) {
+    if (!ratesErrorDates.value[date]) return
+    const next = { ...ratesErrorDates.value }
+    delete next[date]
+    ratesErrorDates.value = next
+  }
+
   async function convertAmount(currencyCode: string, amount: number, date: string): Promise<ConversionResponse> {
     if (currencyCode.trim().toUpperCase() === LOCAL_CURRENCY_CODE) {
       return createLocalConversionResponse(amount, date)
@@ -169,6 +220,9 @@ export const useCurrencyStore = defineStore(STORE_ID, () => {
     isLoading,
     error,
     updatedAt,
+    ratesByDate,
+    ratesErrorDates,
+    loadRates,
     hydrateFromLocalStorage,
     loadCurrencies,
     convertAmount,

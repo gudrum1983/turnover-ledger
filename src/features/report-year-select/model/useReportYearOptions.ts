@@ -1,13 +1,6 @@
 import { computed } from 'vue'
 import { useReportStore } from '@/entities/report'
-import { useLocale, type I18nLocale } from '@/shared/i18n'
-
-const INTL_LOCALES: Record<I18nLocale, string> = {
-  ru: 'ru',
-  en: 'en',
-  srLat: 'sr-Latn',
-  srCyr: 'sr-Cyrl',
-}
+import { INTL_LOCALES, useLocale } from '@/shared/i18n'
 
 export function useReportYearOptions() {
   const reportStore = useReportStore()

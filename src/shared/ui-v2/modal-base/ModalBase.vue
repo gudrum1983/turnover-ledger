@@ -216,8 +216,9 @@ onBeforeUnmount(() => {
                 :ariaLabel="t('ui.importDataModal.close')"
                 @click="closeModal"
                 variant="card"
+                v-slot="{ size }"
               >
-                <IconClose size="xl" />
+                <IconClose :size="size" />
               </ButtonIcon>
             </div>
 

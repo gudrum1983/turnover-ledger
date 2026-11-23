@@ -108,9 +108,41 @@ describe('report store', () => {
   it('collects unique currency codes in insertion order', () => {
     const store = useReportStore()
 
+    store.setActiveYear(2026)
     store.setRows(reportState.rows)
 
-    expect(store.usedCurrencyCodes).toEqual(['EUR', 'RSD'])
+    // Строки сортируются по дате: RSD (2026-03-01) раньше ' eur ' (2026-04-10).
+    expect(store.usedCurrencyCodes).toEqual(['RSD', 'EUR'])
+  })
+
+  it('collects currency codes only from the active year when it has rows', () => {
+    const store = useReportStore()
+    const withCurrency = (id: string, date: string, currency: string) => ({ ...makeRow(id, date), currency })
+
+    store.setRows([
+      withCurrency('old', '2023-05-01', 'CNY'),
+      withCurrency('prev', '2024-05-01', 'USD'),
+      withCurrency('active', '2025-05-01', 'RUB'),
+      withCurrency('next', '2026-05-01', 'CHF'),
+      withCurrency('no-date', '', 'GBP'),
+    ])
+    store.setActiveYear(2025)
+
+    expect(store.usedCurrencyCodes).toEqual(['RUB'])
+  })
+
+  it('collects currency codes from the previous year while the active year has no rows', () => {
+    const store = useReportStore()
+    const withCurrency = (id: string, date: string, currency: string) => ({ ...makeRow(id, date), currency })
+
+    store.setRows([
+      withCurrency('old', '2023-05-01', 'CNY'),
+      withCurrency('prev', '2024-05-01', 'USD'),
+      withCurrency('next', '2026-05-01', 'CHF'),
+    ])
+    store.setActiveYear(2025)
+
+    expect(store.usedCurrencyCodes).toEqual(['USD'])
   })
 
   it('defaults the active year to the current year', () => {

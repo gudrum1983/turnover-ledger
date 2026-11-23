@@ -3,7 +3,7 @@ import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { TagBase } from '@/shared/ui-v2/tag-base'
 import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
 import type { ReportRow } from '../model/types'
-import { getRowTotals } from '../model/lib'
+import { getRowTotals, isForeignCurrencyRow } from '../model/lib'
 import { ROW_HIGHLIGHT_DURATION_MS } from '../model/constants'
 import { formatDateForUi, formatMoneySafe } from '@/shared/lib'
 import { useLocale } from '@/shared/i18n'
@@ -32,7 +32,8 @@ const emit = defineEmits<{
 }>()
 
 const currencyLabel = computed(() => props.row.currency ?? '')
-const hasCurrency = computed(() => Boolean(props.row.currency))
+// У строк в RSD суммы в валюте не показываем — в этих графах прочерк.
+const hasCurrency = computed(() => isForeignCurrencyRow(props.row))
 
 const totals = computed(() => getRowTotals(props.row))
 const totalForeign = computed(() => totals.value.foreignCents)

@@ -16,6 +16,8 @@ export const enUi = {
   },
   common: {
     clearField: 'Clear field',
+    nothingFound: 'Nothing found',
+    showAll: 'Show all',
   },
   reportYearSelect: {
     buttonLabel: 'Report for {year}',
@@ -110,6 +112,7 @@ export const enUi = {
       date: {
         label: 'Date',
         placeholder: 'DD.MM.YYYY',
+        pickPlaceholder: 'Select a date',
         hint: 'Invoice date',
       },
       description: {
@@ -156,11 +159,23 @@ export const enUi = {
   },
   reportRowForm: {
     currency: 'Currency',
+    allCurrencies: 'All "NBS" currencies',
+    currencyHint:
+      'Without a date, the full list of NBS currencies is shown, and a currency in it may have no rate on a specific day. Once you pick a date, only currencies with a rate on that day remain.',
+    currencyNoRateError: 'This currency has no NBS rate on the selected date. Choose another currency or date.',
     total: 'Total',
     calculate: 'Calculate',
+    recalculate: 'Recalculate',
+    retry: 'Retry',
     officialRatePrefix: 'Official middle RSD exchange rate (NBS)',
     recalculateHint: 'Recalculate after any changes.',
     currencyLoadError: 'Failed to load the currency list. Please try again later.',
+    ratesLoadError: 'Failed to load NBS rates for the selected date. Please try again later.',
+    officialRateValue: 'NBS middle rate for the date: {rate}',
+    unsavedChangesWarning: 'Unsaved changes will be lost',
+    continueEditing: 'Continue',
+    closeWithoutSaving: 'Close without saving',
+    closeWithoutSavingShort: 'Close',
     calculationError:
       'Failed to retrieve the exchange rate and complete the calculation. Check the date and try again.',
     goodsRsd: 'Goods (RSD)',
@@ -170,6 +185,8 @@ export const enUi = {
     cancel: 'Cancel',
     titleAdd: 'Add new row',
     titleEdit: 'Edit row',
+    titleAddYear: 'Add row for\u00A0{year}',
+    titleEditYear: 'Edit row for\u00A0{year}',
     submit: 'Save',
   },
   tableAlerts: {

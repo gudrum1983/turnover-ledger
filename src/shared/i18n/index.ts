@@ -1,6 +1,6 @@
 export { useLocale } from './useLocale'
 export { i18n, setI18nLocale } from './i18n'
 export { useLocaleStore } from './model/localeStore'
-export { DEFAULT_LOCALE, SUPPORTED_LOCALES, LOCALE_META, isSupportedLocale } from './locales.ts'
+export { DEFAULT_LOCALE, SUPPORTED_LOCALES, LOCALE_META, INTL_LOCALES, isSupportedLocale } from './locales.ts'
 export type { I18nMessageKey, I18nLocaleMessages } from './types'
 export type { I18nLocale } from './locales.ts'

@@ -16,6 +16,8 @@ export const srLatUi = {
   },
   common: {
     clearField: 'Obrisi polje',
+    nothingFound: 'Nema rezultata',
+    showAll: 'Prikaži sve',
   },
   reportYearSelect: {
     buttonLabel: 'Izveštaj za {year}. godinu',
@@ -110,6 +112,7 @@ export const srLatUi = {
       date: {
         label: 'Datum',
         placeholder: 'DD.MM.GGGG',
+        pickPlaceholder: 'Izaberite datum',
         hint: 'Datum fakture',
       },
       description: {
@@ -156,11 +159,23 @@ export const srLatUi = {
   },
   reportRowForm: {
     currency: 'Valuta',
+    allCurrencies: 'Sve valute „NBS“',
+    currencyHint:
+      'Bez datuma prikazana je opšta lista valuta NBS, koja ne garantuje da valuta ima kurs na određeni dan. Kada izaberete datum, ostaju samo valute sa kursom za taj dan.',
+    currencyNoRateError: 'Ova valuta nema kurs NBS na izabrani datum. Izaberite drugu valutu ili datum.',
     total: 'Ukupno',
     calculate: 'Izračunaj',
+    recalculate: 'Preračunaj',
+    retry: 'Pokušaj ponovo',
     officialRatePrefix: 'Zvanični srednji kurs RSD (NBS)',
     recalculateHint: 'Preračunajte nakon izmena.',
     currencyLoadError: 'Lista valuta nije učitana. Pokušajte ponovo kasnije.',
+    ratesLoadError: 'Kursevi NBS za izabrani datum nisu učitani. Pokušajte ponovo kasnije.',
+    officialRateValue: 'Srednji kurs NBS na datum: {rate}',
+    unsavedChangesWarning: 'Nesačuvane izmene će biti izgubljene',
+    continueEditing: 'Nastavi',
+    closeWithoutSaving: 'Zatvori bez čuvanja',
+    closeWithoutSavingShort: 'Zatvori',
     calculationError: 'Nije moguće dobiti kurs i završiti obračun. Proverite datum i pokušajte ponovo.',
     goodsRsd: 'Roba (RSD)',
     servicesRsd: 'Usluge (RSD)',
@@ -169,6 +184,8 @@ export const srLatUi = {
     cancel: 'Otkaži',
     titleAdd: 'Dodaj red',
     titleEdit: 'Izmena reda',
+    titleAddYear: 'Dodaj red za\u00A0{year}.\u00A0godinu',
+    titleEditYear: 'Izmena reda za\u00A0{year}.\u00A0godinu',
     submit: 'Sačuvaj',
   },
   tableAlerts: {

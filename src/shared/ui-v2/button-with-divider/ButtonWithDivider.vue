@@ -134,7 +134,7 @@ const {
     gap: 4px;
     background: var(--label-clr-bg);
     border-radius: 9px;
-    padding: 4px 6px;
+    padding: 4px 4px;
     transition:
       background-color var(--transition-color),
       color var(--transition-color);

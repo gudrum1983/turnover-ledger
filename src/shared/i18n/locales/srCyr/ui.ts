@@ -16,6 +16,8 @@ export const srCyrUi = {
   },
   common: {
     clearField: 'Обриши поље',
+    nothingFound: 'Нема резултата',
+    showAll: 'Прикажи све',
   },
   reportYearSelect: {
     buttonLabel: 'Извештај за {year}. годину',
@@ -110,6 +112,7 @@ export const srCyrUi = {
       date: {
         label: 'Датум',
         placeholder: 'ДД.ММ.ГГГГ',
+        pickPlaceholder: 'Изаберите датум',
         hint: 'Датум фактуре',
       },
       description: {
@@ -156,11 +159,23 @@ export const srCyrUi = {
   },
   reportRowForm: {
     currency: 'Валута',
+    allCurrencies: 'Све валуте „НБС“',
+    currencyHint:
+      'Без датума приказана је општа листа валута НБС, која не гарантује да валута има курс на одређени дан. Када изаберете датум, остају само валуте са курсом за тај дан.',
+    currencyNoRateError: 'Ова валута нема курс НБС на изабрани датум. Изаберите другу валуту или датум.',
     total: 'Укупно',
     calculate: 'Израчунај',
+    recalculate: 'Прерачунај',
+    retry: 'Покушај поново',
     officialRatePrefix: 'Званични средњи курс RSD (NBS)',
     recalculateHint: 'Прерачунајте након измена.',
     currencyLoadError: 'Листа валута није учитана. Покушајте поново касније.',
+    ratesLoadError: 'Курсеви НБС за изабрани датум нису учитани. Покушајте поново касније.',
+    officialRateValue: 'Средњи курс НБС на датум: {rate}',
+    unsavedChangesWarning: 'Несачуване измене ће бити изгубљене',
+    continueEditing: 'Настави',
+    closeWithoutSaving: 'Затвори без чувања',
+    closeWithoutSavingShort: 'Затвори',
     calculationError: 'Није могуће добити курс и завршити обрачун. Проверите датум и покушајте поново.',
     goodsRsd: 'Роба (RSD)',
     servicesRsd: 'Услуге (RSD)',
@@ -169,6 +184,8 @@ export const srCyrUi = {
     cancel: 'Откажи',
     titleAdd: 'Додај ред',
     titleEdit: 'Измена реда',
+    titleAddYear: 'Додај ред за\u00A0{year}.\u00A0годину',
+    titleEditYear: 'Измена реда за\u00A0{year}.\u00A0годину',
     submit: 'Сачувај',
   },
   tableAlerts: {

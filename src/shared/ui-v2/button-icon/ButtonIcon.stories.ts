@@ -49,13 +49,13 @@ export const Danger: Story = { args: { variant: 'danger' } }
 export const Card: Story = { args: { variant: 'card' } }
 export const DangerCard: Story = { args: { variant: 'danger-card' } }
 
-export const Medium: Story = { name: 'M — 40 px', args: { size: 'm' } }
-export const Large: Story = { name: 'L — 48 px', args: { size: 'l' } }
+export const Medium: Story = { name: 'M — 40 px, иконка 16 px', args: { size: 'm' } }
+export const Large: Story = { name: 'L — 48 px, иконка 24 px', args: { size: 'l' } }
 export const TouchMedium: Story = {
-  name: 'Сенсорная M — 32 px, область нажатия 40 px',
+  name: 'Сенсорная M — 32 px, область нажатия 40 px, иконка 16 px',
   args: { touchTarget: true, size: 'm' },
 }
 export const TouchLarge: Story = {
-  name: 'Сенсорная L — 40 px, область нажатия 48 px',
+  name: 'Сенсорная L — 40 px, область нажатия 48 px, иконка 18 px',
   args: { touchTarget: true, size: 'l' },
 }

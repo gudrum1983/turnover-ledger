@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { IconSize } from '../icons/sizes'
+import { ICON_SIZES as ICON_DIMENSIONS, type IconSize } from '../icons/sizes'
 
 type Props = {
   /** Визуальный вариант кнопки */
@@ -29,16 +29,17 @@ const {
   ariaLabel,
 } = defineProps<Props>()
 
+/** Размер иконки по размеру кнопки и режиму сенсорной области (из спецификации макета) */
 const ICON_SIZES = {
-  regular: { dimension: 22, icon: 'l' },
-  touch: { dimension: 18, icon: 'm' },
-} as const satisfies Record<'regular' | 'touch', { dimension: number; icon: IconSize }>
+  l: { regular: 'xl', touch: 'm' },
+  m: { regular: 's', touch: 's' },
+} as const satisfies Record<'m' | 'l', Record<'regular' | 'touch', IconSize>>
 
-const iconConfig = computed(() => ICON_SIZES[touchTarget ? 'touch' : 'regular'])
+const iconSize = computed<IconSize>(() => ICON_SIZES[size][touchTarget ? 'touch' : 'regular'])
 const BUTTON_SIZES = { m: 40, l: 48 } as const
 const touchDimension = computed(() => `${BUTTON_SIZES[size]}px`)
 const visualDimension = computed(() => `${BUTTON_SIZES[size] - (touchTarget ? 8 : 0)}px`)
-const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
+const iconDimension = computed(() => `${ICON_DIMENSIONS[iconSize.value].dimension}px`)
 </script>
 
 <template>
@@ -51,7 +52,7 @@ const iconDimension = computed(() => `${iconConfig.value.dimension}px`)
   >
     <span class="ButtonIcon-Surface" aria-hidden="true">
       <span class="ButtonIcon-Icon">
-        <slot :size="iconConfig.icon" />
+        <slot :size="iconSize" />
       </span>
     </span>
   </button>

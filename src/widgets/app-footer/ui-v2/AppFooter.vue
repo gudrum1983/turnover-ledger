@@ -80,7 +80,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect())
 .AppFooter {
   margin-top: 40px;
 
-  @media (width < 360px) {
+  @media (width < 768px) {
     margin-top: 16px;
   }
 
