@@ -3,11 +3,18 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   cloneReportState,
+  createEmptyReportMeta,
   createReportExportFile,
+  filterImportableRows,
+  getReportYearCounts,
   getTableTotals,
+  hasReportMeta,
   isReportExportFile,
+  isRowDateAllowed,
   isReportState,
+  mergeReportState,
   parseImportedReportState,
+  pickReportState,
 } from './lib'
 import { REPORT_EXPORT_VERSION, type ReportState } from './types'
 
@@ -152,5 +159,88 @@ describe('report lib', () => {
 
   it('returns null for an invalid imported report fixture', () => {
     expect(parseImportedReportState(invalidReportFixture)).toBeNull()
+  })
+})
+
+describe('report year selection', () => {
+  const row = (id: string, date: string) => ({ ...reportState.rows[0]!, id, date })
+  const current: ReportState = {
+    meta: reportState.meta,
+    rows: [row('c-2024', '2024-03-01'), row('c-2025', '2025-03-01'), row('c-bad', 'bad-date')],
+  }
+  const incoming: ReportState = {
+    meta: { ...createEmptyReportMeta(), header: { ...createEmptyReportMeta().header, pib: '111111111' } },
+    rows: [row('i-2025', '2025-05-01'), row('i-2026-a', '2026-01-01'), row('i-2026-b', '2026-02-01')],
+  }
+  const ids = (state: ReportState) => state.rows.map(({ id }) => id)
+
+  it('counts rows per year from newest to oldest, skipping invalid dates', () => {
+    expect(getReportYearCounts(current.rows)).toEqual([
+      { year: 2025, count: 1 },
+      { year: 2024, count: 1 },
+    ])
+    expect(getReportYearCounts(incoming.rows)[0]).toEqual({ year: 2026, count: 2 })
+  })
+
+  it('detects filled meta', () => {
+    expect(hasReportMeta(createEmptyReportMeta())).toBe(false)
+    expect(hasReportMeta(incoming.meta)).toBe(true)
+  })
+
+  it('picks selected years and empties meta when it is not selected', () => {
+    const picked = pickReportState(current, { years: [2025], meta: false })
+
+    expect(ids(picked)).toEqual(['c-2025'])
+    expect(picked.meta).toEqual(createEmptyReportMeta())
+    expect(ids(pickReportState(current, { years: 'all', meta: true }))).toEqual(ids(current))
+  })
+
+  it('keeps local years that are missing in the file when all file years are imported', () => {
+    const merged = mergeReportState(current, incoming, { years: [2025, 2026], meta: false })
+
+    expect(ids(merged)).toEqual(['c-2024', 'c-bad', 'i-2025', 'i-2026-a', 'i-2026-b'])
+    expect(merged.meta).toEqual(current.meta)
+  })
+
+  it('replaces only selected years and keeps the others', () => {
+    const merged = mergeReportState(current, incoming, { years: [2025], meta: true })
+
+    expect(ids(merged)).toEqual(['c-2024', 'c-bad', 'i-2025'])
+    expect(merged.meta).toEqual(incoming.meta)
+  })
+
+  it('adds a year that is missing locally', () => {
+    expect(ids(mergeReportState(current, incoming, { years: [2026], meta: false }))).toEqual([
+      'c-2024',
+      'c-2025',
+      'c-bad',
+      'i-2026-a',
+      'i-2026-b',
+    ])
+  })
+})
+
+describe('import date limits', () => {
+  const today = new Date(2026, 10, 23)
+  const row = (date: string) => ({ ...reportState.rows[0]!, id: date, date })
+
+  it('allows dates from 2020-01-01 up to today', () => {
+    expect(isRowDateAllowed(row('2020-01-01'), today)).toBe(true)
+    expect(isRowDateAllowed(row('2026-11-23'), today)).toBe(true)
+  })
+
+  it('rejects dates before 2020, after today and invalid dates', () => {
+    expect(isRowDateAllowed(row('2019-12-31'), today)).toBe(false)
+    expect(isRowDateAllowed(row('2026-11-24'), today)).toBe(false)
+    expect(isRowDateAllowed(row('2025-02-30'), today)).toBe(false)
+    expect(isRowDateAllowed(row('bad-date'), today)).toBe(false)
+  })
+
+  it('keeps only importable rows and counts the skipped ones', () => {
+    const state = { ...reportState, rows: [row('2016-05-01'), row('2025-05-01'), row('2026-12-15')] }
+    const result = filterImportableRows(state, today)
+
+    expect(result.state.rows.map(({ date }) => date)).toEqual(['2025-05-01'])
+    expect(result.skippedCount).toBe(2)
   })
 })

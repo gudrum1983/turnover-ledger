@@ -9,14 +9,22 @@ export {
 export type { FooterField, FooterMetaField, HeaderField, HeaderMetaField, TableField, TitleField } from './model/fields'
 export type { ReportExportFile, ReportMeta, ReportState } from './model/types'
 export { REPORT_EXPORT_VERSION } from './model/types'
-export type { ReportTableTotals } from './model/lib'
+export type { ReportImportSelection, ReportStateSelection, ReportTableTotals, ReportYearCount } from './model/lib'
 export {
   cloneReportState,
+  createEmptyReportMeta,
   createReportExportFile,
+  filterImportableRows,
+  getReportYearCounts,
+  getRowYear,
   getTableTotals,
+  hasReportMeta,
   isReportExportFile,
+  isRowDateAllowed,
   isReportState,
+  mergeReportState,
   parseImportedReportState,
+  pickReportState,
 } from './model/lib'
 export type { RollingLimitExceedance, YearLimitStatus } from './model/limits'
 export {
