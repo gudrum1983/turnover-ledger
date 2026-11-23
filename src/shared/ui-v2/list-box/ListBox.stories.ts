@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Список вариантов для выпадающих компонентов (ButtonDropdown, FieldCombobox). Избранные варианты показываются вверху и отделяются разделителем; в слот footer можно положить строку после пунктов (например, «Показать все»). Обрезанный многоточием текст пункта показывается в тултипе. Высоту списка задаёт родитель; если в списке есть разделитель, к ней прибавляется --list-box-divider-space.',
+          'Список вариантов для выпадающих компонентов (ButtonDropdown, FieldCombobox). Избранные варианты показываются вверху и отделяются разделителем; в слот footer можно положить строку после пунктов (например, «Ещё»). Обрезанный многоточием текст пункта показывается в тултипе. Высоту списка задаёт родитель; если в списке есть разделитель, к ней прибавляется --list-box-divider-space.',
       },
     },
   },
@@ -72,7 +72,7 @@ export const WithFooter: Story = {
         <ListBox v-bind="args" v-model="value" :options="args.options.filter((option) => args.favorites.includes(option.value))">
           <template #footer>
             <button type="button" class="u-typo-body-m" style="min-height: 40px; padding: 0 16px; border: none; background: none; text-align: left; color: var(--neutral-600); cursor: pointer">
-              Показать все
+              Ещё
             </button>
           </template>
         </ListBox>

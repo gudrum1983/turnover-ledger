@@ -16,7 +16,7 @@ export const ruUi = {
   common: {
     clearField: 'Очистить поле',
     nothingFound: 'Ничего не найдено',
-    showAll: 'Показать все',
+    showMore: 'Ещё',
   },
   reportYearSelect: {
     buttonLabel: 'Отчёт за {year} год',
@@ -158,7 +158,6 @@ export const ruUi = {
   },
   reportRowForm: {
     currency: 'Валюта',
-    allCurrencies: 'Все валюты «НБС»',
     currencyHint:
       'Без даты показан общий список валют НБС: он не гарантирует, что у валюты есть курс на нужный день. После выбора даты в списке остаются только валюты с курсом на этот день.',
     currencyNoRateError: 'У этой валюты нет курса НБС на выбранную дату. Выберите другую валюту или дату.',

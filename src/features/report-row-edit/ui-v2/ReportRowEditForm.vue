@@ -426,7 +426,6 @@ onMounted(() => {
           placement="right"
           show-description
           collapsible
-          :expand-text="t('ui.reportRowForm.allCurrencies')"
           :hint="t('ui.reportRowForm.currencyHint')"
           :error="currencyErrorMessage !== null"
           :error-message="currencyErrorMessage ?? undefined"

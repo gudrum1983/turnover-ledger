@@ -17,7 +17,7 @@ export const srLatUi = {
   common: {
     clearField: 'Obrisi polje',
     nothingFound: 'Nema rezultata',
-    showAll: 'Prikaži sve',
+    showMore: 'Još',
   },
   reportYearSelect: {
     buttonLabel: 'Izveštaj za {year}. godinu',
@@ -159,7 +159,6 @@ export const srLatUi = {
   },
   reportRowForm: {
     currency: 'Valuta',
-    allCurrencies: 'Sve valute „NBS“',
     currencyHint:
       'Bez datuma prikazana je opšta lista valuta NBS, koja ne garantuje da valuta ima kurs na određeni dan. Kada izaberete datum, ostaju samo valute sa kursom za taj dan.',
     currencyNoRateError: 'Ova valuta nema kurs NBS na izabrani datum. Izaberite drugu valutu ili datum.',

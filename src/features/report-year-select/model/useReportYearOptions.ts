@@ -26,5 +26,11 @@ export function useReportYearOptions() {
       }),
   )
 
-  return { options }
+  // Избранные: текущий год и годы, в которых есть хоть одна запись. Остальные — в свёрнутой части списка.
+  const favorites = computed(() => {
+    const currentYear = new Date().getFullYear()
+    return options.value.filter(({ year, count }) => count > 0 || year === currentYear).map(({ value }) => value)
+  })
+
+  return { options, favorites }
 }

@@ -17,7 +17,7 @@ export const enUi = {
   common: {
     clearField: 'Clear field',
     nothingFound: 'Nothing found',
-    showAll: 'Show all',
+    showMore: 'More',
   },
   reportYearSelect: {
     buttonLabel: 'Report for {year}',
@@ -159,7 +159,6 @@ export const enUi = {
   },
   reportRowForm: {
     currency: 'Currency',
-    allCurrencies: 'All "NBS" currencies',
     currencyHint:
       'Without a date, the full list of NBS currencies is shown, and a currency in it may have no rate on a specific day. Once you pick a date, only currencies with a rate on that day remain.',
     currencyNoRateError: 'This currency has no NBS rate on the selected date. Choose another currency or date.',

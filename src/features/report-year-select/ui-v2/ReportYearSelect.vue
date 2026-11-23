@@ -19,7 +19,7 @@ withDefaults(
 )
 
 const store = useReportStore()
-const { options } = useReportYearOptions()
+const { options, favorites } = useReportYearOptions()
 
 const model = computed({
   get: () => String(store.activeYear),
@@ -31,7 +31,14 @@ const model = computed({
 </script>
 
 <template>
-  <ButtonDropdown v-model="model" :options="options" :typography="typography" :placement="placement">
+  <ButtonDropdown
+    v-model="model"
+    :options="options"
+    :favorites="favorites"
+    collapsible
+    :typography="typography"
+    :placement="placement"
+  >
     <template #label>
       <span v-if="size === 'compact'" class="ReportYearSelect_Year">{{ model }}</span>
       <Translation
