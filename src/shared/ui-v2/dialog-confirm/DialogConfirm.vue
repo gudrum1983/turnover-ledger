@@ -15,7 +15,7 @@ const {
   message,
   details,
   type,
-  labelPrimaryButton = 'Action',
+  labelPrimaryButton,
   labelSecondaryButton = 'Cancel',
   autoFocusCancelButton = true,
 } = defineProps<{
@@ -48,14 +48,20 @@ const emit = defineEmits<{
 // Модификатор корня по типу диалога: DialogConfirm_type_delete и т. д.
 const rootClasses = computed(() => ['DialogConfirm', `DialogConfirm_type_${type}`].join(' '))
 
-// Вид основной кнопки по типу диалога. У диалога ошибки основной кнопки нет — только закрытие.
-const PRIMARY_BUTTON_VARIANT: Record<DialogConfirmType, ButtonProps['variant'] | null> = {
+// Вид основной кнопки по типу диалога. У диалога ошибки основная кнопка — повтор действия
+// (например, «Повторить»), она необязательна: без labelPrimaryButton остаётся только закрытие.
+const PRIMARY_BUTTON_VARIANT: Record<DialogConfirmType, ButtonProps['variant']> = {
   confirm: 'accent',
   delete: 'danger',
-  error: null,
+  error: 'accent',
 }
 
 const primaryButtonVariant = computed(() => PRIMARY_BUTTON_VARIANT[type])
+
+// У диалога ошибки по макету «StatusAlert» кнопка закрытия красная и стоит справа от «Повторить».
+const isError = computed(() => type === 'error')
+const hasRetryButton = computed(() => isError.value && labelPrimaryButton !== undefined)
+const secondaryButtonVariant = computed<ButtonProps['variant']>(() => (isError.value ? 'danger' : 'page'))
 
 // Вид заголовка по типу диалога: удаление и ошибка — красным.
 const TITLE_VARIANT: Record<DialogConfirmType, ModalBaseTitleVariant> = {
@@ -94,12 +100,16 @@ function handleCancel() {
     <p class="DialogConfirm_Message u-typo-body-m">{{ message }}</p>
     <p v-if="details" class="DialogConfirm_Message_light u-typo-body-m">{{ details }}</p>
     <div class="DialogConfirm_Actions">
-      <ButtonBase variant="page" v-autofocus="autoFocusCancelButton" @click="handleCancel">{{
+      <ButtonBase v-if="hasRetryButton" :variant="primaryButtonVariant" @click="emit('confirm')">{{
+        labelPrimaryButton
+      }}</ButtonBase>
+
+      <ButtonBase :variant="secondaryButtonVariant" v-autofocus="autoFocusCancelButton" @click="handleCancel">{{
         labelSecondaryButton
       }}</ButtonBase>
 
-      <ButtonBase v-if="primaryButtonVariant" :variant="primaryButtonVariant" @click="emit('confirm')">{{
-        labelPrimaryButton
+      <ButtonBase v-if="!isError" :variant="primaryButtonVariant" @click="emit('confirm')">{{
+        labelPrimaryButton ?? 'Action'
       }}</ButtonBase>
     </div>
   </ModalBase>
