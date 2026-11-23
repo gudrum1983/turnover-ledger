@@ -1,6 +1,7 @@
 <script lang="ts">
 export type ModalBaseSize = 'xs' | 'sm' | 'md' | 'lg'
 export type ModalBaseTitleVariant = 'default' | 'danger'
+export type ModalBaseTitleSize = 'l' | 'm'
 </script>
 
 <script setup lang="ts">
@@ -17,6 +18,8 @@ type ModalBaseProps = {
   title: string
   /** Вид заголовка: danger — для опасных действий (удаление, ошибка) */
   titleVariant?: ModalBaseTitleVariant
+  /** Размер заголовка: l — H-2 (L), 28px, для окон с формами; m — Subtitle (L), 24px, для окон сообщений */
+  titleSize?: ModalBaseTitleSize
   /** Анимирует смену текста заголовка. */
   animateTitle?: boolean
   /**  Определяет наличие кнопки закрытия */
@@ -36,6 +39,7 @@ const {
   hasCloseButton = false,
   title,
   titleVariant = 'default',
+  titleSize = 'l',
   animateTitle = false,
   rootClass = '',
 } = defineProps<ModalBaseProps>()
@@ -196,8 +200,11 @@ onBeforeUnmount(() => {
             <div class="ModalBase-Header">
               <span
                 :id="titleId"
-                class="ModalBase-Title u-typo-subtitle-l"
-                :class="`ModalBase-Title_variant_${titleVariant}`"
+                class="ModalBase-Title"
+                :class="[
+                  `ModalBase-Title_variant_${titleVariant}`,
+                  titleSize === 'l' ? 'u-typo-h2-l' : 'u-typo-subtitle-l',
+                ]"
               >
                 <Transition
                   :css="animateTitle"

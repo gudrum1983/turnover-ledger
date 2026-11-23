@@ -80,6 +80,7 @@ function handleCancel() {
   <ModalBase
     :title="title"
     :titleVariant="titleVariant"
+    titleSize="m"
     :open="open"
     :rootClass="rootClasses"
     @update:open="closeDialog"
