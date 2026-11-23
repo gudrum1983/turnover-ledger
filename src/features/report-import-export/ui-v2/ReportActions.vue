@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { createReportExportFile, parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
+import { parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { useLocale } from '@/shared/i18n'
 import { DialogAlert } from '@/shared/ui/dialog-alert'
-import { DialogConfirm } from '@/shared/ui/dialog-confirm'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconDownload, IconEye, IconUpload } from '@/shared/ui-v2/icons'
+import ReportExportDialog from './ReportExportDialog.vue'
+import ReportImportDialog from './ReportImportDialog.vue'
 
 type Prop = {
   /** Дополнительно отключает экспорт отчёта. */
@@ -51,21 +52,11 @@ onUnmounted(() => {
 })
 
 const fileInput = ref<HTMLInputElement | null>(null)
+const isExportDialogOpen = ref(false)
 const isImportErrorDialogOpen = ref(false)
-const isImportConfirmOpen = ref(false)
+const isImportDialogOpen = ref(false)
 const pendingImportState = ref<ReportState | null>(null)
 const pendingImportFileName = ref('')
-
-const importRowsSummary = computed(() => {
-  if (!pendingImportState.value) return ''
-
-  return `${t('ui.importDataModal.rowsInTable')}: ${pendingImportState.value.rows.length}`
-})
-
-const formatExportFileName = () => {
-  const today = new Date().toISOString().slice(0, 10)
-  return `kpo-book-${today}.json`
-}
 
 function resetFileInput() {
   if (fileInput.value) {
@@ -73,19 +64,9 @@ function resetFileInput() {
   }
 }
 
-function handleExport() {
+function openExportDialog() {
   if (isExportDisabled.value) return
-
-  const payload = JSON.stringify(createReportExportFile(reportStore.exportState()), null, 2)
-  const blob = new Blob([payload], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-
-  link.href = url
-  link.download = formatExportFileName()
-  link.click()
-
-  URL.revokeObjectURL(url)
+  isExportDialogOpen.value = true
 }
 
 function openImportDialog() {
@@ -109,7 +90,7 @@ async function handleFileChange(event: Event) {
 
     pendingImportState.value = importedState
     pendingImportFileName.value = file.name
-    isImportConfirmOpen.value = true
+    isImportDialogOpen.value = true
   } catch {
     pendingImportState.value = null
     pendingImportFileName.value = ''
@@ -121,19 +102,6 @@ async function handleFileChange(event: Event) {
 
 function closeImportErrorDialog() {
   isImportErrorDialogOpen.value = false
-}
-
-function closeImportConfirm() {
-  isImportConfirmOpen.value = false
-  pendingImportState.value = null
-  pendingImportFileName.value = ''
-}
-
-function applyImport() {
-  if (!pendingImportState.value) return
-
-  reportStore.replaceState(pendingImportState.value)
-  closeImportConfirm()
 }
 </script>
 
@@ -153,7 +121,7 @@ function applyImport() {
       :icon="IconUpload"
       :size="useSmallButtons ? 'm' : 'l'"
       :aria-label="t('ui.reportBuilderActions.export')"
-      @click="handleExport"
+      @click="openExportDialog"
       :disabled="isExportDisabled"
     >
       <template v-if="!iconsOnly" #default>
@@ -187,27 +155,12 @@ function applyImport() {
     :labelCloseButton="t('ui.importDataModal.close')"
     @update:open="closeImportErrorDialog"
   />
-  <DialogConfirm
-    v-model:open="isImportConfirmOpen"
-    :title="t('ui.importDataModal.title')"
-    :message="t('ui.importDataModal.description')"
-    :labelActiveButton="t('ui.importDataModal.confirm')"
-    :labelCancelButton="t('ui.importDataModal.cancel')"
-    type="confirm"
-    @confirm="applyImport"
-    @cancel="closeImportConfirm"
-  >
-    <template v-if="pendingImportFileName" #content>
-      <div class="ReportActions_ImportSummary">
-        <div class="ReportActions_ImportFileName">
-          {{ pendingImportFileName }}
-        </div>
-        <div v-if="importRowsSummary" class="ReportActions_ImportRows">
-          {{ importRowsSummary }}
-        </div>
-      </div>
-    </template>
-  </DialogConfirm>
+  <ReportExportDialog v-model:open="isExportDialogOpen" />
+  <ReportImportDialog
+    v-model:open="isImportDialogOpen"
+    :imported-state="pendingImportState"
+    :file-name="pendingImportFileName"
+  />
 </template>
 
 <style scoped>
@@ -246,19 +199,5 @@ function applyImport() {
 
 .ReportActions_FileInput {
   display: none;
-}
-
-.ReportActions_ImportSummary {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.ReportActions_ImportFileName {
-  overflow-wrap: anywhere;
-}
-
-.ReportActions_ImportRows {
-  white-space: nowrap;
 }
 </style>
