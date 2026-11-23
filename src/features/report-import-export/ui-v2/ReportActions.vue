@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { parseImportedReportState, type ReportState, useReportStore } from '@/entities/report'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { useLocale } from '@/shared/i18n'
-import { DialogAlert } from '@/shared/ui/dialog-alert'
+import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconDownload, IconEye, IconUpload } from '@/shared/ui-v2/icons'
 import ReportExportDialog from './ReportExportDialog.vue'
@@ -57,6 +57,8 @@ const isImportErrorDialogOpen = ref(false)
 const isImportDialogOpen = ref(false)
 const pendingImportState = ref<ReportState | null>(null)
 const pendingImportFileName = ref('')
+// Имя файла, который не удалось прочитать, — для текста ошибки.
+const invalidFileName = ref('')
 
 function resetFileInput() {
   if (fileInput.value) {
@@ -94,14 +96,17 @@ async function handleFileChange(event: Event) {
   } catch {
     pendingImportState.value = null
     pendingImportFileName.value = ''
+    invalidFileName.value = file.name
     isImportErrorDialogOpen.value = true
   } finally {
     resetFileInput()
   }
 }
 
-function closeImportErrorDialog() {
+// «Повторить» — закрываем ошибку и сразу снова открываем выбор файла.
+function retryImport() {
   isImportErrorDialogOpen.value = false
+  openImportDialog()
 }
 </script>
 
@@ -147,13 +152,15 @@ function closeImportErrorDialog() {
       @change="handleFileChange"
     />
   </div>
-  <DialogAlert
+  <DialogConfirm
     v-model:open="isImportErrorDialogOpen"
-    type="danger"
-    :title="t('ui.importDataModal.invalidFileTitle')"
-    :message="t('ui.importDataModal.invalidFile')"
-    :labelCloseButton="t('ui.importDataModal.close')"
-    @update:open="closeImportErrorDialog"
+    type="error"
+    :title="t('ui.dataTransferModal.errorTitle')"
+    :message="t('ui.dataTransferModal.errorMessage', { name: invalidFileName })"
+    :details="t('ui.dataTransferModal.errorDetails')"
+    :label-primary-button="t('ui.dataTransferModal.retry')"
+    :label-secondary-button="t('ui.dataTransferModal.close')"
+    @confirm="retryImport"
   />
   <ReportExportDialog v-model:open="isExportDialogOpen" />
   <ReportImportDialog
