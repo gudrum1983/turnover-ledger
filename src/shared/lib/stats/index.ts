@@ -1,0 +1,1 @@
+export { trackPrint } from './trackEvent'

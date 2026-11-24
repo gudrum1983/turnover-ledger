@@ -14,8 +14,10 @@ import { IconBack, IconPrinter } from '@/shared/ui-v2/icons'
 import { useRouter } from 'vue-router'
 import { ReportScriptSwitch } from '@/features/report-script-switch'
 import { ReportYearSelect } from '@/features/report-year-select'
+import { trackPrint } from '@/shared/lib'
 
 const onPrint = () => {
+  trackPrint(script.value)
   window.print()
 }
 //todo: тут стили перешерстить и свитчер переместить

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { EXCHANGE_RATES_BY_DATE_API_URL } from '@/shared/constants/app'
 import { CurrencyApiError, fetchConversion, fetchCurrencies, fetchRates } from './currencies'
 
 describe('currency api', () => {
@@ -54,7 +55,7 @@ describe('currency api', () => {
     } as unknown as Response)
 
     await expect(fetchRates('2026-01-25')).resolves.toEqual({ rates: [] })
-    expect(fetchMock).toHaveBeenCalledWith('https://nbs-rates.gudrum1983.workers.dev/api/v1/rates/2026-01-25')
+    expect(fetchMock).toHaveBeenCalledWith(`${EXCHANGE_RATES_BY_DATE_API_URL}/2026-01-25`)
   })
 
   it('throws typed error when rates response is not ok', async () => {
