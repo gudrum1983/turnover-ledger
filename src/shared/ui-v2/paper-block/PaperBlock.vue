@@ -31,15 +31,19 @@ const classes = computed(() => [
   // Внутренний радиус для потомков, прижатых к краю блока (например, футер таблицы с фоном).
   // Наследуется вниз по дереву, поэтому блок не нужно обрезать через overflow.
   --radius-paper-block-inner: calc(var(--radius-paper-block) - var(--border-width-paper-block));
+  // Отступы — переменными: потомок может выйти к краям блока (например, липкая шапка во всю ширину).
+  --paper-block-padding-block: 40px;
+  --paper-block-padding-inline: 30px;
 
   border-radius: var(--radius-paper-block);
-  padding: 40px 30px;
+  padding: var(--paper-block-padding-block) var(--paper-block-padding-inline);
   background: var(--white);
   box-shadow: 0 4px 16px 0 #0000000a;
 }
 
 .PaperBlock_noPadding {
-  padding: 0;
+  --paper-block-padding-block: 0px;
+  --paper-block-padding-inline: 0px;
 }
 
 .PaperBlock_overflow_clip {
