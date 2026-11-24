@@ -285,6 +285,9 @@ function handleMenuSelect(value: string) {
   // Сетка по умолчанию; таблица может переопределить её пропом columns.
   grid-template-columns: 60px 120px auto 180px 180px 180px 144px;
   border-bottom: 1px solid #6e777840;
+  // Строка, к которой докручиваем (подсветка новой строки), не должна прятаться под липкими кнопками
+  // и шапкой таблицы: их общая высота — --report-table-sticky-top (кнопки) + шапка с затуханием.
+  scroll-margin-top: calc(var(--report-table-sticky-top, 0px) + 80px);
   // Ширина колонок меняется плавно, если таблица включила переход (--report-table-columns-transition)
   // на время переключения краткий/полный вид.
   transition:

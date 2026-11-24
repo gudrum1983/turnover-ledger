@@ -149,6 +149,8 @@ function handleMenuSelect(value: string) {
 <style scoped lang="scss">
 .ReportTableCard {
   border-bottom: 1px solid #6e777840;
+  // Карточка, к которой докручиваем (подсветка новой записи), не должна прятаться под липкими кнопками.
+  scroll-margin-top: calc(var(--report-table-sticky-top, 0px) + 24px);
   transition: background-color var(--transition-color);
   cursor: pointer;
 
