@@ -22,36 +22,38 @@ const router = useRouter()
 const { stats } = useAppStats()
 const statsSection = computed<AboutSectionData | null>(() => {
   if (!stats.value) return null
+  const { conversions, prints, printsByScript, since } = stats.value
   const formatNumber = (value: number) => new Intl.NumberFormat(INTL_LOCALES[locale.value]).format(value)
+
   return {
     id: 'stats',
-    titleKey: 'ui.infoPage.statsTitle',
+    // С датой начала подсчёта — прямо в заголовке: «Статистика с 24.11.2026».
+    titleKey: since ? 'ui.infoPage.statsTitleSince' : 'ui.infoPage.statsTitle',
+    titleParams: since ? { date: formatDateForUi(since) } : undefined,
     items: [
       {
         id: 'statsConversions',
         parts: [
           { type: 'text', key: 'ui.infoPage.statsConversions' },
-          { type: 'value', value: formatNumber(stats.value.conversions) },
+          { type: 'value', value: formatNumber(conversions) },
         ],
       },
       {
         id: 'statsPrints',
         parts: [
           { type: 'text', key: 'ui.infoPage.statsPrints' },
-          { type: 'value', value: formatNumber(stats.value.prints) },
+          { type: 'value', value: formatNumber(prints) },
+          // Продолжение строки — по письму отчёта, когда уже было что печатать.
+          ...(prints > 0
+            ? ([
+                { type: 'text', key: 'ui.infoPage.statsCyrillic' },
+                { type: 'value', value: formatNumber(printsByScript.srCyr ?? 0) },
+                { type: 'text', key: 'ui.infoPage.statsLatin' },
+                { type: 'value', value: formatNumber(printsByScript.srLat ?? 0) },
+              ] as const)
+            : []),
         ],
       },
-      ...(stats.value.since
-        ? [
-            {
-              id: 'statsSince',
-              parts: [
-                { type: 'text', key: 'ui.infoPage.statsSince' },
-                { type: 'value', value: formatDateForUi(stats.value.since) },
-              ],
-            } as const,
-          ]
-        : []),
       { id: 'statsPrivacy', parts: [{ type: 'text', key: 'ui.infoPage.statsPrivacy' }] },
     ],
   }
@@ -93,7 +95,7 @@ function backToApp() {
       <AboutSection
         v-for="section in sections"
         :key="section.id"
-        :title="t(section.titleKey)"
+        :title="t(section.titleKey, section.titleParams)"
         :show-logo="section.showLogo"
         :items="section.items"
       />

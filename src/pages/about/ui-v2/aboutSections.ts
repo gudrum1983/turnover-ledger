@@ -19,6 +19,8 @@ export type AboutItem = {
 export type AboutSectionData = {
   id: string
   titleKey: AboutMessageKey
+  /** Значения для подстановки в заголовок, например { date } */
+  titleParams?: Record<string, string>
   showLogo?: boolean
   items: readonly AboutItem[]
 }
