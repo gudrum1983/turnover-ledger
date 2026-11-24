@@ -34,4 +34,4 @@ export {
   getYearLimitStatus,
 } from './model/limits'
 export { useReportStore } from './model/store'
-export { getHeaderFieldError, getPersonNameError } from './model/validation'
+export { getHeaderFieldWarning, getPersonNameWarning } from './model/validation'
