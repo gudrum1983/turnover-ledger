@@ -9,7 +9,7 @@ import { FieldMoney } from '@/shared/ui-v2/field-money'
 import { getCurrencyName, useCurrencyStore } from '@/entities/currency'
 import { INTL_LOCALES, useLocale, useLocaleStore } from '@/shared/i18n'
 import { LOCAL_CURRENCY_CODE } from '@/shared/constants/app'
-import { useViewport } from '@/shared/lib'
+import { formatMoneyInput, parseMoneyInput, useViewport } from '@/shared/lib'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconCalculator, IconDangerCircle, IconInfoCircle, IconRepeat } from '@/shared/ui-v2/icons'
 
@@ -146,16 +146,8 @@ const emit = defineEmits<{
   (event: 'submit', payload: ReportRowPayload): void
 }>()
 
-const parseMoney = (value: string | null) => {
-  if (!value) {
-    return 0
-  }
-
-  const normalized = value.replace(/\s/g, '').replace(',', '.')
-  const result = Number.parseFloat(normalized)
-
-  return Number.isFinite(result) ? result : 0
-}
+// В полях сумм — строки по локали, с разрядами после ухода из поля: «1.200,50» (sr-RS).
+const parseMoney = (value: string | null) => parseMoneyInput(value, moneyLocale.value)
 
 const goodsAmountRsd = ref<number | null>(null)
 const servicesAmountRsd = ref<number | null>(null)
@@ -184,17 +176,8 @@ const isCalculateDisabled = computed(
 
 const totalValue = computed(() => parseMoney(goodsAmount.value) + parseMoney(servicesAmount.value))
 
-const formatInputMoney = (value: number | null | undefined): string | null => {
-  if (value === null || value === undefined) {
-    return null
-  }
-
-  return new Intl.NumberFormat(moneyLocale.value, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    useGrouping: false,
-  }).format(value)
-}
+const formatInputMoney = (value: number | null | undefined): string | null =>
+  value === null || value === undefined ? null : formatMoneyInput(value, moneyLocale.value)
 
 const clearCalculated = () => {
   goodsAmountRsd.value = null
@@ -387,7 +370,8 @@ const store = useReportStore()
 
 const year = computed(() => Number(store.activeYear))
 
-watch([currency, date, goodsAmount, servicesAmount], resetCalculated)
+// Суммы сравниваем числами: при фокусе разряды убираются («1 200,50» → «1200,50»), но сумма та же.
+watch([currency, date, () => parseMoney(goodsAmount.value), () => parseMoney(servicesAmount.value)], resetCalculated)
 watch(
   [() => props.initialValue, lastUsedCurrencyCode],
   ([nextInitialValue]) => {
