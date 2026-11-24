@@ -133,13 +133,13 @@ export const srLatUi = {
       },
       address: {
         label: 'Sedište',
-        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србија',
         hint: '"Адреса седишта" iz izvoda APR',
       },
       taxNumber: {
         label: 'Šifra poreskog obveznika',
         placeholder: '12345678',
-        hint: '"Регистарски/матични брой" iz izvoda APR',
+        hint: '"Регистарски/матични број" iz izvoda APR',
       },
       activityCode: {
         label: 'Šifra delatnosti',

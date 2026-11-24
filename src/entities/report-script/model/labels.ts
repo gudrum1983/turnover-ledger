@@ -54,8 +54,8 @@ export const REPORT_LABELS = {
       srCyr: 'ПРИХОД ОД ДЕЛАТНОСТИ',
     },
     incomeFromProducts: {
-      srLat: 'оd prodaje proizvoda',
-      srCyr: 'oд продаје производа',
+      srLat: 'od prodaje proizvoda',
+      srCyr: 'од продаје производа',
     },
     incomeFromServices: {
       srLat: 'od izvršenih usluga',
