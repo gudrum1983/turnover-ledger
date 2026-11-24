@@ -16,7 +16,7 @@ const meta = {
   },
   args: {
     variant: 'page',
-    touchTarget: false,
+    touchTarget: 'auto',
     size: 'l',
     type: 'button',
     disabled: false,
@@ -24,7 +24,11 @@ const meta = {
   },
   argTypes: {
     variant: { control: 'select', options: ['page', 'accent', 'success', 'danger', 'card', 'danger-card'] },
-    touchTarget: { control: 'boolean' },
+    touchTarget: {
+      control: 'select',
+      options: ['auto', true, false],
+      description: 'auto — сенсорный вид включается сам, когда основное устройство ввода — палец (pointer: coarse)',
+    },
     size: { control: 'select', options: ['m', 'l'] },
     type: { control: 'select', options: ['button', 'submit', 'reset'] },
     disabled: { control: 'boolean' },

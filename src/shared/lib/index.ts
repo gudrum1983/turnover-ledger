@@ -9,4 +9,5 @@ export {
 } from './money/moneyInput'
 export { default as vAutofocus } from './directives/autofocus'
 export { VIEWPORT_BREAKPOINTS, getViewportByWidth, useViewport } from './viewport'
+export { useMediaQuery, useTouchMode } from './media'
 export type { Viewport } from './viewport'
