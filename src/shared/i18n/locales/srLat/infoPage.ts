@@ -34,6 +34,14 @@ export const srLatInfoPage = {
     'Pre korišćenja obračuna u izveštavanju preporučuje se da kurseve i konačne iznose proverite prema zvaničnim izvorima, na primer prema podacima ',
   bankLinkText: 'Narodne banke Srbije',
   disclaimerRecommendationAfterLink: '.',
+  statsTitle: 'Statistika',
+  statsConversions: 'Broj zahteva za konverziju: ',
+  statsPrints: 'Broj izveštaja poslatih na štampu ili sačuvanih u PDF: ',
+  statsTitleSince: 'Statistika od {date}',
+  statsCyrillic: ', od toga ćirilica — ',
+  statsLatin: ', latinica — ',
+  statsPrivacy:
+    'Statistika je anonimna: beleži se samo sam čin preračuna ili štampe — bez iznosa, datuma, valuta i podataka iz izveštaja.',
   contactTitle: 'Povratne informacije',
   contactText: 'Ako ste pronašli grešku, netačnost ili želite da predložite poboljšanje, pišite na:',
 } as const

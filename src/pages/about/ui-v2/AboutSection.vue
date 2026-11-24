@@ -32,6 +32,7 @@ const { t } = useLocale()
           <template v-for="(part, partIndex) in item.parts" :key="partIndex">
             <template v-if="part.type === 'text'">{{ t(part.key) }}</template>
             <LinkExternal v-else-if="part.type === 'external'" :href="part.href">{{ t(part.key) }}</LinkExternal>
+            <strong v-else-if="part.type === 'value'" class="AboutSection-Value">{{ part.value }}</strong>
             <template v-else>{{ ' ' }}<LinkEmail :email="part.email" /></template>
           </template>
         </p>
@@ -65,6 +66,10 @@ const { t } = useLocale()
 .AboutSection-ListItem {
   position: relative;
   padding-inline-start: 32px;
+}
+
+.AboutSection-Value {
+  font-weight: 600;
 }
 
 .AboutSection-Marker {
