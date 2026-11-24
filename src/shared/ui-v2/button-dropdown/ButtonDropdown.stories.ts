@@ -78,6 +78,22 @@ export const WithoutScroll: Story = {
     options: baseOptions.slice(0, 3),
   },
 }
+export const Collapsible: Story = {
+  name: 'Свёрнутый список с избранными',
+  args: {
+    favorites: ['2026', '2025', '2023', '2022', '2020', '2019', '2018'],
+    collapsible: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('combobox'))
+    await expect(canvas.queryByRole('option', { name: '2024 (записей нет)' })).toBeNull()
+    await userEvent.click(canvas.getByRole('option', { name: 'Ещё (3)' }))
+    await expect(canvas.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.click(canvas.getByRole('option', { name: '2024 (записей нет)' }))
+    await expect(canvas.getByRole('combobox')).toHaveTextContent('2024')
+  },
+}
 export const KeyboardNavigation: Story = {
   name: 'Управление с клавиатуры',
   render: (args) => ({

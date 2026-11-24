@@ -132,3 +132,26 @@ export const WithContent: Story = {
     `,
   }),
 }
+
+export const ErrorWithRetry: Story = {
+  name: 'Ошибка с повтором',
+  args: {
+    type: 'error',
+    title: 'Не удалось импортировать данные',
+    message: 'Не удалось импортировать файл: data_2026.json',
+    details: 'Убедитесь, что файл экспортирован из приложения в формате JSON.',
+    labelPrimaryButton: 'Повторить',
+    labelSecondaryButton: 'Закрыть',
+  },
+}
+
+export const ErrorCloseOnly: Story = {
+  name: 'Ошибка без повтора',
+  args: {
+    type: 'error',
+    title: 'Не удалось сохранить данные',
+    message: 'Попробуйте ещё раз позже.',
+    labelPrimaryButton: undefined,
+    labelSecondaryButton: 'Закрыть',
+  },
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
 import { useLocale } from '@/shared/i18n'
-import { ListBox, type ListBoxOption } from '@/shared/ui-v2/list-box'
+import { ListBox, ListBoxExpand, animateListHeight, type ListBoxOption } from '@/shared/ui-v2/list-box'
 import { IconClose, IconDangerCircle, IconQuestion } from '@/shared/ui-v2/icons'
 import { FieldTooltip } from '@/shared/ui-v2/field-base'
 
@@ -34,10 +34,10 @@ type Props = {
   showDescription?: boolean
   /**
    * Без поискового запроса показывать только избранные (и выбранное значение), остальные — по строке
-   * «Показать все (N)» в конце списка. Поиск всегда идёт по всем вариантам.
+   * «Ещё (N)» в конце списка. Поиск всегда идёт по всем вариантам.
    */
   collapsible?: boolean
-  /** Текст строки, раскрывающей список. По умолчанию — «Показать все». Количество скрытых добавляется в скобках. */
+  /** Текст строки, раскрывающей список. По умолчанию — «Ещё». Количество скрытых добавляется в скобках. */
   expandText?: string
 }
 
@@ -177,10 +177,10 @@ const collapsedOptions = computed(() => {
 })
 const visibleOptions = computed(() => collapsedOptions.value ?? filteredOptions.value)
 const hiddenCount = computed(() => filteredOptions.value.length - visibleOptions.value.length)
-const expandLabel = computed(() => `${expandText ?? t('ui.common.showAll')} (${hiddenCount.value})`)
+const expandLabel = computed(() => `${expandText ?? t('ui.common.showMore')} (${hiddenCount.value})`)
 
 // Подсветка варианта, который выберут Enter или Tab. Видна после ввода или стрелок.
-// Строка «Показать все» подсвечивается как последний вариант, значение у неё служебное.
+// Строка «Ещё» подсвечивается как последний вариант, значение у неё служебное.
 const EXPAND_VALUE = Symbol('expand')
 const expandId = `${listId}-expand`
 const highlightedValue = ref<string | typeof EXPAND_VALUE>()
@@ -217,28 +217,6 @@ function expand() {
   const firstHidden = visibleOptions.value.findIndex((option) => !shown.has(option.value))
   void highlight(firstHidden)
   void nextTick(() => animateListHeight(listElement, fromHeight))
-}
-
-// Плавно меняет высоту списка со старой на новую (при раскрытии «Показать все»), как при открытии меню.
-// Переход к height: auto умеют не все браузеры, поэтому новую высоту замеряем и ставим явно, а после — убираем.
-function animateListHeight(element: HTMLElement | undefined, fromHeight: number | undefined) {
-  if (!element || !fromHeight) return
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  const toHeight = element.offsetHeight
-  if (toHeight === fromHeight) return
-
-  // transitionend всплывает и от пунктов (у них свои переходы при наведении) — ждём именно высоту списка.
-  const cleanup = (event: TransitionEvent) => {
-    if (event.target !== element || event.propertyName !== 'height') return
-    element.removeEventListener('transitionend', cleanup)
-    element.style.height = ''
-    element.style.transition = ''
-  }
-  element.style.height = `${fromHeight}px`
-  void element.offsetHeight // применяем стартовую высоту до перехода
-  element.style.transition = 'height var(--transition-collapse-enter)'
-  element.style.height = `${toHeight}px`
-  element.addEventListener('transitionend', cleanup)
 }
 
 function openMenu() {
@@ -313,7 +291,7 @@ function handleKeydown(event: KeyboardEvent) {
       closeMenu()
       return
     case 'Tab':
-      // Tab на строке «Показать все» просто уводит фокус, ничего не выбирая.
+      // Tab на строке «Ещё» просто уводит фокус, ничего не выбирая.
       if (isOpen.value && showHighlight.value && highlightedValue.value !== EXPAND_VALUE) commitHighlighted()
       return
   }
@@ -470,19 +448,9 @@ const classList = computed(() => ({
             @change="select"
           >
             <template v-if="collapsedOptions" #footer>
-              <button
-                :id="expandId"
-                class="FieldCombobox-Expand u-typo-body-m"
-                :class="{ 'FieldCombobox-Expand_focused': isExpandHighlighted }"
-                type="button"
-                role="option"
-                tabindex="-1"
-                aria-selected="false"
-                :data-active="isExpandHighlighted"
-                @click="expand"
-              >
+              <ListBoxExpand :id="expandId" :focused="isExpandHighlighted" @click="expand">
                 {{ expandLabel }}
-              </button>
+              </ListBoxExpand>
             </template>
           </ListBox>
           <div v-else class="FieldCombobox-Empty u-typo-body-m" role="status">
@@ -780,33 +748,6 @@ const classList = computed(() => ({
   // 5 пунктов, плюс разделитель, если он есть.
   max-height: calc(226px + var(--list-box-divider-space, 0px));
   box-shadow: none;
-}
-
-.FieldCombobox-Expand {
-  flex-shrink: 0;
-  width: 100%;
-  min-height: 40px;
-  padding: 0 16px;
-  border: none;
-  border-radius: 24px;
-  background: inherit;
-  color: var(--neutral-600);
-  text-align: left;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all var(--transition);
-
-  &:hover {
-    background: var(--neutral-100);
-    color: var(--neutral-900);
-  }
-
-  // Как подсветка пунктов ListBox при навигации с клавиатуры.
-  &_focused {
-    background: var(--neutral-100);
-    color: var(--neutral-900);
-    box-shadow: 0 0 0 3px #f5c96a99;
-  }
 }
 
 .FieldCombobox-Empty {
