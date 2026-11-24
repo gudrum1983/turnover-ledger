@@ -366,6 +366,9 @@ const classList = computed(() => ({
       <span class="FieldDate-LabelText">{{ label }}</span>
     </span>
 
+    <!-- strategy: 'fixed' — календарь не обрезается контейнером с прокруткой (например, короткой модалкой)
+         и при нехватке места переворачивается вверх по границам окна браузера. Меню остаётся внутри поля,
+         поэтому обработчики клавиатуры и кликов на корне продолжают работать. -->
     <VueDatePicker
       ref="pickerRef"
       class="FieldDate-Picker"
@@ -376,7 +379,7 @@ const classList = computed(() => ({
       :max-date="bounds.max"
       :start-date="startDate"
       prevent-min-max-navigation
-      :floating="{ arrow: false }"
+      :floating="{ arrow: false, strategy: 'fixed' }"
       :flow="{ steps: ['month', 'calendar'], partial: true }"
       disable-year-select
       :placeholder="placeholder"
