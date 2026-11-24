@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type ReportRow, ROW_HIGHLIGHT_DURATION_MS } from '@/entities/report-row'
 import {
@@ -15,6 +15,7 @@ import { DialogConfirm } from '@/shared/ui-v2/dialog-confirm'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
 import { IconAddCircle, IconTrash } from '@/shared/ui-v2/icons'
 import { LabelContainer } from '@/shared/ui-v2/label-container'
+import { FadeTransition } from '@/shared/ui-v2/fade-transition'
 import { ReportYearSelect } from '@/features/report-year-select'
 import { ReportRowsTable, type ReportRowsTableAlert } from '@/widgets/report-rows-table'
 
@@ -161,6 +162,42 @@ async function highlightRow(id: string) {
 
 onBeforeUnmount(() => clearTimeout(highlightTimer))
 
+// Липкие кнопки над таблицей. Шапке колонок нужна их высота — передаём переменной --report-table-sticky-top.
+// Прилипшее состояние ловим нулевым маркером перед кнопками: он ушёл за верх окна — кнопки прилипли.
+const stickySentinel = useTemplateRef<HTMLElement>('stickySentinel')
+const actionsRef = useTemplateRef<HTMLElement>('actionsRef')
+const actionsHeight = ref(0)
+const isActionsStuck = ref(false)
+
+const stickyObserver =
+  typeof IntersectionObserver === 'undefined'
+    ? undefined
+    : new IntersectionObserver(([entry]) => {
+        isActionsStuck.value = Boolean(entry && !entry.isIntersecting && entry.boundingClientRect.top < 0)
+      })
+const actionsResizeObserver =
+  typeof ResizeObserver === 'undefined'
+    ? undefined
+    : new ResizeObserver(([entry]) => {
+        actionsHeight.value = entry?.borderBoxSize[0]?.blockSize ?? 0
+      })
+
+// Кнопок нет, пока в году нет записей, — подписываемся, когда элементы появляются.
+watch(stickySentinel, (element, previous) => {
+  if (previous) stickyObserver?.unobserve(previous)
+  if (element) stickyObserver?.observe(element)
+  else isActionsStuck.value = false
+})
+watch(actionsRef, (element, previous) => {
+  if (previous) actionsResizeObserver?.unobserve(previous)
+  if (element) actionsResizeObserver?.observe(element)
+})
+
+onBeforeUnmount(() => {
+  stickyObserver?.disconnect()
+  actionsResizeObserver?.disconnect()
+})
+
 const toCents = (value: number) => Math.round(value * 100)
 
 const createRowId = () => {
@@ -239,7 +276,11 @@ const isShowYearSelect = computed(() => {
 </script>
 
 <template>
-  <div class="ReportRowManage">
+  <div
+    class="ReportRowManage"
+    :class="{ ReportRowManage_stuck: isActionsStuck }"
+    :style="{ '--report-table-sticky-top': `${actionsHeight}px` }"
+  >
     <div class="ReportRowManage-Header">
       <h2 class="ReportRowManage-Title u-typo-h2-l">
         {{ t('ui.reportBuilderSections.incomeRecords') }}
@@ -258,50 +299,71 @@ const isShowYearSelect = computed(() => {
           {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
         </ButtonWithIcon>
       </div>
+    </div>
 
-      <div class="ReportRowManage_Actions" v-if="rows.length">
-        <div class="ReportRowManage_Actions_left" v-if="viewport === 'desktop'">
-          <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
-            {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
-          </ButtonWithIcon>
-          <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
-            {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
-          </ButtonWithIcon>
-        </div>
+    <!-- Маркер прилипания: ушёл за верх окна — кнопки (и шапка таблицы) прилипли. -->
+    <div v-if="rows.length" ref="stickySentinel" class="ReportRowManage-StickySentinel" aria-hidden="true" />
+    <!-- Кнопки липнут у верха окна до конца таблицы (вместе с «Итого»); шапка колонок липнет под ними. -->
+    <div
+      v-if="rows.length"
+      ref="actionsRef"
+      class="ReportRowManage_Actions"
+      :class="{ ReportRowManage_Actions_stuck: isActionsStuck }"
+    >
+      <div class="ReportRowManage_Actions_left" v-if="viewport === 'desktop'">
+        <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
+          {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+        </ButtonWithIcon>
+        <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
+          {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
+        </ButtonWithIcon>
+      </div>
 
-        <div class="ReportRowManage_Actions_left" v-else-if="viewport === 'tablet'">
-          <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
-            {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
-          </ButtonWithIcon>
-          <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
-            {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
-          </ButtonWithIcon>
-        </div>
+      <div class="ReportRowManage_Actions_left" v-else-if="viewport === 'tablet'">
+        <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
+          {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+        </ButtonWithIcon>
+        <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
+          {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
+        </ButtonWithIcon>
+      </div>
 
-        <div class="ReportRowManage_Actions_mobile" v-else>
-          <ButtonWithIcon
-            :icon="IconAddCircle"
-            variant="page"
-            :aria-label="t('ui.reportBuilderIncomeRecordsTable.addRow')"
-            @click="openCreateModal()"
-          />
-          <ReportYearSelect size="middle" typography="button-l" placement="center" />
-          <ButtonWithIcon
-            :icon="IconTrash"
-            variant="danger"
-            :aria-label="t('ui.reportBuilderIncomeRecordsTable.clearYear')"
-            @click="openDialogConfirm = true"
-          />
-        </div>
+      <!-- В прилипшей полосе на десктопе и планшете — ещё выбор года (макет): заголовок с выбором года
+           уехал вверх. До прилипания не показываем, чтобы не дублировать выбор под заголовком. -->
+      <FadeTransition v-if="viewport !== 'mobile'">
+        <ReportYearSelect
+          v-if="isActionsStuck"
+          class="ReportRowManage-StickyYearSelect"
+          size="middle"
+          typography="button-l"
+          placement="center"
+        />
+      </FadeTransition>
 
-        <LabelContainer
-          v-if="viewport === 'desktop'"
-          ariaLabel="Вариант таблицы"
-          v-model="sizeRow"
-          :options="options"
-          size="l"
+      <div class="ReportRowManage_Actions_mobile" v-else>
+        <ButtonWithIcon
+          :icon="IconAddCircle"
+          variant="page"
+          :aria-label="t('ui.reportBuilderIncomeRecordsTable.addRow')"
+          @click="openCreateModal()"
+        />
+        <ReportYearSelect size="middle" typography="button-l" placement="center" />
+        <ButtonWithIcon
+          :icon="IconTrash"
+          variant="danger"
+          :aria-label="t('ui.reportBuilderIncomeRecordsTable.clearYear')"
+          @click="openDialogConfirm = true"
         />
       </div>
+
+      <LabelContainer
+        v-if="viewport === 'desktop'"
+        class="ReportRowManage-TableView"
+        ariaLabel="Вариант таблицы"
+        v-model="sizeRow"
+        :options="options"
+        size="l"
+      />
     </div>
 
     <ReportRowsTable
@@ -368,25 +430,95 @@ const isShowYearSelect = computed(() => {
   }
 }
 
+.ReportRowManage-StickySentinel {
+  height: 0;
+  // Отступ над кнопками — у маркера, а не у кнопок: маркер должен стоять вплотную к ним,
+  // иначе «прилипло» включится раньше, чем кнопки дойдут до верха окна.
+  margin-top: 24px;
+
+  // На мобильном до кнопок меньше места, как было раньше (8px вместо 40px).
+  &:has(+ .ReportRowManage_Actions .ReportRowManage_Actions_mobile) {
+    margin-top: -8px;
+  }
+}
+
+// Липкие кнопки над таблицей (макеты «Главный экран»): белая полоса во всю ширину карточки.
+// Отступ сверху — padding (виден и в прилипшем состоянии, 16px от края окна), остальное — margin.
+// Снизу 16px до шапки колонок — тоже внутри полосы, чтобы прилипшая шапка не вплотную к кнопкам.
 .ReportRowManage_Actions {
+  position: sticky;
+  top: 0;
+  // Выше липкой шапки колонок (z-index: 2) и содержимого строк.
+  z-index: 3;
   display: flex;
   width: 100%;
-  padding-inline: 16px;
+  padding: 16px;
+  // Нижние 16px полосы заходят на верхний отступ таблицы (20px): расстояние до шапки колонок не меняется.
+  margin-bottom: -16px;
   justify-content: space-between;
   align-items: flex-end;
+  background: var(--white);
+
+  // Затухание под прилипшими кнопками — только на мобильном: там нет шапки колонок.
+  // На десктопе и планшете затухание у шапки колонок (ReportRowsTableHeader). Цвета — ScrollFade из макета.
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 18px;
+    background: linear-gradient(to bottom, var(--neutral-200), rgb(255 255 255 / 30%));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-color);
+  }
 }
 
 .ReportRowManage_Actions_left {
-  padding-top: 40px;
   display: flex;
   gap: 24px;
 }
 
+// Десктоп: кнопки слева, выбор года по центру (в прилипшей полосе), вид таблицы справа — как в макете.
+.ReportRowManage_Actions:has(.ReportRowManage-TableView) {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+
+  .ReportRowManage_Actions_left {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .ReportRowManage-StickyYearSelect {
+    grid-column: 2;
+  }
+
+  .ReportRowManage-TableView {
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
 .ReportRowManage_Actions_mobile {
   display: flex;
-  padding-top: 8px;
   width: 100%;
   justify-content: space-between;
   gap: 16px;
+}
+
+// В прилипшей полосе появляется выбор года — расстояние между группами 24px.
+.ReportRowManage_Actions_stuck {
+  gap: 24px;
+}
+
+.ReportRowManage_Actions_stuck:has(.ReportRowManage_Actions_mobile)::after {
+  opacity: 1;
+}
+
+// Шапка колонок берёт состояние «прилипло» из переменной (наследуется вниз по дереву).
+.ReportRowManage_stuck {
+  --report-table-header-fade-opacity: 1;
 }
 </style>
