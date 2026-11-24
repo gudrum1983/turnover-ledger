@@ -34,6 +34,12 @@ export const enInfoPage = {
     'Before using the calculations in reporting, it is recommended to verify exchange rates and final amounts against official sources, for example the data of the ',
   bankLinkText: 'National Bank of Serbia',
   disclaimerRecommendationAfterLink: '.',
+  statsTitle: 'Statistics',
+  statsConversions: 'Amounts converted to RSD: ',
+  statsPrints: 'Reports printed or saved as PDF: ',
+  statsSince: 'Counting since ',
+  statsPrivacy:
+    'The statistics are anonymous: only the fact of a conversion or a print is counted — no amounts, dates, currencies or report data.',
   contactTitle: 'Feedback',
   contactText: 'If you found a bug, an inaccuracy, or would like to suggest an improvement, write to:',
 } as const
