@@ -3,7 +3,7 @@ import { ReportTableRow, type ReportRow } from '@/entities/report-row'
 import type { I18nLocale } from '@/shared/i18n'
 import { useLocale } from '@/shared/i18n'
 import ReportRowsTableHeader from './ReportRowsTableHeader.vue'
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 // Десктопная таблица (≥ 1024 px): шапка-грид и строки в кратком или расширенном виде.
 const {
@@ -48,12 +48,37 @@ const COLUMNS = computed(() =>
   ].join(' '),
 )
 
+// Ширина колонок плавно меняется вместе с высотой строк при переключении краткий/полный вид.
+// Переход включаем только на время переключения: колонки зависят от ширины окна (vw), и с постоянным
+// переходом таблица догоняла бы окно с задержкой при изменении его размера.
+// Длительность совпадает с анимацией высоты строк (income-details в ReportTableRow).
+const COLUMNS_TRANSITION_MS = 200
+const isResizingColumns = ref(false)
+let resizeTimer: ReturnType<typeof setTimeout> | undefined
+
+watch(
+  () => size,
+  () => {
+    isResizingColumns.value = true
+    clearTimeout(resizeTimer)
+    resizeTimer = setTimeout(() => {
+      isResizingColumns.value = false
+    }, COLUMNS_TRANSITION_MS)
+  },
+)
+
+onBeforeUnmount(() => clearTimeout(resizeTimer))
+
 /*const COLUMNS =
   '60px clamp(90px, 10vw, 120px) auto clamp(90px, 10vw, 180px) clamp(124px, 10vw, 180px) clamp(124px, 10vw, 180px) 144px'*/
 </script>
 
 <template>
-  <div class="ReportRowsTableDesktop">
+  <div
+    class="ReportRowsTableDesktop"
+    :class="{ ReportRowsTableDesktop_resizingColumns: isResizingColumns }"
+    :style="{ '--report-table-columns-duration': `${COLUMNS_TRANSITION_MS}ms` }"
+  >
     <ReportRowsTableHeader :columns="COLUMNS">
       <div>{{ t('ui.reportBuilderIncomeRecordsTable.rowNumber') }}</div>
       <div>{{ t('ui.reportBuilderIncomeRecordsTable.date') }}</div>
@@ -83,6 +108,18 @@ const COLUMNS = computed(() =>
 
 <style scoped lang="scss">
 .ReportRowsTableDesktop {
+  // Шапка и строки берут переход колонок из этой переменной (наследуется вниз по дереву).
+  &_resizingColumns {
+    --report-table-columns-transition: grid-template-columns var(--report-table-columns-duration) ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    // Не none: в строке переход колонок стоит в списке вместе с фоном, а none в списке недопустим.
+    &_resizingColumns {
+      --report-table-columns-transition: grid-template-columns 0s;
+    }
+  }
+
   &-Rows {
     display: flex;
     flex-direction: column;

@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useTouchMode } from '@/shared/lib'
 import { ICON_SIZES as ICON_DIMENSIONS, type IconSize } from '../icons/sizes'
 
 type Props = {
   /** Визуальный вариант кнопки */
   variant?: 'page' | 'accent' | 'success' | 'danger' | 'card' | 'danger-card'
-  /** Уменьшает видимую часть на 8 px, сохраняя область нажатия выбранного размера */
-  touchTarget?: boolean
+  /**
+   * Сенсорный вид из макета («mobile touch»): видимая часть на 8 px меньше, область нажатия того же размера.
+   * auto — включается сам, когда основное устройство ввода — палец (pointer: coarse);
+   * true / false — принудительно для конкретного места.
+   */
+  touchTarget?: boolean | 'auto'
   /** Размер кнопки и области нажатия: m — 40 px, l — 48 px. */
   size?: 'm' | 'l'
   /** HTML-тип кнопки */
@@ -21,7 +26,7 @@ type Props = {
 
 const {
   variant = 'page',
-  touchTarget = false,
+  touchTarget = 'auto',
   size = 'l',
   type = 'button',
   disabled = false,
@@ -35,10 +40,13 @@ const ICON_SIZES = {
   m: { regular: 's', touch: 's' },
 } as const satisfies Record<'m' | 'l', Record<'regular' | 'touch', IconSize>>
 
-const iconSize = computed<IconSize>(() => ICON_SIZES[size][touchTarget ? 'touch' : 'regular'])
+const touchMode = useTouchMode()
+const isTouch = computed(() => (touchTarget === 'auto' ? touchMode.value : touchTarget))
+
+const iconSize = computed<IconSize>(() => ICON_SIZES[size][isTouch.value ? 'touch' : 'regular'])
 const BUTTON_SIZES = { m: 40, l: 48 } as const
 const touchDimension = computed(() => `${BUTTON_SIZES[size]}px`)
-const visualDimension = computed(() => `${BUTTON_SIZES[size] - (touchTarget ? 8 : 0)}px`)
+const visualDimension = computed(() => `${BUTTON_SIZES[size] - (isTouch.value ? 8 : 0)}px`)
 const iconDimension = computed(() => `${ICON_DIMENSIONS[iconSize.value].dimension}px`)
 </script>
 

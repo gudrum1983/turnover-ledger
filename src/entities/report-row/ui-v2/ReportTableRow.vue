@@ -285,7 +285,11 @@ function handleMenuSelect(value: string) {
   // Сетка по умолчанию; таблица может переопределить её пропом columns.
   grid-template-columns: 60px 120px auto 180px 180px 180px 144px;
   border-bottom: 1px solid #6e777840;
-  transition: background-color var(--transition-color);
+  // Ширина колонок меняется плавно, если таблица включила переход (--report-table-columns-transition)
+  // на время переключения краткий/полный вид.
+  transition:
+    background-color var(--transition-color),
+    var(--report-table-columns-transition, grid-template-columns 0s);
   cursor: pointer;
 
   // Подсветка как при ховере, когда по табу сфокусирована кнопка внутри строки.

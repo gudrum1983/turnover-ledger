@@ -111,10 +111,9 @@ export const enUi = {
   },
   reportBuilderMetaFields: {
     validation: {
-      personName: 'Enter a first and last name using letters. Hyphens and apostrophes are allowed.',
-      pib: 'Enter exactly 9 or 13 digits.',
-      taxNumber: 'Enter exactly 8 or 13 digits.',
-      activityCode: 'The field must contain 4 digits.',
+      personName: 'The name seems to contain digits. Please check for typos.',
+      pib: 'Usually 9 or 13 digits. Please check for typos.',
+      taxNumber: 'Usually 8 or 13 digits. Please check for typos.',
     },
     taxpayerInfo: {
       pib: {
@@ -134,13 +133,13 @@ export const enUi = {
       },
       address: {
         label: 'Registered office',
-        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србија',
         hint: '"Адреса седишта" from the SBRA excerpt (АПР Извод)',
       },
       taxNumber: {
         label: 'Taxpayer code',
         placeholder: '12345678',
-        hint: '"Регистарски/матични брой" from the SBRA excerpt (АПР Извод)',
+        hint: '"Регистарски/матични број" from the SBRA excerpt (АПР Извод)',
       },
       activityCode: {
         label: 'Activity code',

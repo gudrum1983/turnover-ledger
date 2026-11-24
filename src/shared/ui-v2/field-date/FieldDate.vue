@@ -366,6 +366,9 @@ const classList = computed(() => ({
       <span class="FieldDate-LabelText">{{ label }}</span>
     </span>
 
+    <!-- strategy: 'fixed' — календарь не обрезается контейнером с прокруткой (например, короткой модалкой)
+         и при нехватке места переворачивается вверх по границам окна браузера. Меню остаётся внутри поля,
+         поэтому обработчики клавиатуры и кликов на корне продолжают работать. -->
     <VueDatePicker
       ref="pickerRef"
       class="FieldDate-Picker"
@@ -376,7 +379,7 @@ const classList = computed(() => ({
       :max-date="bounds.max"
       :start-date="startDate"
       prevent-min-max-navigation
-      :floating="{ arrow: false }"
+      :floating="{ arrow: false, strategy: 'fixed' }"
       :flow="{ steps: ['month', 'calendar'], partial: true }"
       disable-year-select
       :placeholder="placeholder"
@@ -564,6 +567,21 @@ const classList = computed(() => ({
     color var(--transition-color),
     opacity var(--transition-color),
     transform var(--transition-color);
+}
+
+// Сенсорный ввод: область нажатия значков расширена до полной высоты поля (48px), вид не меняется.
+// По бокам — только 4px: шире слева крестик перехватывал бы нажатия, которыми ставят курсор в конец текста.
+// any-pointer — чтобы работало и на ноутбуках с сенсорным экраном, где основное устройство — тачпад.
+@media (any-pointer: coarse) {
+  .FieldDate-Clear {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -12px -4px;
+    }
+  }
 }
 
 .FieldDate :deep(.dp__input_wrap:hover),

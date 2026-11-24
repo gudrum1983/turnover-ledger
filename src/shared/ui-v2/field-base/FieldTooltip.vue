@@ -2,9 +2,11 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { TooltipBase } from '@/shared/ui-v2/tooltip-base'
 
-const { open, errorMessage, hint, anchor } = defineProps<{
+const { open, errorMessage, warningMessage, hint, anchor } = defineProps<{
   open: boolean
   errorMessage?: string
+  /** Предупреждение — такая же плашка, как у ошибки, но жёлтая */
+  warningMessage?: string
   hint?: string
   anchor: HTMLElement | null
 }>()
@@ -33,7 +35,9 @@ function scheduleVisibility() {
 
 watch(() => open, scheduleVisibility)
 const below = ref(true)
-const gap = computed(() => (errorMessage ? 3 : 1))
+// Ошибка или предупреждение — плашка над подсказкой, тултип по центру поля.
+const message = computed(() => errorMessage ?? warningMessage)
+const gap = computed(() => (message.value ? 3 : 1))
 const gapValue = computed(() => `${gap.value}px`)
 const arrowBorderRadius = computed(() => (below.value ? '2px 0 0 0' : '0 0 2px 0'))
 const VIEWPORT_GAP = 18
@@ -48,7 +52,7 @@ async function updatePlacement() {
   below.value = spaceBelow >= tooltipRef.value.offsetHeight || spaceBelow >= spaceAbove
 }
 
-watch(() => [open, errorMessage, hint], updatePlacement)
+watch(() => [open, message.value, hint], updatePlacement)
 watch(
   () => anchor,
   (element) => {
@@ -80,15 +84,18 @@ onBeforeUnmount(() => {
   <span
     ref="tooltipRef"
     class="FieldTooltip"
-    :class="{ FieldTooltip_open: visible, FieldTooltip_below: below, FieldTooltip_error: Boolean(errorMessage) }"
+    :class="{ FieldTooltip_open: visible, FieldTooltip_below: below, FieldTooltip_error: Boolean(message) }"
     role="tooltip"
     :aria-hidden="!visible"
   >
     <TooltipBase class="FieldTooltip-Body">
-      <span v-if="errorMessage" class="FieldTooltip-Error u-typo-body-small-m">{{ errorMessage }}</span>
-      <span v-if="hint" class="u-typo-body-small-m" :class="{ 'FieldTooltip-Hint': Boolean(errorMessage) }">{{
-        hint
-      }}</span>
+      <span
+        v-if="message"
+        class="FieldTooltip-Error u-typo-body-small-m"
+        :class="{ 'FieldTooltip-Error_warning': !errorMessage }"
+        >{{ message }}</span
+      >
+      <span v-if="hint" class="u-typo-body-small-m" :class="{ 'FieldTooltip-Hint': Boolean(message) }">{{ hint }}</span>
     </TooltipBase>
   </span>
 </template>
@@ -166,6 +173,11 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   border-left: 1px solid var(--red-500);
   padding: 2px 4px;
+
+  &_warning {
+    background: var(--orange-200);
+    border-left-color: var(--orange-400);
+  }
 }
 
 .FieldTooltip-Hint {

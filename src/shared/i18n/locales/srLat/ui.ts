@@ -111,10 +111,9 @@ export const srLatUi = {
   },
   reportBuilderMetaFields: {
     validation: {
-      personName: 'Unesite ime i prezime slovima. Dozvoljeni su crtica i apostrof.',
-      pib: 'Unesite tačno 9 ili 13 cifara.',
-      taxNumber: 'Unesite tačno 8 ili 13 cifara.',
-      activityCode: 'Polje mora sadržati 4 cifre.',
+      personName: 'Izgleda da ime sadrži cifre. Proverite da nema greške u kucanju.',
+      pib: 'Obično ima 9 ili 13 cifara. Proverite da nema greške u kucanju.',
+      taxNumber: 'Obično ima 8 ili 13 cifara. Proverite da nema greške u kucanju.',
     },
     taxpayerInfo: {
       pib: {
@@ -134,13 +133,13 @@ export const srLatUi = {
       },
       address: {
         label: 'Sedište',
-        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србијя',
+        placeholder: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србија',
         hint: '"Адреса седишта" iz izvoda APR',
       },
       taxNumber: {
         label: 'Šifra poreskog obveznika',
         placeholder: '12345678',
-        hint: '"Регистарски/матични брой" iz izvoda APR',
+        hint: '"Регистарски/матични број" iz izvoda APR',
       },
       activityCode: {
         label: 'Šifra delatnosti',

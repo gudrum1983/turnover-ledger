@@ -6,7 +6,6 @@ import { FOOTER_FIELDS, HEADER_FIELDS } from './fields'
 import { cloneReportState, isReportState } from './lib'
 import { getYearLimitStatus } from './limits'
 import type { ReportState } from './types'
-import { getHeaderFieldError, getPersonNameError } from './validation'
 import { REPORT_FIRST_YEAR } from '@/shared/constants/app'
 
 const STORE_ID = 'report-store'
@@ -85,10 +84,11 @@ export const useReportStore = defineStore(STORE_ID, () => {
     })
   })
 
+  // Поле с предупреждением (например, ПИБ из 8 цифр) всё равно заполнено: проверка реквизитов мягкая.
   const metaFieldsProgress = computed(() => {
     const values = [
-      ...HEADER_FIELDS.map((key) => (getHeaderFieldError(key, formData.header[key]) ? '' : formData.header[key])),
-      ...FOOTER_FIELDS.map((key) => (getPersonNameError(formData.footer[key]) ? '' : formData.footer[key])),
+      ...HEADER_FIELDS.map((key) => formData.header[key]),
+      ...FOOTER_FIELDS.map((key) => formData.footer[key]),
     ]
 
     return {

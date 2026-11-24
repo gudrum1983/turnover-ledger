@@ -17,6 +17,10 @@ type Props = {
   error?: boolean
   /** Сообщение об ошибке в тултипе. */
   errorMessage?: string
+  /** Предупреждение: значение похоже на опечатку, но ввод не блокируется. Жёлтое, ошибка важнее */
+  warning?: boolean
+  /** Текст предупреждения в тултипе */
+  warningMessage?: string
   /** Устаревший пропс: ошибки отображаются в тултипе без резервирования места. */
   reserveErrorSpace?: boolean
   /** Имя поля для формы */
@@ -52,6 +56,8 @@ const {
   variant = 'default',
   error = false,
   errorMessage,
+  warning = false,
+  warningMessage,
   maxLength,
   inputmode,
   disabled = false,
@@ -89,10 +95,18 @@ const iconHovered = ref(false)
 const tooltipHovered = ref(false)
 const tooltipDismissed = ref(false)
 const hasErrorMessage = computed(() => error && Boolean(errorMessage))
+const hasWarningMessage = computed(() => !error && warning && Boolean(warningMessage))
+// Сообщение под полем: ошибка или предупреждение — тултип открывается при фокусе, значок — «!».
+const statusMessage = computed(() =>
+  hasErrorMessage.value ? errorMessage : hasWarningMessage.value ? warningMessage : undefined,
+)
 const tooltipOpen = computed(
   () =>
     !tooltipDismissed.value &&
-    (iconFocused.value || iconHovered.value || tooltipHovered.value || (hasErrorMessage.value && inputFocused.value)),
+    (iconFocused.value ||
+      iconHovered.value ||
+      tooltipHovered.value ||
+      (Boolean(statusMessage.value) && inputFocused.value)),
 )
 function showTooltip() {
   tooltipDismissed.value = false
@@ -134,6 +148,7 @@ const classList = computed(() => [
     FieldBase_empty: !hasValue.value,
     FieldBase_filled: hasValue.value,
     FieldBase_error: error,
+    FieldBase_warning: warning && !error,
     FieldBase_disabled: disabled,
     FieldBase_readonly: readonly,
   },
@@ -204,20 +219,20 @@ onBeforeUnmount(clearTimer)
       </svg>
       <Transition name="field-icon">
         <button
-          v-if="(hasErrorMessage || hint) && !disabled"
+          v-if="(statusMessage || hint) && !disabled"
           class="FieldBase-Hint"
           @mouseenter="handleIconMouseEnter"
           @mouseleave="iconHovered = false"
           type="button"
-          :aria-label="hasErrorMessage ? errorMessage : hint"
-          :aria-describedby="hasErrorMessage ? `${inputId}-error` : undefined"
+          :aria-label="statusMessage ?? hint"
+          :aria-describedby="statusMessage ? `${inputId}-error` : undefined"
           @focus="handleIconFocus"
           @blur="iconFocused = false"
           @click="showTooltip"
         >
           <span class="FieldBase-HintIconSlot">
             <Transition name="field-icon">
-              <IconDangerCircle v-if="hasErrorMessage" key="error" class="FieldBase-HintIcon" />
+              <IconDangerCircle v-if="statusMessage" key="error" class="FieldBase-HintIcon" />
               <IconQuestion v-else key="hint" class="FieldBase-HintIcon" />
             </Transition>
           </span>
@@ -233,7 +248,7 @@ onBeforeUnmount(clearTimer)
         class="FieldBase_Input u-typo-body-m"
         :name="name"
         :aria-invalid="error ? 'true' : undefined"
-        :aria-describedby="error && errorMessage ? `${inputId}-error` : undefined"
+        :aria-describedby="statusMessage ? `${inputId}-error` : undefined"
         :placeholder="placeholder"
         :maxlength="maxLength"
         :inputmode="inputmode"
@@ -257,16 +272,15 @@ onBeforeUnmount(clearTimer)
       <FieldTooltip
         @mouseenter="tooltipHovered = true"
         @mouseleave="tooltipHovered = false"
-        :open="tooltipOpen && !disabled && Boolean(hasErrorMessage || hint)"
+        :open="tooltipOpen && !disabled && Boolean(statusMessage || hint)"
         :error-message="hasErrorMessage ? errorMessage : undefined"
+        :warning-message="hasWarningMessage ? warningMessage : undefined"
         :hint="hint"
         :anchor="controlRef"
       />
     </span>
 
-    <span :id="`${inputId}-error`" class="FieldBase-AccessibleError" aria-live="polite">{{
-      hasErrorMessage ? errorMessage : ''
-    }}</span>
+    <span :id="`${inputId}-error`" class="FieldBase-AccessibleError" aria-live="polite">{{ statusMessage ?? '' }}</span>
   </label>
 </template>
 
@@ -350,7 +364,8 @@ onBeforeUnmount(clearTimer)
   --box-shadow-icons-focus-tab: 0 0 0 3px #4a8c7a99;
 }
 
-.FieldBase_variant_warning {
+.FieldBase_variant_warning,
+.FieldBase_warning {
   // Рамка пустого поля.
   --color-border-empty: var(--yellow-600);
   --color-border-empty-hover: var(--orange-400);
@@ -501,6 +516,22 @@ onBeforeUnmount(clearTimer)
   --clear-opacity: 1;
   --clear-scale: 1;
   --clear-pointer-events: auto;
+}
+
+// Сенсорный ввод: область нажатия значков расширена до полной высоты поля (48px), вид не меняется.
+// По бокам — только 4px: шире слева крестик перехватывал бы нажатия, которыми ставят курсор в конец текста.
+// any-pointer — чтобы работало и на ноутбуках с сенсорным экраном, где основное устройство — тачпад.
+@media (any-pointer: coarse) {
+  .FieldBase-Hint,
+  .FieldBase_Clear {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -12px -4px;
+    }
+  }
 }
 
 .FieldBase-HintIconSlot {

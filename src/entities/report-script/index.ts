@@ -5,6 +5,7 @@ export { REPORT_LABELS } from './model/labels'
 export {
   getReportFooterLabel,
   getReportHeaderLabel,
+  getReportMetaExample,
   getReportTableLabel,
   getReportTitleLabel,
   getReportTotalLabel,

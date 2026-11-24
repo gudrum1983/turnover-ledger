@@ -43,7 +43,7 @@ const handleClick = () => {
 
 <template>
   <button class="CollapseToggle" :aria-label="buttonAriaLabel" :aria-expanded="isOpen" @click="handleClick">
-    <span class="CollapseToggle-Label u-typo-label-m">Cкрыть</span>
+    <span class="CollapseToggle-Label u-typo-label-m">Скрыть</span>
     <span class="CollapseToggle-Tag">
       <DisclosureChevron class="CollapseToggle-Icon" :open="isOpen" />
     </span>

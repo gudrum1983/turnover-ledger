@@ -12,6 +12,9 @@ type Props = {
   placeholder?: string
   error?: boolean
   errorMessage?: string
+  /** Предупреждение (жёлтое): значение похоже на опечатку, ввод не блокируется */
+  warning?: boolean
+  warningMessage?: string
   /** Сохраняет место под сообщение ошибки. */
   reserveErrorSpace?: boolean
   /** Максимальная длина вводимого значения. */
@@ -20,8 +23,19 @@ type Props = {
   modelValue: string | null
 }
 
-const { name, label, hint, placeholder, modelValue, error, errorMessage, reserveErrorSpace, maxLength } =
-  defineProps<Props>()
+const {
+  name,
+  label,
+  hint,
+  placeholder,
+  modelValue,
+  error,
+  errorMessage,
+  warning,
+  warningMessage,
+  reserveErrorSpace,
+  maxLength,
+} = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null): void
@@ -45,6 +59,8 @@ const digitsMask = {
     :placeholder="placeholder"
     :error="error"
     :error-message="errorMessage"
+    :warning="warning"
+    :warning-message="warningMessage"
     :reserve-error-space="reserveErrorSpace"
     :max-length="maxLength"
     :model-value="modelValue"

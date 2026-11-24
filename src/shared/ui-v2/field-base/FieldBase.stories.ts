@@ -20,6 +20,8 @@ const meta = {
     readonly: false,
     error: false,
     errorMessage: 'Укажите ровно 4 цифры.',
+    warning: false,
+    warningMessage: 'Обычно здесь 4 цифры. Проверьте, нет ли опечатки.',
     name: 'description',
     label: 'Описание',
     hint: 'Подсказка к полю: введите описание.',
@@ -41,6 +43,8 @@ const meta = {
     errorMessage: {
       control: 'text',
     },
+    warning: { control: 'boolean' },
+    warningMessage: { control: 'text' },
     name: {
       control: 'text',
     },
@@ -126,6 +130,23 @@ export const ErrorWithHint: Story = {
     error: true,
     errorMessage: 'Значение должно содержать ровно четыре цифры. Проверьте введённые данные и попробуйте снова.',
     hint: 'Введите код из документа без пробелов и разделителей.',
+  },
+}
+
+export const WithWarning: Story = {
+  name: 'С предупреждением',
+  args: {
+    warning: true,
+    warningMessage: 'Обычно здесь 9 или 13 цифр. Проверьте, нет ли опечатки.',
+    hint: 'ПИБ указан в решении о регистрации.',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Мягкая проверка: значение похоже на опечатку, но не блокирует дальнейшие действия. Если одновременно передана ошибка, показывается ошибка.',
+      },
+    },
   },
 }
 

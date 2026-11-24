@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import {
+  formatMoneyInput,
+  getDecimalSeparator,
+  groupMoneyInput,
+  normalizeMoneyInput,
+  parseMoneyInput,
+} from '@/shared/lib'
 import { FieldBase } from '../field-base'
 
 type Props = {
@@ -13,7 +20,7 @@ type Props = {
   placeholder?: string
   /** Текущее значение поля */
   modelValue: string | null
-  /** Локаль: от неё зависят разделитель дробной части в маске и формат значения после blur */
+  /** Локаль: от неё зависят разделители дробной части и разрядов */
   locale?: Intl.LocalesArgument
   /** Состояние ошибки валидации */
   error?: boolean
@@ -44,38 +51,41 @@ const emit = defineEmits<{
 }>()
 
 // Разделитель дробной части локали: «,» для ru-RU и sr-RS, «.» для en-US.
-const decimalSeparator = computed(() => {
-  const decimalPart = new Intl.NumberFormat(locale).formatToParts(1.1).find((part) => part.type === 'decimal')
+const decimalSeparator = computed(() => getDecimalSeparator(locale))
 
-  return decimalPart?.value ?? ','
-})
+// Пока поле в фокусе, разрядов нет — курсор не прыгает при наборе. Вне фокуса — «1 200,50» по локали.
+const inputFocused = ref(false)
 
 // Маска: целая часть любой длины, разделитель и до двух знаков после него.
-// Разделителем принимаем и «.», и «,»: на телефоне клавиатура decimal показывает разделитель системной
-// локали, а не локали интерфейса. До маски заменяем любой из них на разделитель локали.
-const moneyMask = computed(() => ({
-  mask: `0${decimalSeparator.value}99`,
-  preProcess: (value: string) => value.replace(/[.,]/g, decimalSeparator.value),
-  tokens: {
-    '0': { pattern: /[0-9]/, multiple: true },
-    '9': { pattern: /[0-9]/, optional: true },
-  },
-}))
+// До маски убираем разряды и заменяем «.» и «,» на разделитель локали: на телефоне клавиатура decimal
+// показывает разделитель системной локали, а не локали интерфейса. После маски вне фокуса — разряды.
+// Маска применяется заново при каждой перерисовке, поэтому значение с разрядами должно проходить через неё без изменений.
+// Фокус читаем здесь, а не внутри postProcess: так маска пересоздаётся при фокусе и уходе из поля,
+// maska сразу применяет её к значению — разряды убираются при фокусе, а не с первым введённым символом.
+const moneyMask = computed(() => {
+  const focused = inputFocused.value
 
-// После ухода из поля приводим значение к двум знакам после разделителя, без разделителей разрядов: «1200» → «1200,00».
+  return {
+    mask: `0${decimalSeparator.value}99`,
+    preProcess: (value: string) => normalizeMoneyInput(value, locale),
+    postProcess: (value: string) => (focused ? value : groupMoneyInput(value, locale)),
+    tokens: {
+      '0': { pattern: /[0-9]/, multiple: true },
+      '9': { pattern: /[0-9]/, optional: true },
+    },
+  }
+})
+
+// После ухода из поля — два знака после разделителя и разряды: «1200» → «1 200,00».
 function formatMoneyValue(value: string | null): string | null {
   if (!value) return value
 
-  const normalized = value.replace(',', '.')
-  const parsed = Number(normalized)
+  return formatMoneyInput(parseMoneyInput(value, locale), locale)
+}
 
-  if (Number.isNaN(parsed)) return value
-
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    useGrouping: false,
-  }).format(parsed)
+// Фокус именно на самом поле ввода, а не на значке подсказки рядом.
+function handleFocusChange(event: FocusEvent, focused: boolean) {
+  if (event.target instanceof HTMLInputElement) inputFocused.value = focused
 }
 
 function handleBlur(value: string | null) {
@@ -101,5 +111,7 @@ function handleBlur(value: string | null) {
     :readonly="readonly"
     @update:model-value="emit('update:modelValue', $event)"
     @blur="handleBlur"
+    @focusin="handleFocusChange($event, true)"
+    @focusout="handleFocusChange($event, false)"
   />
 </template>

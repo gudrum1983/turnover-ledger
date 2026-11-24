@@ -684,6 +684,22 @@ const classList = computed(() => ({
   }
 }
 
+// Сенсорный ввод: область нажатия значков расширена до полной высоты поля (48px), вид не меняется.
+// По бокам — только 4px: шире слева крестик перехватывал бы нажатия, которыми ставят курсор в конец текста.
+// any-pointer — чтобы работало и на ноутбуках с сенсорным экраном, где основное устройство — тачпад.
+@media (any-pointer: coarse) {
+  .FieldCombobox-Hint,
+  .FieldCombobox-Clear {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -12px -4px;
+    }
+  }
+}
+
 .FieldCombobox-HintIconSlot {
   display: grid;
   width: 24px;

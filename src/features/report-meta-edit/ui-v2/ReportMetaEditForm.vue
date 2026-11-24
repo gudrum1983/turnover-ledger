@@ -6,11 +6,12 @@ import { storeToRefs } from 'pinia'
 import {
   FOOTER_META_FIELDS,
   HEADER_META_FIELDS,
-  getHeaderFieldError,
-  getPersonNameError,
+  getHeaderFieldWarning,
+  getPersonNameWarning,
   useReportStore,
 } from '@/entities/report'
-import type { HeaderField, FooterField } from '@/entities/report'
+import type { FooterField, HeaderField } from '@/entities/report'
+import { getReportMetaExample, useReportScriptStore } from '@/entities/report-script'
 import { useLocale } from '@/shared/i18n'
 import { IconInfoCircle } from '@/shared/ui-v2/icons'
 import { LinkBase } from '@/shared/ui-v2/link-base'
@@ -24,6 +25,12 @@ const store = useReportStore()
 const { formData, metaFieldsProgress } = storeToRefs(store)
 const { setHeaderValue, setFooterValue } = store
 const { t } = useLocale()
+const reportScriptStore = useReportScriptStore()
+
+// Адрес и код деятельности — примером тем же письмом, что и отчёт; остальное — из словаря интерфейса.
+function headerPlaceholder(field: (typeof HEADER_META_FIELDS)[number]) {
+  return getReportMetaExample(field.key, reportScriptStore.script) ?? t(field.placeholderKey)
+}
 
 const isOpenHeader = ref(true)
 const touchedFields = ref<Partial<Record<HeaderField, boolean>>>({
@@ -37,22 +44,18 @@ const touchedFooterFields = ref<Partial<Record<FooterField, boolean>>>({
   responsiblePerson: Boolean(formData.value.footer.responsiblePerson),
 })
 
-function footerFieldError(field: FooterField) {
-  const value = formData.value.footer[field]
-  if (!touchedFooterFields.value[field] || !value.trim()) return undefined
-  const key = getPersonNameError(value)
-  return key ? t(key) : undefined
-}
-
-function fieldError(field: HeaderField) {
+// Предупреждение (жёлтое) — после ухода из поля и только для непустого значения. Печать не блокирует.
+function fieldWarning(field: HeaderField) {
   const value = formData.value.header[field]
   if (!touchedFields.value[field] || !value.trim()) return undefined
-  const key = getHeaderFieldError(field, value)
+  const key = getHeaderFieldWarning(field, value)
   return key ? t(key) : undefined
 }
 
-function fieldErrorMessage(field: HeaderField) {
-  const key = getHeaderFieldError(field, '')
+function footerFieldWarning(field: FooterField) {
+  const value = formData.value.footer[field]
+  if (!touchedFooterFields.value[field] || !value.trim()) return undefined
+  const key = getPersonNameWarning(value)
   return key ? t(key) : undefined
 }
 
@@ -121,12 +124,12 @@ function copyTaxpayerToSignatories() {
               :is="field.isDigit ? FieldDigit : FieldBase"
               :name="field.key"
               :label="t(field.labelKey)"
-              :placeholder="t(field.placeholderKey)"
+              :placeholder="headerPlaceholder(field)"
               :hint="t(field.hintKey) || undefined"
               :modelValue="formData.header[field.key]"
               :max-length="field.key === 'pib' || field.key === 'taxNumber' ? 13 : undefined"
-              :error="Boolean(fieldError(field.key))"
-              :error-message="fieldErrorMessage(field.key)"
+              :warning="Boolean(fieldWarning(field.key))"
+              :warning-message="fieldWarning(field.key)"
               :debounce-ms="field.key === 'taxpayer' ? 0 : undefined"
               @update:modelValue="setHeaderValue(field.key, $event ?? '')"
               @blur="touchedFields[field.key] = true"
@@ -157,8 +160,8 @@ function copyTaxpayerToSignatories() {
               :placeholder="t(field.placeholderKey)"
               :hint="t(field.hintKey) || undefined"
               :modelValue="formData.footer[field.key]"
-              :error="Boolean(footerFieldError(field.key))"
-              :error-message="t('ui.reportBuilderMetaFields.validation.personName')"
+              :warning="Boolean(footerFieldWarning(field.key))"
+              :warning-message="footerFieldWarning(field.key)"
               @update:modelValue="setFooterValue(field.key, $event ?? '')"
               @blur="touchedFooterFields[field.key] = true"
             />
