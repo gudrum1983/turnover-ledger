@@ -28,25 +28,12 @@ const { columns } = defineProps<{
   background: var(--neutral-200);
   border-bottom: 1px solid #a7afb1;
 
-  // Затухание под прилипшей шапкой (ScrollFade из макета): продолжает фон шапки и сходит
-  // в полупрозрачный белый — строки мягко уходят под шапку.
-  // Видно, только когда шапка прилипла: страница задаёт --report-table-header-fade-opacity.
-  &::after {
-    content: '';
-    position: absolute;
-    // top: 100% — это низ области внутри рамки: затухание легло бы на нижнюю границу шапки.
-    // Сдвигаем на её толщину, чтобы шапка выглядела как без затухания, а затухание шло под ней.
-    top: calc(100% + 1px);
-    left: 0;
-    right: 0;
-    height: 18px;
-    background: linear-gradient(to bottom, var(--neutral-200), rgb(255 255 255 / 30%));
-    opacity: var(--report-table-header-fade-opacity, 0);
-    pointer-events: none;
-    transition: opacity var(--transition-color);
-  }
+  // Тень у прилипшей шапки: строки уходят под неё. Включает страница через --report-table-header-shadow.
+  box-shadow: var(--report-table-header-shadow, none);
   // Переход ширины колонок задаёт таблица на время переключения вида (--report-table-columns-transition).
-  transition: var(--report-table-columns-transition, grid-template-columns 0s);
+  transition:
+    box-shadow var(--transition-color),
+    var(--report-table-columns-transition, grid-template-columns 0s);
 
   :slotted(*) {
     display: flex;

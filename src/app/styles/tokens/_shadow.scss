@@ -1,4 +1,6 @@
 :root {
   /* Выпадающие меню и списки: ListBox, FieldCombobox, ButtonDropdown, ActionMenu, календарь FieldDate. */
   --shadow-dropdown: 0 6px 16px 0 #00000033;
+  /* Прилипшие шапки при прокрутке: таблица записей (кнопки, шапка колонок). */
+  --shadow-sticky: 0 4px 12px 0 #0000001f;
 }

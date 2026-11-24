@@ -458,21 +458,7 @@ const isShowYearSelect = computed(() => {
   justify-content: space-between;
   align-items: flex-end;
   background: var(--white);
-
-  // Затухание под прилипшими кнопками — только на мобильном: там нет шапки колонок.
-  // На десктопе и планшете затухание у шапки колонок (ReportRowsTableHeader). Цвета — ScrollFade из макета.
-  &::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    height: 18px;
-    background: linear-gradient(to bottom, var(--neutral-200), rgb(255 255 255 / 30%));
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--transition-color);
-  }
+  transition: box-shadow var(--transition-color);
 }
 
 .ReportRowManage_Actions_left {
@@ -513,12 +499,14 @@ const isShowYearSelect = computed(() => {
   gap: 24px;
 }
 
-.ReportRowManage_Actions_stuck:has(.ReportRowManage_Actions_mobile)::after {
-  opacity: 1;
+// Тень под прилипшими кнопками — только на мобильном: там нет шапки колонок.
+// На десктопе и планшете тень у шапки колонок (ReportRowsTableHeader).
+.ReportRowManage_Actions_stuck:has(.ReportRowManage_Actions_mobile) {
+  box-shadow: var(--shadow-sticky);
 }
 
-// Шапка колонок берёт состояние «прилипло» из переменной (наследуется вниз по дереву).
+// Шапка колонок берёт тень прилипшего состояния из переменной (наследуется вниз по дереву).
 .ReportRowManage_stuck {
-  --report-table-header-fade-opacity: 1;
+  --report-table-header-shadow: var(--shadow-sticky);
 }
 </style>
