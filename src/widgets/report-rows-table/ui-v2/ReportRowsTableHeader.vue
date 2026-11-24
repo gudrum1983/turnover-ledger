@@ -20,6 +20,8 @@ const { columns } = defineProps<{
   min-height: 56px;
   background: var(--neutral-200);
   border-bottom: 1px solid #a7afb1;
+  // Переход ширины колонок задаёт таблица на время переключения вида (--report-table-columns-transition).
+  transition: var(--report-table-columns-transition, grid-template-columns 0s);
 
   :slotted(*) {
     display: flex;
