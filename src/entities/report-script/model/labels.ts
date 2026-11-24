@@ -93,3 +93,20 @@ export const getReportFooterLabel = (field: FooterField, script: ReportScript) =
 export const getReportTitleLabel = (field: TitleField, script: ReportScript) => REPORT_LABELS.title[field][script]
 export const getReportTableLabel = (field: TableField, script: ReportScript) => REPORT_LABELS.table[field][script]
 export const getReportTotalLabel = (script: ReportScript) => REPORT_TOTAL_LABEL_BY_SCRIPT[script]
+
+// Примеры для плейсхолдеров реквизитов — тем же письмом, что и отчёт: так их пишут в выписке АПР
+// для сербов. Имена и название фирмы не меняем: у иностранцев они в выписке латиницей, как в паспорте.
+const REPORT_META_EXAMPLES: Partial<Record<HeaderField, DictionaryEntry>> = {
+  address: {
+    srLat: 'JUG-BOGDANOVA 45, stan 16, BEOGRAD, SAVSKI VENAC, Srbija',
+    srCyr: 'ЈУГ-БОГДАНОВА 45, стан 16, БЕОГРАД, САВСКИ ВЕНАЦ, Србија',
+  },
+  activityCode: {
+    srLat: '6201 - Računarsko programiranje',
+    srCyr: '6201 - Рачунарско програмирање',
+  },
+}
+
+/** Пример значения реквизита письмом отчёта или undefined, если пример не зависит от письма */
+export const getReportMetaExample = (field: HeaderField, script: ReportScript): string | undefined =>
+  REPORT_META_EXAMPLES[field]?.[script]

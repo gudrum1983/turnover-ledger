@@ -11,6 +11,7 @@ import {
   useReportStore,
 } from '@/entities/report'
 import type { FooterField, HeaderField } from '@/entities/report'
+import { getReportMetaExample, useReportScriptStore } from '@/entities/report-script'
 import { useLocale } from '@/shared/i18n'
 import { IconInfoCircle } from '@/shared/ui-v2/icons'
 import { LinkBase } from '@/shared/ui-v2/link-base'
@@ -24,6 +25,12 @@ const store = useReportStore()
 const { formData, metaFieldsProgress } = storeToRefs(store)
 const { setHeaderValue, setFooterValue } = store
 const { t } = useLocale()
+const reportScriptStore = useReportScriptStore()
+
+// Адрес и код деятельности — примером тем же письмом, что и отчёт; остальное — из словаря интерфейса.
+function headerPlaceholder(field: (typeof HEADER_META_FIELDS)[number]) {
+  return getReportMetaExample(field.key, reportScriptStore.script) ?? t(field.placeholderKey)
+}
 
 const isOpenHeader = ref(true)
 const touchedFields = ref<Partial<Record<HeaderField, boolean>>>({
@@ -117,7 +124,7 @@ function copyTaxpayerToSignatories() {
               :is="field.isDigit ? FieldDigit : FieldBase"
               :name="field.key"
               :label="t(field.labelKey)"
-              :placeholder="t(field.placeholderKey)"
+              :placeholder="headerPlaceholder(field)"
               :hint="t(field.hintKey) || undefined"
               :modelValue="formData.header[field.key]"
               :max-length="field.key === 'pib' || field.key === 'taxNumber' ? 13 : undefined"
