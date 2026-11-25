@@ -37,10 +37,11 @@ export const srCyrInfoPage = {
   statsTitle: 'Статистика',
   statsNote: 'Подаци се прикупљају анонимно',
   statsNoteSince: 'Подаци се прикупљају анонимно од {date}',
+  statsVisits: 'Посета',
   statsPrints: 'Извештаја',
   statsConversions: 'Конверзија',
-  statsCyrillicShort: '{count} ћир',
-  statsLatinShort: '{count} лат',
+  statsCyrillicShort: 'Ћир {share}',
+  statsLatinShort: 'Lat {share}',
   contactTitle: 'Повратне информације',
   contactText: 'Ако сте пронашли грешку, нетачност или желите да предложите побољшање, пишите на:',
 } as const

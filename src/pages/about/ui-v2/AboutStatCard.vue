@@ -34,7 +34,6 @@ const { icon, value, label, badges = [] } = defineProps<AboutStatCardProps>()
 <style scoped lang="scss">
 .AboutStatCard {
   display: flex;
-  flex: 1 1 240px;
   flex-direction: column;
   gap: 16px;
   padding: 16px;

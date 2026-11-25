@@ -37,10 +37,11 @@ export const ruInfoPage = {
   statsTitle: 'Статистика',
   statsNote: 'Сбор сведений осуществляется анонимно',
   statsNoteSince: 'Сбор сведений осуществляется анонимно с {date}',
+  statsVisits: 'Посещений',
   statsPrints: 'Отчётов',
   statsConversions: 'Конвертаций',
-  statsCyrillicShort: '{count} кир',
-  statsLatinShort: '{count} лат',
+  statsCyrillicShort: 'Ћир {share}',
+  statsLatinShort: 'Lat {share}',
   contactTitle: 'Обратная связь',
   contactText: 'Если вы нашли ошибку, неточность или хотите предложить улучшение, напишите на:',
 } as const

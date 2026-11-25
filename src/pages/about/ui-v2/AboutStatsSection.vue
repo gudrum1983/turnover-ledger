@@ -2,8 +2,9 @@
 import { computed } from 'vue'
 import { INTL_LOCALES, useLocale } from '@/shared/i18n'
 import { formatDateForUi, type AppStats } from '@/shared/lib'
-import { IconDocuments, IconRefresh } from '@/shared/ui-v2/icons'
+import { IconDocuments, IconEye, IconRefresh } from '@/shared/ui-v2/icons'
 import AboutStatCard from './AboutStatCard.vue'
+import { getScriptShares } from './scriptShares'
 
 const { stats } = defineProps<{
   /** Итоги анонимной статистики */
@@ -19,15 +20,18 @@ const note = computed(() =>
   stats.since ? t('ui.infoPage.statsNoteSince', { date: formatDateForUi(stats.since) }) : t('ui.infoPage.statsNote'),
 )
 
-// Разбивку по письму показываем, только когда уже было что печатать.
-const printBadges = computed(() =>
-  stats.prints > 0
-    ? [
-        t('ui.infoPage.statsCyrillicShort', { count: formatNumber(stats.printsByScript.srCyr ?? 0) }),
-        t('ui.infoPage.statsLatinShort', { count: formatNumber(stats.printsByScript.srLat ?? 0) }),
-      ]
-    : [],
-)
+const formatPercent = (value: number) =>
+  new Intl.NumberFormat(INTL_LOCALES[locale.value], { style: 'percent', maximumFractionDigits: 0 }).format(value / 100)
+
+// Разбивка по письму в процентах — только когда уже было что печатать.
+const printBadges = computed(() => {
+  const shares = getScriptShares(stats.printsByScript.srCyr ?? 0, stats.printsByScript.srLat ?? 0)
+  if (!shares) return []
+  return [
+    t('ui.infoPage.statsCyrillicShort', { share: formatPercent(shares.cyrillic) }),
+    t('ui.infoPage.statsLatinShort', { share: formatPercent(shares.latin) }),
+  ]
+})
 </script>
 
 <template>
@@ -37,16 +41,30 @@ const printBadges = computed(() =>
       <p class="AboutStatsSection-Note u-typo-body-l">{{ note }}</p>
     </div>
     <div class="AboutStatsSection-Cards">
+      <!-- Две короткие карточки — общей группой, чтобы и на телефоне стояли рядом -->
+      <div class="AboutStatsSection-Group">
+        <!-- Посещений нет в ответе, пока воркер не обновлён — тогда карточку не показываем -->
+        <AboutStatCard
+          v-if="stats.visits !== undefined"
+          class="AboutStatsSection-Card"
+          :icon="IconEye"
+          :value="formatNumber(stats.visits)"
+          :label="t('ui.infoPage.statsVisits')"
+        />
+        <AboutStatCard
+          class="AboutStatsSection-Card"
+          :icon="IconRefresh"
+          :value="formatNumber(stats.conversions)"
+          :label="t('ui.infoPage.statsConversions')"
+        />
+      </div>
+      <!-- Отчёты — широкая карточка (как две короткие) с разбивкой по письму -->
       <AboutStatCard
+        class="AboutStatsSection-Card AboutStatsSection-Card_wide"
         :icon="IconDocuments"
         :value="formatNumber(stats.prints)"
         :label="t('ui.infoPage.statsPrints')"
         :badges="printBadges"
-      />
-      <AboutStatCard
-        :icon="IconRefresh"
-        :value="formatNumber(stats.conversions)"
-        :label="t('ui.infoPage.statsConversions')"
       />
     </div>
   </section>
@@ -69,10 +87,26 @@ const printBadges = computed(() =>
   color: var(--neutral-600);
 }
 
-// На узком экране карточки переносятся и встают одна под другой.
+// Пара коротких карточек и широкая «Отчётов» — поровну; на узком экране «Отчётов» уходит вниз.
 .AboutStatsSection-Cards {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
+}
+
+.AboutStatsSection-Group {
+  display: flex;
+  flex: 1 1 400px;
+  gap: 24px;
+  min-width: 0;
+}
+
+.AboutStatsSection-Card {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.AboutStatsSection-Card_wide {
+  flex: 1 1 400px;
 }
 </style>

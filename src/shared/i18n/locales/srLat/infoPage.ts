@@ -37,10 +37,11 @@ export const srLatInfoPage = {
   statsTitle: 'Statistika',
   statsNote: 'Podaci se prikupljaju anonimno',
   statsNoteSince: 'Podaci se prikupljaju anonimno od {date}',
+  statsVisits: 'Poseta',
   statsPrints: 'Izveštaja',
   statsConversions: 'Konverzija',
-  statsCyrillicShort: '{count} ćir',
-  statsLatinShort: '{count} lat',
+  statsCyrillicShort: 'Ћир {share}',
+  statsLatinShort: 'Lat {share}',
   contactTitle: 'Povratne informacije',
   contactText: 'Ako ste pronašli grešku, netačnost ili želite da predložite poboljšanje, pišite na:',
 } as const

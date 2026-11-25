@@ -37,10 +37,11 @@ export const enInfoPage = {
   statsTitle: 'Statistics',
   statsNote: 'Data is collected anonymously',
   statsNoteSince: 'Data has been collected anonymously since {date}',
+  statsVisits: 'Visits',
   statsPrints: 'Reports',
   statsConversions: 'Conversions',
-  statsCyrillicShort: '{count} Cyr',
-  statsLatinShort: '{count} Lat',
+  statsCyrillicShort: 'Ћир {share}',
+  statsLatinShort: 'Lat {share}',
   contactTitle: 'Feedback',
   contactText: 'If you found a bug, an inaccuracy, or would like to suggest an improvement, write to:',
 } as const
