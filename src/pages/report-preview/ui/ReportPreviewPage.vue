@@ -5,7 +5,7 @@ import { AppHeader } from '@/widgets/app-header'
 import { ReportPreviewDocument } from '@/widgets/report-preview-document'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import { ButtonWithIcon } from '@/shared/ui-v2/button-with-icon'
-import { onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 import { useLocale } from '@/shared/i18n'
 import { useReportScriptStore } from '@/entities/report-script'
 import { storeToRefs } from 'pinia'
@@ -14,10 +14,10 @@ import { IconBack, IconPrinter } from '@/shared/ui-v2/icons'
 import { useRouter } from 'vue-router'
 import { ReportScriptSwitch } from '@/features/report-script-switch'
 import { ReportYearSelect } from '@/features/report-year-select'
-import { trackPrint } from '@/shared/lib'
+import { trackPrint, trackView } from '@/shared/lib'
 
 const onPrint = () => {
-  trackPrint(script.value)
+  trackPrint(script.value, locale.value)
   window.print()
 }
 //todo: тут стили перешерстить и свитчер переместить
@@ -27,11 +27,16 @@ function closePreview() {
   router.push({ name: ROUTES.reportBuilder.name })
 }
 
-const { t } = useLocale()
+const { t, locale } = useLocale()
 const reportScriptStore = useReportScriptStore()
 const { script } = storeToRefs(reportScriptStore)
 
 const printStyleId = 'print-page-size'
+
+// Анонимная статистика: открытие просмотра (раз в день с браузера) с языком интерфейса — только для автора.
+onMounted(() => {
+  trackView(locale.value)
+})
 
 onBeforeUnmount(() => {
   document.getElementById(printStyleId)?.remove()

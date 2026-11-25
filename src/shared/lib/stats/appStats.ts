@@ -9,11 +9,16 @@ export type AppStats = {
   prints: number
   /** Нажатий «Печать/PDF» по письму отчёта: srLat, srCyr */
   printsByScript: Record<string, number>
+  /** Посещений (не чаще раза в день с браузера); нет в ответе, пока воркер не обновлён */
+  visits?: number
+  /** Посещений за сегодня (UTC) */
+  visitsToday?: number
   /** Первый день подсчёта, YYYY-MM-DD (UTC), или null, если событий ещё не было */
   since: string | null
 }
 
 const isCount = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0
+const isOptionalCount = (value: unknown) => value === undefined || isCount(value)
 
 function isAppStats(value: unknown): value is AppStats {
   if (typeof value !== 'object' || value === null) return false
@@ -23,6 +28,8 @@ function isAppStats(value: unknown): value is AppStats {
     isCount(stats.prints) &&
     typeof stats.printsByScript === 'object' &&
     stats.printsByScript !== null &&
+    isOptionalCount(stats.visits) &&
+    isOptionalCount(stats.visitsToday) &&
     (stats.since === null || typeof stats.since === 'string')
   )
 }

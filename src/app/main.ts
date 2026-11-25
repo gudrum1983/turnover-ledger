@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { vMaska } from 'maska/vue'
-import { vAutofocus } from '@/shared/lib'
+import { trackVisit, vAutofocus } from '@/shared/lib'
 
 import './styles/main.css'
 
@@ -27,5 +27,8 @@ currencyStore.hydrateFromLocalStorage()
 useLocaleStore(pinia).hydrateFromLocalStorage()
 
 void currencyStore.loadCurrencies()
+
+// Анонимная статистика посещений: не чаще раза в день с браузера, без идентификаторов.
+trackVisit()
 
 app.mount('#app')

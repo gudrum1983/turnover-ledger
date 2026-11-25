@@ -24,6 +24,20 @@ describe('fetchAppStats', () => {
     await expect(fetchAppStats()).resolves.toMatchObject({ conversions: 0, since: null })
   })
 
+  it('returns visits from the updated worker', async () => {
+    const stats = {
+      conversions: 1,
+      prints: 0,
+      printsByScript: {},
+      visits: 146,
+      visitsToday: 1,
+      since: '2026-11-24',
+    }
+    mockFetch(true, stats)
+
+    await expect(fetchAppStats()).resolves.toEqual(stats)
+  })
+
   it('rejects an error response', async () => {
     mockFetch(false, { error: 'stats are unavailable' })
 
@@ -34,6 +48,8 @@ describe('fetchAppStats', () => {
     { conversions: '12', prints: 3, printsByScript: {}, since: null },
     { conversions: -1, prints: 3, printsByScript: {}, since: null },
     { conversions: 1, prints: 3, since: null },
+    { conversions: 1, prints: 3, printsByScript: {}, visits: '146', since: null },
+    { conversions: 1, prints: 3, printsByScript: {}, visits: 146, visitsToday: -1, since: null },
     null,
   ])('rejects an unexpected response %j', async (body) => {
     mockFetch(true, body)

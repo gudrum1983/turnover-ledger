@@ -10,5 +10,5 @@ export {
 export { default as vAutofocus } from './directives/autofocus'
 export { VIEWPORT_BREAKPOINTS, getViewportByWidth, useViewport } from './viewport'
 export { useMediaQuery, useTouchMode } from './media'
-export { fetchAppStats, trackPrint, useAppStats, type AppStats } from './stats'
+export { fetchAppStats, trackPrint, trackView, trackVisit, useAppStats, type AppStats } from './stats'
 export type { Viewport } from './viewport'
