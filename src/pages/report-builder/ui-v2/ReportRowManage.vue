@@ -193,6 +193,23 @@ watch(actionsRef, (element, previous) => {
   if (element) actionsResizeObserver?.observe(element)
 })
 
+// В прилипшей полосе добавляется выбор года и места мало — подписи кнопок короче.
+// Полное название остаётся в aria-label, чтобы «Очистить» без уточнения не было двусмысленным.
+const addRowLabel = computed(() =>
+  t(
+    isActionsStuck.value
+      ? 'ui.reportBuilderIncomeRecordsTable.addRowShort'
+      : 'ui.reportBuilderIncomeRecordsTable.addRow',
+  ),
+)
+const clearYearLabel = computed(() =>
+  t(
+    isActionsStuck.value
+      ? 'ui.reportBuilderIncomeRecordsTable.clearYearShort'
+      : 'ui.reportBuilderIncomeRecordsTable.clearYear',
+  ),
+)
+
 onBeforeUnmount(() => {
   stickyObserver?.disconnect()
   actionsResizeObserver?.disconnect()
@@ -311,20 +328,40 @@ const isShowYearSelect = computed(() => {
       :class="{ ReportRowManage_Actions_stuck: isActionsStuck }"
     >
       <div class="ReportRowManage_Actions_left" v-if="viewport === 'desktop'">
-        <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
-          {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+        <ButtonWithIcon
+          :icon="IconAddCircle"
+          variant="page"
+          :aria-label="t('ui.reportBuilderIncomeRecordsTable.addRow')"
+          @click="openCreateModal()"
+        >
+          {{ addRowLabel }}
         </ButtonWithIcon>
-        <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
-          {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
+        <ButtonWithIcon
+          :icon="IconTrash"
+          variant="danger"
+          :aria-label="t('ui.reportBuilderIncomeRecordsTable.clearYear')"
+          @click="openDialogConfirm = true"
+        >
+          {{ clearYearLabel }}
         </ButtonWithIcon>
       </div>
 
       <div class="ReportRowManage_Actions_left" v-else-if="viewport === 'tablet'">
-        <ButtonWithIcon :icon="IconAddCircle" variant="page" @click="openCreateModal()">
-          {{ t('ui.reportBuilderIncomeRecordsTable.addRow') }}
+        <ButtonWithIcon
+          :icon="IconAddCircle"
+          variant="page"
+          :aria-label="t('ui.reportBuilderIncomeRecordsTable.addRow')"
+          @click="openCreateModal()"
+        >
+          {{ addRowLabel }}
         </ButtonWithIcon>
-        <ButtonWithIcon :icon="IconTrash" variant="danger" @click="openDialogConfirm = true">
-          {{ t('ui.reportBuilderIncomeRecordsTable.clearYear') }}
+        <ButtonWithIcon
+          :icon="IconTrash"
+          variant="danger"
+          :aria-label="t('ui.reportBuilderIncomeRecordsTable.clearYear')"
+          @click="openDialogConfirm = true"
+        >
+          {{ clearYearLabel }}
         </ButtonWithIcon>
       </div>
 
@@ -468,10 +505,6 @@ const isShowYearSelect = computed(() => {
 
 // Десктоп: кнопки слева, выбор года по центру (в прилипшей полосе), вид таблицы справа — как в макете.
 .ReportRowManage_Actions:has(.ReportRowManage-TableView) {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-
   .ReportRowManage_Actions_left {
     grid-column: 1;
     justify-self: start;
