@@ -137,10 +137,7 @@ export const srCyrUi = {
       },
     },
     responsiblePeople: {
-      editSeparately: 'Уреди засебно',
       sameAsTaxpayer: 'Исто као обвезник',
-      separateHint: 'Попуњавају се засебно',
-      taxpayerHint: 'Подударају се са пољем „Обвезник“',
       preparedBy: {
         label: 'Саставио',
         placeholder: 'Ivan Markov',

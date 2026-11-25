@@ -137,10 +137,7 @@ export const enUi = {
       },
     },
     responsiblePeople: {
-      editSeparately: 'Edit separately',
       sameAsTaxpayer: 'Same as taxpayer',
-      separateHint: 'Filled in separately',
-      taxpayerHint: 'Match the “Taxpayer” field',
       preparedBy: {
         label: 'Prepared by',
         placeholder: 'Ivan Markov',

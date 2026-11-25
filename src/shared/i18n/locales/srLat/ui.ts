@@ -137,10 +137,7 @@ export const srLatUi = {
       },
     },
     responsiblePeople: {
-      editSeparately: 'Uredi zasebno',
       sameAsTaxpayer: 'Isto kao obveznik',
-      separateHint: 'Popunjavaju se zasebno',
-      taxpayerHint: 'Podudaraju se sa poljem „Obveznik“',
       preparedBy: {
         label: 'Sastavio',
         placeholder: 'Ivan Markov',
