@@ -9,7 +9,7 @@ export const enInfoPage = {
   introLanguages:
     'The report can be generated in Serbian Latin or Cyrillic. The app interface is available in Russian, English, and Serbian.',
   introGuideBeforeLink:
-    'When creating the app, I relied on open materials about keeping the KPO book, including the guide from ',
+    'The app was launched on 1 May 2026. When creating it, I relied on open materials about keeping the KPO book, including the guide from ',
   guideLinkText: 'srb.guide',
   introGuideAfterLink: '.',
   backToApp: 'Home',
@@ -17,6 +17,8 @@ export const enInfoPage = {
   storageText:
     'Report data, the selected interface language, the report display mode, and the service currency cache are stored locally in the user browser using localStorage.',
   storageNote: 'The app does not use a separate server-side database to store user reports.',
+  storageStatsNote:
+    'For statistics, the app sends only anonymous counters: a visit and opening the report preview (at most once a day), a print (with the report script), and an amount conversion. The interface language is sent along with the preview and the print. Amounts, dates, currencies and report data are not stored in the statistics.',
   storageBackupNote:
     'The report can also be saved to your computer in JSON format and later restored via import. This is useful if you want to move the data to another browser, open the app on another device, or keep a backup before clearing browser data.',
   conversionTitle: 'How currency conversion works',
@@ -35,13 +37,13 @@ export const enInfoPage = {
   bankLinkText: 'National Bank of Serbia',
   disclaimerRecommendationAfterLink: '.',
   statsTitle: 'Statistics',
-  statsConversions: 'Number of conversion requests: ',
-  statsPrints: 'Number of reports printed or saved as PDF: ',
-  statsTitleSince: 'Statistics since {date}',
-  statsCyrillic: ', of which Cyrillic — ',
-  statsLatin: ', Latin — ',
-  statsPrivacy:
-    'The statistics are anonymous: only the fact of a conversion or a print is counted — no amounts, dates, currencies or report data.',
+  statsNote: 'Anonymous statistics: counts only, no amounts or report data',
+  statsVisits: 'Visits',
+  statsPrints: 'Reports',
+  statsConversions: 'Conversions',
+  statsSince: 'Stats started',
+  statsCyrillicShort: 'Ћир {share}',
+  statsLatinShort: 'Lat {share}',
   contactTitle: 'Feedback',
   contactText: 'If you found a bug, an inaccuracy, or would like to suggest an improvement, write to:',
 } as const

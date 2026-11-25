@@ -9,9 +9,13 @@
 //
 // Статистика (привязка D1 с именем DB, схема — workers/schema.sql):
 //  - запросы /conversions/ считаются сами при проксировании;
-//  - POST /stats/print — нажатие «Печать/PDF», тело запроса — письмо отчёта (srLat / srCyr);
-//  - GET  /stats       — итоги за всё время для страницы приложения.
-// Считаем только факт события: без IP, сумм, дат и кодов валют.
+//  - POST /stats/print — нажатие «Печать/PDF», тело — script=srCyr&locale=ru (письмо отчёта и язык интерфейса;
+//    старые версии приложения шлют просто srLat / srCyr);
+//  - POST /stats/visit — посещение: приложение шлёт его не чаще раза в день (UTC) с одного браузера;
+//  - POST /stats/view  — открытие просмотра отчёта, не чаще раза в день с браузера, тело — язык интерфейса;
+//  - GET  /stats       — итоги за всё время для страницы приложения. Языки интерфейса туда не входят:
+//    они только для автора, смотреть в консоли D1 (запросы — в workers/schema.sql).
+// Считаем только факт события: без IP, идентификаторов, сумм, дат и кодов валют.
 
 const ORIGIN = 'https://kurs.resenje.org'
 
@@ -21,6 +25,11 @@ const APP_ORIGINS = ['https://gudrum1983.github.io']
 
 // Письмо отчёта для события печати: всё остальное записываем как пустую метку.
 const PRINT_LABELS = ['srLat', 'srCyr']
+
+// Языки интерфейса приложения: всё остальное записываем как пустую метку.
+const LOCALE_LABELS = ['ru', 'en', 'srLat', 'srCyr']
+
+const pickLabel = (value, allowed) => (allowed.includes(value) ? value : '')
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -74,18 +83,28 @@ async function countEvent(env, event, label = '') {
   }
 }
 
-// Итоги за всё время: { conversions, prints, printsByScript: { srLat, srCyr }, since }.
+// Итоги за всё время: { conversions, prints, printsByScript: { srLat, srCyr }, visits, visitsToday, since }.
+// visitsToday — посещения за сегодняшний день (UTC).
 async function readStats(env) {
+  const today = new Date().toISOString().slice(0, 10)
   const { results } = await env.DB.prepare(
-    'SELECT event, label, SUM(count) AS total, MIN(day) AS since FROM stats GROUP BY event, label',
-  ).all()
+    `SELECT event, label, SUM(count) AS total, MIN(day) AS since,
+            SUM(CASE WHEN day = ?1 THEN count ELSE 0 END) AS today
+     FROM stats GROUP BY event, label`,
+  )
+    .bind(today)
+    .all()
 
-  const stats = { conversions: 0, prints: 0, printsByScript: {}, since: null }
+  const stats = { conversions: 0, prints: 0, printsByScript: {}, visits: 0, visitsToday: 0, since: null }
   for (const row of results) {
     if (row.event === 'conversion') stats.conversions += row.total
     if (row.event === 'print') {
       stats.prints += row.total
       if (row.label) stats.printsByScript[row.label] = row.total
+    }
+    if (row.event === 'visit') {
+      stats.visits += row.total
+      stats.visitsToday += row.today
     }
     if (row.since && (!stats.since || row.since < stats.since)) stats.since = row.since
   }
@@ -97,7 +116,28 @@ async function handleStats(request, env, ctx, url) {
   if (url.pathname === '/stats/print' && request.method === 'POST') {
     if (isAppRequest(request)) {
       const body = (await request.text()).trim()
-      ctx.waitUntil(countEvent(env, 'print', PRINT_LABELS.includes(body) ? body : ''))
+      // Новый формат — script=…&locale=…, старый — просто письмо отчёта.
+      const params = body.includes('=') ? new URLSearchParams(body) : null
+      const script = params ? params.get('script') : body
+      ctx.waitUntil(countEvent(env, 'print', pickLabel(script, PRINT_LABELS)))
+      // Язык при печати — отдельным событием, в итоги GET /stats не входит.
+      if (params) ctx.waitUntil(countEvent(env, 'print-locale', pickLabel(params.get('locale'), LOCALE_LABELS)))
+    }
+    return new Response(null, { status: 204, headers: CORS_HEADERS })
+  }
+
+  // Посещение. Раз в день с браузера решает само приложение (дата последнего визита в localStorage),
+  // воркер просто прибавляет +1 за сегодня.
+  if (url.pathname === '/stats/visit' && request.method === 'POST') {
+    if (isAppRequest(request)) ctx.waitUntil(countEvent(env, 'visit'))
+    return new Response(null, { status: 204, headers: CORS_HEADERS })
+  }
+
+  // Открытие просмотра отчёта (раз в день с браузера) с языком интерфейса. В итоги GET /stats не входит.
+  if (url.pathname === '/stats/view' && request.method === 'POST') {
+    if (isAppRequest(request)) {
+      const body = (await request.text()).trim()
+      ctx.waitUntil(countEvent(env, 'view', pickLabel(body, LOCALE_LABELS)))
     }
     return new Response(null, { status: 204, headers: CORS_HEADERS })
   }
