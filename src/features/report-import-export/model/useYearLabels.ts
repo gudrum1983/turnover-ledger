@@ -1,17 +1,12 @@
 import { computed } from 'vue'
 import { INTL_LOCALES, useLocale } from '@/shared/i18n'
-import { useViewport } from '@/shared/lib'
+import { formatMoney } from '@/shared/lib'
 import { REPORT_FIRST_YEAR } from '@/shared/constants/app'
-import type { ImportYearItem } from './importYears'
 
-// Подписи годов в окнах импорта и экспорта.
-// Экспорт: «2026 — 16 записей».
-// Импорт: «2026 — в книге 2 записи, в файле 3», на мобильном коротко: «2026 — 2 в книге / 3 в файле».
+// Подписи годов и итог в окнах импорта и экспорта.
 export function useYearLabels() {
   const { locale, t } = useLocale()
-  const viewport = useViewport()
   const pluralRules = computed(() => new Intl.PluralRules(INTL_LOCALES[locale.value]))
-  const isMobile = computed(() => viewport.value === 'mobile')
 
   function pluralForm(count: number) {
     const category = pluralRules.value.select(count)
@@ -27,37 +22,12 @@ export function useYearLabels() {
     return t(`ui.dataTransferModal.importSkipped.${pluralForm(count)}`, { count, firstYear: REPORT_FIRST_YEAR })
   }
 
-  function exportLabel(year: number, count: number) {
-    return t('ui.dataTransferModal.yearRecords', { year, records: records(count) })
-  }
-
-  function importLabel({ year, current, inFile }: ImportYearItem) {
-    if (isMobile.value) return t('ui.dataTransferModal.yearShort', { year, current, inFile })
-    if (inFile === 0) return t('ui.dataTransferModal.yearInBookOnly', { year, records: records(current) })
-    if (current === 0) return t('ui.dataTransferModal.yearInFileOnly', { year, records: records(inFile) })
-    return t('ui.dataTransferModal.yearInBookAndFile', { year, inFile, records: records(current) })
-  }
-
-  const label = () => t('ui.dataTransferModal.meta')
-
-  // Экспорт: заполненные — просто «Реквизиты», пустые — «Реквизиты - не заполнены».
-  function metaExportLabel(filled: boolean) {
-    if (filled) return label()
-    return t('ui.dataTransferModal.metaExport', {
-      label: label(),
-      state: t('ui.dataTransferModal.metaNotFilled'),
-    })
-  }
-
-  // Импорт — в том же формате, что и годы: «Реквизиты - в книге заполнены, в файле нет»,
-  // на мобильном «Реквизиты - есть в книге / нет в файле».
-  function metaImportLabel(inBook: boolean, inFile: boolean) {
-    const none = t('ui.dataTransferModal.metaNone')
-    const present = t(isMobile.value ? 'ui.dataTransferModal.metaPresent' : 'ui.dataTransferModal.metaFilled')
-    return t(isMobile.value ? 'ui.dataTransferModal.metaImportShort' : 'ui.dataTransferModal.metaImport', {
-      label: label(),
-      book: inBook ? present : none,
-      file: inFile ? present : none,
+  // «2026 - 16 записей (1.234.567,00 RSD)» — и в экспорте (из книги), и в импорте (из файла).
+  function yearLabel(year: number, count: number, rsdCents: number) {
+    return t('ui.dataTransferModal.yearRecords', {
+      year,
+      records: records(count),
+      amount: formatMoney(rsdCents, { locale: locale.value }),
     })
   }
 
@@ -96,5 +66,5 @@ export function useYearLabels() {
     ].join(' ')
   }
 
-  return { exportLabel, importLabel, skippedRowsText, metaExportLabel, metaImportLabel, importSummary }
+  return { yearLabel, skippedRowsText, importSummary }
 }

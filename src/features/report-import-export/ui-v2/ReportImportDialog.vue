@@ -23,14 +23,14 @@ const { importedState, fileName } = defineProps<{
 const open = defineModel<boolean>('open', { required: true })
 
 const { t } = useLocale()
-const { importLabel, skippedRowsText, metaImportLabel, importSummary } = useYearLabels()
+const { yearLabel, skippedRowsText, importSummary } = useYearLabels()
 const reportStore = useReportStore()
 
 // В импорт идут только записи с датой, которую можно ввести в таблицу (с 2020 года и не позже сегодня).
 // Остальные отбрасываем и пишем, сколько их.
 const importable = computed(() => (importedState ? filterImportableRows(importedState) : null))
 
-// Годы из текущих данных и из файла. Года, которого нет в файле, импортировать нечего — галочка неактивна.
+// Годы из файла: «2026 - 16 записей (… RSD)» — количество и сумма из файла. Годы только из книги не показываем.
 const yearItems = computed(() =>
   getImportYearItems(
     getReportYearCounts(reportStore.rows),
@@ -38,9 +38,9 @@ const yearItems = computed(() =>
   ),
 )
 const items = computed(() =>
-  yearItems.value.map((item) => ({ year: item.year, label: importLabel(item), disabled: item.inFile === 0 })),
+  yearItems.value.map((item) => ({ year: item.year, label: yearLabel(item.year, item.inFile, item.rsdCents) })),
 )
-const hasYearsToImport = computed(() => yearItems.value.some((item) => item.inFile > 0))
+const hasYearsToImport = computed(() => yearItems.value.length > 0)
 const warnings = computed(() => {
   if (!hasYearsToImport.value) return [t('ui.dataTransferModal.importNoYears')]
   const skippedCount = importable.value?.skippedCount ?? 0
@@ -48,14 +48,13 @@ const warnings = computed(() => {
 })
 const isMetaEmpty = computed(() => !importedState || !hasReportMeta(importedState.meta))
 const hasBookMeta = computed(() => hasReportMeta(reportStore.exportState().meta))
-const metaLabel = computed(() => metaImportLabel(hasBookMeta.value, !isMetaEmpty.value))
 const selectedYears = ref<number[]>([])
 const includeMeta = ref(false)
 
 // При каждом открытии отмечено всё, что есть в файле.
 watch(open, (value) => {
   if (!value) return
-  selectedYears.value = yearItems.value.filter((item) => item.inFile > 0).map(({ year }) => year)
+  selectedYears.value = yearItems.value.map(({ year }) => year)
   includeMeta.value = !isMetaEmpty.value
 })
 
@@ -91,7 +90,7 @@ function handleImport() {
     :subtitle="t('ui.dataTransferModal.importSubtitle')"
     :warnings="warnings"
     :summary="summary"
-    :meta-label="metaLabel"
+    :meta-label="t('ui.dataTransferModal.meta')"
     :confirm-label="t('ui.dataTransferModal.importConfirm')"
     :items="items"
     :meta-disabled="isMetaEmpty"

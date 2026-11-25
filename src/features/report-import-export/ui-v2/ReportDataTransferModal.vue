@@ -32,7 +32,7 @@ const {
   fileName?: string
   /** Заголовок списка годов */
   subtitle: string
-  /** Предупреждения над кнопками — жёлтым, с восклицательным знаком */
+  /** Предупреждения под именем файла — жёлтым, с восклицательным знаком */
   warnings?: string[]
   /** Итог: что произойдёт по отмеченным галочкам — серым, с «i» */
   summary?: string | null
@@ -40,9 +40,9 @@ const {
   confirmLabel: string
   /** Годы, от нового к старому */
   items: DataTransferYearItem[]
-  /** Подпись галочки реквизитов, например «Реквизиты - в книге заполнены, в файле нет» */
+  /** Подпись галочки реквизитов */
   metaLabel: string
-  /** Реквизитов нет — галочка неактивна */
+  /** Реквизитов нет (в книге при экспорте, в файле при импорте) — галочка неактивна */
   metaDisabled?: boolean
 }>()
 
@@ -83,9 +83,20 @@ function toggleYear(year: number, value: boolean) {
     @update:open="open = $event"
   >
     <div class="ReportDataTransferModal">
-      <p v-if="fileName" class="ReportDataTransferModal-File u-typo-body-m">
-        {{ t('ui.dataTransferModal.file', { name: fileName }) }}
-      </p>
+      <!-- Под заголовком: имя файла и предупреждения о нём (например, записи, которые не импортируются). -->
+      <div v-if="fileName || warnings.length > 0" class="ReportDataTransferModal-Head">
+        <p v-if="fileName" class="ReportDataTransferModal-File u-typo-body-m">
+          {{ t('ui.dataTransferModal.file', { name: fileName }) }}
+        </p>
+        <p
+          v-for="warning in warnings"
+          :key="warning"
+          class="ReportDataTransferModal-Note ReportDataTransferModal-Note_warning u-typo-body-small-m"
+        >
+          <IconDangerCircle class="ReportDataTransferModal-NoteIcon" size="s" />
+          {{ warning }}
+        </p>
+      </div>
 
       <div class="ReportDataTransferModal-Selection">
         <p class="ReportDataTransferModal-Subtitle u-typo-subtitle-l">{{ subtitle }}</p>
@@ -123,20 +134,10 @@ function toggleYear(year: number, value: boolean) {
       </CheckboxBase>
 
       <DividerBase />
-      <div v-if="warnings.length > 0 || summary" class="ReportDataTransferModal-Notes">
-        <p
-          v-for="warning in warnings"
-          :key="warning"
-          class="ReportDataTransferModal-Note ReportDataTransferModal-Note_warning u-typo-body-small-m"
-        >
-          <IconDangerCircle class="ReportDataTransferModal-NoteIcon" size="s" />
-          {{ warning }}
-        </p>
-        <p v-if="summary" class="ReportDataTransferModal-Note u-typo-body-small-m" aria-live="polite">
-          <IconInfoCircle class="ReportDataTransferModal-NoteIcon" size="s" />
-          {{ summary }}
-        </p>
-      </div>
+      <p v-if="summary" class="ReportDataTransferModal-Note u-typo-body-small-m" aria-live="polite">
+        <IconInfoCircle class="ReportDataTransferModal-NoteIcon" size="s" />
+        {{ summary }}
+      </p>
 
       <div class="ReportDataTransferModal-Actions">
         <div class="ReportDataTransferModal-Buttons">
@@ -168,9 +169,16 @@ function toggleYear(year: number, value: boolean) {
   flex-direction: column;
   gap: 24px;
 
-  // Имя файла стоит под заголовком окна: отступ 8px вместо 24px у шапки ModalBase.
+  // Имя файла и предупреждения стоят под заголовком окна: отступ 8px вместо 24px у шапки ModalBase.
+  &-Head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: -16px;
+  }
+
   &-File {
-    margin: -16px 0 0;
+    margin: 0;
     color: var(--neutral-700);
     overflow-wrap: anywhere;
   }
@@ -200,17 +208,11 @@ function toggleYear(year: number, value: boolean) {
     padding-left: 16px;
   }
 
-  &-Notes {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
   // Итог — спокойным серым; предупреждение — жёлтым, как в макете.
   &-Note {
     display: flex;
     gap: 8px;
-    align-items: center;
+    align-items: flex-start;
     margin: 0;
     color: var(--neutral-700);
 
@@ -223,8 +225,11 @@ function toggleYear(year: number, value: boolean) {
     }
   }
 
+  // Иконка по центру первой строки текста: одна строка — ровно по центру, несколько — напротив первой.
+  // 1lh — высота строки текста (12px × 1.2 = 14,4px), иконка 16px: сдвиг (14,4 − 16) / 2 = −0,8px.
   &-NoteIcon {
     flex-shrink: 0;
+    margin-block-start: calc((1lh - 16px) / 2);
   }
 
   &-Actions {

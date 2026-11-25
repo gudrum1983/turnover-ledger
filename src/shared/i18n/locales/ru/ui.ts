@@ -70,13 +70,6 @@ export const ruUi = {
     retry: 'Повторить',
     close: 'Закрыть',
     meta: 'Реквизиты',
-    metaExport: '{label} - {state}',
-    metaFilled: 'заполнены',
-    metaNotFilled: 'не заполнены',
-    metaImport: '{label} - в книге {book}, в файле {file}',
-    metaImportShort: '{label} - {book} в книге / {file} в файле',
-    metaNone: 'нет',
-    metaPresent: 'есть',
     summary: {
       replace: 'Будут заменены {items}.',
       add: 'Будут добавлены {items}.',
@@ -97,11 +90,7 @@ export const ruUi = {
       many: '{count} записей',
       other: '{count} записи',
     },
-    yearRecords: '{year} - {records}',
-    yearInBookAndFile: '{year} - в книге {records}, в файле {inFile}',
-    yearInBookOnly: '{year} - в книге {records}, в файле нет',
-    yearInFileOnly: '{year} - в книге нет, в файле {records}',
-    yearShort: '{year} - {current} в книге / {inFile} в файле',
+    yearRecords: '{year} - {records} ({amount} RSD)',
   },
   reportBuilderSections: {
     taxpayerInfo: 'Информация о налогоплательщике',
@@ -147,10 +136,7 @@ export const ruUi = {
       },
     },
     responsiblePeople: {
-      editSeparately: 'Редактировать отдельно',
-      sameAsTaxpayer: 'ЗАПОЛНИТЬ ИЗ «НАЛОГОПЛАТЕЛЬЩИКА»',
-      separateHint: 'Указаны отдельно',
-      taxpayerHint: 'Совпадают с «Налогоплательщиком»',
+      sameAsTaxpayer: 'Совпадают с налогоплательщиком',
       preparedBy: {
         label: 'Составил',
         placeholder: 'Ivan Markov',
@@ -193,8 +179,10 @@ export const ruUi = {
     description: 'Описание',
     currency: 'Валюта',
     addRow: 'Добавить запись',
+    addRowShort: 'Добавить',
     clearTable: 'Очистить всё',
     clearYear: 'Очистить год',
+    clearYearShort: 'Очистить',
     sortByDate: 'Сортировать по дате',
     emptyHint: 'Таблица пустая, добавьте строку',
     emptyTitle: 'За {year} год записей пока нет',
@@ -288,7 +276,7 @@ export const ruUi = {
       'Будет удалена {count} запись на сумму {amount} RSD. | Будут удалены {count} записи на сумму {amount} RSD. | Будут удалены {count} записей на сумму {amount} RSD.',
     description:
       'Восстановить записи после удаления не получится. Чтобы сохранить копию, сначала сделайте экспорт данных.',
-    confirm: 'Очистить год',
+    confirm: 'Очистить',
     cancel: 'Отмена',
   },
   reportPreviewScriptSwitcher: {

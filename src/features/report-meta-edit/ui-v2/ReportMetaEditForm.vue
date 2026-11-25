@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { FieldBase } from '@/shared/ui-v2/field-base'
 import { FieldDigit } from '@/shared/ui-v2/field-digit'
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import {
   FOOTER_META_FIELDS,
@@ -17,9 +17,7 @@ import { IconInfoCircle } from '@/shared/ui-v2/icons'
 import { LinkBase } from '@/shared/ui-v2/link-base'
 import { ROUTES } from '@/shared/constants/routes.ts'
 import CollapseToggle from './CollapseToggle.vue'
-import { ButtonBase } from '@/shared/ui-v2/button-base'
-import SignatoriesHint from './SignatoriesHint.vue'
-import { FadeTransition } from '@/shared/ui-v2/fade-transition'
+import { CheckboxBase } from '@/shared/ui-v2/checkbox-base'
 
 const store = useReportStore()
 const { formData, metaFieldsProgress } = storeToRefs(store)
@@ -59,27 +57,37 @@ function footerFieldWarning(field: FooterField) {
   return key ? t(key) : undefined
 }
 
-const signatoriesMatchTaxpayer = computed(() => {
+// Галочка «Совпадают с «Налогоплательщиком»»: отмечена — «Составил» и «Ответственное лицо» неактивны
+// и повторяют имя налогоплательщика; снята — их можно редактировать, значения остаются.
+// Отдельно не храним: при загрузке галочка отмечена, если оба поля уже равны непустому имени.
+function signatoriesMatchTaxpayer() {
   const name = formData.value.header.taxpayer.trim()
-  return formData.value.footer.preparedBy === name && formData.value.footer.responsiblePerson === name
-})
-const signatoriesHint = computed(() =>
-  /*    t(
-      signatoriesMatchTaxpayer.value
-        ? 'ui.reportBuilderMetaFields.responsiblePeople.taxpayerHint'
-        : 'ui.reportBuilderMetaFields.responsiblePeople.separateHint',
-    ),*/
-  t('ui.reportBuilderMetaFields.responsiblePeople.taxpayerHint'),
+  const { preparedBy, responsiblePerson } = formData.value.footer
+  return name !== '' && preparedBy === name && responsiblePerson === name
+}
+
+const isSameAsTaxpayer = ref(signatoriesMatchTaxpayer())
+
+function copyTaxpayerToSignatories() {
+  const name = formData.value.header.taxpayer.trim()
+  setFooterValue('preparedBy', name)
+  setFooterValue('responsiblePerson', name)
+  touchedFooterFields.value.preparedBy = true
+  touchedFooterFields.value.responsiblePerson = true
+}
+
+function handleSameAsTaxpayer(value: boolean) {
+  isSameAsTaxpayer.value = value
+  if (value) copyTaxpayerToSignatories()
+}
+
+// Пока галочка отмечена, правки имени налогоплательщика сразу попадают в оба поля.
+watch(
+  () => formData.value.header.taxpayer,
+  () => {
+    if (isSameAsTaxpayer.value) copyTaxpayerToSignatories()
+  },
 )
-
-const isSignatoriesHintVisible = computed(() => {
-  /*  const { preparedBy, responsiblePerson } = formData.value.footer
-
-  return Boolean(preparedBy.trim() || responsiblePerson.trim())*/
-
-  const name = formData.value.header.taxpayer.trim()
-  return formData.value.footer.preparedBy === name && formData.value.footer.responsiblePerson === name && name !== ''
-})
 
 // Липкая шапка (на узком экране): пока она прилипла к верху окна, у неё белый фон.
 // Нулевой маркер стоит прямо перед шапкой: ушёл за верх окна — шапка прилипла.
@@ -153,14 +161,6 @@ function handleToggle(isOpen: boolean) {
 onBeforeUnmount(() => {
   if (scrollFrame !== undefined) cancelAnimationFrame(scrollFrame)
 })
-
-function copyTaxpayerToSignatories() {
-  const name = formData.value.header.taxpayer.trim()
-  setFooterValue('preparedBy', name)
-  setFooterValue('responsiblePerson', name)
-  touchedFooterFields.value.preparedBy = true
-  touchedFooterFields.value.responsiblePerson = true
-}
 </script>
 
 <template>
@@ -234,16 +234,15 @@ function copyTaxpayerToSignatories() {
             <h3 class="u-typo-subtitle-l">
               {{ t('ui.reportBuilderSections.responsiblePeople') }}
             </h3>
-            <div class="ReportMetaEditForm-SignatoriesHintContainer" aria-live="polite">
-              <FadeTransition mode="out-in">
-                <SignatoriesHint
-                  v-if="isSignatoriesHintVisible"
-                  :key="signatoriesHint"
-                  :automatic="signatoriesMatchTaxpayer"
-                  :text="signatoriesHint"
-                />
-              </FadeTransition>
-            </div>
+            <!-- Без имени налогоплательщика отмечать нечего; уже отмеченную галочку снять можно всегда. -->
+            <CheckboxBase
+              class="ReportMetaEditForm-SameAsTaxpayer"
+              :model-value="isSameAsTaxpayer"
+              :disabled="!isSameAsTaxpayer && !formData.header.taxpayer.trim()"
+              @update:model-value="handleSameAsTaxpayer"
+            >
+              {{ t('ui.reportBuilderMetaFields.responsiblePeople.sameAsTaxpayer') }}
+            </CheckboxBase>
           </div>
           <div class="ReportMetaEditForm_Fieldset ReportMetaEditForm_Fieldset_footer">
             <component
@@ -257,18 +256,10 @@ function copyTaxpayerToSignatories() {
               :modelValue="formData.footer[field.key]"
               :warning="Boolean(footerFieldWarning(field.key))"
               :warning-message="footerFieldWarning(field.key)"
+              :disabled="isSameAsTaxpayer"
               @update:modelValue="setFooterValue(field.key, $event ?? '')"
               @blur="touchedFooterFields[field.key] = true"
             />
-            <ButtonBase
-              fullWidth
-              class="ReportMetaEditForm-Button"
-              variant="page"
-              :disabled="!formData.header.taxpayer.trim() || signatoriesMatchTaxpayer"
-              @click="copyTaxpayerToSignatories"
-            >
-              {{ t('ui.reportBuilderMetaFields.responsiblePeople.sameAsTaxpayer') }}
-            </ButtonBase>
           </div>
         </div>
       </div>
@@ -293,12 +284,13 @@ function copyTaxpayerToSignatories() {
 }
 
 .ReportMetaEditForm_Fieldset_footer {
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr;
 }
 
 .ReportMetaEditForm-SignatoriesHeader {
   display: flex;
-  align-items: flex-end;
+  // Заголовок слева, галочка справа на одной линии; на узком экране галочка переносится под заголовок.
+  align-items: center;
   flex-wrap: wrap;
   gap: 8px 16px;
   padding: 24px 0 16px;
@@ -309,13 +301,14 @@ function copyTaxpayerToSignatories() {
   }
 }
 
-.ReportMetaEditForm-SignatoriesHintContainer {
-  max-width: 100%;
-  min-height: 24px;
-}
+// Зона нажатия не меньше 44px по высоте (удобно пальцем); нажимается и подпись — CheckboxBase это <label>.
+// Подпись приглушённая, как в макете; у неактивной галочки цвет остаётся от CheckboxBase.
+.ReportMetaEditForm-SameAsTaxpayer {
+  min-height: 44px;
 
-.ReportMetaEditForm-Button {
-  margin-top: 18px;
+  &:not(.CheckboxBase_disabled) {
+    color: var(--neutral-600);
+  }
 }
 
 .ReportMetaEditForm-Collapse {
@@ -394,14 +387,9 @@ function copyTaxpayerToSignatories() {
   justify-self: end;
 }
 
-@media (width <= 1024px) {
+@media (width < 1024px) {
   .ReportMetaEditForm_Fieldset {
     grid-template-columns: repeat(2, 1fr);
-
-    .ReportMetaEditForm-Button {
-      margin-top: 0;
-      grid-column: span 2;
-    }
   }
 }
 
@@ -414,7 +402,7 @@ function copyTaxpayerToSignatories() {
   }
 }
 
-@media (width <= 740px) {
+@media (width < 768px) {
   .ReportMetaEditForm-Counter {
     justify-self: start;
   }
@@ -434,10 +422,6 @@ function copyTaxpayerToSignatories() {
     gap: 24px;
     flex-direction: column;
   }
-
-  .ReportMetaEditForm-Button {
-    margin-top: 0;
-  }
 }
 
 // Вне узкого экрана строка под шапкой не нужна — она в сетке шапки.
@@ -451,7 +435,7 @@ function copyTaxpayerToSignatories() {
 
 // Липкая шапка на узком экране (макет «Details block»): счётчик, «Скрыть» и заголовок остаются
 // у верха окна, пока прокручиваются поля. Прилипшая — белая плашка во всю ширину карточки.
-@media (width <= 740px) {
+@media (width < 768px) {
   .ReportMetaEditForm-Header_sticky {
     position: sticky;
     top: 0;

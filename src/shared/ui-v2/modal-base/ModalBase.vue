@@ -370,7 +370,17 @@ onBeforeUnmount(() => {
   }
 }
 
+// Окна-сообщения (DialogConfirm: удаление, очистка года, ошибка импорта) — не во всю ширину мобильного:
+// всегда 16px от краёв экрана и не шире 560px. Большие окна с формами на узком экране — во всю ширину.
 .DialogConfirm {
+  .ModalBase-Overlay {
+    padding: 16px;
+  }
+
+  .ModalBase-Container {
+    max-width: min(560px, 100%);
+  }
+
   .ModalBase-Header {
     margin-bottom: 16px;
   }

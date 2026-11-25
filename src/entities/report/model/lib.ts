@@ -138,16 +138,22 @@ export function filterImportableRows(state: ReportState, today: Date = new Date(
 export type ReportYearCount = {
   year: number
   count: number
+  /** Сумма записей года в RSD, в центах */
+  rsdCents: number
 }
 
-// Годы, в которых есть записи, с числом записей — от нового к старому.
+// Годы, в которых есть записи, с числом записей и суммой в RSD — от нового к старому.
 export function getReportYearCounts(rows: ReportRow[]): ReportYearCount[] {
-  const counts = new Map<number, number>()
+  const counts = new Map<number, ReportYearCount>()
   for (const row of rows) {
     const year = getRowYear(row)
-    if (year !== null) counts.set(year, (counts.get(year) ?? 0) + 1)
+    if (year === null) continue
+    const item = counts.get(year) ?? { year, count: 0, rsdCents: 0 }
+    item.count += 1
+    item.rsdCents = sumCents([item.rsdCents, getRowTotals(row).rsdCents])
+    counts.set(year, item)
   }
-  return [...counts].map(([year, count]) => ({ year, count })).sort((left, right) => right.year - left.year)
+  return [...counts.values()].sort((left, right) => right.year - left.year)
 }
 
 export function createEmptyReportMeta(): ReportMeta {

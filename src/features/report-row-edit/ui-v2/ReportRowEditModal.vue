@@ -46,6 +46,9 @@ const isDirty = ref(false)
 // Пользователь пытается закрыть форму с несохранёнными изменениями: показываем предупреждение
 // и вместо «Отменить / Сохранить» — «Продолжить / Закрыть без сохранения».
 const isConfirmingClose = ref(false)
+// Предупреждать есть о чём, только когда изменения можно сохранить: форма изменена и «Сохранить» активна.
+// Если сохранить нельзя (не все поля заполнены или есть ошибки), закрываем без вопросов.
+const hasUnsavedChanges = computed(() => isDirty.value && canSubmit.value)
 
 const title = computed(() =>
   mode === 'edit'
@@ -65,8 +68,8 @@ watch(
   },
 )
 
-// Изменения откатили вручную — предупреждать больше не о чем.
-watch(isDirty, (value) => {
+// Изменения откатили вручную или сохранить стало нельзя — предупреждать больше не о чем.
+watch(hasUnsavedChanges, (value) => {
   if (!value) isConfirmingClose.value = false
 })
 
@@ -77,9 +80,9 @@ function close() {
   emit('update:open', false)
 }
 
-// «Отменить», крестик и Esc: без изменений закрываем сразу, с изменениями — просим подтвердить.
+// «Отменить», крестик и Esc: если сохранять нечего — закрываем сразу, иначе просим подтвердить.
 function requestClose() {
-  if (isDirty.value) {
+  if (hasUnsavedChanges.value) {
     isConfirmingClose.value = true
     return
   }

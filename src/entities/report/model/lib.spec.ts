@@ -17,6 +17,7 @@ import {
   pickReportState,
 } from './lib'
 import { REPORT_EXPORT_VERSION, type ReportState } from './types'
+import { getRowTotals } from '@/entities/report-row/@x/report'
 
 const reportState: ReportState = {
   meta: {
@@ -175,11 +176,12 @@ describe('report year selection', () => {
   const ids = (state: ReportState) => state.rows.map(({ id }) => id)
 
   it('counts rows per year from newest to oldest, skipping invalid dates', () => {
+    const rowRsdCents = getRowTotals(reportState.rows[0]!).rsdCents
     expect(getReportYearCounts(current.rows)).toEqual([
-      { year: 2025, count: 1 },
-      { year: 2024, count: 1 },
+      { year: 2025, count: 1, rsdCents: rowRsdCents },
+      { year: 2024, count: 1, rsdCents: rowRsdCents },
     ])
-    expect(getReportYearCounts(incoming.rows)[0]).toEqual({ year: 2026, count: 2 })
+    expect(getReportYearCounts(incoming.rows)[0]).toEqual({ year: 2026, count: 2, rsdCents: rowRsdCents * 2 })
   })
 
   it('detects filled meta', () => {

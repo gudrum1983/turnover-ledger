@@ -14,13 +14,14 @@ import ReportDataTransferModal from './ReportDataTransferModal.vue'
 const open = defineModel<boolean>('open', { required: true })
 
 const { t } = useLocale()
-const { exportLabel, metaExportLabel } = useYearLabels()
+const { yearLabel } = useYearLabels()
 const reportStore = useReportStore()
 
 const yearCounts = computed(() => getReportYearCounts(reportStore.rows))
-const items = computed(() => yearCounts.value.map(({ year, count }) => ({ year, label: exportLabel(year, count) })))
+const items = computed(() =>
+  yearCounts.value.map(({ year, count, rsdCents }) => ({ year, label: yearLabel(year, count, rsdCents) })),
+)
 const isMetaEmpty = computed(() => !hasReportMeta(reportStore.exportState().meta))
-const metaLabel = computed(() => metaExportLabel(!isMetaEmpty.value))
 const selectedYears = ref<number[]>([])
 const includeMeta = ref(false)
 
@@ -65,7 +66,7 @@ function handleExport() {
     :subtitle="t('ui.dataTransferModal.exportSubtitle')"
     :confirm-label="t('ui.dataTransferModal.exportConfirm')"
     :items="items"
-    :meta-label="metaLabel"
+    :meta-label="t('ui.dataTransferModal.meta')"
     :meta-disabled="isMetaEmpty"
     @confirm="handleExport"
   />

@@ -71,13 +71,6 @@ export const srLatUi = {
     retry: 'Pokušaj ponovo',
     close: 'Zatvori',
     meta: 'Podaci o obvezniku',
-    metaExport: '{label} - {state}',
-    metaFilled: 'popunjeni',
-    metaNotFilled: 'nisu popunjeni',
-    metaImport: '{label} - u knjizi {book}, u fajlu {file}',
-    metaImportShort: '{label} - {book} u knjizi / {file} u fajlu',
-    metaNone: 'nema',
-    metaPresent: 'ima',
     summary: {
       replace: 'Biće zamenjeni {items}.',
       add: 'Biće dodati {items}.',
@@ -98,11 +91,7 @@ export const srLatUi = {
       many: '{count} zapisa',
       other: '{count} zapisa',
     },
-    yearRecords: '{year} - {records}',
-    yearInBookAndFile: '{year} - u knjizi {records}, u fajlu {inFile}',
-    yearInBookOnly: '{year} - u knjizi {records}, u fajlu nema',
-    yearInFileOnly: '{year} - u knjizi nema, u fajlu {records}',
-    yearShort: '{year} - {current} u knjizi / {inFile} u fajlu',
+    yearRecords: '{year} - {records} ({amount} RSD)',
   },
   reportBuilderSections: {
     taxpayerInfo: 'Informacije o poreskom obvezniku',
@@ -148,10 +137,7 @@ export const srLatUi = {
       },
     },
     responsiblePeople: {
-      editSeparately: 'Uredi zasebno',
       sameAsTaxpayer: 'Isto kao obveznik',
-      separateHint: 'Popunjavaju se zasebno',
-      taxpayerHint: 'Podudaraju se sa poljem „Obveznik“',
       preparedBy: {
         label: 'Sastavio',
         placeholder: 'Ivan Markov',
@@ -194,8 +180,10 @@ export const srLatUi = {
     income: 'Prihod',
     currency: 'Valuta',
     addRow: 'Dodaj zapis',
+    addRowShort: 'Dodaj',
     clearTable: 'Obriši sve',
     clearYear: 'Očisti godinu',
+    clearYearShort: 'Očisti',
     sortByDate: 'Sortiraj po datumu',
     emptyHint: 'Tabela je prazna, dodajte red',
     emptyTitle: 'Za {year}. godinu još nema zapisa',
@@ -287,7 +275,7 @@ export const srLatUi = {
     summary:
       'Biće obrisan {count} zapis u iznosu od {amount} RSD. | Biće obrisana {count} zapisa u iznosu od {amount} RSD. | Biće obrisano {count} zapisa u iznosu od {amount} RSD.',
     description: 'Obrisani zapisi neće moći da se vrate. Da biste sačuvali kopiju, prvo izvezite podatke.',
-    confirm: 'Očisti godinu',
+    confirm: 'Očisti',
     cancel: 'Otkaži',
   },
   reportPreviewScriptSwitcher: {

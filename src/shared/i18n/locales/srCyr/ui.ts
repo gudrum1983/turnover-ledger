@@ -71,13 +71,6 @@ export const srCyrUi = {
     retry: 'Покушај поново',
     close: 'Затвори',
     meta: 'Подаци о обвезнику',
-    metaExport: '{label} - {state}',
-    metaFilled: 'попуњени',
-    metaNotFilled: 'нису попуњени',
-    metaImport: '{label} - у књизи {book}, у фајлу {file}',
-    metaImportShort: '{label} - {book} у књизи / {file} у фајлу',
-    metaNone: 'нема',
-    metaPresent: 'има',
     summary: {
       replace: 'Биће замењени {items}.',
       add: 'Биће додати {items}.',
@@ -98,11 +91,7 @@ export const srCyrUi = {
       many: '{count} записа',
       other: '{count} записа',
     },
-    yearRecords: '{year} - {records}',
-    yearInBookAndFile: '{year} - у књизи {records}, у фајлу {inFile}',
-    yearInBookOnly: '{year} - у књизи {records}, у фајлу нема',
-    yearInFileOnly: '{year} - у књизи нема, у фајлу {records}',
-    yearShort: '{year} - {current} у књизи / {inFile} у фајлу',
+    yearRecords: '{year} - {records} ({amount} RSD)',
   },
   reportBuilderSections: {
     taxpayerInfo: 'Информације о пореском обвезнику',
@@ -148,10 +137,7 @@ export const srCyrUi = {
       },
     },
     responsiblePeople: {
-      editSeparately: 'Уреди засебно',
       sameAsTaxpayer: 'Исто као обвезник',
-      separateHint: 'Попуњавају се засебно',
-      taxpayerHint: 'Подударају се са пољем „Обвезник“',
       preparedBy: {
         label: 'Саставио',
         placeholder: 'Ivan Markov',
@@ -194,8 +180,10 @@ export const srCyrUi = {
     income: 'Приход',
     currency: 'Валута',
     addRow: 'Додај запис',
+    addRowShort: 'Додај',
     clearTable: 'Обриши све',
     clearYear: 'Очисти годину',
+    clearYearShort: 'Очисти',
     sortByDate: 'Сортирај по датуму',
     emptyHint: 'Табела је празна, додајте ред',
     emptyTitle: 'За {year}. годину још нема записа',
@@ -287,7 +275,7 @@ export const srCyrUi = {
     summary:
       'Биће обрисан {count} запис у износу од {amount} RSD. | Биће обрисана {count} записа у износу од {amount} RSD. | Биће обрисано {count} записа у износу од {amount} RSD.',
     description: 'Обрисани записи неће моћи да се врате. Да бисте сачували копију, прво извезите податке.',
-    confirm: 'Очисти годину',
+    confirm: 'Очисти',
     cancel: 'Откажи',
   },
   reportPreviewScriptSwitcher: {

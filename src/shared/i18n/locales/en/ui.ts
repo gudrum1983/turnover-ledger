@@ -71,13 +71,6 @@ export const enUi = {
     retry: 'Try again',
     close: 'Close',
     meta: 'Taxpayer details',
-    metaExport: '{label} - {state}',
-    metaFilled: 'filled in',
-    metaNotFilled: 'not filled in',
-    metaImport: '{label} - in the book: {book}, in the file: {file}',
-    metaImportShort: '{label} - {book} in book / {file} in file',
-    metaNone: 'none',
-    metaPresent: 'yes',
     summary: {
       replace: 'To be replaced: {items}.',
       add: 'To be added: {items}.',
@@ -98,11 +91,7 @@ export const enUi = {
       many: '{count} records',
       other: '{count} records',
     },
-    yearRecords: '{year} - {records}',
-    yearInBookAndFile: '{year} - {records} in the book, {inFile} in the file',
-    yearInBookOnly: '{year} - {records} in the book, none in the file',
-    yearInFileOnly: '{year} - none in the book, {records} in the file',
-    yearShort: '{year} - {current} in book / {inFile} in file',
+    yearRecords: '{year} - {records} ({amount} RSD)',
   },
   reportBuilderSections: {
     taxpayerInfo: 'Taxpayer information',
@@ -148,10 +137,7 @@ export const enUi = {
       },
     },
     responsiblePeople: {
-      editSeparately: 'Edit separately',
       sameAsTaxpayer: 'Same as taxpayer',
-      separateHint: 'Filled in separately',
-      taxpayerHint: 'Match the “Taxpayer” field',
       preparedBy: {
         label: 'Prepared by',
         placeholder: 'Ivan Markov',
@@ -194,8 +180,10 @@ export const enUi = {
     income: 'Income',
     currency: 'Currency',
     addRow: 'Add record',
+    addRowShort: 'Add',
     clearTable: 'Clear all',
     clearYear: 'Clear year',
+    clearYearShort: 'Clear',
     sortByDate: 'Sort by date',
     emptyHint: 'The table is empty, add a row',
     emptyTitle: 'No records for {year} yet',
@@ -288,7 +276,7 @@ export const enUi = {
     summary:
       '{count} record totaling {amount} RSD will be deleted. | {count} records totaling {amount} RSD will be deleted.',
     description: 'Once deleted, the records cannot be restored. To keep a copy, export your data first.',
-    confirm: 'Clear year',
+    confirm: 'Clear',
     cancel: 'Cancel',
   },
   reportPreviewScriptSwitcher: {
