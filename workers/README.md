@@ -17,9 +17,15 @@
 ## turnover-ledger-api
 
 - `https://turnover-ledger-api.gudrum1983.workers.dev/api/v1/...` — прокси на `https://kurs.resenje.org/api/v1/...`.
-- `POST /stats/print` — нажатие «Печать/PDF», тело запроса — письмо отчёта (`srLat` / `srCyr`).
+- `POST /stats/print` — нажатие «Печать/PDF», тело запроса — `script=srCyr&locale=ru`: письмо отчёта и язык
+  интерфейса (язык пишется отдельным событием `print-locale`). Старые версии приложения шлют просто `srLat` / `srCyr`.
   Приложение шлёт его через `navigator.sendBeacon` (`src/shared/lib/stats/trackEvent.ts`), в разработке — не шлёт.
-- `GET /stats` — итоги за всё время: `{ conversions, prints, printsByScript, since }`. Кешируется в браузере на 5 минут.
+- `POST /stats/visit` — посещение. Приложение шлёт его не чаще раза в день (UTC) с одного браузера: дата
+  последнего визита хранится в localStorage (`trackVisit` в `src/shared/lib/stats/trackEvent.ts`). Без идентификаторов.
+- `POST /stats/view` — открытие просмотра отчёта, не чаще раза в день с браузера (`trackView`), тело — язык интерфейса.
+- `GET /stats` — итоги за всё время: `{ conversions, prints, printsByScript, visits, visitsToday, since }`,
+  `visitsToday` — посещения за сегодня (UTC). Кешируется в браузере на 5 минут.
+  Языки интерфейса (`view`, `print-locale`) сюда не входят — они только для автора, смотреть в консоли D1.
 - Пересчёты сумм (`/conversions/`) считаются сами при проксировании.
 
 Считаются только события с адреса приложения (заголовок `Origin` из `APP_ORIGINS`). Превью
