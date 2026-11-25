@@ -387,7 +387,7 @@ onBeforeUnmount(() => {
   justify-self: end;
 }
 
-@media (width <= 1024px) {
+@media (width < 1024px) {
   .ReportMetaEditForm_Fieldset {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -402,7 +402,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (width <= 740px) {
+@media (width < 768px) {
   .ReportMetaEditForm-Counter {
     justify-self: start;
   }
@@ -435,7 +435,7 @@ onBeforeUnmount(() => {
 
 // Липкая шапка на узком экране (макет «Details block»): счётчик, «Скрыть» и заголовок остаются
 // у верха окна, пока прокручиваются поля. Прилипшая — белая плашка во всю ширину карточки.
-@media (width <= 740px) {
+@media (width < 768px) {
   .ReportMetaEditForm-Header_sticky {
     position: sticky;
     top: 0;

@@ -44,8 +44,17 @@ const { t } = useLocale()
 
 <style scoped lang="scss">
 .ReportBuilderPage {
+  // Блок реквизитов: отступы 32 × 24, на мобильном (< 768px, как viewport 'mobile') — 32 × 16.
+  // Задаём переменными PaperBlock: от них же считается липкая шапка формы во всю ширину блока.
   &-Meta {
+    --paper-block-padding-block: 32px;
+    --paper-block-padding-inline: 24px;
+
     margin-block: 40px;
+
+    @media (width < 768px) {
+      --paper-block-padding-inline: 16px;
+    }
   }
 
   .ReportBuilderPage_layout {
