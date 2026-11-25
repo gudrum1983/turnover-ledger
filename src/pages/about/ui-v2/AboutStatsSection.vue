@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { INTL_LOCALES, useLocale } from '@/shared/i18n'
 import { formatDateForUi, type AppStats } from '@/shared/lib'
-import { IconDocuments, IconEye, IconRefresh } from '@/shared/ui-v2/icons'
+import { IconCalendar, IconDocuments, IconEye, IconRefresh } from '@/shared/ui-v2/icons'
 import AboutStatCard from './AboutStatCard.vue'
 import { getScriptShares } from './scriptShares'
 
@@ -14,11 +14,6 @@ const { stats } = defineProps<{
 const { t, locale } = useLocale()
 
 const formatNumber = (value: number) => new Intl.NumberFormat(INTL_LOCALES[locale.value]).format(value)
-
-// Дата начала подсчёта — в серой подписи под заголовком: «…анонимно с 24.11.2026: …».
-const note = computed(() =>
-  stats.since ? t('ui.infoPage.statsNoteSince', { date: formatDateForUi(stats.since) }) : t('ui.infoPage.statsNote'),
-)
 
 const formatPercent = (value: number) =>
   new Intl.NumberFormat(INTL_LOCALES[locale.value], { style: 'percent', maximumFractionDigits: 0 }).format(value / 100)
@@ -38,10 +33,10 @@ const printBadges = computed(() => {
   <section class="AboutStatsSection">
     <div class="AboutStatsSection-Header">
       <h2 class="u-typo-h2-l">{{ t('ui.infoPage.statsTitle') }}</h2>
-      <p class="AboutStatsSection-Note u-typo-body-l">{{ note }}</p>
+      <p class="AboutStatsSection-Note u-typo-body-l">{{ t('ui.infoPage.statsNote') }}</p>
     </div>
     <div class="AboutStatsSection-Cards">
-      <!-- Две короткие карточки — общей группой, чтобы и на телефоне стояли рядом -->
+      <!-- Карточки парами: на узком экране пары встают одна под другой, сетка 2 × 2 -->
       <div class="AboutStatsSection-Group">
         <!-- Посещений нет в ответе, пока воркер не обновлён — тогда карточку не показываем -->
         <AboutStatCard
@@ -58,14 +53,24 @@ const printBadges = computed(() => {
           :label="t('ui.infoPage.statsConversions')"
         />
       </div>
-      <!-- Отчёты — с разбивкой по письму -->
-      <AboutStatCard
-        class="AboutStatsSection-Card AboutStatsSection-Card_reports"
-        :icon="IconDocuments"
-        :value="formatNumber(stats.prints)"
-        :label="t('ui.infoPage.statsPrints')"
-        :badges="printBadges"
-      />
+      <div class="AboutStatsSection-Group">
+        <!-- Отчёты — с разбивкой по письму -->
+        <AboutStatCard
+          class="AboutStatsSection-Card"
+          :icon="IconDocuments"
+          :value="formatNumber(stats.prints)"
+          :label="t('ui.infoPage.statsPrints')"
+          :badges="printBadges"
+        />
+        <!-- Дата начала подсчёта: «Старт статистики» -->
+        <AboutStatCard
+          v-if="stats.since"
+          class="AboutStatsSection-Card"
+          :icon="IconCalendar"
+          :value="formatDateForUi(stats.since)"
+          :label="t('ui.infoPage.statsSince')"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -87,8 +92,8 @@ const printBadges = computed(() => {
   color: var(--neutral-600);
 }
 
-// Три карточки одной ширины: группа из двух — flex 2 и база 2 × 200px + промежуток 24px,
-// «Отчётов» — flex 1 и база 200px. На узком экране «Отчётов» уходит вниз, пара остаётся рядом.
+// Две пары карточек поровну, карточки в паре поровну. На узком экране пары встают одна под другой,
+// а если и пара не помещается — карточки в ней тоже переносятся, каждая на всю ширину.
 .AboutStatsSection-Cards {
   display: flex;
   flex-wrap: wrap;
@@ -97,17 +102,15 @@ const printBadges = computed(() => {
 
 .AboutStatsSection-Group {
   display: flex;
-  flex: 2 1 424px;
+  flex: 1 1 424px;
+  flex-wrap: wrap;
   gap: 24px;
   min-width: 0;
 }
 
+// База 0 — в паре поровну; уже своего содержимого карточка не сжимается (min-width: auto),
+// поэтому, когда двум не хватает места, вторая уходит на новую строку.
 .AboutStatsSection-Card {
   flex: 1 1 0;
-  min-width: 0;
-}
-
-.AboutStatsSection-Card_reports {
-  flex: 1 1 200px;
 }
 </style>

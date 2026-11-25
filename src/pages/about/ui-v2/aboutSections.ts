@@ -47,6 +47,7 @@ export const ABOUT_SECTIONS: readonly AboutSectionData[] = [
     items: [
       { id: 'storageText', parts: [{ type: 'text', key: 'ui.infoPage.storageText' }] },
       { id: 'storageNote', parts: [{ type: 'text', key: 'ui.infoPage.storageNote' }] },
+      { id: 'storageStatsNote', parts: [{ type: 'text', key: 'ui.infoPage.storageStatsNote' }] },
       { id: 'storageBackupNote', parts: [{ type: 'text', key: 'ui.infoPage.storageBackupNote' }] },
     ],
   },

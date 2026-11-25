@@ -9,7 +9,7 @@ export const srLatInfoPage = {
   introLanguages:
     'Izveštaj se može formirati na srpskoj latinici ili ćirilici. Interfejs aplikacije dostupan je na ruskom, engleskom i srpskom jeziku.',
   introGuideBeforeLink:
-    'Prilikom izrade aplikacije oslanjala sam se na otvorene materijale o vođenju KPO knjige, uključujući i vodič sa sajta ',
+    'Aplikacija je pokrenuta 1. maja 2026. godine. Prilikom njene izrade oslanjala sam se na otvorene materijale o vođenju KPO knjige, uključujući i vodič sa sajta ',
   guideLinkText: 'srb.guide',
   introGuideAfterLink: '.',
   backToApp: 'Na početnu',
@@ -17,6 +17,8 @@ export const srLatInfoPage = {
   storageText:
     'Podaci izveštaja, izabrani jezik interfejsa, režim prikaza izveštaja i pomoćni keš valuta čuvaju se lokalno u pregledaču korisnika pomoću localStorage.',
   storageNote: 'Aplikacija ne koristi posebnu serversku bazu podataka za čuvanje korisničkih izveštaja.',
+  storageStatsNote:
+    'Za statistiku aplikacija šalje samo anonimne brojače: posetu i otvaranje pregleda izveštaja (najviše jednom dnevno), štampu (sa pismom izveštaja) i preračun iznosa. Uz pregled i štampu šalje se i jezik interfejsa. Iznosi, datumi, valute i podaci izveštaja ne čuvaju se u statistici.',
   storageBackupNote:
     'Izveštaj takođe možete sačuvati na računar u JSON formatu i kasnije ga vratiti kroz uvoz. To je korisno ako želite da prenesete podatke u drugi pregledač, otvorite aplikaciju na drugom uređaju ili sačuvate rezervnu kopiju pre brisanja podataka pregledača.',
   conversionTitle: 'Kako radi konverzija valuta',
@@ -35,11 +37,11 @@ export const srLatInfoPage = {
   bankLinkText: 'Narodne banke Srbije',
   disclaimerRecommendationAfterLink: '.',
   statsTitle: 'Statistika',
-  statsNote: 'Podaci se prikupljaju anonimno',
-  statsNoteSince: 'Podaci se prikupljaju anonimno od {date}',
+  statsNote: 'Statistika je anonimna: samo broj, bez iznosa i podataka izveštaja',
   statsVisits: 'Poseta',
   statsPrints: 'Izveštaja',
   statsConversions: 'Konverzija',
+  statsSince: 'Početak statistike',
   statsCyrillicShort: 'Ћир {share}',
   statsLatinShort: 'Lat {share}',
   contactTitle: 'Povratne informacije',
