@@ -58,9 +58,9 @@ const printBadges = computed(() => {
           :label="t('ui.infoPage.statsConversions')"
         />
       </div>
-      <!-- Отчёты — широкая карточка (как две короткие) с разбивкой по письму -->
+      <!-- Отчёты — с разбивкой по письму -->
       <AboutStatCard
-        class="AboutStatsSection-Card AboutStatsSection-Card_wide"
+        class="AboutStatsSection-Card AboutStatsSection-Card_reports"
         :icon="IconDocuments"
         :value="formatNumber(stats.prints)"
         :label="t('ui.infoPage.statsPrints')"
@@ -87,7 +87,8 @@ const printBadges = computed(() => {
   color: var(--neutral-600);
 }
 
-// Пара коротких карточек и широкая «Отчётов» — поровну; на узком экране «Отчётов» уходит вниз.
+// Три карточки одной ширины: группа из двух — flex 2 и база 2 × 200px + промежуток 24px,
+// «Отчётов» — flex 1 и база 200px. На узком экране «Отчётов» уходит вниз, пара остаётся рядом.
 .AboutStatsSection-Cards {
   display: flex;
   flex-wrap: wrap;
@@ -96,7 +97,7 @@ const printBadges = computed(() => {
 
 .AboutStatsSection-Group {
   display: flex;
-  flex: 1 1 400px;
+  flex: 2 1 424px;
   gap: 24px;
   min-width: 0;
 }
@@ -106,7 +107,7 @@ const printBadges = computed(() => {
   min-width: 0;
 }
 
-.AboutStatsSection-Card_wide {
-  flex: 1 1 400px;
+.AboutStatsSection-Card_reports {
+  flex: 1 1 200px;
 }
 </style>
