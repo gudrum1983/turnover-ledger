@@ -275,7 +275,7 @@ export const srLatUi = {
     summary:
       'Biće obrisan {count} zapis u iznosu od {amount} RSD. | Biće obrisana {count} zapisa u iznosu od {amount} RSD. | Biće obrisano {count} zapisa u iznosu od {amount} RSD.',
     description: 'Obrisani zapisi neće moći da se vrate. Da biste sačuvali kopiju, prvo izvezite podatke.',
-    confirm: 'Očisti godinu',
+    confirm: 'Očisti',
     cancel: 'Otkaži',
   },
   reportPreviewScriptSwitcher: {

@@ -275,7 +275,7 @@ export const srCyrUi = {
     summary:
       'Биће обрисан {count} запис у износу од {amount} RSD. | Биће обрисана {count} записа у износу од {amount} RSD. | Биће обрисано {count} записа у износу од {amount} RSD.',
     description: 'Обрисани записи неће моћи да се врате. Да бисте сачували копију, прво извезите податке.',
-    confirm: 'Очисти годину',
+    confirm: 'Очисти',
     cancel: 'Откажи',
   },
   reportPreviewScriptSwitcher: {

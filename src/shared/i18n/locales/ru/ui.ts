@@ -276,7 +276,7 @@ export const ruUi = {
       'Будет удалена {count} запись на сумму {amount} RSD. | Будут удалены {count} записи на сумму {amount} RSD. | Будут удалены {count} записей на сумму {amount} RSD.',
     description:
       'Восстановить записи после удаления не получится. Чтобы сохранить копию, сначала сделайте экспорт данных.',
-    confirm: 'Очистить год',
+    confirm: 'Очистить',
     cancel: 'Отмена',
   },
   reportPreviewScriptSwitcher: {

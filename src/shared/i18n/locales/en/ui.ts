@@ -276,7 +276,7 @@ export const enUi = {
     summary:
       '{count} record totaling {amount} RSD will be deleted. | {count} records totaling {amount} RSD will be deleted.',
     description: 'Once deleted, the records cannot be restored. To keep a copy, export your data first.',
-    confirm: 'Clear year',
+    confirm: 'Clear',
     cancel: 'Cancel',
   },
   reportPreviewScriptSwitcher: {
