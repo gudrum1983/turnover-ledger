@@ -8,8 +8,6 @@ type AboutPart =
   | { type: 'text'; key: AboutMessageKey }
   | { type: 'external'; key: AboutMessageKey; href: string }
   | { type: 'email'; email: string }
-  /** Готовое значение, не из словаря (например, число из статистики) — выделяется жирным */
-  | { type: 'value'; value: string }
 
 export type AboutItem = {
   id: string
@@ -19,8 +17,6 @@ export type AboutItem = {
 export type AboutSectionData = {
   id: string
   titleKey: AboutMessageKey
-  /** Значения для подстановки в заголовок, например { date } */
-  titleParams?: Record<string, string>
   showLogo?: boolean
   items: readonly AboutItem[]
 }
